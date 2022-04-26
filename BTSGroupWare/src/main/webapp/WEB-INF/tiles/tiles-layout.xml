@@ -44,6 +44,29 @@
 		<put-attribute name="content" value="/WEB-INF/views/tiles2/{1}/{2}/{3}.jsp"/>
 	</definition>
 
+
+
+
+	<!-- bts 파이널 프로젝트 시작 -->
+	<!-- ==== tiles 를 사용하는 레이아웃(header,content,sideinfo,footer) 설정 시작 ==== -->
+	<definition name="layout-tiles3"  template="/WEB-INF/tiles/layout/layout-tiles3.jsp"> 
+		<put-attribute name="header"  value="/WEB-INF/tiles/tile3/header.jsp" />
+		<put-attribute name="sideinfo_edms"  value="/WEB-INF/tiles/tile3/sideinfo_edms.jsp" />
+		<put-attribute name="content" value="" />
+		<put-attribute name="footer"  value="/WEB-INF/tiles/tile3/footer.jsp" />
+	</definition>
+	
+	<definition name="*.tiles3" extends="layout-tiles3">
+		<put-attribute name="content" value="/WEB-INF/views/tiles3/{1}.jsp"/>
+	</definition>
+	<definition name="*/*.tiles3" extends="layout-tiles3">
+		<put-attribute name="content" value="/WEB-INF/views/tiles3/{1}/{2}.jsp"/>
+	</definition>
+	<definition name="*/*/*.tiles3" extends="layout-tiles3">
+		<put-attribute name="content" value="/WEB-INF/views/tiles3/{1}/{2}/{3}.jsp"/>
+	</definition>
+	<!-- bts 파이널 프로젝트 끝 -->
+
 </tiles-definitions> 
 
 
