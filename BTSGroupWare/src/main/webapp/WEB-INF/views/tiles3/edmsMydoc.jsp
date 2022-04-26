@@ -19,25 +19,25 @@
 		<div class="row">
 			<div class="col-3">
 				<div class="card">
-					<div class="card-header">내문서함</div>
+					<div class="card-header">전체</div>
 					<div class="card-body">+999</div>
 				</div>
 			</div>
 			<div class="col-3">
 				<div class="card">
-					<div class="card-header">처리할 문서</div>
+					<div class="card-header">진행중</div>
 					<div class="card-body">+999</div>
 				</div>
 			</div>			
 			<div class="col-3">
 				<div class="card">
-					<div class="card-header">반려된</div>
+					<div class="card-header">완료됨</div>
 					<div class="card-body">+999</div>
 				</div>
 			</div>
 			<div class="col-3">
 				<div class="card">
-					<div class="card-header">결재전</div>
+					<div class="card-header">반려됨</div>
 					<div class="card-body">+999</div>
 				</div>
 			</div>
