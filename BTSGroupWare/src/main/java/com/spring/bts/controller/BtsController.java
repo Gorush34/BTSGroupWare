@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.spring.bts.service.*;
 
 /*
@@ -92,4 +94,21 @@ public class BtsController {
 		return "test/test_insert";
 		// /WEB-INF/views/test/test_insert.jsp 페이지를 만들어야 함.
 	}
+	
+	// #36. 메인 페이지 요청
+	@RequestMapping(value="/index.bts")
+	public ModelAndView index(ModelAndView mav, HttpServletRequest request) {
+		
+		// getCurrentURL(request); // 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출 
+		
+		// List<String> imgfilenameList = service.getImgfilenameList();
+		
+		// mav.addObject("imgfilenameList", imgfilenameList);
+		mav.setViewName("main/index.tiles1");
+		// /WEB-INF/views/tiles1/main/index.jsp 페이지를 만들어야 한다.
+		
+		return mav;
+	}
+	
+	
 }
