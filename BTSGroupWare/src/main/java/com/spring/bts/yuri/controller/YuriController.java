@@ -28,8 +28,8 @@ public class YuriController {
 	public ModelAndView edmsHome(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 
 		mav.setViewName("edmsHome.tiles3");
-		// /WEB-INF/views/tiles2/{1}.jsp
-		// /WEB-INF/views/tiles2/edmsHome.jsp 페이지를 만들어야 한다.
+		// /WEB-INF/views/tiles3/{1}.jsp
+		// /WEB-INF/views/tiles3/edmsHome.jsp 페이지를 만들어야 한다.
 		return mav;
 		
 	}
@@ -37,7 +37,7 @@ public class YuriController {
 
 	// === bts 게시판 글쓰기 폼페이지 요청 === //
 	@RequestMapping(value="/test/edmsAdd.bts", produces="text/plain;charset=UTF-8")
-	public ModelAndView requiredLogin_addEdms(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView addEdms(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 	//	getCurrentURL(request); // 로그아웃을 했을 때  현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
 		// 위의 문장을 주석처리하고 게시판 - 글쓰기 - 로그인 - 로그아웃 을 하면  goBackURL이 없으므로 시작페이지로 간다!
@@ -51,7 +51,7 @@ public class YuriController {
 	
 	// === bts 내문서함 페이지 === //
 	@RequestMapping(value="/test/edmsMydoc.bts", produces="text/plain;charset=UTF-8")
-	public ModelAndView requiredLogin_edmsMydoc(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView edmsMydoc(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 	//	getCurrentURL(request); // 로그아웃을 했을 때  현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
 		// 위의 문장을 주석처리하고 게시판 - 글쓰기 - 로그인 - 로그아웃 을 하면  goBackURL이 없으므로 시작페이지로 간다!
@@ -64,7 +64,7 @@ public class YuriController {
 	
 	// === bts 결재하기 페이지 === //
 	@RequestMapping(value="/test/edmsApprove.bts", produces="text/plain;charset=UTF-8")
-	public ModelAndView requiredLogin_edmsApprove(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView edmsApprove(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 	//	getCurrentURL(request); // 로그아웃을 했을 때  현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
 		// 위의 문장을 주석처리하고 게시판 - 글쓰기 - 로그인 - 로그아웃 을 하면  goBackURL이 없으므로 시작페이지로 간다!
