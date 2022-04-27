@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 //=== #32. DAO 선언 === 
 @Repository
-public class CalenderDAO implements InterCalenderDAO {
+public class CalendarDAO implements InterCalendarDAO {
 	
 	// === #33. 의존객체 주입하기(DI: Dependency Injection) ===
 	// >>> 의존 객체 자동 주입(Automatic Dependency Injection)은
@@ -30,6 +30,15 @@ public class CalenderDAO implements InterCalenderDAO {
 	// Type 에 따라 Spring 컨테이너가 알아서 root-context.xml 에 생성된 org.mybatis.spring.SqlSessionTemplate 의  sqlsession bean 을  sqlsession 에 주입시켜준다. 
     // 그러므로 sqlsession 는 null 이 아니다.
 	
+
+	// ======== ***** 파이널 옮기기 시작 ***** ======== //
+	// === 일정 체크 박스 추가 === //
+/*	@Override
+	public int addCalenderName(CalenderVO calendervo) {
+		int n = sqlsession.insert("jieun.addCalenderName", calendervo);
+		return n;
+	}
+*/
 	
 	
 }

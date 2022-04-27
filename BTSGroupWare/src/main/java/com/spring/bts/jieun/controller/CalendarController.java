@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.spring.bts.jieun.service.InterCalenderService;
+import com.spring.bts.jieun.service.InterCalendarService;
 
 /*
 사용자 웹브라우저 요청(View)  ==> DispatcherServlet ==> @Controller 클래스 <==>> Service단(핵심업무로직단, business logic단) <==>> Model단[Repository](DAO, DTO) <==>> myBatis <==>> DB(오라클)           
@@ -42,7 +42,7 @@ Service(서비스)단 객체가 하는 일은 Model단에서 작성된 데이터
 */
 
 @Controller
-public class CalenderController {
+public class CalendarController {
 	
 	
 	// === #35. 의존객체 주입하기(DI: Dependency Injection) ===
@@ -78,17 +78,16 @@ public class CalenderController {
 		
 
 		@Autowired    // Type에 따라 알아서 Bean 을 주입해준다.
-	    private InterCalenderService service;
-		// === 캘린더 일정 페이지 === //
-		@RequestMapping(value="/calender.bts")
-		public ModelAndView calender(ModelAndView mav) {
+	    private InterCalendarService service;
+		// === 캘린더 일정 페이지 === //	
+		@RequestMapping(value="/calendar/calenderMain.bts")
+		public ModelAndView calenderMain(ModelAndView mav) {
 			
-			mav.setViewName("/fcalenderMain.tiles3");
+			mav.setViewName("calendar_test.calendar");
 			
 			return mav;
 		//  /WEB-INF/views/tiles3/fcalenderMain.jsp	페이지를 만들어야 한다.		
 		}
-		
 		/*	// === 일정 체크 박스 추가 === //
 		@ResponseBody
 		@RequestMapping(value="/addCalenderName.bts", method={RequestMethod.POST}, produces="text/plain;charset=UTF-8")

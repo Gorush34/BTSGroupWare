@@ -1,6 +1,6 @@
 package com.spring.bts.jieun.model;
 
-public class CalenderVO {
+public class CalendarVO {
 	
 	private int cal_no;
 	private String cal_name;
