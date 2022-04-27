@@ -62,14 +62,58 @@ public class HwanmoController {
 	
 	// ========== 서버 테스트 끝.. ================= //
 	
-	@RequestMapping(value = "/mailList.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
-	   public String mailList(HttpServletRequest request) {
+	// 민정 타일 레이아웃 테스트
+	@RequestMapping(value = "/mail/mailList.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
+    public String mailList(HttpServletRequest request) {
 
 	      // 메일 기능 시작
 	      
-	      return "mailList.tiles1";
-	      //  return "/tiles1/mailList.jsp";
-    }
+	      return "mailList.mail";
+	      // *.mail 일 때 /WEB-INF/views/mail/{1}.jsp
+	}
+	
+	// 지은 타일 레이아웃 테스트
+	@RequestMapping(value = "/calendar/calendar_test.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
+    public String calendar_test(HttpServletRequest request) {
+
+	      
+	      return "calendar_test.calendar";
+	}
+	
+	// 문길 타일 레이아웃 테스트
+	@RequestMapping(value = "/board/board_test.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
+    public String board_test(HttpServletRequest request) {
+
+		      
+	       return "board_test.board";
+	}
+		
+		
+	// 병윤 타일 레이아웃 테스트
+	@RequestMapping(value = "/addBook/addBook_test.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
+    public String addBook_test(HttpServletRequest request) {
+
+		      
+	       return "addBook_test.addBook";
+	}	
+		
+		
+	// 유리 타일 레이아웃 테스트
+	@RequestMapping(value = "/edms/edms_test.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
+    public String edms_test(HttpServletRequest request) {
+
+		      
+	       return "edms_test.edms";
+	}		
+		
+	// 환모 타일 레이아웃 테스트
+	@RequestMapping(value = "/emp/emp_test.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
+    public String emp_test(HttpServletRequest request) {
+
+		      
+	       return "emp_test.emp";
+	}		
+		
 
 	
 }
