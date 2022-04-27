@@ -7,6 +7,10 @@
 <!-- ==== 대부분은 namespace에 파일이름 사용(유일하니까) ==== -->
 <mapper namespace="hwanmo">
 
+	<insert id="test_insert_2" parameterType="HashMap">
+		insert into bts_test(no, name, writeday)
+		values(#{no}, #{name}, default)
 
+	</insert>
 
 </mapper>
