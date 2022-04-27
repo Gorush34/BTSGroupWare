@@ -5,7 +5,7 @@
     
 <%
     String ctxPath = request.getContextPath();
-    //    /MyMVC
+    //    /bts
 %>
 
 <script type="text/javascript">

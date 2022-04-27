@@ -5,7 +5,7 @@
     
 <%
     String ctxPath = request.getContextPath();
-    //    /MyMVC
+    //    /bts
 %>
 
 <script type="text/javascript">
@@ -118,7 +118,7 @@
 								<td style="width: 40px; text-align: center;">
 									<span class="fa fa-paperclip"></span>
 								</td>							
-								<td>김민정</td>
+								<td>임유리</td>
 								<td>메일 제목 확인 JSP</td>
 								<td>2022.04.25</td>
 							</tr>						
