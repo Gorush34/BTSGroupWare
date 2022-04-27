@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<%-- === bts 파이널 프로젝트 tiles 를 사용하는 레이아웃3 페이지 만들기 === --%>
+<%-- === #24. tiles 를 사용하는 레이아웃1 페이지 만들기 === --%>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 
 <%
@@ -11,7 +11,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>게시판3</title>
+<title>게시판</title>
   <!-- Required meta tags -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> 
@@ -22,34 +22,34 @@
   <!-- Font Awesome 5 Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   
-  <!-- 직접 만든 CSS -->
-  <link rel="stylesheet" type="text/css" href="<%=ctxPath %>/resources/css/style3.css" />
+  <!-- 직접 만든 CSS 1 -->
+  <link rel="stylesheet" type="text/css" href="<%=ctxPath %>/resources/css/style_calendar.css" />
   
   <!-- Optional JavaScript -->
   <script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery-3.6.0.min.js"></script>
   <script type="text/javascript" src="<%= ctxPath%>/resources/bootstrap-4.6.0-dist/js/bootstrap.bundle.min.js" ></script> 
   <script type="text/javascript" src="<%= ctxPath%>/resources/smarteditor/js/HuskyEZCreator.js" charset="utf-8"></script> 
   
-  <!--  ===== 스피너 및 datepicker 를 사용하기 위해  jquery-ui 사용하기 ===== -->
+  <%--  ===== 스피너 및 datepicker 를 사용하기 위해  jquery-ui 사용하기 ===== --%>
   <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.css" />
   <script type="text/javascript" src="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.js"></script>
 
-  <!-- *** ajax로 파일을 업로드할때 가장 널리 사용하는 방법 ==> ajaxForm *** -->
+  <%-- *** ajax로 파일을 업로드할때 가장 널리 사용하는 방법 ==> ajaxForm *** --%>
   <script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery.form.min.js"></script>
 
 </head>
 <body>
-	<div id="mycontainer"> <!-- bootstrap도 container나 header를 쓰고 있을 수도 있어서 id를 my~라고 사용함 -->
+	<div id="mycontainer">
 		<div id="myheader">
 			<tiles:insertAttribute name="header" />
-		</div>
-				
-		<div id="sideinfo_edms">
-			<tiles:insertAttribute name="sideinfo_edms" />
 		</div>
 		
 		<div id="mycontent">
 			<tiles:insertAttribute name="content" />
+		</div>
+		
+		<div id="mysideinfo">
+			<tiles:insertAttribute name="sideinfo" />
 		</div>
 		
 		<div id="myfooter">

@@ -8,7 +8,16 @@
        
 <tiles-definitions>
 
+	<!-- 헷갈려하는 사람(나)을 위해 작성
+		1. *.mail 은 return "*.mail을 주면 됩니다.
+		2. 이때, 파일의 경로는 /WEB-INF/views/mail/*.jsp 이어야 합니다.
+		3. @RequestMapping(value = "/mail/mailList.bts")  부분에서
+		   value 부분은 웹사이트에 ctxPath(/bts) 다음 들어갈 주소입니다.
+		   예) 위의 jsp를 보려면 http://localhost:9090/bts/mail/mailList.bts 로 가면 되겠죠?
+	 -->
+
 	<!-- ==== tiles 를 사용하는 레이아웃(header,content,footer) 설정 시작 ==== -->
+	 
 	<definition name="layout-tiles1"  template="/WEB-INF/tiles/layout/layout-tiles1.jsp"> 
 		<put-attribute name="header"  value="/WEB-INF/tiles/tile1/header.jsp" />
 		<put-attribute name="content" value="" />
@@ -27,6 +36,7 @@
 	
 	
 	<!-- ==== tiles 를 사용하는 레이아웃(header,content,sideinfo,footer) 설정 시작 ==== -->
+	<!-- 
 	<definition name="layout-tiles2"  template="/WEB-INF/tiles/layout/layout-tiles2.jsp"> 
 		<put-attribute name="header"  value="/WEB-INF/tiles/tile2/header.jsp" />
 		<put-attribute name="content" value="" />
@@ -43,29 +53,126 @@
 	<definition name="*/*/*.tiles2" extends="layout-tiles2">
 		<put-attribute name="content" value="/WEB-INF/views/tiles2/{1}/{2}/{3}.jsp"/>
 	</definition>
-
-
-
-
-	<!-- bts 파이널 프로젝트 시작 -->
-	<!-- ==== tiles 를 사용하는 레이아웃(header,content,sideinfo,footer) 설정 시작 ==== -->
-	<definition name="layout-tiles3"  template="/WEB-INF/tiles/layout/layout-tiles3.jsp"> 
-		<put-attribute name="header"  value="/WEB-INF/tiles/tile3/header.jsp" />
-		<put-attribute name="sideinfo_edms"  value="/WEB-INF/tiles/tile3/sideinfo_edms.jsp" />
+	-->
+	
+	<!-- 민정 메일 레이아웃 시작 -->
+	<definition name="layout-mail"  template="/WEB-INF/tiles/layout/layout-tiles_mail.jsp"> 
+		<put-attribute name="header"  value="/WEB-INF/tiles/common/header.jsp" />
+		<put-attribute name="sideinfo"  value="/WEB-INF/tiles/sideinfo/sideinfo_mail.jsp" />
 		<put-attribute name="content" value="" />
-		<put-attribute name="footer"  value="/WEB-INF/tiles/tile3/footer.jsp" />
+		<put-attribute name="footer"  value="/WEB-INF/tiles/common/footer.jsp" />
 	</definition>
 	
-	<definition name="*.tiles3" extends="layout-tiles3">
-		<put-attribute name="content" value="/WEB-INF/views/tiles3/{1}.jsp"/>
+	<definition name="*.mail" extends="layout-mail">
+		<put-attribute name="content" value="/WEB-INF/views/mail/{1}.jsp"/>
 	</definition>
-	<definition name="*/*.tiles3" extends="layout-tiles3">
-		<put-attribute name="content" value="/WEB-INF/views/tiles3/{1}/{2}.jsp"/>
+	<definition name="*/*.mail" extends="layout-mail">
+		<put-attribute name="content" value="/WEB-INF/views/mail/{1}/{2}.jsp"/>
 	</definition>
-	<definition name="*/*/*.tiles3" extends="layout-tiles3">
-		<put-attribute name="content" value="/WEB-INF/views/tiles3/{1}/{2}/{3}.jsp"/>
+	<definition name="*/*/*.mail" extends="layout-mail">
+		<put-attribute name="content" value="/WEB-INF/views/mail/{1}/{2}/{3}.jsp"/>
 	</definition>
-	<!-- bts 파이널 프로젝트 끝 -->
+	<!-- 민정 메일 레이아웃 끝 -->
+
+
+	<!-- 지은 일정 레이아웃 시작 -->
+	<definition name="layout_calendar"  template="/WEB-INF/tiles/layout/layout-tiles_calendar.jsp"> 
+		<put-attribute name="header"  value="/WEB-INF/tiles/common/header.jsp" />
+		<put-attribute name="sideinfo"  value="/WEB-INF/tiles/sideinfo/sideinfo_calendar.jsp" />
+		<put-attribute name="content" value="" />
+		<put-attribute name="footer"  value="/WEB-INF/tiles/common/footer.jsp" />
+	</definition>
+	
+	<definition name="*.calendar" extends="layout_calendar">
+		<put-attribute name="content" value="/WEB-INF/views/calendar/{1}.jsp"/>
+	</definition>
+	<definition name="*/*.calendar" extends="layout_calendar">
+		<put-attribute name="content" value="/WEB-INF/views/calendar/{1}/{2}.jsp"/>
+	</definition>
+	<definition name="*/*/*.calendar" extends="layout_calendar">
+		<put-attribute name="content" value="/WEB-INF/views/calendar/{1}/{2}/{3}.jsp"/>
+	</definition>
+	<!-- 지은 일정 레이아웃 끝 -->
+	
+	
+	<!-- 문길 게시판1 레이아웃 시작 -->
+	<definition name="layout_board"  template="/WEB-INF/tiles/layout/layout-tiles_board.jsp"> 
+		<put-attribute name="header"  value="/WEB-INF/tiles/common/header.jsp" />
+		<put-attribute name="sideinfo"  value="/WEB-INF/tiles/sideinfo/sideinfo_board.jsp" />
+		<put-attribute name="content" value="" />
+		<put-attribute name="footer"  value="/WEB-INF/tiles/common/footer.jsp" />
+	</definition>
+	
+	<definition name="*.board" extends="layout_board">
+		<put-attribute name="content" value="/WEB-INF/views/board/{1}.jsp"/>
+	</definition>
+	<definition name="*/*.board" extends="layout_board">
+		<put-attribute name="content" value="/WEB-INF/views/board/{1}/{2}.jsp"/>
+	</definition>
+	<definition name="*/*/*.board" extends="layout_board">
+		<put-attribute name="content" value="/WEB-INF/views/board/{1}/{2}/{3}.jsp"/>
+	</definition>
+	<!-- 문길 게시판1 레이아웃 끝 -->
+	
+	
+	<!-- 병윤 주소록 레이아웃 시작 -->
+	<definition name="layout_addBook"  template="/WEB-INF/tiles/layout/layout-tiles_addBook.jsp"> 
+		<put-attribute name="header"  value="/WEB-INF/tiles/common/header.jsp" />
+		<put-attribute name="sideinfo"  value="/WEB-INF/tiles/sideinfo/sideinfo_addBook.jsp" />
+		<put-attribute name="content" value="" />
+		<put-attribute name="footer"  value="/WEB-INF/tiles/common/footer.jsp" />
+	</definition>
+	
+	<definition name="*.addBook" extends="layout_addBook">
+		<put-attribute name="content" value="/WEB-INF/views/addBook/{1}.jsp"/>
+	</definition>
+	<definition name="*/*.addBook" extends="layout_addBook">
+		<put-attribute name="content" value="/WEB-INF/views/addBook/{1}/{2}.jsp"/>
+	</definition>
+	<definition name="*/*/*.addBook" extends="layout_addBook">
+		<put-attribute name="content" value="/WEB-INF/views/addBook/{1}/{2}/{3}.jsp"/>
+	</definition>
+	<!-- 병윤 주소록 레이아웃  끝 -->
+	
+	
+	<!-- 유리 전자결재 레이아웃 시작 -->
+	<definition name="layout_edms"  template="/WEB-INF/tiles/layout/layout-tiles_edms.jsp"> 
+		<put-attribute name="header"  value="/WEB-INF/tiles/common/header.jsp" />
+		<put-attribute name="sideinfo"  value="/WEB-INF/tiles/sideinfo/sideinfo_edms.jsp" />
+		<put-attribute name="content" value="" />
+		<put-attribute name="footer"  value="/WEB-INF/tiles/common/footer.jsp" />
+	</definition>
+	
+	<definition name="*.edms" extends="layout_edms">
+		<put-attribute name="content" value="/WEB-INF/views/edms/{1}.jsp"/>
+	</definition>
+	<definition name="*/*.edms" extends="layout_edms">
+		<put-attribute name="content" value="/WEB-INF/views/edms/{1}/{2}.jsp"/>
+	</definition>
+	<definition name="*/*/*.edms" extends="layout_edms">
+		<put-attribute name="content" value="/WEB-INF/views/edms/{1}/{2}/{3}.jsp"/>
+	</definition>
+	<!-- 유리 전자결재 레이아웃 끝 -->
+	
+	
+	<!-- 환모 사원 레이아웃 시작 -->
+	<definition name="layout_emp"  template="/WEB-INF/tiles/layout/layout-tiles_emp.jsp"> 
+		<put-attribute name="header"  value="/WEB-INF/tiles/common/header.jsp" />
+		<put-attribute name="sideinfo"  value="/WEB-INF/tiles/sideinfo/sideinfo_emp.jsp" />
+		<put-attribute name="content" value="" />
+		<put-attribute name="footer"  value="/WEB-INF/tiles/common/footer.jsp" />
+	</definition>
+	
+	<definition name="*.emp" extends="layout_emp">
+		<put-attribute name="content" value="/WEB-INF/views/emp/{1}.jsp"/>
+	</definition>
+	<definition name="*/*.emp" extends="layout_emp">
+		<put-attribute name="content" value="/WEB-INF/views/emp/{1}/{2}.jsp"/>
+	</definition>
+	<definition name="*/*/*.emp" extends="layout_emp">
+		<put-attribute name="content" value="/WEB-INF/views/emp/{1}/{2}/{3}.jsp"/>
+	</definition>
+	<!-- 환모 사원 레이아웃 끝 -->
 
 </tiles-definitions> 
 
