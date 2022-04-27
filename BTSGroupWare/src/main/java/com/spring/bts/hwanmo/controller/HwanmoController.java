@@ -88,7 +88,6 @@ public class HwanmoController {
 	       return "board_test.board";
 	}
 		
-		
 	// 병윤 타일 레이아웃 테스트
 	@RequestMapping(value = "/addBook/addBook_test.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
     public String addBook_test(HttpServletRequest request) {
