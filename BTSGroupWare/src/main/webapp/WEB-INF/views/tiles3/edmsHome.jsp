@@ -26,8 +26,6 @@
 		<H2>김다우 님의 현황</H2>
 		<div class="divClear"></div>
 		<div class="row">
-		<%-- 나중에 여기를 어떻게? 그 뭐냐.. 그거 뭐지.. 아 테이블에서 꺼내와에 되는야 --%>
-		<%-- 아무튼 진행 중인 문서에서 꺼내올 꺼니까 그 뭐냐 forEach문을 써야 하나? 암튼 ㅇㅋ --%>
 			<div class="col-3">
 				<div class="card">
 					<div class="card-body">
