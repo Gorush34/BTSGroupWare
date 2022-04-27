@@ -7,6 +7,15 @@
 <!-- ==== 대부분은 namespace에 파일이름 사용(유일하니까) ==== -->
 <mapper namespace="jieun">
 
+<!-- // ======== ***** 파이널 옮기기 시작 ***** ======== //
+	// === 일정 체크 박스 추가 === // -->
+	
+<!--  	<insert id="addCalenderName" parameterType="com.spring.board.model.CalenderVO">
+		insert into tbl_calender(cal_no, fk_사원번호 ,cal_name, cal_color) 
+      		values(calenderSeq.nextval, #{cal_name}, #{fk_사원번호},#{name}, default)
+
+	</insert>
+ --> 
 
 
 </mapper>
