@@ -23,7 +23,7 @@
 <div id="myedms">
 	<!-- 나의 현황 시작 -->
 	<div id="edms_top">
-		<H2>김다우 님의 현황</H2>
+		<H2>김다우 님의 현황 입니다.</H2>
 		<div class="divClear"></div>
 		<div class="row">
 			<div class="col-3">
