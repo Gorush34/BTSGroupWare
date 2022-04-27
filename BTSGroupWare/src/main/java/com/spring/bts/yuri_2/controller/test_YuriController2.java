@@ -1,4 +1,4 @@
-package com.spring.bts.yuri.controller;
+package com.spring.bts.yuri_2.controller;
 
 /*import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
