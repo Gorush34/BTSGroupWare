@@ -62,4 +62,14 @@ public class HwanmoController {
 	
 	// ========== 서버 테스트 끝.. ================= //
 	
+	@RequestMapping(value = "/mailList.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
+	   public String mailList(HttpServletRequest request) {
+
+	      // 메일 기능 시작
+	      
+	      return "mailList.tiles1";
+	      //  return "/tiles1/mailList.jsp";
+    }
+
+	
 }

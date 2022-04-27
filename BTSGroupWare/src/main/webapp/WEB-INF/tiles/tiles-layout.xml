@@ -66,6 +66,26 @@
 		<put-attribute name="content" value="/WEB-INF/views/tiles3/{1}/{2}/{3}.jsp"/>
 	</definition>
 	<!-- bts 파이널 프로젝트 끝 -->
+	
+	<!-- 예 -->
+	<!-- ==== tiles 를 사용하는 레이아웃(header,content,sideinfo,footer) 설정 시작 ==== -->
+	<definition name="layout-mail"  template="/WEB-INF/tiles/layout/layout-tiles_mail.jsp"> 
+		<put-attribute name="header"  value="/WEB-INF/tiles/common/header.jsp" />
+		<put-attribute name="sideinfo"  value="/WEB-INF/tiles/sideinfo/mail_sideinfo.jsp" />
+		<put-attribute name="content" value="" />
+		<put-attribute name="footer"  value="/WEB-INF/tiles/common/footer.jsp" />
+	</definition>
+	
+	<definition name="*.mail" extends="layout-mail">
+		<put-attribute name="content" value="/WEB-INF/views/mail/{1}.jsp"/>
+	</definition>
+	<definition name="*/*.mail" extends="layout-mail">
+		<put-attribute name="content" value="/WEB-INF/views/mail/{1}/{2}.jsp"/>
+	</definition>
+	<definition name="*/*/*.mail" extends="layout-mail">
+		<put-attribute name="content" value="/WEB-INF/views/mail/{1}/{2}/{3}.jsp"/>
+	</definition>
+	<!-- 예 끝 -->
 
 </tiles-definitions> 
 
