@@ -49,7 +49,7 @@
 			alert("추가할 일정을 입력하세요");
 			return; 
 		}
-		else{
+<%--		else{
 			$.ajax({
 				url:"<%= ctxPath%>/addCalenderName.bts",
 				data:{"cal_name":$("input#cal_name").val()
@@ -63,7 +63,7 @@
 		            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 		        }
 			});
-		}
+		} --%>
 	}// end of function goAddCheckbox()------------------------------------------------
 			
 </script>
@@ -71,7 +71,7 @@
 	<div>
 	   <div id="sidebar" style="font-size: 11pt;">
 		 <h4>캘린더</h4>
-			<button type="button" class="btn btn-outline-primary btn-lg btn-block" style="margin: 15px 10px 15px 10px;" onclick="<%= ctxPath%>/schedualRegister.bts">일정등록</button>
+			<button type="button" class="btn btn-outline-primary btn-lg" style="margin: 15px 10px 15px 10px;" onclick="<%= ctxPath%>/schedualRegister.bts">일정등록</button>
 			<ul style="list-style-type: none;">
 				<li style="margin-bottom: 15px;">
 					<div id="calenderbtn1" class="calenderbtn">내 캘린더</div>
