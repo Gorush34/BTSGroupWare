@@ -1,27 +1,75 @@
 @charset "UTF-8";
 /*
-body {font-family: Arial, Helvetica, sans-serif, 돋움; }
+body {font-family: 'Noto Sans KR', sans-serif; }
 */
-#mycontainer   { padding:20px; }
-#myheader      { display: flex; min-height:100px; position: relative; top: 60px; }
-#mycontent      { min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:#F5F5F5;
-                  float:left; width:65%; }
+#mycontainer	{ padding:20px; }
+#myheader		{ display: flex; min-height:100px; position: relative; top: 60px; }
+#mycontent		{ min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:#fff;
+				  float:right; width:80%; padding: 20px; }
 
-#mysideinfo      { min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:#F0FFFF;
-                  float:right; width:33.5%; }
+#mysideinfo		{ min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:#000033;
+				  float:left; width:20%; color:white; }
 
-#myfooter      { display: flex; min-height:120px; position: relative; top:60px; background-color:#555555; margin-bottom: 70px; 
-                 clear:both; }
- 
-#myheader a {text-decoration:none;}
+#myfooter		{ display: flex; min-height:120px; position: relative; top:60px; background-color:#555555; margin-bottom: 70px; 
+				  clear:both; }
+
+#myheader a		{ text-decoration:none; }
 
 
+/*****************************************
+ * 전자결재 서식 시작
+ *****************************************/
+	
+	/* 개별 컨테이너 제목 */
+	span.title {
+		font-size: 16pt;
+		font-weight: 500;
+		color: #007bff;
+	}
+	
+	/* 내용 사이를 띄워주는 곳 */
+	div.divClear {
+		margin-bottom: 20px;
+		border: solid 1px lime;
+	}
+	
+	/* 나의현황, 결재대기, 결재완료, 결재반려 목록보기 */
+	div#edms_current, div#edms_mid, div#edms_bott {
+		border: solid 1px pink;
+	} 
+	
+	/* 카드 */
+	div.card {
+		min-width: 120px;
+		max-width: 240px;
+	}
+	
+	/* 카드 제목 */
+	div.card-title {
+		font-size: 12pt;
+		line-height: 12pt;
+		text-align: left;
+		padding-left: 12px;
+		margin-top: 12px;
+	}	
+	
+	/* 전체보기 div */
+	div.more {
+		display: inline-block;
+	}
+
+	/* 전체보기 */
+	span.more{
+		margin-top: 12px;
+		text-align: left;
+		color: #007bff;
+	}
 
 /* 
 민정서식 시작
 */
 
-
+/*
 	#secondHeader {
 		display: inline-block;
 	}
@@ -151,3 +199,4 @@ div.content {
     float: none;
   }
 }
+*/
