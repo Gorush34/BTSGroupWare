@@ -25,7 +25,7 @@
 	<!-- 나의 현황(최근문서) 시작 -->
 	<div id="edms_current">
 		<span class="title">김한조 님의 현황</span>
-		<div class="divClear"></div>  ㅇㅇ
+		<div class="divClear"></div>
 		<!-- 나의현황 카드 시작 -->
 		<div class="row">
 			<%-- 나중에 c:forEach 으로 여러 개 불러오기 --%>
@@ -56,8 +56,6 @@
 	<!-- 결재진행 문서목록 시작 -->
 	<div id="edms_accepted">
 		<span class="title">결재완료 목록보기</span>
-		<div class="divClear"></div>
-		<div>
 		<table class="table table-sm">
 			<thead>
 				<tr>
@@ -85,7 +83,9 @@
 				</c:forEach>
 			</tbody>
 		</table>
-		</div>
+		
+		<div class="divClear"></div>
+		
 		<div class="more">
 			<span class="more">전체보기</span>
 		</div>
@@ -97,8 +97,6 @@
 	<!-- 결재진행 문서목록 시작 -->
 	<div id="edms_rejected">
 		<span class="title">결재반려 목록보기</span>
-		<div class="divClear"></div>
-		<div>
 		<table class="table table-sm">
 			<thead>
 				<tr>
@@ -126,7 +124,9 @@
 				</c:forEach>
 			</tbody>
 		</table>
-		</div>
+		
+		<div class="divClear"></div>
+		
 		<div class="more">
 			<span class="more">전체보기</span>
 		</div>

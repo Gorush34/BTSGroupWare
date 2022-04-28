@@ -17,9 +17,9 @@ import org.springframework.web.servlet.ModelAndView;
 	여기서는 @Controller 를 사용하므로 @Component 기능이 이미 있으므로 @Component를 명기하지 않아도 BoardController 는 bean 으로 등록되어 스프링컨테이너가 자동적으로 관리해준다. 
 */
 @Controller /* Bean + controller 기능을 모듀 포함 */
-public class test_YuriController2 {
+public class YuriController {
 
-	
+/*	
 	// 주소록 테스트
 	@RequestMapping(value="/addBook/addbook_main.bts")
 	public ModelAndView addbook_main(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
@@ -39,6 +39,7 @@ public class test_YuriController2 {
 		// /WEB-INF/views/addBook/addbook_teladd.jsp 페이지를 만들어야 한다.
 		return mav;
 	}
+*/
 	
 	// === 전자결재 테스트 페이지 === //
 	@RequestMapping(value="/edms/edmsTest.bts")
