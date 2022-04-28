@@ -1,7 +1,7 @@
 @charset "UTF-8";
-/*
+
 body {font-family: 'Noto Sans KR', sans-serif; }
-*/
+
 #mycontainer	{ padding:20px; }
 #myheader		{ display: flex; min-height:100px; position: relative; top: 60px; }
 #mycontent		{ min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:#fff;

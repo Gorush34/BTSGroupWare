@@ -5,12 +5,7 @@
 	String ctxPath = request.getContextPath();
 %>
 
-<title>전자결재 홈</title>
-
-<!-- 폰트를 쓰기 위한 링크 -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo&family=Noto+Sans+KR&display=swap" rel="stylesheet">
+<title>내 문서함</title>
 
 <!-- style_edms.css 는 이미 layout-tiles_edms.jsp 에 선언되어 있으므로 쓸 필요 X! -->
 
@@ -19,7 +14,6 @@
 		
 	});
 </script>
-
 
 <%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
 
@@ -33,27 +27,28 @@
 		<!-- 나의현황 카드 시작 -->
 		<div class="row">
 			<%-- 나중에 c:forEach 으로 여러 개 불러오기 --%>
-			<c:forEach var="i" begin="1" end="4">
-				<div class="col-3">
-				<div class="card">
-					<div class="card-body">
-						<p><c:out value="${i}" /></p>
-						<h5 class="card-title">기안서 제목 </h5>
-						<h6 class="card-subtitle mb-2 text-muted">진행상태</h6>
-						<hr>
-						<!-- <a href="/bts/edms/edmsMydoc.bts" class="stretched-link btn btn-sm text-primary" class="card-link">자세히 보기</a> -->
-						<span onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsMydoc.bts'" class="stretched-link btn btn-sm text-primary" class="card-link">자세히 보기</span>
+			<c:forEach var="i" begin="1" end="6">
+				<div class="col-2">
+					<div class="card">
+						<div class="card-body">
+							<p><c:out value="${i}" /></p>
+							<h5 class="card-title">기안서 제목 </h5>
+							<h6 class="card-subtitle mb-2 text-muted">진행상태</h6>
+							<hr>
+							<!-- <a href="/bts/edms/edmsMydoc.bts" class="stretched-link btn btn-sm text-primary" class="card-link">자세히 보기</a> -->
+							<span onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsMydoc.bts'" class="stretched-link btn btn-sm text-primary" class="card-link">자세히 보기</span>
+						</div>
 					</div>
 				</div>
-				</div>
-			</c:forEach>
+			</c:forEach>		
+			
 		</div>
 		<!-- 나의현황 카드 종료 -->
 		
 		<div class="divClear"></div>
 		
 		<div class="more">
-			<span class="more">전체보기</span>
+			<span class="more" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsMydoc.bts'">전체보기</span>
 		</div>
 	</div>
 	<!-- 나의 현황 종료 -->
@@ -94,7 +89,7 @@
 		<div class="divClear"></div>
 		
 		<div class="more">
-			<span class="more">전체보기</span>
+			<span class="more" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsMydoc.bts'">전체보기</span>
 		</div>
 	</div>
 	<!-- 결재진행 문서목록 종료 -->
@@ -135,7 +130,7 @@
 		<div class="divClear"></div>
 		
 		<div class="more">
-			<span class="more">전체보기</span>
+			<span class="more" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsMydoc.bts'">전체보기</span>
 		</div>
 	</div>
 	<!-- 결재진행 문서목록 종료 -->
