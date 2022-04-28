@@ -25,7 +25,7 @@
 	<!-- 나의 현황(최근문서) 시작 -->
 	<div id="edms_current">
 		<span class="title">김한조 님의 현황</span>
-		<div class="divClear"></div>
+		<div class="divClear"></div>  ㅇㅇ
 		<!-- 나의현황 카드 시작 -->
 		<div class="row">
 			<%-- 나중에 c:forEach 으로 여러 개 불러오기 --%>
