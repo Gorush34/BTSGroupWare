@@ -50,8 +50,7 @@ span.edms_menu {
 
 span.edms_menu:hover {
 	font-size: 18pt;
-	font-weight: bold;
-	color: orange;
+	color: #fff;
 }
 
 

@@ -7,7 +7,7 @@ body {font-family: 'Noto Sans KR', sans-serif; }
 #mycontent		{ min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:#fff;
 				  float:right; width:80%; padding: 20px; }
 
-#mysideinfo		{ min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:#000033;
+#mysideinfo		{ min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:#000060;
 				  float:left; width:20%; color:white; }
 
 #myfooter		{ display: flex; min-height:120px; position: relative; top:60px; background-color:#555555; margin-bottom: 70px; 
@@ -20,23 +20,36 @@ body {font-family: 'Noto Sans KR', sans-serif; }
  * 전자결재 서식 시작
  *****************************************/
 	
+	/* 전체 제목 */
+	div.edmsHomeTitle {
+		border-bottom: solid 3px #000060;
+		margin-bottom: 20px;
+	}
+	span.edms_maintitle {
+		font-size: 24pt;
+		font-weight: 800;
+		color: #000060;
+		margin-bottom: 40px;
+	}
+	
+	/* 전체 제목 아래에 밑줄 */
+	div.mainLine {
+		border-bottom: solid 3px #000060;
+		width: 100%; 
+	}
+	
 	/* 개별 컨테이너 제목 */
 	span.edms_title {
 		font-size: 16pt;
 		font-weight: 500;
-		color: #007bff;
+		color: #000060;
 	}
 	
 	/* 내용 사이를 띄워주는 곳 */
 	div.divClear {
-		margin-bottom: 20px;
-		border: solid 1px lime;
-	}
-	
-	/* 나의현황, 결재대기, 결재완료, 결재반려 목록보기 */
-	div#edms_current, div#edms_mid, div#edms_bott {
+		margin-bottom: 10px;
 		border: solid 1px pink;
-	} 
+	}
 	
 	/* 카드 */
 	div.card {
@@ -66,8 +79,9 @@ body {font-family: 'Noto Sans KR', sans-serif; }
 	}
 	
 	/* 전체보기 마우스오버 했을 때 커서로 바뀌도록 */
-	span.more {
+	span.more:hover {
 		cursor: pointer;
+		color: #000060;
 	}
 /* 
 민정서식 시작

@@ -17,13 +17,16 @@
 
 <%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
 
-	<div id="edmsHomeTitle">
-	<span class="edms_title"></span>
+	<div class="edmsHomeTitle">
+		<span class="edms_maintitle">전자결재 홈</span>
+		<p style="margin-bottom: 10px;"></p>
 	</div>
+	
 	<!-- 나의 현황(최근문서) 시작 -->
 	<div id="edms_current">
-		<span class="edms_title">김한조 님의 현황</span>
+		<span class="edms_title">김다우 님의 현황</span>
 		<div class="divClear"></div>
+		
 		<!-- 나의현황 카드 시작 -->
 		<div class="row">
 			<%-- 나중에 c:forEach 으로 여러 개 불러오기 --%>
@@ -40,10 +43,10 @@
 						</div>
 					</div>
 				</div>
-			</c:forEach>		
-			
+			</c:forEach>	
 		</div>
 		<!-- 나의현황 카드 종료 -->
+
 		
 		<div class="divClear"></div>
 		
@@ -58,6 +61,9 @@
 	<!-- 결재진행 문서목록 시작 -->
 	<div id="edms_accepted">
 		<span class="edms_title">결재완료 목록보기</span>
+		
+		<div class="divClear"></div>
+		
 		<table class="table table-sm">
 			<thead>
 				<tr>
@@ -99,6 +105,9 @@
 	<!-- 결재진행 문서목록 시작 -->
 	<div id="edms_rejected">
 		<span class="edms_title">결재반려 목록보기</span>
+		
+		<div class="divClear"></div>
+		
 		<table class="table table-sm">
 			<thead>
 				<tr>
@@ -113,6 +122,7 @@
 			</thead>
 			<tbody>
 				<%-- 나중에 forEach문 사용해서 뿌려주기 --%>
+				<%-- 이상하게 나옴
 				<c:forEach var="i" begin="1" end="5">
 				<tr>
 					<th scope="row"><p><c:out value="${i}" /></p></th>
@@ -124,13 +134,63 @@
 					<td>20220428-000001</td>
 				</tr>
 				</c:forEach>
+				--%>
+				<tr>
+					<th scope="row"><p><c:out value="${i}" /></p></th>
+					<td>2022.02.02</td>
+					<td>업무기안</td>
+					<td></td>
+					<td>(신규)휴가신청-연차관리연동</td>
+					<td>있음</td>
+					<td>20220428-000001</td>
+				</tr>
+				
+				<tr>
+					<th scope="row"><p><c:out value="${i}" /></p></th>
+					<td>2022.02.02</td>
+					<td>업무기안</td>
+					<td></td>
+					<td>(신규)휴가신청-연차관리연동</td>
+					<td>있음</td>
+					<td>20220428-000001</td>
+				</tr>
+				
+				<tr>
+					<th scope="row"><p><c:out value="${i}" /></p></th>
+					<td>2022.02.02</td>
+					<td>업무기안</td>
+					<td></td>
+					<td>(신규)휴가신청-연차관리연동</td>
+					<td>있음</td>
+					<td>20220428-000001</td>
+				</tr>
+				
+				<tr>
+					<th scope="row"><p><c:out value="${i}" /></p></th>
+					<td>2022.02.02</td>
+					<td>업무기안</td>
+					<td></td>
+					<td>(신규)휴가신청-연차관리연동</td>
+					<td>있음</td>
+					<td>20220428-000001</td>
+				</tr>
+				
+				<tr>
+					<th scope="row"><p><c:out value="${i}" /></p></th>
+					<td>2022.02.02</td>
+					<td>업무기안</td>
+					<td></td>
+					<td>(신규)휴가신청-연차관리연동</td>
+					<td>있음</td>
+					<td>20220428-000001</td>
+				</tr>
+				
 			</tbody>
 		</table>
 		
-		<div class="divClear"></div>
-		
 		<div class="more">
 			<span class="more" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsMydoc.bts'">전체보기</span>
+			<%-- <button type="button" class="more" style="background-color: #000060; color: #fff;">전체보기</button> --%>
 		</div>
 	</div>
 	<!-- 결재진행 문서목록 종료 -->
