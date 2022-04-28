@@ -40,6 +40,21 @@
 .highcharts-data-table tr:hover {
     background: #f1f7ff;
 }
+
+span.edms_menu {
+	font-size: 16pt;
+	color: #fff;
+	cursor: pointer;
+	margin: 4px;
+}
+
+span.edms_menu:hover {
+	font-size: 18pt;
+	font-weight: bold;
+	color: orange;
+}
+
+
 </style>
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -323,5 +338,17 @@
           <div id="container"></div>
       </figure> 
    </div>
+   
+   
+	<div>
+		<ul>
+			<li style="list-style: none"><span class="edms_menu" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsHome.bts'">전자결재 홈</span></li>
+			<li style="list-style: none"><span class="edms_menu" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsAdd.bts'">문서작성</span></li>
+			<li style="list-style: none"><span class="edms_menu" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsMydoc.bts'">내문서함(전체문서함/결재대기/결재승인/결재반려)</span></li>
+			<li style="list-style: none"><span class="edms_menu" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsApprove.bts'">결재하기</span></li>
+		</ul>
+	</div>
+   
+   
 </div>
    

@@ -22,9 +22,13 @@
 
 
 <%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
+
+	<div id="edmsHomeTitle">
+	<span class="edms_title"></span>
+	</div>
 	<!-- 나의 현황(최근문서) 시작 -->
 	<div id="edms_current">
-		<span class="title">김한조 님의 현황</span>
+		<span class="edms_title">김한조 님의 현황</span>
 		<div class="divClear"></div>
 		<!-- 나의현황 카드 시작 -->
 		<div class="row">
@@ -37,13 +41,16 @@
 						<h5 class="card-title">기안서 제목 </h5>
 						<h6 class="card-subtitle mb-2 text-muted">진행상태</h6>
 						<hr>
-						<a href="/bts/edms/edmsMydoc.bts" class="stretched-link btn btn-sm text-primary" class="card-link">자세히 보기</a>
+						<!-- <a href="/bts/edms/edmsMydoc.bts" class="stretched-link btn btn-sm text-primary" class="card-link">자세히 보기</a> -->
+						<span onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsMydoc.bts'" class="stretched-link btn btn-sm text-primary" class="card-link">자세히 보기</span>
 					</div>
 				</div>
 				</div>
 			</c:forEach>
 		</div>
 		<!-- 나의현황 카드 종료 -->
+		
+		<div class="divClear"></div>
 		
 		<div class="more">
 			<span class="more">전체보기</span>
@@ -55,7 +62,7 @@
 
 	<!-- 결재진행 문서목록 시작 -->
 	<div id="edms_accepted">
-		<span class="title">결재완료 목록보기</span>
+		<span class="edms_title">결재완료 목록보기</span>
 		<table class="table table-sm">
 			<thead>
 				<tr>
@@ -96,7 +103,7 @@
 
 	<!-- 결재진행 문서목록 시작 -->
 	<div id="edms_rejected">
-		<span class="title">결재반려 목록보기</span>
+		<span class="edms_title">결재반려 목록보기</span>
 		<table class="table table-sm">
 			<thead>
 				<tr>

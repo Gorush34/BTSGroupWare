@@ -21,7 +21,7 @@ body {font-family: 'Noto Sans KR', sans-serif; }
  *****************************************/
 	
 	/* 개별 컨테이너 제목 */
-	span.title {
+	span.edms_title {
 		font-size: 16pt;
 		font-weight: 500;
 		color: #007bff;
@@ -53,7 +53,7 @@ body {font-family: 'Noto Sans KR', sans-serif; }
 		margin-top: 12px;
 	}	
 	
-	/* 전체보기 div */
+	/* 전체보기 div(왼쪽 오른쪽 하려고) */
 	div.more {
 		display: inline-block;
 	}
@@ -64,7 +64,11 @@ body {font-family: 'Noto Sans KR', sans-serif; }
 		text-align: left;
 		color: #007bff;
 	}
-
+	
+	/* 전체보기 마우스오버 했을 때 커서로 바뀌도록 */
+	span.more {
+		cursor: pointer;
+	}
 /* 
 민정서식 시작
 */
