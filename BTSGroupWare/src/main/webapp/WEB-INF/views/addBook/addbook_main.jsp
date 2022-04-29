@@ -7,30 +7,6 @@
    String ctxPath = request.getContextPath();
   //       /board 
 %>
-<!DOCTYPE html>
-<html>
-<head>
-<jsp:include page="header.jsp"/>
-<style type="text/css">
-
-
-	table#main_tbl {
-		margin:auto;
-		width:90%;
-		text-align:center;
-		font-family: 'Noto Sans KR',맑은 고딕,돋움, malgun gothic, dotum,AppleGothic,Helvetica,sans-serif;
-	}
-	
-	button#mini_btn {
-		padding-top: 5px;
-		padding-left: 5px;
-	    padding-right: 5px;
-	    font-size: 10pt;
-	    height: 30px;
-	    border: solid lightgray 1px;
-	}
-
-</style>
 
 <script type="text/javascript">
 
@@ -43,9 +19,7 @@
 
 </script>
 
-<title>주소록메인페이지</title>
-</head>
-<body>
+
 	<table id="main_tbl">
 		<tr>
 			<td colspan="6" style="text-align: left;"><br><h2>전체주소록</h2><br><br></td>
@@ -125,5 +99,3 @@
 			  <li role="presentation"><button class="btn btn-default" id="mini_btn"> 맨 뒤로 </button></li>
 			</ul>
 			</div>
-</body>
-</html>

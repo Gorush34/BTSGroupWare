@@ -89,7 +89,7 @@
 						
 						<tbody>
 							<tr>
-								<td style="width: 40px; text-align: center;">
+								<td style="width: 40px; text-align: center;" >
 									<input type="checkbox" id="checkAll" />
 								</td>
 								<td style="width: 40px; text-align: center;">
@@ -98,7 +98,7 @@
 								<td style="width: 40px; text-align: center;">
 									<span class="fa fa-paperclip"></span>
 								</td>							
-								<td>정환모</td>
+								<td id="hwanmo">정환모</td>
 								<td>메일 제목 확인 JSP</td>
 								<td>2022.04.25</td>
 							</tr>						
