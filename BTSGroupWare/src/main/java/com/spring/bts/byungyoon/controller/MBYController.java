@@ -20,9 +20,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class MBYController {
 
    
-   // 주소록 테스트
+   // 주소록 메인페이지
    @RequestMapping(value="/addBook/addBook_main.bts")
-   public ModelAndView addbook_main(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+   public ModelAndView addBook_main(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
       
       mav.setViewName("addBook_main.addBook");
       // /WEB-INF/views/addBook/{1}.jsp
@@ -30,13 +30,21 @@ public class MBYController {
       return mav;
    }
    
-   // 주소록 테스트2
+   // 주소록 추가 페이지
    @RequestMapping(value="/addBook/addBook_telAdd.bts")
-   public ModelAndView addbook_teladd(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+   public ModelAndView addBook_telAdd(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
       
       mav.setViewName("addBook_telAdd.addBook");
-      // /WEB-INF/views/addBook/{1}.jsp
-      // /WEB-INF/views/addBook/addbook_teladd.jsp 페이지를 만들어야 한다.
+      
+      return mav;
+   }
+   
+   // 조직도
+   @RequestMapping(value="/addBook/addBook_orgChart.bts")
+   public ModelAndView addBook_orgChart(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+      
+      mav.setViewName("addBook_orgChart.addBook");
+     
       return mav;
    }
 

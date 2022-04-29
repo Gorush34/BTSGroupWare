@@ -20,7 +20,7 @@
 </script>
 
 
-	<table id="main_tbl">
+	<table id="Main_main_tbl">
 		<tr>
 			<td colspan="6" style="text-align: left;"><br><h2>전체주소록</h2><br><br></td>
 			<td>
@@ -39,33 +39,35 @@
 			</td>
 		</tr>
 		<tr>
-			<td colspan="5" style="text-align:left;">
+			<td colspan="7" style="text-align:left;">
 				<div id="fassadd_input">
-						<input type="text" style="border-radius: 10px;" placeholder="이름">
-						<input type="text" style="border-radius: 10px;" placeholder="이메일">
-						<input type="text" style="border-radius: 10px;" placeholder="휴대폰">
+						<input type="text" style="border-radius: 10px; height: 35px;" placeholder="이름">
+						<input type="text" style="border-radius: 10px; height: 35px;" placeholder="이메일">
+						<input type="text" style="border-radius: 10px; height: 35px;" placeholder="휴대폰">
+						<button class="btn btn-default" id="mini_btn" style="background-color:lightgray;">+</button>
+						<button class="btn btn-default">상세정보추가</button>
 				</div>
 			</td>
 		</tr>
 		<tr>
 		<td colspan="10">
 			<ul class="nav nav-pills">
-			  <li role="presentation"><button class="btn btn-default" id="mini_btn">전체</button></li>
-			  <li role="presentation"><button class="btn btn-default" id="mini_btn">ㄱ</button></li>
-			  <li role="presentation"><button class="btn btn-default" id="mini_btn">ㄴ</button></li>
-			  <li role="presentation"><button class="btn btn-default" id="mini_btn">ㄷ</button></li>
-			  <li role="presentation"><button class="btn btn-default" id="mini_btn">ㄹ</button></li>
-			  <li role="presentation"><button class="btn btn-default" id="mini_btn">ㅁ</button></li>
-			  <li role="presentation"><button class="btn btn-default" id="mini_btn">ㅂ</button></li>
-			  <li role="presentation"><button class="btn btn-default" id="mini_btn">ㅅ</button></li>
-			  <li role="presentation"><button class="btn btn-default" id="mini_btn">ㅇ</button></li>
-			  <li role="presentation"><button class="btn btn-default" id="mini_btn">ㅈ</button></li>
-			  <li role="presentation"><button class="btn btn-default" id="mini_btn">ㅊ</button></li>
-			  <li role="presentation"><button class="btn btn-default" id="mini_btn">ㅋ</button></li>
-			  <li role="presentation"><button class="btn btn-default" id="mini_btn">ㅌ</button></li>
-			  <li role="presentation"><button class="btn btn-default" id="mini_btn">ㅍ</button></li>
-			  <li role="presentation"><button class="btn btn-default" id="mini_btn">ㅎ</button></li>
-			  <li role="presentation"><button class="btn btn-default" id="mini_btn">a-z</button></li>
+			  <li role="presentation"><button class="btn btn-default" id="Main_mini_btn">전체</button></li>
+			  <li role="presentation"><button class="btn btn-default" id="Main_mini_btn">ㄱ</button></li>
+			  <li role="presentation"><button class="btn btn-default" id="Main_mini_btn">ㄴ</button></li>
+			  <li role="presentation"><button class="btn btn-default" id="Main_mini_btn">ㄷ</button></li>
+			  <li role="presentation"><button class="btn btn-default" id="Main_mini_btn">ㄹ</button></li>
+			  <li role="presentation"><button class="btn btn-default" id="Main_mini_btn">ㅁ</button></li>
+			  <li role="presentation"><button class="btn btn-default" id="Main_mini_btn">ㅂ</button></li>
+			  <li role="presentation"><button class="btn btn-default" id="Main_mini_btn">ㅅ</button></li>
+			  <li role="presentation"><button class="btn btn-default" id="Main_mini_btn">ㅇ</button></li>
+			  <li role="presentation"><button class="btn btn-default" id="Main_mini_btn">ㅈ</button></li>
+			  <li role="presentation"><button class="btn btn-default" id="Main_mini_btn">ㅊ</button></li>
+			  <li role="presentation"><button class="btn btn-default" id="Main_mini_btn">ㅋ</button></li>
+			  <li role="presentation"><button class="btn btn-default" id="Main_mini_btn">ㅌ</button></li>
+			  <li role="presentation"><button class="btn btn-default" id="Main_mini_btn">ㅍ</button></li>
+			  <li role="presentation"><button class="btn btn-default" id="Main_mini_btn">ㅎ</button></li>
+			  <li role="presentation"><button class="btn btn-default" id="Main_mini_btn">a-z</button></li>
 			</ul>
 		</td>
 		</tr>
@@ -87,15 +89,15 @@
 			</td>
 		</tr>
         <tr>
-           <td colspan="6" style="text-align:center;padding-top: 16%; padding-left: 16%;"><strong>새로운 연락처를 등록하세요</strong><br><br><button class="btn btn-info btn-sm" id="" style="border: solid lightgray 1.5px;" >연락처 추가</button></td>
+           <td colspan="6" style="text-align:center;padding-top: 16%; padding-left: 16%;"><strong>새로운 연락처를 등록하세요</strong><br><br><button class="btn btn-info btn-sm" id="" style="border: solid lightgray 1.5px;" onclick="location.href='http://localhost:9090/bts/addBook/addBook_telAdd.bts'">연락처 추가</button></td>
         </tr>
 	</table>
 			<div style="text-align:center; margin-top: 18%; ">
 			<ul class="nav nav-pills justify-content-center"  >
-			  <li role="presentation"><button class="btn btn-default" id="mini_btn"> 맨 앞 </button></li>
-			  <li role="presentation"><button class="btn btn-default" id="mini_btn"> 1 </button></li>
-			  <li role="presentation"><button class="btn btn-default" id="mini_btn"> 2 </button></li>
-			  <li role="presentation"><button class="btn btn-default" id="mini_btn"> 3 </button></li>
-			  <li role="presentation"><button class="btn btn-default" id="mini_btn"> 맨 뒤로 </button></li>
+			  <li role="presentation"><button class="btn btn-default" id="Main_mini_btn"> 맨 앞 </button></li>
+			  <li role="presentation"><button class="btn btn-default" id="Main_mini_btn"> 1 </button></li>
+			  <li role="presentation"><button class="btn btn-default" id="Main_mini_btn"> 2 </button></li>
+			  <li role="presentation"><button class="btn btn-default" id="Main_mini_btn"> 3 </button></li>
+			  <li role="presentation"><button class="btn btn-default" id="Main_mini_btn"> 맨 뒤로 </button></li>
 			</ul>
 			</div>

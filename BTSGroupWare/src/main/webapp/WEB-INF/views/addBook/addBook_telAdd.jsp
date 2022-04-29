@@ -5,7 +5,7 @@
 
 <%
    String ctxPath = request.getContextPath();
-  //       /board 
+
 %>
 
 
@@ -15,16 +15,15 @@
 </script>
 
 <title>연락처추가페이지</title>
-</head>
-<body>
-	<div id="main_tbl" style="text-align:center;">
+
+	<div id="telAdd_main_tbl" style="text-align:center;">
 	<table>
 		<tr>
 			<td><h2>연락처 추가</h2></td>
 		</tr>
 		<tr>
 			<td><strong>사진</strong></td>
-			<td><img src="<%=ctxPath %>/resources/images/addBook_telAdd_sample.jpg" alt="..." class="img-rounded"><button class="btn btn-default" id="mini_btn">삭제</button></td>
+			<td><img src="<%=ctxPath %>/resources/images/addBook_telAdd_sample.jpg" alt="..." class="img-rounded"><button class="btn btn-default" id="telAdd_mini_btn">삭제</button></td>
 		</tr>
 		<tr>
 			<td><strong>성</strong></td>
@@ -66,17 +65,17 @@
 		<tr>
 			
 			<td><strong>회사주소</strong></td>
-			<td><input type="text" class="form-control" placeholder="회사주소" style="width: 140%;"></td>
+			<td><input type="text" class="form-control" placeholder="회사주소" style="width: 110%;"></td>
 			
 		</tr>
 		<tr>
 			<td><strong>메모사항</strong></td>
-			<td><input type="text" class="form-control" placeholder="메모사항" style="width:200%; height: 80px;"></td>
+			<td><input type="text" class="form-control" placeholder="메모사항" style="width:120%; height: 80px;"></td>
 		</tr>
 		<tr>
 			<td><strong>항목추가</strong></td>
 			<td>
-				<select class="form-control" style="width: 110%;">
+				<select class="form-control" style="width: 120%;">
 					<option>추가할 항목을 선택하세요</option>
 					<option>생일</option>
 					<option>집전화</option>
