@@ -1,7 +1,5 @@
 @charset "UTF-8";
-/*
-body {font-family: Arial, Helvetica, sans-serif, 돋움; }
-*/
+
 #mycontainer   { padding:20px; }
 #myheader      { display: flex; min-height:100px; position: relative; top: 60px;}
 #mycontent      { min-height:900px; position: relative; top:60px; padding-top: 40px;}
@@ -38,10 +36,7 @@ body {font-family: Arial, Helvetica, sans-serif, 돋움; }
 
 * {box-sizing: border-box;}
 
-body { 
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-}
+body {font-family: 'Noto Sans KR', sans-serif; }
 
 .header {
   overflow: hidden;
