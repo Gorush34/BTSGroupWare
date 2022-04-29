@@ -10,7 +10,7 @@
 
 <script type="text/javascript">
 
-// function declaration 
+// function declaration 123123
 
 // 검색 버튼 클릭시 동작하는 함수
 	function goMailSearch() {
