@@ -110,5 +110,20 @@ public class BtsController {
 		return mav;
 	}
 	
+	// #36. 메인 페이지 요청
+		@RequestMapping(value="/index_test.bts")
+		public ModelAndView index_test(ModelAndView mav, HttpServletRequest request) {
+			
+			// getCurrentURL(request); // 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출 
+			
+			// List<String> imgfilenameList = service.getImgfilenameList();
+			
+			// mav.addObject("imgfilenameList", imgfilenameList);
+			mav.setViewName("main/index_test.tiles1");
+			// /WEB-INF/views/tiles1/main/index.jsp 페이지를 만들어야 한다.
+			
+			return mav;
+		}
+	
 	
 }
