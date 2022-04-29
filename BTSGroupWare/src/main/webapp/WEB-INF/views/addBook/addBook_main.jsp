@@ -7,30 +7,6 @@
    String ctxPath = request.getContextPath();
   //       /board 
 %>
-<!DOCTYPE html>
-<html>
-<head>
-<jsp:include page="header.jsp"/>
-<style type="text/css">
-
-
-	table#main_tbl {
-		margin:auto;
-		width:90%;
-		text-align:center;
-		font-family: 'Noto Sans KR',맑은 고딕,돋움, malgun gothic, dotum,AppleGothic,Helvetica,sans-serif;
-	}
-	
-	button#mini_btn {
-		padding-top: 5px;
-		padding-left: 5px;
-	    padding-right: 5px;
-	    font-size: 10pt;
-	    height: 30px;
-	    border: solid lightgray 1px;
-	}
-
-</style>
 
 <script type="text/javascript">
 
@@ -40,18 +16,18 @@
 	    $( "div#fassadd_input" ).slideToggle();
 	  });
 	}); // end of $( document ).ready( function()
+			
+			
 
 </script>
 
-<title>주소록메인페이지</title>
-</head>
-<body>
+
 	<table id="main_tbl">
 		<tr>
 			<td colspan="6" style="text-align: left;"><br><h2>전체주소록</h2><br><br></td>
 			<td>
 				  <div class="d-flex align-items-center">
-				    <input class="form-control" type="search" placeholder="주소록검색" aria-label="Search">
+				    <input class="form-control" type="search" placeholder="화이팅" aria-label="Search">
 				    <button id="searchBtn" class="btn btn-outline-success flex-shrink-0" type="submit">검색</button>
 				  </div>
 			</td>
@@ -67,9 +43,11 @@
 		<tr>
 			<td colspan="5" style="text-align:left;">
 				<div id="fassadd_input">
-						<input type="text" style="border-radius: 10px;" placeholder="이름">
-						<input type="text" style="border-radius: 10px;" placeholder="이메일">
-						<input type="text" style="border-radius: 10px;" placeholder="휴대폰">
+						<input type="text" style="border-radius: 10px; height: 35px;" placeholder="이름">
+						<input type="text" style="border-radius: 10px; height: 35px;" placeholder="이메일">
+						<input type="text" style="border-radius: 10px; height: 35px;"  placeholder="휴대폰">
+						<button class="btn btn-default" style="font-weight:bold; background-color:lightgray;">+</button>
+						<button class="btn btn-default" style="font-weight:bold;">상세정보추가</button>
 				</div>
 			</td>
 		</tr>
@@ -125,5 +103,3 @@
 			  <li role="presentation"><button class="btn btn-default" id="mini_btn"> 맨 뒤로 </button></li>
 			</ul>
 			</div>
-</body>
-</html>
