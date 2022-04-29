@@ -21,9 +21,10 @@
 
   <!-- Font Awesome 5 Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
   
   <!-- 직접 만든 CSS 1 -->
-  <link rel="stylesheet" type="text/css" href="<%=ctxPath %>/resources/css/style_calendar.css" />
+  <link rel="stylesheet" type="text/css" href="<%=ctxPath %>/resources/css/style_calendar.css?after" />
   
   <!-- Optional JavaScript -->
   <script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery-3.6.0.min.js"></script>
