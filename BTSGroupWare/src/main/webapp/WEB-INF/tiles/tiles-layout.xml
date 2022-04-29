@@ -173,6 +173,25 @@
 		<put-attribute name="content" value="/WEB-INF/views/emp/{1}/{2}/{3}.jsp"/>
 	</definition>
 	<!-- 환모 사원 레이아웃 끝 -->
+	
+	<!-- 메인 테스트 레이아웃 시작 -->
+	<definition name="layout-test"  template="/WEB-INF/tiles/layout/layout-test.jsp"> 
+		<put-attribute name="header"  value="/WEB-INF/tiles/common/header.jsp" />
+		<put-attribute name="content" value="" />
+		<put-attribute name="footer"  value="/WEB-INF/tiles/common/footer.jsp" />
+	</definition>
+	
+	<definition name="*.test" extends="layout-test">
+		<put-attribute name="content" value="/WEB-INF/views/tiles1/{1}.jsp"/>
+	</definition>
+	<definition name="*/*.test" extends="layout-test">
+		<put-attribute name="content" value="/WEB-INF/views/tiles1/{1}/{2}.jsp"/>
+	</definition>
+	<definition name="*/*/*.test" extends="layout-test">
+		<put-attribute name="content" value="/WEB-INF/views/tiles1/{1}/{2}/{3}.jsp"/>
+	</definition>
+	<!-- 메인 테스트 레이아웃 시작 -->
+	
 
 </tiles-definitions> 
 
