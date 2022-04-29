@@ -67,6 +67,7 @@ public class HwanmoController {
     public String mailList(HttpServletRequest request) {
 
 	      // 메일 기능 시작
+		  // 민정이가 알아서 하라고 해서 알아서 했음.
 	      
 	      return "mailList.mail";
 	      // *.mail 일 때 /WEB-INF/views/mail/{1}.jsp
@@ -88,15 +89,13 @@ public class HwanmoController {
 	       return "board_test.board";
 	}
 		
-		
 	// 병윤 타일 레이아웃 테스트
-	@RequestMapping(value = "/addBook/addBook_test.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
-    public String addBook_test(HttpServletRequest request) {
+	@RequestMapping(value = "/addBook/addbook_main.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
+    public String addbook_main(HttpServletRequest request) {
 
 		      
-	       return "addBook_test.addBook";
-	}	
-		
+	       return "addbook_main.addBook";
+	}			
 		
 	// 유리 타일 레이아웃 테스트
 	@RequestMapping(value = "/edms/edms_test.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
