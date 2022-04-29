@@ -32,6 +32,8 @@
           font-size: 3.5rem;
         }
       }
+      
+      a{color: black; text-decoration: none !important; cursor: pointer;}
     </style>
 
     
@@ -45,7 +47,7 @@
 <main class="container">
   <div class="d-flex align-items-center p-3 my-3 text-white bg-purple rounded shadow-sm" style="background-color: darkblue; ">
     <div class="lh-1" style="text-align: center;">
-      <h1 class="h6 mb-0 text-white lh-1" style="font-size:25px; font-weight: bold; margin-left: 30px; ">게시판</h1>
+      <h1 class="h6 mb-0 text-white lh-1" style="font-size:22px; font-weight: bold; margin-left: 30px; ">게시판</h1>
     </div>
   </div>
 
@@ -54,26 +56,25 @@
     <div class="d-flex text-muted pt-3">
       <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
 
-      <p class="pb-3 mb-0 small lh-sm border-bottom">
+      <a class="pb-3 mb-0 small lh-sm border-bottom" href="<%= request.getContextPath()%>/notice/list.bts">
         <strong class="d-block text-gray-dark">공지사항</strong>
         	꼭 확인해주세요.
-      </p>
+      </a>
     </div>
     <div class="d-flex text-muted pt-3">
       <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e83e8c"/><text x="50%" y="50%" fill="#e83e8c" dy=".3em">32x32</text></svg>
-
-      <p class="pb-3 mb-0 small lh-sm border-bottom">
+      <a class="pb-3 mb-0 small lh-sm border-bottom" href="<%= request.getContextPath()%>/fileboard/list.bts">
         <strong class="d-block text-gray-dark">자료실</strong>
         	자료실 입니다.
-      </p>
+      </a>
     </div>
     <div class="d-flex text-muted pt-3">
       <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#6f42c1"/><text x="50%" y="50%" fill="#6f42c1" dy=".3em">32x32</text></svg>
 
-      <p class="pb-3 mb-0 small lh-sm border-bottom">
+      <a class="pb-3 mb-0 small lh-sm border-bottom" href="<%= request.getContextPath()%>/board/list.bts">
         <strong class="d-block text-gray-dark">자유게시판</strong>
         	자유롭게 이용해주세요.
-      </p>
+      </a>
     </div>
   </div>
 
@@ -82,42 +83,42 @@
     <div class="d-flex text-muted pt-3">
       <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
 
-      <p class="pb-3 mb-0 small lh-sm border-bottom">
+      <a class="pb-3 mb-0 small lh-sm border-bottom">
         <strong class="d-block text-gray-dark">관리자</strong>
         	공지사항공지사항공지사항공지사항공지사항공지사항공지사항공지사항공지사항공지사항공지사항공지사항공지사항공지사항공지사항공지사항
-      </p>
+      </a>
     </div>
     <div class="d-flex text-muted pt-3">
       <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e83e8c"/><text x="50%" y="50%" fill="#e83e8c" dy=".3em">32x32</text></svg>
 
-      <p class="pb-3 mb-0 small lh-sm border-bottom">
+      <a class="pb-3 mb-0 small lh-sm border-bottom">
         <strong class="d-block text-gray-dark">총무팀</strong>
         	자료입니다.자료입니다.자료입니다.자료입니다.자료입니다.자료입니다.자료입니다.자료입니다.자료입니다.자료입니다.자료입니다.자료입니다.
-      </p>
+      </a>
     </div>
     <div class="d-flex text-muted pt-3">
       <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#6f42c1"/><text x="50%" y="50%" fill="#6f42c1" dy=".3em">32x32</text></svg>
 
-      <p class="pb-3 mb-0 small lh-sm border-bottom">
+      <a class="pb-3 mb-0 small lh-sm border-bottom">
         <strong class="d-block text-gray-dark">사원</strong>
         	잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.
-      </p>
+      </a>
     </div>
     <div class="d-flex text-muted pt-3">
       <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#6f42c1"/><text x="50%" y="50%" fill="#6f42c1" dy=".3em">32x32</text></svg>
 
-      <p class="pb-3 mb-0 small lh-sm border-bottom">
+      <a class="pb-3 mb-0 small lh-sm border-bottom">
         <strong class="d-block text-gray-dark">사원</strong>
         	잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.
-      </p>
+      </a>
     </div>
     <div class="d-flex text-muted pt-3">
       <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#6f42c1"/><text x="50%" y="50%" fill="#6f42c1" dy=".3em">32x32</text></svg>
 
-      <p class="pb-3 mb-0 small lh-sm border-bottom">
+      <a class="pb-3 mb-0 small lh-sm border-bottom">
         <strong class="d-block text-gray-dark">사원</strong>
         	잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.?
-      </p>
+      </a>
     </div>
   </div>
 
