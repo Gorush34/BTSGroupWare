@@ -6,7 +6,6 @@
     
 <% String ctxPath = request.getContextPath(); %>
 
-<link rel="stylesheet" type="text/css" href="<%=ctxPath %>/resources/css/style_calendar.css" />
 <%-- 캘린더(일정) 사이드 tiles 만들기 --%>
 
 <style type="text/css">
@@ -49,11 +48,11 @@
 			alert("추가할 일정을 입력하세요");
 			return; 
 		}
-		else{
+<%--		else{
 			$.ajax({
 				url:"<%= ctxPath%>/addCalenderName.bts",
 				data:{"cal_name":$("input#cal_name").val()
-					, "fk_사원번호":($"input#fk_사원번호").val()},
+					, "fk_emp_no":($"input#fk_emp_no").val()},
 				type:"POST",
 				dataType:"JSON",
 				success:function(json){
@@ -63,7 +62,7 @@
 		            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 		        }
 			});
-		}
+		} --%>
 	}// end of function goAddCheckbox()------------------------------------------------
 			
 </script>
@@ -71,16 +70,19 @@
 	<div>
 	   <div id="sidebar" style="font-size: 11pt;">
 		 <h4>캘린더</h4>
-			<button type="button" class="btn btn-outline-primary btn-lg btn-block" style="margin: 15px 10px 15px 10px;" onclick="<%= ctxPath%>/schedualRegister.bts">일정등록</button>
-			<ul style="list-style-type: none;">
+		 
+		   <input type="hidden" value="${sessionScope }" id="fk_emp_no">
+		 
+			<button type="button" class="btn btn-outline-primary btn-lg " style="margin: 15px auto; width:200px; display:block;" onclick="<%= ctxPath%>/schedualRegister.bts">일정등록</button>
+			<ul style="list-style-type: none; padding: 10px;">
 				<li style="margin-bottom: 15px;">
 					<div id="calenderbtn1" class="calenderbtn">내 캘린더</div>
 						<div id="slideTogglebox1"  class="slideTogglebox">
-							<table>
+							<table style="margin: 0 20px;">
 								<tbody>
 									<tr id="schecheck">
 										<td><input type="checkbox" name="mySche" id="mySche" style="vertical-align: top;"/></td>
-					   					<td><label for="mySche"><span style="margin-left: 5px;">내 일정</span></label></td>
+					   					<td><label for="mySche"><span style="margin-left: 5px;">내 일정<i class="bi bi-trash3"></i></span></label></td>
 					   				</tr>	
 				   				</tbody>	
 			   				</table>	
@@ -110,7 +112,7 @@
 				<li style="margin-bottom: 15px;">
 					<div id="calenderbtn2" class="calenderbtn">관심 캘린더</div>
 						<div id="slideTogglebox2"  class="slideTogglebox">	
-							<table>
+							<table style="margin: 0 20px;">
 								<tbody>
 									<tr id="schecheck">
 										<td><input type="checkbox" name="allSche" id="allSche" style="vertical-align: top;"/></td>
@@ -146,7 +148,7 @@
 			</ul>
 			<hr>
 			
-			<table>
+			<table style="margin: 20px;">
 				<tbody>
 					<tr id="schecheck">
 						<td><input type="checkbox" name="comSche" id="comSche" style="vertical-align: top;"/></td>
