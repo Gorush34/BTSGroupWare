@@ -1,363 +1,116 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<% String ctxPath = request.getContextPath(); %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+
+<%
+   String ctxPath = request.getContextPath();
+%>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    
-<style type="text/css">
-/* div, span {
-	border: solid 1px gray;
-} */
-div.go-gadget-content {
-	display: inline-block;
-	border: solid 1px #c9c9c9;
-	border-radius: 5px;
-	margin-top: 20px;
-}
-div.left_section {
-	width: 320px;
-}
-div.profile {
-	padding: 40px 40px 10px;
-}
-img.emp_photo {
-	display: block;
-	width: 82px;
-	height: 82px;
-	border-radius: 50%;
-	margin: 0 auto;
-}
-span.info {
-	display: block;
-	text-align: center;
-	margin: 0 auto;
-}
-span.profileInfo {
-	text-align: center;
-	font-size: 18px;
-	font-weight: bold;
-}
-span.company {
-	display: inline-block;
-	width: 100px;
-	text-align: center;
-	color: #919191;
-}
-li.today_list {
-	line-height: 30px;
-}
-span.mybadge {
-	margin-left: 130px;
-}
-ul#btn_list_block {
-	margin-right: 0;
-}
-li.btn_list_li {
-	border: solid 1px #c9c9c9;
-	width: 150px;
-	height: 70px;
-	margin: 0 auto 10px auto;
-	padding: 15px 8px;
-}
-li.odd {
-	margin-right: 10px;
-}
-ul {
-	list-style: none;
-}
-ul.type_btn_list_block {
-	padding-left: 0;
-}
-li.odd, li.even {
-	display: inline-block;
-}
-div.go-gadget-header, div.go_gadget_header {
-	padding: 16px 21px 4px;
-}
-span.title {
-	padding: 0px 2px 0px 0px;
-	font-size: 16px;
-	font-weight: bold;
-}
-p.txt {
-	font-size: 13px;
-	padding: 10px 21px 5px;
-}
-div.content-section-2 {
-	width: 702px;
-}
-ul.dashboard_tab.gadget_tab {
-	padding: 0px 24px;
-}
-ul.dashboard_tab.gadget_tab > li {
-	display: inline-block;
-}
-ul.dashboard_tab.gadget_tab > li > a {
-	font-size: 13px;
-	padding: 0px 10px;
-}
-hr {
-	margin: 0;
-}
-li.integrated {
-	padding: 6px 36px 6px 21px;
-}
-li.board_menu, li.note_menu {
-	cursor: pointer;
-}
-.whereBoard, .whereNote {
-	border-bottom: solid 1px #000;
-}
-.whereBoard a, .whereNote a {
-	color: #000;
-	font-weight: bold;
-}
-ul.mailList {
-	padding: 20px 0;
-}
-div.content-section-3 {
-	width: 230px;
-}
-img.ic_dashboard {
-	width: 30px;
-	height: 28px;
-}
-div#section_1, div#section_2 {
-	display: inline-block;
-}
-div#section_1 {
-	float: left;
-}
-div#section_2_1, div#section_2_2 {
-	display: inline-block;
-}
-div#section_2_2 {
-	float: right;
-}
-div.ehr_stat_data.summary {
-	position: relative;
-	color: #333;
-	font-size: 13px;
-	padding: 0 21px 45px;
-}
-p#workTime {
-	color: #000;
-	font-size: 28px;
-}
-b {
-	font-size: 20px;
-	margin: 0 0 0 2px;
-}
-div#timemin {
-	position: absolute;
-	font-size: 13px;
-	margin: 0 0 0 -40px;
-	top: 60%;
-}
-div#bar {
-	position: absolute;
-	border: dotted 1px red;
-	width: 2px;
-	height: 30px;
-	margin: -10px 0 0;
-	/* top: 55%; */
-}
-div#timemax {
-	position: absolute;
-	font-size: 13px;
-	right: 10%;
-	top: 20%;
-}
-div.board_card.cardItem {
-	width: 200px;
-	height: 45px;
-	color: #333;
-	font-size: 13px;
-	background-color: #F0F5FC;
-	padding: 0 10px 10px;
-	margin: 5px 0 5px 15px;
-}
-div.board_card.cardItem > div.title {
-	padding: 16px 0 4px;
-	cursor: pointer;
-}
 
-i#idx-icon {
-	min-width:40px;
-	text-align: center;
-}
 
-a#btn_a {
-	text-decoration: none !important;
-	color: black;
-	font-weight: bold;
-}
+<script type="text/javascript">
 
-</style>
-
-<script>
 	$(document).ready(function(){
-
-		loopshowNowTime();
 		
 	});// end of $(document).ready(function(){})----------------------
-	
-	// 현재 시간
-	function showNowTime() {
-		
-		var now = new Date();
-		
-		var month = now.getMonth() + 1;
-		
-		if(month < 10) {
-			month = "0" + month;
-		}// end of if(month < 10) {}----------------------
-		
-		var date = now.getDate();
-		
-		if(date < 10) {
-			date = "0" + date;
-		}// end of if(date < 10) {}--------------------
-		
-		var week = new Array('일', '월', '화', '수', '목', '금', '토');
-		var dayOfWeek = now.getDay();
-		
-		var strNow = now.getFullYear() + "년" + month + "월" + date + "일" + "(" + week[dayOfWeek] + ")";
-		$("span#timelineGadgetDate").html(strNow);
-		
-		var hour = "";
-		
-		if(now.getHours() < 10) {
-			hour = "0" + now.getHours();
-		} else {
-			hour = now.getHours();
-		}// end of if(now.getHours() < 10) {}----------------------
-		
-		var minute = "";
-		
-		if(now.getMinutes() < 10) {
-			minute = "0" + now.getMinutes();
-		} else {
-			minute = now.getMinutes();
-		}// end of if(now.getMinutes() < 10) {}----------------------
-		
-		var second = "";
-		
-		if(now.getSeconds() < 10) {
-			second = "0" + now.getSeconds();
-		} else {
-			second = now.getSeconds();
-		}// end of if(now.getSeconds < 10) {} --------------------
-		
-		var strTime = hour + ":" + minute + ":" + second;
-		$("span#timelineGadgetTime").html(strTime);
-	   
-	}// end of function showNowTime() -----------------------------
-	
-	// 반복
-	function loopshowNowTime() {
-		
-		showNowTime();
-		
-		var timejugi = 1000;
-		
-		setTimeout(function(){
-			loopshowNowTime();
-		}, timejugi);
-	      
-	}// end of function loopshowNowTime() {} --------------------------
-	
 
+	
 </script>
 
-<div id="go-dashboard-10" class="go-dashboard go_dashboard_5_1">
-	<!-- 1 block -->
-	<div class="col-lg-3 go-gadget-column gadget-col-1 gadget_section1 layout_fixed" id="section_1" data-columnid="1">
-		<div class="go-gadget go-gadget-17">
-			<!-- <div class="go-gadget-header go_gadget_header">
-				<div class="gadget_h1">
-					<span class="title">투데이 프로필</span>
-					<span class="btn-mgmt btn_side_wrap">
-						<span class="btn-edit btn_wrap"><span class="ic_dashboard2 ic_d_mgmt" title="편집"></span></span>
-						<span class="btn-remove btn_wrap"><span class="ic_dashboard2 ic_d_delete" title="삭제"></span></span>
-					</span>
-				</div>
-			</div> -->
-			<div class="go-gadget-config gadget_edit" style="display:none">
-				<p class="desc">
-					<span class="txt_caution error-msg-wrapper"></span>
-				</p>
-				<form name="gadget_options" class="gadget-options-form"></form>
-				<footer class="btn_layer_wrap">
-					<a class="btn_major_s btn-option-save"><span class="txt">저장</span></a>
-					<a class="btn_minor_s btn-option-cancel"><span class="txt">취소</span></a>
-				</footer>
-			</div>
-			<div class="go-gadget-content">
-				<div class="gadget_design_wrap left_section">
-					<div class="profile">
-						<span class="photo">
-							<c:choose>
-								<c:when test="${not empty sessionScope.loginemp.photo_route}"><img src="<%= ctxPath%>/resources/images/${sessionScope.loginemp.photo_route}" class="emp_photo" title="${sessionScope.loginemp.emp_name}"></c:when>
-								<c:otherwise><img src="<%= ctxPath%>/resources/images/photo_profile_small.jpg" class="emp_photo" title="${sessionScope.loginemp.emp_name}"></c:otherwise>
-							</c:choose>
-						</span>
-						<br>
-						<span class="info">
-							<span class="profileInfo emp_name" title="${sessionScope.loginemp.emp_name}">${sessionScope.loginemp.emp_name}</span>
-							<span class="profileInfo position_name">${sessionScope.loginemp.position_name}</span>
-							<br>
-							<span class="company">파이널 1팀</span>
-						</span>
-					</div>
-					<ul class="type_simple_list today_list">
-						<li class="summary-approval today_list">
-							<a href="<%=ctxPath %>/elecapproval/waiting.os" data-bypass="true">
-								<span class="type">
-									<span class="ic_dashboard2 ic_type_approval" title="approval"></span>
-								</span>
-								<span class="txt">결재대기 문서</span>
-								<span class="badge badge_zero mybadge" id="approvalBadge">0</span>
-							</a>
-						</li>
-						<li class="summary-calendar today_list">
-							<a href="<%=ctxPath %>/goCalendar.os" data-bypass="true">
-								<span class="type">
-									<span class="ic_dashboard2 ic_type_cal" title="calendar"></span>
-								</span>
-								<span class="txt">오늘의 일정</span>
-								<span class="badge mybadge" id="calendarBadge">8</span>
-							</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<div class="go-gadget go-gadget-21">
-			<!-- <div class="go-gadget-header go_gadget_header">
-				<div class="gadget_h1">
-					<span class="title">Quick Menu</span>
-					<span class="btn-mgmt btn_side_wrap">
-						<span class="btn-edit btn_wrap"><span class="ic_dashboard2 ic_d_mgmt" title="편집"></span></span>
-						<span class="btn-remove btn_wrap"><span class="ic_dashboard2 ic_d_delete" title="삭제"></span></span>
-					</span>
-				</div>
-			</div> -->
-			<div class="go-gadget-config gadget_edit" style="display:none">
-				<p class="desc">
-					<span class="txt_caution error-msg-wrapper"></span>
-				</p>
-				<form name="gadget_options" class="gadget-options-form"></form>
-				<footer class="btn_layer_wrap">
-					<a class="btn_major_s btn-option-save"><span class="txt">저장</span></a>
-					<a class="btn_minor_s btn-option-cancel"><span class="txt">취소</span></a>
-				</footer>
-			</div>
-			<div class="go-gadget-content" style="border: none;">
-				<div class="gadget_design_wrap left_section">
+
+
+<div class="container_fluid">
+	    <div class="row">
+        <!-- 왼쪽 섹션 시작 -->
+        <div class="col-sm-2 gadget_design_wrap" id="section_left">
+        	<!-- 사원정보 시작 -->
+	        <div id="empInfo">
+	        	<div class="profile">
+	        		<span class="photo">
+	        			<span class="photo">
+	        				<img src="<%= ctxPath%>/resources/images/nol.png" title="" />
+	        			</span>
+	        		</span>
+	        		<span class="info">
+	        			<span class="name" title="">정환모</span>
+	        			<span class="position">사원</span>
+	        			<br>
+	        			<span class="part">인사과</span>
+	        		</span>
+	        	</div>
+	        
+		        <ul class="type_simple_list today_list">
+		        	<li class="summary-approval2">
+		        		<a href="">
+		        			<span class="type">
+		        				<span class="ic_dashboard2 ic_type_approval2" title="approval2"></span>
+		        			</span>
+		        			<span class="text">결재 수신 문서</span>
+		        			<span class="badge">0</span>
+		        		</a>
+		        	</li>
+		        	<li class="summary-approval">
+	 		        	<a href="">
+		        			<span class="type">
+		        				<span class="ic_dashboard2 ic_type_approval" title="approval"></span>
+		        			</span>
+		        			<span class="text">결재할 문서</span>
+		        			<span class="badge">0</span>
+		        		</a>
+		        	</li>
+		        	<li class="summary-calendar">
+	     		        <a href="">
+		        			<span class="type">
+		        				<span class="ic_dashboard2 ic_type_calendar" title="calendar"></span>
+		        			</span>
+		        			<span class="text">오늘의 일정</span>
+		        			<span class="badge">0</span>
+		        		</a>
+		        	</li>
+		        	<li class="summary-community">
+		        		<a href="">
+		        			<span class="type">
+		        				<span class="ic_dashboard2 ic_type_community" title="community"></span>
+		        			</span>
+		        			<span class="text">내 커뮤니티 새글</span>
+		        			<span class="badge">0</span>
+		        		</a>
+		        	</li>
+		        	<li class="summary-asset">
+		        		<a href="">
+		        			<span class="type">
+		        				<span class="ic_dashboard2 ic_type_asset" title="asset"></span>
+		        			</span>
+		        			<span class="text">내 예약/대여 현황</span>
+		        			<span class="badge">0</span>
+		        		</a>
+		        	</li>
+		        	<li class="summary-report">
+		        		<a href="">
+		        			<span class="type">
+		        				<span class="ic_dashboard2 ic_type_report" title="report"></span>
+		        			</span>
+		        			<span class="text">작성할 보고</span>
+		        			<span class="badge">0</span>
+		        		</a>
+		        	</li>	
+		        	<li class="summary-survey">
+		        		<a href="">
+		        			<span class="type">
+		        				<span class="ic_dashboard2 ic_type_survey" title="survey"></span>
+		        			</span>
+		        			<span class="text">참여할 문서</span>
+		        			<span class="badge">0</span>
+		        		</a>
+		        	</li>	
+		        </ul>
+		    </div>
+		    <!-- 사원정보 끝 -->
+		    <!-- 퀵메뉴 시작 -->
+		    <div class="go-gadget-content" style="border: none;">
+				<div class="gadget_design_wrap left_section" id="gadget_design_wrap">
 					<ul class="type_btn_list_block" id="btn_list_block">
 						<li class="odd btn_list_li" style="border-top-left-radius: 5px;">
 							<a href="" data-bypass="true" data-popup="width=1024,height=790,scrollbars=yes,resizable=yes" id="btn_a">
@@ -394,343 +147,291 @@ a#btn_a {
 					</ul>
 				</div>
 			</div>
-		</div>
-		<div class="go-gadget go-gadget-30">
-			 <div class="go-gadget-header go_gadget_header">
-				<div class="gadget_h1">
-					<span class="title">근태관리</span>
-					<span class="btn-mgmt btn_side_wrap">
-						<span class="btn-edit btn_wrap">
-							<span class="ic_dashboard2 ic_d_mgmt" title="편집"></span>
-						</span>
-						<span class="btn-remove btn_wrap">
-							<span class="ic_dashboard2 ic_d_delete" title="삭제"></span>
-						</span>
-					</span>
-				</div>
-			</div> 
-			<div class="go-gadget-config gadget_edit" style="display:none">
-				<p class="desc">
-					<span class="txt_caution error-msg-wrapper"></span>
-				</p>
-				<form name="gadget_options" class="gadget-options-form"></form>
-				<footer class="btn_layer_wrap">
-					<a class="btn_major_s btn-option-save"><span class="txt">저장</span></a>
-					<a class="btn_minor_s btn-option-cancel"><span class="txt">취소</span></a>
-				</footer>
-			</div>
-			<div class="go-gadget-content timeline_contents_wrap">
-				<div class="gadget_design_wrap left_section" id="attendTable">						
-					<div class="go-gadget-header go_gadget_header">							
-						<div class="gadget_h1">								
-							<span class="type">
-								<span class="ic_dashboard2 ic_type_attend" title="근태관리"></span>
-							</span>								
-							<span class="title">근태관리</span>							
-						</div>						
-					</div>						
-					<div class="attend_contents_wrap2">								
-						<p class="txt"> 
-							<span id="timelineGadgetDate"></span>&nbsp;
-							<span class="time" id="timelineGadgetTime"></span>
-						</p>	                                                  
-						<div class="ehr_stat_data summary">                             
-							<p class="stat_tit" id="workTime"><span id="workHour"></span><b>h</b> <span id="workMinute"></span><b>m</b></p>                             
-							<div class="type_flexible_summary">                                 
-								<div class="wrap_progress" id="wrap_progress">                                     
-									<div class="time min" id="timemin" title="주간 근무시간은 40h입니다." style="left:76%">최소 40h</div>                                     
-									<div class="bar" id="bar" style="left:70%"></div>                                     
-									<div class="time max" id="timemax" title="최대 근무시간은 52h입니다.">최대 52h</div>  
-									<div class="progress" style="background-color: #E9E9E9; width: 269px; height: 10px;">                                   
-										<div class="progress-bar" id="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="background-color: #44D1A5;">                                         
-											<div class="part_default" title="선택근무" style="width:0%"></div>                                         
-											<div class="part_overtime" title="초과근무(연장)" style="width:0%"></div>                                     
-										</div>              
-									</div>                   
-								</div>                             
-							</div>                         
-						</div>                                                  												
-					</div>					
-				</div>
-			</div>
-		</div>
-		<div class="go-gadget go-gadget-15">
-			<div class="go-gadget-config gadget_edit" style="display:none">
-				<p class="desc">
-					<span class="txt_caution error-msg-wrapper"></span>
-				</p>
-				<form name="gadget_options" class="gadget-options-form"></form>
-				<footer class="btn_layer_wrap">
-					<a class="btn_major_s btn-option-save"><span class="txt">저장</span></a>
-					<a class="btn_minor_s btn-option-cancel"><span class="txt">취소</span></a>
-				</footer>
-			</div>
-		</div>
-	</div>
-
-	<div class="col-lg-9 gadget_layout_wrapper" id="section_2">
-		<!-- 2 block -->
-		<div class="col-lg-9 gadget_layout_wrapper2" id="section_2_1">
-			<div class="gadget_layout_wrapper3">
-				<div class="go-gadget-column gadget-col-2 gadget_section2" data-columnid="2">
-					<div class="go-gadget go-gadget-19">
-						<div class="go-gadget-config gadget_edit" style="display:none">
-							<p class="desc">
-								<span class="txt_caution error-msg-wrapper"></span>
-							</p>
-							<form name="gadget_options" class="gadget-options-form"></form>
-							<footer class="btn_layer_wrap">
-								<a class="btn_major_s btn-option-save"><span class="txt">저장</span></a>
-								<a class="btn_minor_s btn-option-cancel"><span class="txt">취소</span></a>
-							</footer>
-						</div>
-						<div class="go-gadget-content content-section-2">
-							<div data-cid="view73">
-								<div class="gadget_design_wrap gadget_board_wrap">
-									<div class="go_gadget_header">
-						    			<div class="gadget_h1">
-						        			<span class="type">
-						        				<span class="ic_dashboard2 ic_type_bbs" title="전사게시판 최근글"></span>
-						        			</span>
-						        			<span class="title">전사게시판 최근글</span>
-						    			</div>
-									</div>
-									<div class="design_content_header">
-										<div class="tab_control tab_btn_prev tab_disabled">
-											<span class="btn_wrap">
-												<span class="ic_prev" title="이전"></span>
-											</span>
-										</div>
-										<div id="gadget_tabs" class="swipe gadget_tab_wrap" style="visibility: visible;">
-											<div class="swipe-wrap" style="width: 596px;">
-												<div data-index="0" style="width: 596px; left: 0px; transition-duration: 0ms; transform: translate(0px, 0px) translateZ(0px);">
-													<ul class="dashboard_tab gadget_tab">
-														<li class="on board_menu" id="board_1" data-type="250">
-															<a data-bypass="" title="전체" onclick="integratedBoard();">전체</a>
-														</li>
-														<li class="on board_menu" id="board_2" data-type="250">
-															<a data-bypass="" title="전사 공지" onclick="noticeBoard();">전사 공지</a>
-														</li>
-														<li class="on board_menu" id="board_3" data-type="250">
-															<a data-bypass="" title="일반 게시판" onclick="generalBoard();">일반 게시판</a>
-														</li>
-														<li class="on board_menu" id="board_4" data-type="250">
-															<a data-bypass="" title="자료 게시판" onclick="fileBoard();">자료 게시판</a>
-														</li>
-													</ul>
-													<hr>
-												</div>
-											</div>
-										</div>
-									</div>
-									<ul class="type_simple_list simple_list_notice" id="postList">
-									</ul>
-									<div class="tool_bar tool_absolute" id="pageControl">
-										<div class="dataTables_paginate paging_full_numbers">
-											<a class="previous paginate_button_disabled" data-value="-1" data-type="prev" id="prev" data-bypass="true"></a>
-											<a class="next paginate_button_disabled" data-value="1" data-type="next" id="next" data-bypass="true"></a>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					
-					<div class="go-gadget go-gadget-51 gadget_design_border">
-						<div class="go-gadget-config gadget_edit" style="display:none">
-							<p class="desc">
-								<span class="txt_caution error-msg-wrapper"></span>
-							</p>
-							<form name="gadget_options" class="gadget-options-form"></form>
-							<footer class="btn_layer_wrap">
-								<a class="btn_major_s btn-option-save"><span class="txt">저장</span></a>
-								<a class="btn_minor_s btn-option-cancel"><span class="txt">취소</span></a>
-							</footer>
-						</div>
-					</div>
-					
-					<div class="go-gadget go-gadget-25">
-						<div class="go-gadget-config gadget_edit" style="display:none">
-							<p class="desc">
-								<span class="txt_caution error-msg-wrapper"></span>
-							</p>
-							<form name="gadget_options" class="gadget-options-form"></form>
-							<footer class="btn_layer_wrap">
-								<a class="btn_major_s btn-option-save"><span class="txt">저장</span></a>
-								<a class="btn_minor_s btn-option-cancel"><span class="txt">취소</span></a>
-							</footer>
-						</div>
-						<div class="go-gadget-content content-section-2">
-							<div class="gadget_design_wrap gadget_board_wrap">
-								<div class="go_gadget_header">
-									<div class="gadget_h1">
-										<span class="type">
-											<span class="ic_dashboard2 ic_type_mail" title="메일함"></span>
-										</span>
-										<span class="title">쪽지함</span>
-									</div>
-								</div>
-								<div id="tab">
-									<div class="design_content_header">
-										<div class="tab_control tab_btn_prev tab_disabled">
-											<span class="btn_wrap">
-												<span class="ic_prev" title="이전"></span>
-											</span>
-										</div>
-										<div id="gadget_tabs" class="swipe gadget_tab_wrap" style="visibility: visible;">
-											<div class="swipe-wrap" style="width: 596px;">
-												<div data-index="0" style="width: 596px; left: 0px; transition-duration: 0ms; transform: translate(0px, 0px) translateZ(0px);">
-													<ul class="dashboard_tab gadget_tab">
-														<li class="on note_menu" id="note_1" data-type="folder/Inbox">
-															<a data-bypass="" title="받은쪽지함" onclick="receivedAndSendNote(1);">받은쪽지함</a>
-														</li>
-														<li class="on note_menu" id="note_2" data-type="folder/Sent">
-															<a data-bypass="" title="보낸쪽지함" onclick="receivedAndSendNote(2);">보낸쪽지함</a>
-														</li>
-														<li class="on note_menu" id="note_3" data-type="folder/Reserved">
-															<a data-bypass="" title="중요쪽지함" onclick="receivedAndSendNote(3);">중요쪽지함</a>
-														</li>
-														<li class="on note_menu" id="note_4" data-type="quick/flaged">
-															<a data-bypass="" title="임시쪽지함" onclick="receivedAndSendNote(4);">임시쪽지함</a>
-														</li>
-													</ul>
-													<hr>
-												</div>
-											</div>
-										</div>
-										<div class="tab_control tab_btn_next tab_disabled">
-											<span class="btn_wrap">
-												<span class="ic_next" title="다음"></span>
-											</span>
-										</div>
-									</div>
-								</div>
-								<div id="items">
-									<div data-cid="view66">
-										<ul class="mailList type_simple_list simple_list_mail" id="noteList">
-										</ul>
-										<div class="tool_bar tool_absolute">
-											<div class="dataTables_paginate paging_full_numbers">
-												<a data-bypass="true" class="previous paginate_button  paginate_button_disabled " title="이전"></a>
-												<a data-bypass="true" class="next paginate_button  paginate_button_disabled " title="다음"></a>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div></div>
-							</div>
-						</div>
-					</div>
-					
-					<div class="go-gadget go-gadget-27">
-						<div class="go-gadget-config gadget_edit" style="display:none">
-							<p class="desc">
-								<span class="txt_caution error-msg-wrapper"></span>
-							</p>
-							<form name="gadget_options" class="gadget-options-form"></form>
-							<footer class="btn_layer_wrap">
-								<a class="btn_major_s btn-option-save"><span class="txt">저장</span></a>
-								<a class="btn_minor_s btn-option-cancel"><span class="txt">취소</span></a>
-							</footer>
-						</div>
-					</div>
-				</div>
-			</div>
+			<!-- 퀵메뉴 끝 -->
 			
-			<div class="gadget_layout_wrapper4">
-				<div class="go-gadget-column gadget-col-4 gadget_section2" data-columnid="4"></div>
-				<div class="go-gadget-column gadget-col-5 gadget_section2" data-columnid="5"></div>
-			</div>
-		</div>
-			
-		<!-- 3 block -->
-		<div class="col-lg-3 go-gadget-column gadget-col-3 gadget_section3 layout_fixed" id="section_2_2" data-columnid="3">
-			<div class="go-gadget go-gadget-24 gadget_design_border">
-			<div class="go-gadget-config gadget_edit" style="display:none">
-				<p class="desc">
-					<span class="txt_caution error-msg-wrapper"></span>
-				</p>
-				<form name="gadget_options" class="gadget-options-form"></form>
-				<footer class="btn_layer_wrap">
-					<a class="btn_major_s btn-option-save"><span class="txt">저장</span></a>
-					<a class="btn_minor_s btn-option-cancel"><span class="txt">취소</span></a>
-				</footer>
-			</div>
-			<div class="go-gadget-content content-section-3">
-				<div class="gadget_design_wrap">
-					<div class="go-gadget-header go_gadget_header">
-						<div class="gadget_h1">
-						<span class="type"><span class="ic_dashboard2 ic_type_todo" title="예약"></span></span>
-						<span class="title">ToDO+ 카드 목록</span>
-						</div>
-					</div>
-					<div class="board_card_wrap">
-						<div class="layout_left_wrap" id="card_todo_card">
-						</div>
-					</div>
-					<div class="tool_bar tool_absolute">
-					    <div class="dataTables_paginate paging_full_numbers">
-					        <a data-bypass="true" class="previous paginate_button paginate_button_disabled btnDisable" title="이전"></a>
-					        <a data-bypass="true" class="next paginate_button " title="다음"></a>
-					    </div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="go-gadget go-gadget-24">
-			<div class="go-gadget-config gadget_edit" style="display:none">
-				<p class="desc">
-					<span class="txt_caution error-msg-wrapper"></span>
-				</p>
-				<form name="gadget_options" class="gadget-options-form"></form>
-				<footer class="btn_layer_wrap">
-					<a class="btn_major_s btn-option-save"><span class="txt">저장</span></a>
-					<a class="btn_minor_s btn-option-cancel"><span class="txt">취소</span></a>
-				</footer>
-			</div>
-		</div>
-			
-			<div class="go-gadget go-gadget-24">
-				<!-- <div class="go-gadget-header go_gadget_header">
-					<div class="gadget_h1">
-						<span class="title">가입 커뮤니티 바로가기</span>
-						<span class="btn-mgmt btn_side_wrap">
-							<span class="btn-edit btn_wrap"><span class="ic_dashboard2 ic_d_mgmt" title="편집"></span></span>
-							<span class="btn-remove btn_wrap"><span class="ic_dashboard2 ic_d_delete" title="삭제"></span></span>
-						</span>
-					</div>
-				</div> -->
-				<div class="go-gadget-config gadget_edit" style="display:none">
-					<p class="desc">
-						<span class="txt_caution error-msg-wrapper"></span>
-					</p>
-					<form name="gadget_options" class="gadget-options-form"></form>
-					<footer class="btn_layer_wrap">
-						<a class="btn_major_s btn-option-save"><span class="txt">저장</span></a>
-						<a class="btn_minor_s btn-option-cancel"><span class="txt">취소</span></a>
-					</footer>
-				</div>
-				<div class="go-gadget-content content-section-3">
-					<div class="gadget_design_wrap">
-						<div class="go_gadget_header">
-							<div class="gadget_h1">
-							    <span class="type"><span class="ic_dashboard2 ic_type_login"></span></span>
-							    <span class="title">최근 로그인 정보</span>
-							</div>
-						</div>
-						<table class="type_normal table_fix gadget_login_info">
-							<thead>
-							    <tr>
-							        <th class="time sorting_disabled" style="padding: 0 0 0 21px;"><span class="title_sort">일시</span></th>
-							        <th class="ip sorting_disabled"><span class="title_sort">IP</span></th>
+			<!-- 생일자 시작 -->
+        	<div class="go-gadget-content" id="empBirthday">
+	        	<div class="go_gadget_header empBirthday_title">
+	        		<div class="gadget_h1">
+		        		<span id="title">임직원 생일</span>
+		        	</div>
+		        	<div class="birth_month" style="border-bottom: solid 1px dee2e6;">
+	        			<span style="font-size:20px; font-weight:bold;">2022.04</span>
+        				<div id="birth_prevenext">
+        					<a href=""><i class="fas fa-angle-left"></i></a>&nbsp;&nbsp;
+        					<a href=""><i class="fas fa-angle-right"></i></a>
+        				</div>
+        			</div>
+        		</div>
+	        	
+	        	<br>
+	        	<br>
+	        	<br>
+	        	<div id="birthList">
+		        	<table id="todayBirthday">
+		        	<tbody style="text-align: center;">
+		        		<tr style="border-top:solid 1px #dee2e6;"></tr>
+		        		<tr id="birth_person" style="width:100%;">
+		        			<td id="date" style="width:40%; text-align: center;">
+		        				04 / 30
+		        			</td>
+		        			<td id="name" style="width:60%; text-align: center;">
+		        				정환모 사원
+		        			</td>
+		        		</tr>
+		        		<tr id="birth_person" style="width:100%;">
+		        			<td id="date" style="width:40%; text-align: center;">
+		        				04 / 30
+		        			</td>
+		        			<td id="name" style="width:60%; text-align: center;">
+		        				정환모 대리
+		        			</td>
+		        		</tr>
+		        	</tbody>
+		        	</table>
+		        </div>	
+		        	
+		    </div>
+		    <!-- 생일자 끝 -->
+		
+        </div>
+        <!-- 왼쪽 섹션 끝 -->
+	        
+        <!-- 중간 섹션 시작 -->
+        <div class="col-sm-7" id="section_center">
+        
+        
+        
+        <div id="margin_left">
+        	<!-- 게시판 카드 시작 -->
+			<div class="card shadow mb-4" style="min-height: 400px;">
+                <!-- Card Header - Dropdown -->
+                <div
+                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+	                    <!-- <h6 class="m-0 font-weight-bold">게시판</h6>  -->
+	                    <ul class="nav nav-tabs board-tab">
+						<!-- Tab 아이템이다. 태그는 li과 li > a이다. li태그에 active는 현재 선택되어 있는 탭 메뉴이다. -->
+						<li class="active"><a href="#all" data-toggle="tab">전체</a></li>
+						<li><span>|</span></li>
+						<!-- a 태그의 href는 아래의 tab-content 영역의 id를 설정하고 data-toggle 속성을 tab으로 설정한다. -->
+						<li><a href="#notice" data-toggle="tab">공지게시판</a></li>
+						<li><span>|</span></li>
+						<li><a href="#board" data-toggle="tab">일반게시판</a></li>
+						<li><span>|</span></li>
+						<li><a href="#archive" data-toggle="tab">자료게시판</a></li>
+					</ul>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                
+	                <!-- Tab이 선택되면 내용이 보여지는 영역이다. -->
+					<!-- 태그는 div이고 class는 tab-content로 설정한다. -->
+					<div class="tab-content">
+						<!-- 각 탭이 선택되면 보여지는 내용이다. 태그는 div이고 클래스는 tab-pane이다. -->
+						<!-- active 클래스는 현재 선택되어 있는 탭 영역이다. -->
+						<div class="tab-pane in active" id="all">
+							<div class="board-area">
+	                    	<table class="table" id="tbl_notice">
+							  <thead class="thead-light th_all" id="all_head">
+							    <tr style="text-align: center;">
+							      <th style="width:60%; text-align: center;">제목</th>
+							      <th style="width:20%; text-align: center;">작성자</th>
+							      <th style="width:20%; text-align: center;">작성일자</th>
 							    </tr>
-							</thead>
-							<tbody id="loginHistory">
-							</tbody>
-						</table>
+							  </thead>
+							  <tbody id="all_body">
+								<tr style="text-align: center;">
+							      <td style="width:60%; text-align: left; padding-left: 30px;">문길이는 웃고있다.</td>
+							      <td style="width:20%; text-align: center;">정환모 사원</td>
+							      <td style="width:20%; text-align: center;">2022/4/30</td>
+							    </tr>
+							    <tr style="text-align: center;">
+							      <td style="width:60%; text-align: left; padding-left: 30px;">안녕하세요~</td>
+							      <td style="width:20%; text-align: center;">정환모 사원</td>
+							      <td style="width:20%; text-align: center;">2022/4/30</td>
+							    </tr>
+							  </tbody>
+							</table>
+	                    	</div>
+						</div>
+						<!-- id는 고유한 이름으로 설정하고 tab의 href와 연결되어야 한다. -->
+						<div class="tab-pane" id="notice">
+							<div class="board-area">
+	                    	<table class="table" id="tbl_notice">
+							  <thead class="thead-light th_all" id="all_head">
+							    <tr style="text-align: center;">
+							      <th style="width:60%; text-align: center;">제목</th>
+							      <th style="width:20%; text-align: center;">작성자</th>
+							      <th style="width:20%; text-align: center;">작성일자</th>
+							    </tr>
+							  </thead>
+							  <tbody id="all_body">
+								<tr style="text-align: center;">
+							      <td style="width:60%; text-align: left; padding-left: 30px;">다들 열심히 해주시길 바랍니다.</td>
+							      <td style="width:20%; text-align: center;">김민정 상무</td>
+							      <td style="width:20%; text-align: center;">2022/4/30</td>
+							    </tr>
+							    <tr style="text-align: center;">
+							      <td style="width:60%; text-align: left; padding-left: 30px;">알아서 잘 딱 깔끔하고 센스있게 하세요.</td>
+							      <td style="width:20%; text-align: center;">문병윤 대표</td>
+							      <td style="width:20%; text-align: center;">2022/4/30</td>
+							    </tr>
+							  </tbody>
+							</table>
+	                    	</div>
+						</div>
+						<!-- fade 클래스는 선택적인 사항으로 트랜지션(transition)효과가 있다.
+						<!-- in 클래스는 fade 클래스를 선언하여 트랜지션효과를 사용할 때 in은 active와 선택되어 있는 탭 영역의 설정이다. -->
+						<div class="tab-pane" id="board">
+							<div class="board-area">
+	                    	<table class="table" id="tbl_notice">
+							  <thead class="thead-light th_all" id="all_head">
+							    <tr style="text-align: center;">
+							      <th style="width:60%; text-align: center;">제목</th>
+							      <th style="width:20%; text-align: center;">작성자</th>
+							      <th style="width:20%; text-align: center;">작성일자</th>
+							    </tr>
+							  </thead>
+							  <tbody id="all_body">
+								<tr style="text-align: center;">
+							      <td style="width:60%; text-align: left; padding-left: 30px;">주말에도 일하기 싫습니다.</td>
+							      <td style="width:20%; text-align: center;">임유리 대리</td>
+							      <td style="width:20%; text-align: center;">2022/4/30</td>
+							    </tr>
+							    <tr style="text-align: center;">
+							      <td style="width:60%; text-align: left; padding-left: 30px;">팀장님이 도망갔습니다.</td>
+							      <td style="width:20%; text-align: center;">김지은 대리</td>
+							      <td style="width:20%; text-align: center;">2022/4/30</td>
+							    </tr>
+							  </tbody>
+							</table>
+	                    	</div>
+						</div>
+						<div class="tab-pane" id="archive">
+							<div class="board-area">
+	                    	<table class="table" id="tbl_notice">
+							  <thead class="thead-light th_all" id="all_head">
+							    <tr style="text-align: center;">
+							      <th style="width:60%; text-align: center;">제목</th>
+							      <th style="width:20%; text-align: center;">작성자</th>
+							      <th style="width:20%; text-align: center;">작성일자</th>
+							    </tr>
+							  </thead>
+							  <tbody id="all_body">
+								<tr style="text-align: center;">
+							      <td style="width:60%; text-align: left; padding-left: 30px;">지하철에서 앉기 위한 10가지 전략</td>
+							      <td style="width:20%; text-align: center;">정환모 사원</td>
+							      <td style="width:20%; text-align: center;">2022/4/30</td>
+							    </tr>
+							    <tr style="text-align: center;">
+							      <td style="width:60%; text-align: left; padding-left: 30px;">등 뒤에 곰이 업혀있다.</td>
+							      <td style="width:20%; text-align: center;">성문길 차장</td>
+							      <td style="width:20%; text-align: center;">2022/4/30</td>
+							    </tr>
+							  </tbody>
+							</table>
+	                    	</div>
+						</div>
 					</div>
-				</div>
-			</div>
+				    
+                </div>
+                
+            </div>
+            <!-- 게시판 카드 끝 -->
+        	
+			<!-- 메일함 카드 시작 -->
+			<div class="card shadow mb-4" style="min-height: 400px;">
+                <!-- Card Header - Dropdown -->
+                <div
+                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+	                    <!-- <h6 class="m-0 font-weight-bold">게시판</h6>  -->
+	                    <ul class="nav nav-tabs board-tab">
+						<!-- a 태그의 href는 아래의 tab-content 영역의 id를 설정하고 data-toggle 속성을 tab으로 설정한다. -->
+						<li class="active"><a href="#recieve" data-toggle="tab">받은메일함</a></li>
+					</ul>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                
+	                <!-- Tab이 선택되면 내용이 보여지는 영역이다. -->
+					<!-- 태그는 div이고 class는 tab-content로 설정한다. -->
+					<div class="tab-content">
+						<!-- 각 탭이 선택되면 보여지는 내용이다. 태그는 div이고 클래스는 tab-pane이다. -->
+						<!-- active 클래스는 현재 선택되어 있는 탭 영역이다. -->
+						<div class="tab-pane in active" id="recieve">
+							<div class="board-area">
+	                    	<table class="table" id="tbl_notice">
+							  <thead class="thead-light th_all" id="all_head">
+							    <tr style="text-align: center;">
+							      <th style="width:20%; text-align: center;">보낸이</th>
+							      <th style="width:60%; text-align: center;">제목</th>
+							      <th style="width:20%; text-align: center;">작성일자</th>
+							    </tr>
+							  </thead>
+							  <tbody id="all_body">
+								<tr style="text-align: center;">
+							      <td style="width:20%; text-align: center;">정환모</td>
+							      <td style="width:60%; text-align: left; padding-left: 30px;">여기는 메일함이에요!</td>
+							      <td style="width:20%; text-align: center;">2022/4/30</td>
+							    </tr>
+							    <tr style="text-align: center;">
+							      <td style="width:20%; text-align: center;">정환모</td>
+							      <td style="width:60%; text-align: left; padding-left: 30px;">메인화면 채워야되니까 보존해주세요..</td>
+							      <td style="width:20%; text-align: center;">2022/4/30</td>
+							    </tr>
+							  </tbody>
+							</table>
+	                    	</div>
+						</div>
+					</div>
+				    
+                </div>
+                
+            </div>
+            <!-- 메일함 카드 끝 -->
+			
 		</div>
-	</div>
+        </div>
+        <!-- 중간 섹션 끝 -->
+        
+        <!-- 오른쪽 섹션 시작 -->
+        <div class="col-sm-3" id="section_right">
+        	<!-- 웹채팅 시작 -->
+        	<div id="webChatting">
+        		<div id="web_title" style="text-align:center;"></div>
+	        	<div class="profile">
+	        		<span class="photo">
+	        			<span class="photo">
+	        				<img src="<%= ctxPath%>/resources/images/choo.png" title="" />
+	        			</span>
+	        		</span>
+	        		<span class="title">
+	        			<span class="name" title="">웹채팅</span>
+	        		</span>
+	        	</div>
+	        	<hr>
+		        <div id="chatFrame" style="width:90%">
+		        	<table id="chatting">
+		        	<tbody>
+			        	<tr>
+			        	<span><td>[17:25]정환모 : 안녕하세요!</td></span>
+			        	</tr>
+			        	<tr>
+			        	<span><td>[03:40]정환모 : 아무도 없네요..</td></span>
+			        	</tr>
+		        	</tbody>
+		        	
+		        	</table>
+		        </div>
+		        <div id="input" style="width:100%">
+		        	<input type="text" name="chatContent" id="chatContent"/>
+		        	<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnChat">입력</button>
+		        </div>
+		    </div>
+		    <!-- 메모장 끝 -->
+		    
+        </div>
+        <!-- 오른쪽 섹션 끝 -->
+	        
+    </div>
 </div>

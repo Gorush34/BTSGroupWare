@@ -22,6 +22,62 @@
 
 <script type="text/javascript">
 
+	$(document).ready(function(){
+		
+		// === 캘린더 보여주기 (기본 틀) === //
+		var calendarEl = document.getElementById('calendar');
+		
+		var calendar = new FullCalendar.Calendar(calendarEl, {
+			initialView: 'dayGridMonth',
+			locale: 'ko',
+			selectable: true,
+			editable: false,
+			themeSystem: 'bootstrap',
+			headerToolbar:{
+				left: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
+			    center: 'title',
+			    right: 'today prevYear,prev,next,nextYear'
+			},
+			dayMaxEventRows: true, // for all non-TimeGrid views
+		    views: {
+		      timeGrid: {
+		        dayMaxEventRows: 3 // adjust to 6 only for timeGridWeek/timeGridDay
+		      }
+		    },
+		    events:function(){
+		    	
+		    }, // end of events:function(info, successCallback, failureCallback) {}---------------
+		    dateClick: function(info){
+		    	
+		    },
+		    eventDidMount: function(arg){
+		    	
+		    }
+			
+			
+			
+			
+		}); // end of var calendar = = new FullCalendar.Calendar(calendarEl, {}--------------------------------------
+		
+		calendar.render(); // 캘린더 보여주기
+	});// end of $(document).ready(function(){}------------------------------------
+
 </script>
 
+<div>
 
+	<%-- 검색바를 보여주는 곳 --%>
+	<div id="search">
+		<select id="searchType" name="searchType">
+			<option>캘린더</option>
+			<option>통합검색</option>
+		</select>
+		<input type="text" id="searchWord" name="searchWord" style="align: right;"/>
+		<span id="detailSearch" style="font-size: 8pt; color:#99ccff;">상세 <i class="bi bi-caret-down-fill"></i></span>
+		<button type="button" id="goSearch"><i class="bi bi-search"></i></button>
+	</div>
+	
+	<%-- 캘린더를 보여주는 곳 --%>
+	<div id="calendar" style="margin: 60px 30px 50px 60px;"></div>
+
+</div>

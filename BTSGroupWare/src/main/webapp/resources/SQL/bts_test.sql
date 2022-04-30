@@ -10,7 +10,7 @@ create table bts_test
 select *
 from bts_test;
 
-
+;
 
 select count(*)
 from bts_test;

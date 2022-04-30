@@ -31,83 +31,86 @@
     <!-- 상단 네비게이션 시작 -->
    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top mx-4 py-3">
       <!-- Brand/logo --> 
-      <a class="navbar-brand" href="<%= ctxPath %>/index.action" style="margin-right: 10%;"><img src="<%= ctxPath %>/resources/images/sist_logo.png" /></a>
+      <a class="navbar-brand" href="<%= ctxPath %>/index.action" style="margin-right: 5%;"><span style="font-weight: bold;">BTSGroupWare</span></a>
       
       <!-- 아코디언 같은 Navigation Bar 만들기 -->
        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
          <span class="navbar-toggler-icon"></span>
        </button>
       
-      <div class="collapse navbar-collapse" id="collapsibleNavbar">
-        <ul class="navbar-nav h5"> <%-- .h5 는 글자크기임 --%>  
-           <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle text-info" href="#" id="navbarDropdown" data-toggle="dropdown">Home</a> 
-                                           <%-- .text-info 는 글자색으로 청록색임 --%>  
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                 <a class="dropdown-item" href="<%= ctxPath %>/index.action">Home</a>
-                 <a class="dropdown-item" href="<%= serverName%><%=ctxPath%>/chatting/multichat.action">웹채팅</a>
-              </div>
-           </li>
-           
-           <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle text-info" href="#" id="navbarDropdown" data-toggle="dropdown">게시판</a>  
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                 <a class="dropdown-item" href="<%=ctxPath%>/list.action">목록보기</a>
-            <%-- <c:if test="${not empty sessionScope.loginuser}"> --%>
-                 <a class="dropdown-item" href="<%=ctxPath%>/add.action">글쓰기</a>
-            <%-- </c:if>  --%>
-              </div>
-           </li>
-           
-           <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle text-info" href="#" id="navbarDropdown" data-toggle="dropdown">로그인</a>  
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                 <c:if test="${empty sessionScope.loginuser}">
-                    <a class="dropdown-item" href="#">회원가입</a>
-                    <a class="dropdown-item" href="<%=ctxPath%>/login.action">로그인</a>
-                 </c:if>
-                             
-               <c:if test="${not empty sessionScope.loginuser}">
-                  <a class="dropdown-item" href="#">나의정보</a>
-                  <a class="dropdown-item" href="<%=ctxPath%>/logout.action">로그아웃</a>
-               </c:if>
-              </div>
-           </li>
-           
-           <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle text-info" href="#" id="navbarDropdown" data-toggle="dropdown">인사관리</a>  
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                 <a class="dropdown-item" href="<%=ctxPath%>/emp/empList.action">직원목록</a>
-                 <a class="dropdown-item" href="<%=ctxPath%>/emp/chart.action">통계차트</a>
-              </div>
-           </li>
-           
-     <%-- <c:if test="${sessionScope.loginuser.gradelevel == 10 }">  --%>
-           <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle text-info" href="#" id="navbarDropdown" data-toggle="dropdown">제품등록(다중파일첨부)</a>  
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                 <a class="dropdown-item" href="#">제품등록</a>
-                 <a class="dropdown-item" href="#">제품입고</a>
-              </div>
-           </li>
-    <%-- </c:if>  --%>
-           
-          <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle text-info" href="#" id="navbarDropdown" data-toggle="dropdown">제품정보</a>  
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                 <a class="dropdown-item" href="#">제품목록</a>
-              </div>
-          </li>
-          
-          <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle text-info" href="#" id="navbarDropdown" data-toggle="dropdown">일정관리</a>  
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                 <a class="dropdown-item" href="<%=ctxPath%>/schedule/scheduleManagement.action">일정관리</a>
-              </div>
-          </li>
-          
-        </ul>
-      </div>
+      
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+	    <ul class="navbar-nav mr-auto">
+	       <%-- 전자결재 시작 --%>
+	      <li class="nav-item">
+	        <a class="nav-link " href="#" id="navbar" role="button" aria-expanded="false">
+	          	전자결재
+	        </a>
+	      </li>
+	      <%-- 전자결재 끝 --%>
+	       
+	       <%--게시판 / 자료실 시작 --%>
+	       <li class="nav-item">
+	        <a class="nav-link" href="#" id="navbar" role="button" aria-expanded="false">
+	          	게시판
+	        </a>
+	      </li>
+	      <li class="nav-item ">
+	        <a class="nav-link " href="#" id="navbar" role="button" aria-expanded="false">
+	          	자료실
+	        </a>
+	      </li>
+	      <%-- 게시판 / 자료실 끝 --%>
+	      
+	      <%-- 메일 시작 --%>
+	      <li class="nav-item">
+	        <a class="nav-link" href="#" id="navbar" role="button" aria-expanded="false">
+	        	메일함
+	        </a>
+	      </li>
+	      <%--메일 끝 --%>
+	      
+	      <%-- 일정관리 / 자원관리 시작 --%>
+	      <li class="nav-item">
+	        <a class="nav-link" href="#" id="navbar" role="button" aria-expanded="false">
+	          	일정관리
+	        </a>
+	      </li>
+	      
+	      <li class="nav-item">
+	        <a class="nav-link" href="#" id="navbar" role="button" aria-expanded="false">
+	          	자원관리
+	        </a>
+	      </li>
+	      <%-- 일정 끝 --%>
+	      
+	      <%-- 근태관리 시작 --%>
+	      <li class="nav-item">
+	        <a class="nav-link" href="#" id="navbar" role="button" aria-expanded="false">
+	          	근태관리
+	        </a>
+	      </li>
+	      <%-- 근태관리 끝 --%>
+	      
+	      <%-- 주소록 / 조직도 시작 --%>
+	      <li class="nav-item">
+	        <a class="nav-link" href="#" id="navbar" role="button" aria-expanded="false">
+	          	주소록
+	        </a>
+	      </li>
+	      
+	      <li class="nav-item">
+	        <a class="nav-link" href="#" id="navbar" role="button" aria-expanded="false">
+	          	조직도
+	        </a>
+	      </li>
+	      <%-- 주소록 / 조직도 끝 --%>
+	    </ul>
+	    <form class="form-inline my-2 my-lg-0">
+	      <input class="form-control mr-sm-2" type="search" placeholder="통합검색" aria-label="Search">
+	      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">검색</button>
+	    </form>
+	  </div>
       
       <!-- === #49. 로그인이 성공되어지면 로그인되어진 사용자의 이메일 주소를 출력하기 === -->
       <c:if test="${not empty sessionScope.loginuser}">
@@ -118,10 +121,5 @@
          
    </nav>
    <!-- 상단 네비게이션 끝 -->
-   
-
-      <p class="h5" style="margin: auto">
-         <marquee> [공지사항] 쌍용강북교육센터 C클래스 수강생 여러분들의 수료후 프로그래머 입사를 진심으로 기원합니다.</marquee>
-        </p>
 
   
