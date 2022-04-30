@@ -16,8 +16,8 @@ ul#secondHeaderGroup, .secondHeaderList {
 		display: inline-block;
 }
 
-div#empInfo {
-	border: solid 1px gray;	
+div#empInfo, div#empBirthday, div.cal {
+	border: solid 1px #c9c9c9;	
 	border-radius: 10px;
 	padding : 5px;
 	width: 320px;
@@ -117,7 +117,7 @@ div#margin_left {
 	font-weight: bold;
 }
 
-.board-tab > li > a {
+.board-tab > li > a, #birth_prevenext > a {
 	text-decoration: none;
 	color : black;
 }
@@ -136,3 +136,76 @@ div#margin_left {
 	padding : 5px 5px;
 	border-bottom: solid 1px #dee2e6;
 } 
+
+div.go-gadget-content {
+	min-height: 150px;
+}
+
+div.go_gadget_header {
+    cursor: default;
+    display: block;
+    position: relative;
+    height: 28px;
+    padding: 16px 21px 4px;
+    border: none;
+    background: #fff;
+    vertical-align: middle;
+}
+
+span#title {
+    font-size: 24px;
+    line-height: 27px;
+    font-weight: bold;
+    color: #3b3b3b;
+    letter-spacing: -1px;
+    padding-right: 2px;
+    vertical-align: top;
+}
+
+div.birth_month {
+	margin-top: 5px;
+}
+
+div#birth_prevenext {
+	float: right;
+}
+
+div#birthList{
+	padding-left: 21px;
+}
+
+table#todayBirthday {
+	width:90%;
+}
+
+tr#birth_person{
+	border-bottom: solid 1px #dee2e6;
+}
+
+td#date, td#name {
+	padding-left: 21px;
+}
+
+div#calendar > table {
+	width: 100%;
+	text-align: center;
+	display: flex;
+	padding : 0 10px;
+}
+
+#calendar > div.fc-view-harness.fc-view-harness-active > div > table > tbody > tr > td > div > div > div > table > tbody {
+	font-size: 12px;
+}
+
+
+div#input {
+	display: inline-block;
+}
+
+input#chatContent {
+	margin-top: 5px;
+}
+
+button#btnChat {
+	margin-bottom: 5px;
+}

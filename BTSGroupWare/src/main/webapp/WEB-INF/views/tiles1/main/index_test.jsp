@@ -8,19 +8,24 @@
 %>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    
+
+
 <script type="text/javascript">
 
 	$(document).ready(function(){
 		
 	});// end of $(document).ready(function(){})----------------------
+
 	
 </script>
+
+
 
 <div class="container_fluid">
 	    <div class="row">
         <!-- 왼쪽 섹션 시작 -->
         <div class="col-sm-2 gadget_design_wrap" id="section_left">
+        	<!-- 사원정보 시작 -->
 	        <div id="empInfo">
 	        	<div class="profile">
 	        		<span class="photo">
@@ -102,6 +107,8 @@
 		        	</li>	
 		        </ul>
 		    </div>
+		    <!-- 사원정보 끝 -->
+		    <!-- 퀵메뉴 시작 -->
 		    <div class="go-gadget-content" style="border: none;">
 				<div class="gadget_design_wrap left_section" id="gadget_design_wrap">
 					<ul class="type_btn_list_block" id="btn_list_block">
@@ -140,6 +147,53 @@
 					</ul>
 				</div>
 			</div>
+			<!-- 퀵메뉴 끝 -->
+			
+			<!-- 생일자 시작 -->
+        	<div class="go-gadget-content" id="empBirthday">
+	        	<div class="go_gadget_header empBirthday_title">
+	        		<div class="gadget_h1">
+		        		<span id="title">임직원 생일</span>
+		        	</div>
+		        	<div class="birth_month" style="border-bottom: solid 1px dee2e6;">
+	        			<span style="font-size:20px; font-weight:bold;">2022.04</span>
+        				<div id="birth_prevenext">
+        					<a href=""><i class="fas fa-angle-left"></i></a>&nbsp;&nbsp;
+        					<a href=""><i class="fas fa-angle-right"></i></a>
+        				</div>
+        			</div>
+        		</div>
+	        	
+	        	<br>
+	        	<br>
+	        	<br>
+	        	<div id="birthList">
+		        	<table id="todayBirthday">
+		        	<tbody style="text-align: center;">
+		        		<tr style="border-top:solid 1px #dee2e6;"></tr>
+		        		<tr id="birth_person" style="width:100%;">
+		        			<td id="date" style="width:40%; text-align: center;">
+		        				04 / 30
+		        			</td>
+		        			<td id="name" style="width:60%; text-align: center;">
+		        				정환모 사원
+		        			</td>
+		        		</tr>
+		        		<tr id="birth_person" style="width:100%;">
+		        			<td id="date" style="width:40%; text-align: center;">
+		        				04 / 30
+		        			</td>
+		        			<td id="name" style="width:60%; text-align: center;">
+		        				정환모 대리
+		        			</td>
+		        		</tr>
+		        	</tbody>
+		        	</table>
+		        </div>	
+		        	
+		    </div>
+		    <!-- 생일자 끝 -->
+		
         </div>
         <!-- 왼쪽 섹션 끝 -->
 	        
@@ -158,9 +212,12 @@
 	                    <ul class="nav nav-tabs board-tab">
 						<!-- Tab 아이템이다. 태그는 li과 li > a이다. li태그에 active는 현재 선택되어 있는 탭 메뉴이다. -->
 						<li class="active"><a href="#all" data-toggle="tab">전체</a></li>
+						<li><span>|</span></li>
 						<!-- a 태그의 href는 아래의 tab-content 영역의 id를 설정하고 data-toggle 속성을 tab으로 설정한다. -->
 						<li><a href="#notice" data-toggle="tab">공지게시판</a></li>
+						<li><span>|</span></li>
 						<li><a href="#board" data-toggle="tab">일반게시판</a></li>
+						<li><span>|</span></li>
 						<li><a href="#archive" data-toggle="tab">자료게시판</a></li>
 					</ul>
                 </div>
@@ -211,12 +268,12 @@
 							  <tbody id="all_body">
 								<tr style="text-align: center;">
 							      <td style="width:60%; text-align: left; padding-left: 30px;">다들 열심히 해주시길 바랍니다.</td>
-							      <td style="width:20%; text-align: center;">김민정 과장</td>
+							      <td style="width:20%; text-align: center;">김민정 상무</td>
 							      <td style="width:20%; text-align: center;">2022/4/30</td>
 							    </tr>
 							    <tr style="text-align: center;">
 							      <td style="width:60%; text-align: left; padding-left: 30px;">알아서 잘 딱 깔끔하고 센스있게 하세요.</td>
-							      <td style="width:20%; text-align: center;">문병윤 부장</td>
+							      <td style="width:20%; text-align: center;">문병윤 대표</td>
 							      <td style="width:20%; text-align: center;">2022/4/30</td>
 							    </tr>
 							  </tbody>
@@ -339,7 +396,40 @@
         
         <!-- 오른쪽 섹션 시작 -->
         <div class="col-sm-3" id="section_right">
-        
+        	<!-- 웹채팅 시작 -->
+        	<div id="empInfo">
+        		<div id="web_title" style="text-align:center;"></div>
+	        	<div class="profile">
+	        		<span class="photo">
+	        			<span class="photo">
+	        				<img src="<%= ctxPath%>/resources/images/choo.png" title="" />
+	        			</span>
+	        		</span>
+	        		<span class="title">
+	        			<span class="name" title="">웹채팅</span>
+	        		</span>
+	        	</div>
+	        	<hr>
+		        <div id="chatFrame" style="width:90%">
+		        	<table id="chatting">
+		        	<tbody>
+			        	<tr>
+			        	<span><td>[17:25]정환모 : 안녕하세요!</td></span>
+			        	</tr>
+			        	<tr>
+			        	<span><td>[03:40]정환모 : 아무도 없네요..</td></span>
+			        	</tr>
+		        	</tbody>
+		        	
+		        	</table>
+		        </div>
+		        <div id="input" style="width:100%">
+		        	<input type="text" name="chatContent" id="chatContent"/>
+		        	<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnChat">입력</button>
+		        </div>
+		    </div>
+		    <!-- 메모장 끝 -->
+		    
         </div>
         <!-- 오른쪽 섹션 끝 -->
 	        
