@@ -31,13 +31,14 @@
 			initialView: 'dayGridMonth',
 			locale: 'ko',
 			selectable: true,
-			editable: false,
+			editable: true,
 			themeSystem: 'bootstrap',
 			headerToolbar:{
 				left: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
 			    center: 'title',
 			    right: 'today prevYear,prev,next,nextYear'
 			},
+			events: 'https://fullcalendar.io/api/demo-feeds/events.json?overload-day',
 			dayMaxEventRows: true, // for all non-TimeGrid views
 		    views: {
 		      timeGrid: {
