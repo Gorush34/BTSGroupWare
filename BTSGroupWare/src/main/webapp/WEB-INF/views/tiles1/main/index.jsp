@@ -277,15 +277,6 @@ a#btn_a {
 	<!-- 1 block -->
 	<div class="col-lg-3 go-gadget-column gadget-col-1 gadget_section1 layout_fixed" id="section_1" data-columnid="1">
 		<div class="go-gadget go-gadget-17">
-			<!-- <div class="go-gadget-header go_gadget_header">
-				<div class="gadget_h1">
-					<span class="title">투데이 프로필</span>
-					<span class="btn-mgmt btn_side_wrap">
-						<span class="btn-edit btn_wrap"><span class="ic_dashboard2 ic_d_mgmt" title="편집"></span></span>
-						<span class="btn-remove btn_wrap"><span class="ic_dashboard2 ic_d_delete" title="삭제"></span></span>
-					</span>
-				</div>
-			</div> -->
 			<div class="go-gadget-config gadget_edit" style="display:none">
 				<p class="desc">
 					<span class="txt_caution error-msg-wrapper"></span>
@@ -337,15 +328,6 @@ a#btn_a {
 			</div>
 		</div>
 		<div class="go-gadget go-gadget-21">
-			<!-- <div class="go-gadget-header go_gadget_header">
-				<div class="gadget_h1">
-					<span class="title">Quick Menu</span>
-					<span class="btn-mgmt btn_side_wrap">
-						<span class="btn-edit btn_wrap"><span class="ic_dashboard2 ic_d_mgmt" title="편집"></span></span>
-						<span class="btn-remove btn_wrap"><span class="ic_dashboard2 ic_d_delete" title="삭제"></span></span>
-					</span>
-				</div>
-			</div> -->
 			<div class="go-gadget-config gadget_edit" style="display:none">
 				<p class="desc">
 					<span class="txt_caution error-msg-wrapper"></span>
@@ -392,65 +374,6 @@ a#btn_a {
 							</a>
 						</li>
 					</ul>
-				</div>
-			</div>
-		</div>
-		<div class="go-gadget go-gadget-30">
-			 <div class="go-gadget-header go_gadget_header">
-				<div class="gadget_h1">
-					<span class="title">근태관리</span>
-					<span class="btn-mgmt btn_side_wrap">
-						<span class="btn-edit btn_wrap">
-							<span class="ic_dashboard2 ic_d_mgmt" title="편집"></span>
-						</span>
-						<span class="btn-remove btn_wrap">
-							<span class="ic_dashboard2 ic_d_delete" title="삭제"></span>
-						</span>
-					</span>
-				</div>
-			</div> 
-			<div class="go-gadget-config gadget_edit" style="display:none">
-				<p class="desc">
-					<span class="txt_caution error-msg-wrapper"></span>
-				</p>
-				<form name="gadget_options" class="gadget-options-form"></form>
-				<footer class="btn_layer_wrap">
-					<a class="btn_major_s btn-option-save"><span class="txt">저장</span></a>
-					<a class="btn_minor_s btn-option-cancel"><span class="txt">취소</span></a>
-				</footer>
-			</div>
-			<div class="go-gadget-content timeline_contents_wrap">
-				<div class="gadget_design_wrap left_section" id="attendTable">						
-					<div class="go-gadget-header go_gadget_header">							
-						<div class="gadget_h1">								
-							<span class="type">
-								<span class="ic_dashboard2 ic_type_attend" title="근태관리"></span>
-							</span>								
-							<span class="title">근태관리</span>							
-						</div>						
-					</div>						
-					<div class="attend_contents_wrap2">								
-						<p class="txt"> 
-							<span id="timelineGadgetDate"></span>&nbsp;
-							<span class="time" id="timelineGadgetTime"></span>
-						</p>	                                                  
-						<div class="ehr_stat_data summary">                             
-							<p class="stat_tit" id="workTime"><span id="workHour"></span><b>h</b> <span id="workMinute"></span><b>m</b></p>                             
-							<div class="type_flexible_summary">                                 
-								<div class="wrap_progress" id="wrap_progress">                                     
-									<div class="time min" id="timemin" title="주간 근무시간은 40h입니다." style="left:76%">최소 40h</div>                                     
-									<div class="bar" id="bar" style="left:70%"></div>                                     
-									<div class="time max" id="timemax" title="최대 근무시간은 52h입니다.">최대 52h</div>  
-									<div class="progress" style="background-color: #E9E9E9; width: 269px; height: 10px;">                                   
-										<div class="progress-bar" id="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="background-color: #44D1A5;">                                         
-											<div class="part_default" title="선택근무" style="width:0%"></div>                                         
-											<div class="part_overtime" title="초과근무(연장)" style="width:0%"></div>                                     
-										</div>              
-									</div>                   
-								</div>                             
-							</div>                         
-						</div>                                                  												
-					</div>					
 				</div>
 			</div>
 		</div>
