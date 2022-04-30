@@ -22,6 +22,9 @@
   <!-- Font Awesome 5 Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   
+  <!-- 직접 만든 CSS 1 -->
+  <link rel="stylesheet" type="text/css" href="<%=ctxPath %>/resources/css/style1.css" />
+  
   <!-- 테스트 파일 불러오기 1 -->
   <link href="<%=ctxPath %>/resources/css/sb-admin-2.css" rel="stylesheet"/>
   <link href="<%=ctxPath %>/resources/css/sb-admin-2.min.css" rel="stylesheet"/>
