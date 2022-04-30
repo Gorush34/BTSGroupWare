@@ -10,82 +10,74 @@
 
 <style type="text/css">
 
-<%-- 테이블 --%>
-   table, th, td, input, textarea {border: solid #a0a0a0 1px;}
-   
-   #table {border-collapse: collapse;
-          width: 1175px;
-          }
-   #table th, #table td{padding: 5px;}
-   #table th{ 
-   		background-color: #6F808A; 
-   		color: white;
-   }
-
-<%-- 버튼 --%>   
-   .buttonList {
-   		display: inline-block;
-   		list-style-type: none;
-   		margin-right: 15px;
-   }
+/* 테이블 */
+  table, th, td, input, textarea {border: solid #a0a0a0 0px;}
   
-   #buttonGroup {
-   		padding: 0px;
-   		margin-top: 5px;
-   }
-   
-     button {
-   		border-radius: 3px !important;
-   } 
-   
-<%-- 파일첨부 --%>
-   /*input="file" 태그 원래 형태 지우기*/
-   #mail_file_upload {
-	    width: 0.1px;
-		height: 0.1px;
-		opacity: 0;
-		overflow: hidden;
-		position: absolute;
-		z-index: -1;   
-   }
-   
-   #mail_file_upload + label {
-	    border: 1px solid gray; /*1px solid #d9e1e8;*/
-	    background-color: #fff;
-	    color: black; /*#2b90d9;*/
-	    padding: 6px 12px 0px 12px;
-	    font-weight: 400;
-	    font-size: 14px;
-	    box-shadow: 1px 2px 3px 0px #f2f2f2;
-	    outline: none;
-	    margin-left: 10px;
-	    margin-bottom: 0px;
-	    height: 30px;
-   }
+  #table {border-collapse: collapse;
+         width: 1175px;
+         }
+  #table th, #table td{padding: 5px;}
+  #table th{ 
+  		background-color: #6F808A; 
+  		color: white;
+  }
+
+/*버튼 */   
+  .buttonList {
+  		display: inline-block;
+  		list-style-type: none; 		
+  }
  
-   #mail_file_upload:focus + label,
-   #mail_file_upload + label:hover {
-    	cursor: pointer;
-   }
-   
-   /* named upload */ 
-   .upload-name { 
-   		display: inline-block; 
-   		padding: .5em .75em;
-   		font-size: inherit; 
-   		font-family: inherit; 
-   		line-height: normal; 
-   		vertical-align: middle; 
-   		background-color: #f5f5f5; 
-   		border: 1px solid #ebebeb; 
-   		border-bottom-color: #e2e2e2; 
-   		-webkit-appearance: none; /*요소 자체구성요소 숨기기*/ 
-   		-moz-appearance: none; 
-   		appearance: none; 
-   		height: 30px;
-   		margin-bottom: .30em;
-   		width: 250px;
-   	}   
+  #buttonGroup {
+  		padding: 0px;
+  		margin-top: 5px;
+  }
+  
+    button {
+  		border-radius: 3px !important;
+  } 
+  
+  /* 파일첨부 */
+  /*input="file" 태그 원래 형태 지우기*/
+
+  
+  #mail_file_upload + label {
+    border: 0px solid gray; /*0px solid #d9e1e8;*/
+    background-color: #fff;
+    color: black; /*#2b90d9;*/
+    padding: 6px 12px 0px 12px;
+    font-weight: 400;
+    font-size: 14px;
+    box-shadow: 1px 2px 3px 0px #f2f2f2;
+    outline: none;
+    margin-left: 10px;
+    margin-bottom: 0px;
+    height: 30px;
+  }
+
+  #mail_file_upload:focus + label,
+  #mail_file_upload + label:hover {
+   	cursor: pointer;
+  }
+  
+  /* named upload */ 
+  .upload-name { 
+  		display: inline-block; 
+  		padding: .5em .75em;
+  		font-size: inherit; 
+  		font-family: inherit; 
+  		line-height: normal; 
+  		vertical-align: middle; 
+  		background-color: #f5f5f5; 
+  		border: 1px solid #ebebeb; 
+  		border-bottom-color: #e2e2e2; 
+  		-webkit-appearance: none; /*요소 자체구성요소 숨기기*/ 
+  		-moz-appearance: none; 
+  		appearance: none; 
+  		height: 30px;
+  		margin-bottom: .30em;
+  		width: 250px;
+  	}   
    
 </style>
 
@@ -98,19 +90,6 @@
 
 </script>
 
-<%-- 사이드바 부분 시작 --%>
-<div class="sidebar">
-  <a class="active" href="#home">홈</a>
-  <a href="#writeMail">메일쓰기</a>
-  <a href="#receiveMail">받은메일함</a>
-  <a href="#importantMail">중요메일함</a>
-  <a href="#temporaryMail">임시보관함</a>
-  <a href="#reserveMail">예약메일함</a>
-  <a href="#recyclebinMail">휴지통</a>  
-</div>
-<%-- 사이드바 부분 끝 --%>
-
-<div class="content">
 	<div class="row bg-title" style="border-bottom: solid .025em gray;">	
 		<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
 			<h4 class="page-title" style="color: black;">메일 쓰기</h4>
@@ -160,10 +139,10 @@
 			<tr>
 				<th width="14%">파일첨부</th>
 				<td width="86%" style="padding-top: 9px">
-					<input type="file" name="mail_attach" id="mail_file_upload" style="width: 89%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray;" />
-					<label for="mail_file_upload">		
-					<i class="fa fa-file-o"></i>&nbsp;파일선택</label>
-					<input class="upload-name" disabled="disabled" style="border-radius: 3px;" />
+					<input type="file" name="mail_attach" id="mail_file_upload" style="width: 30%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 0px solid gray;" />
+			<!--	<label for="mail_file_upload">		
+			 		<i class="fa fa-file-o"></i>&nbsp;파일선택</label>
+					<input class="upload-name" disabled="disabled" style="border-radius: 3px;" /> -->
 				</td>
 			</tr>			
 		</table>	
@@ -174,7 +153,7 @@
 		<table style="border: 0px; width: 800px;">
 			<tr style="border: 0px;">
 				<td width="1200px;" style="border: 0px">
-					<textarea rows="20" cols="100" style="width: 1150px; height: 400px;" name="mail_content">					
+					<textarea rows="20" cols="100" style="width: 1098px; border: solid 1px gray; height: 400px;" name="mail_content" >					
 					</textarea>					
 				</td>
 			</tr>
@@ -203,5 +182,3 @@
 
 
 <%-- 발송예약 모달 --%>
-
-</div>
