@@ -4,8 +4,8 @@ body {font-family: font-family: 'Noto Sans KR', sans-serif; }
 */
 #mycontainer   { padding:20px; }
 #myheader      { display: flex; min-height:100px; position: relative; top: 60px; }
-#mycontent      { min-height:1200px; top:60px; padding-top: 40px; padding-left:250px; background-color:#F5F5F5;
-                  float:left; width:100%;}
+#mycontent      { min-height:1200px; top:60px; padding-top: 40px; padding-left:250px; background-color:#FFF;
+                  float:left; width:1400px;}
 
 #mysideinfo      { min-height:1200px; position: fixed; top:60px; padding-top: 40px; background-color:#FFF;
                   float:left; width:250px; }
@@ -60,5 +60,48 @@ div.modal_content{
 
 /* === 모달창 관련 css 끝 == */
 
+div#search{
+  border: 1px solid #999;
+  position: relative;
+  width: 320px;
+  height: 32px;
+  margin-left: 800px;
+}
 
+select {
+  width:80px;
+  padding:5px;
+  border:0px solid #999;
+  border-right: 1px solid #999;
+  margin-right:0px;
+  border-radius:0px;
+  font-size: 10pt;
+  vertical-align: middle;
+     
+}
+
+input#searchWord{
+  width: 150px;
+  height: 30px;
+  vertical-align: middle;
+  padding:5px;
+  margin-left: 0px;
+  border: 0px;
+ /* border: 1px solid #999;
+  border-left: 1px solid #999;
+  border-right: 1px solid #999;
+  border-top: 0px solid;
+  border-bottom: 0px;*/
+  border-radius:0px;
+}
+
+#detailSearch{
+  font-size: 8pt; color:#99ccff;
+}
+
+
+#goSearch{
+	border: none;
+	background-color: white;
+	margin-left: 3px;
 }
