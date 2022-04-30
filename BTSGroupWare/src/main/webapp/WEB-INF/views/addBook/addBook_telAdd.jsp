@@ -7,43 +7,7 @@
    String ctxPath = request.getContextPath();
   //       /board 
 %>
-<!DOCTYPE html>
-<html>
-<head>
-<jsp:include page="header.jsp"/>
-<meta charset="UTF-8">  
-<!-- <link rel="stylesheet" href="addbook_style.css" type="text/css"> -->
 
-<style type="text/css">
-
-	div#main_tbl {
-	font-family: 'Noto Sans KR',맑은 고딕,돋움, malgun gothic, dotum,AppleGothic,Helvetica,sans-serif;
-	text-align:center;
-	padding-top: 3%;
-    padding-left: 34%;
-	}
-	
-	button#mini_btn {
-		padding-top: 5px;
-		padding-left: 5px;
-	    padding-right: 5px;
-	    font-size: 8pt;
-	    height: 26px;
-	    border: solid lightgray 1px;
-	    vertical-align: bottom;
-	    font-weight: bold;
-	}
-	
-	button#openModalBtn {
-		padding-top: 5px;
-		padding-left: 5px;
-	    padding-right: 5px;
-	    font-size: 8pt;
-	    height: 26px;
-	    border: solid lightgray 1px;
-	    font-weight: bold;
-	}
-</style>
 
 <script type="text/javascript">
 
@@ -60,7 +24,7 @@
 		</tr>
 		<tr>
 			<td><strong>사진</strong></td>
-			<td><img src="hi.jpg" alt="..." class="img-rounded"><button class="btn btn-default" id="mini_btn">삭제</button></td>
+			<td><img src="<%=ctxPath %>/resources/images/addBook_telAdd_sample.jpg" alt="..." class="img-rounded"><button class="btn btn-default" id="mini_btn">삭제</button></td>
 		</tr>
 		<tr>
 			<td><strong>성</strong></td>
@@ -152,6 +116,3 @@
 		</div> 
 	</div>
 
-	
-</body>
-</html>

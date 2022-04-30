@@ -15,13 +15,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller	// Bean 기능 + Controller 기능 ( @Component 를 빼도, 안빼도 무방하다. )
 public class MailController {
 
-	@RequestMapping(value = "/tiles1/mailList.bts")	
+	@RequestMapping(value = "/mail/mailList.bts")	
 	// URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
 	// http://localhost:9090/bts/tiles1/mailList.bts
 	public String mailList(HttpServletRequest request) {
 
 		// 메일 기능 시작		
-		return "mailList.tiles1";
+		return "mailList.mail";
     //  return "/tiles1/mailList.jsp";	// 아래와 같이 써서 오류가 났음.
 	}
+	
+	@RequestMapping(value = "/mail/mailWrite.bts")
+	
+	public String mailWrite(HttpServletRequest request) {
+		
+		return "mailWrite.mail";
+		//	value="/WEB-INF/views/mail/{1}.jsp 페이지를 만들어야 한다.
+	}
+	
 }

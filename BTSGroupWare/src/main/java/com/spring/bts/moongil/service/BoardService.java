@@ -1,10 +1,12 @@
 package com.spring.bts.moongil.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.bts.moongil.model.BoardVO;
 import com.spring.bts.moongil.model.InterBoardDAO;
 
 
@@ -16,12 +18,22 @@ public class BoardService implements InterBoardService {
 
 	@Autowired
 	private InterBoardDAO dao;
-	
+
 	@Override
-	public int test_insert_2(Map<String, String> paraMap) {
-		
-		int n = dao.test_insert_2(paraMap);
+	public int getTotalCount(Map<String, String> paraMap) {
+		int n = dao.getTotalCount(paraMap);
 		return n;
 	}
+
+	@Override
+	public List<BoardVO> boardListSearchWithPaging(Map<String, String> paraMap) {
+		List<BoardVO> boardList = dao.boardListSearchWithPaging(paraMap);
+		return boardList;
+	}
+
+
+	
+	
+
 
 }

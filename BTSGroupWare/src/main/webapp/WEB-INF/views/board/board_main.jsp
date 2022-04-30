@@ -15,6 +15,11 @@
 
 
     <style>
+    a:hover{
+	font-weight: bold;
+	color: black;
+	}
+    
     .small, small {
     margin-left: 15px;
 	}
@@ -58,14 +63,14 @@
 
       <a class="pb-3 mb-0 small lh-sm border-bottom" href="<%= request.getContextPath()%>/notice/list.bts">
         <strong class="d-block text-gray-dark">공지사항</strong>
-        	꼭 확인해주세요.
+        	우리 회사의 소식이나 정보 및 공지사항 입니다. <span style="font-weight: bold;">필히 확인 부탁드립니다.</span>
       </a>
     </div>
     <div class="d-flex text-muted pt-3">
       <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e83e8c"/><text x="50%" y="50%" fill="#e83e8c" dy=".3em">32x32</text></svg>
       <a class="pb-3 mb-0 small lh-sm border-bottom" href="<%= request.getContextPath()%>/fileboard/list.bts">
         <strong class="d-block text-gray-dark">자료실</strong>
-        	자료실 입니다.
+        	우리 회사의 자료실 입니다. 각 부서별로 필요한 자료를 올리거나 받아주십시오.
       </a>
     </div>
     <div class="d-flex text-muted pt-3">
@@ -73,7 +78,7 @@
 
       <a class="pb-3 mb-0 small lh-sm border-bottom" href="<%= request.getContextPath()%>/board/list.bts">
         <strong class="d-block text-gray-dark">자유게시판</strong>
-        	자유롭게 이용해주세요.
+        	누구나 이용가능한 자유게시판 입니다. 자유롭게 이용해주십시오.
       </a>
     </div>
   </div>

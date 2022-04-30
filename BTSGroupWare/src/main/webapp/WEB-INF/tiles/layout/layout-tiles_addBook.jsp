@@ -8,7 +8,6 @@
 	String ctxPath = request.getContextPath();
 %>    
     
-<!DOCTYPE html>
 <html>
 <head>
 <title>게시판</title>

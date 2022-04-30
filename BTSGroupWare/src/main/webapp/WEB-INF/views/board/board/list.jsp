@@ -115,8 +115,14 @@ margin: 10px;
 	
 </script>
 
-<div style="">
-	<h2 style="margin-bottom: 30px; text-align: center;" >자유게시판</h2>
+<div style="padding: 0 15px !important; margin-right: auto !important; margin-left: auto !important;">
+	
+	<div class="d-flex align-items-center p-3 my-3 text-white bg-purple rounded shadow-sm" style="background-color: #6F42C1; ">
+    <div class="lh-1" style="text-align: center; width: 100%;">
+      <h1 class="h6 mb-0 text-white lh-1" style="font-size:22px; font-weight: bold; ">자유게시판</h1>
+    </div>
+  </div>
+
 	<div style="text-align: center;">
 		<a id="brd_category" href="<%= request.getContextPath()%>/notice/list.bts">공지사항</a> 
 		<a id="brd_category" href="<%= request.getContextPath()%>/fileboard/list.bts">자료실</a> 
@@ -138,91 +144,36 @@ margin: 10px;
 			</tr>
 		</thead>
 		<tbody>
-			
-	 <c:choose>
-		 <c:when test = "${noticeList > 0}">
-		<c:forEach var="board" items="${noticeList}" varStatus="status">
-			 <tr>
-			 	<td style="width: 70px;  text-align: center;">${board.seq}  
-			 </td>
-			
-			 	 <td style="width: 40px;  text-align: left; padding-left: 20px;">
-			  
-			  <%-- 파일첨부가 없을때 --%>
-			    <c:if test="${empty board.fileName}"> 
-			 	
-					   <c:if test="${board.commentCount > 0}">
-					   <span class="title" onclick="goView('${board.seq}')"><span id="head">[ ${board.header} ]</span>${board.title} <span style="vertical-align: super;">[<span style="color: red; font-size: 9pt; font-style: italic; font-weight: bold;">${board.commentCount}</span>]</span> </span> 
-					   </c:if>
-					   
-					   <c:if test="${board.commentCount == 0}">
-					   <span class="title" onclick="goView('${board.seq}')"><span id="head">[ ${board.header} ]</span> ${board.title}</span>  
-					   </c:if>
-				  
-				</c:if>   
-		
-			 <%--파일첨부 없을때 끝 --%>	 
-			 	 
-			 	 <%-- 첨부파일이 있는 경우 --%>
-			 <c:if test="${not empty board.fileName}">
-					   <c:if test="${board.commentCount > 0}">
-					   <span class="title" onclick="goView('${board.seq}')"><span id="head">[ ${board.header} ]</span> ${board.title} <span style="vertical-align: super;">[<span style="color: red; font-size: 9pt; font-style: italic; font-weight: bold;">${board.commentCount}</span>]</span> </span> &nbsp;<i class="fa fa-file-o"></i>
-					   </c:if>
-					   
-					   <c:if test="${board.commentCount == 0}">
-					   <span class="title" onclick="goView('${board.seq}')"><span id="head">[ ${board.header} ]</span> ${board.title}</span> &nbsp;<i class="fa fa-file-o"></i>
-					   </c:if>			   
-			 </c:if>		
-		    <%-- 파일첨부가 있을때끝 --%> 			 
-					</td> 
-				  
-			 	<td style="width: 70px;  text-align: center;">${board.name}</td>			
-			 	<td style="width: 70px;  text-align: center;" > ${board.writeDay}</td>
-			 	<td style="width: 70px;  text-align: center;" >${board.readCount}</td>
-			 	
-			 </tr>
-
-		</c:forEach>	 
-			</c:when>
-			
-			<c:otherwise>
-        		 <tr>
-			 	<td colspan="5" style="text-align: center;">게시물이 존재하지 않습니다.
-			 </td>
-			 </tr>
-
-         </c:otherwise>
-		</c:choose>
+			<c:forEach var="boardvo" items="${requestScope.boardList}" varStatus="status">
+			   <tr>
+			      <td align="center">
+			          ${boardvo.seq}
+			      </td>
+			      <td align="center">${boardvo.subject}</td>
+				  <td align="center">${boardvo.name}</td>
+				  <td align="center">${boardvo.regDate}</td>
+				  <td align="center">${boardvo.readCount}</td>
+			   </tr>
+			</c:forEach>
 		</tbody>
-		</table>
-		
-		<%--페이지 바  --%>
-		<div align="center" style="width: 70%; border: solid 0px gray; margin: 20px auto;">        
-		${pageBar}
-	    </div>
-		
-	<%--검색 폼--%>
- <div id="searchDiv">
-	<form name="searchFrm" id="searchFrm">
-	
+	</table>
+
+	<%-- === #122. 페이지바 보여주기 === --%>
+	<div align="center" style="border: solid 0px gray; width: 70%; margin: 20px auto;">
+		${requestScope.pageBar}
+	</div>
+ 
+    <%-- === #101. 글검색 폼 추가하기 : 글제목, 글쓴이로 검색을 하도록 한다. === --%>
+    <form name="searchFrm" style="margin-top: 20px;">
 		<select name="searchType" id="searchType" style="height: 26px;">
-			<option value="title">글제목</option>
-			<option value="name">작성자</option>
+			<option value="subject">글제목</option>
+			<option value="name">글쓴이</option>
 		</select>
-		
-		<input type="text" placeholder="검색" name="searchWord" id="searchWord" size="20" autocomplete="off" /> 
-		<button type="button" style="width: 30px" onclick="goSearch()">
-		<i class="fa fa-search fa-fw" aria-hidden="true"></i>
-		</button>
+		<input type="text" name="searchWord" id="searchWord" size="40" autocomplete="off" /> 
+		<input type="text" style="display: none;"/> <%-- form 태그내에 input 태그가 오로지 1개 뿐일경우에는 엔터를 했을 경우 검색이 되어지므로 이것을 방지하고자 만든것이다. --%> 
+		<button type="button" class="btn btn-secondary btn-sm" onclick="goSearch()">검색</button>
 	</form>
 	
+
 	
-	<%--글제목 클릭후 상세보기를 한 다음에 목록보기를 봤을때
-	 돌아갈 페이지를 알려주기 위해서 현재 페이지 주소를 뷰단으로 넘겨준다. --%>
- </div>	
-		<form name="goViewFrm">
-		   <input type="hidden" name="seq" />
-		   <input type="hidden" name="gobackURL" value="${gobackURL}" />
-	    </form>
-		
-</div>	
+</div>

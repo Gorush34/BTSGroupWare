@@ -115,8 +115,13 @@ margin: 10px;
 	
 </script>
 
-<div style="">
-	<h2 style="margin-bottom: 30px; text-align: center;" >공지사항</h2>
+<div style="padding: 0 15px !important; margin-right: auto !important; margin-left: auto !important;">
+	
+	<div class="d-flex align-items-center p-3 my-3 text-white bg-purple rounded shadow-sm" style="background-color: #007BFF; ">
+    <div class="lh-1" style="text-align: center; width: 100%;">
+      <h1 class="h6 mb-0 text-white lh-1" style="font-size:22px; font-weight: bold; ">공지사항</h1>
+    </div>
+  </div>
 	<div style="text-align: center;">
 		<a id="brd_category" href="<%= request.getContextPath()%>/notice/list.bts" style="font-weight: bold; text-decoration: underline;">공지사항</a> 
 		<a id="brd_category" href="<%= request.getContextPath()%>/fileboard/list.bts">자료실</a> 

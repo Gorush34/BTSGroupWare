@@ -4,7 +4,7 @@ body {font-family: Arial, Helvetica, sans-serif, 돋움; }
 */
 #mycontainer   { padding:20px; }
 #myheader      { display: flex; min-height:100px; position: relative; top: 60px; }
-#mycontent      { min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:#F5F5F5;
+#mycontent      { min-height:1200px; position: relative; top:60px; padding:20px; background-color:#F2F2F2;	
                   float:left; width:65%; }
 
 #mysideinfo      { min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:#F0FFFF;

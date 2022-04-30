@@ -5,7 +5,7 @@
     
 <%
     String ctxPath = request.getContextPath();
-    //    /MyMVC
+    //    /bts
 %>
 
 <script type="text/javascript">
@@ -20,21 +20,12 @@
 	}// end of function goMailSearch(){}-------------------------
 
 </script>
-
-<%-- 헤더 부분 시작 --%>
-<div class="header">
-  <a href="#default" class="logo">BTSGroupWare</a>
-  <div class="header-right">
-    <a class="active" href="#home">Home</a>
-  </div>
-</div>
-<%-- 헤더 부분 끝 --%>
-
+<%--
 <%-- 사이드바 부분 시작 --%>
 <div class="sidebar">
   <a class="active" href="#home">홈</a>
-  <a href="#writeMail">메일쓰기</a>
-  <a href="#receiveMail">받은메일함</a>
+  <a href="<%= ctxPath%>/mail/mailWrite.bts">메일쓰기</a>
+  <a href="">받은메일함</a>
   <a href="#importantMail">중요메일함</a>
   <a href="#temporaryMail">임시보관함</a>
   <a href="#reserveMail">예약메일함</a>
@@ -92,7 +83,7 @@
 					<table>
 						<thead>
 							<tr>
-								<th style="width: 40px; text-align: center;">
+								<th style="width: 40px;">
 									<input type="checkbox" id="checkAll" />
 								</th>
 								<th style="width: 40px;">
@@ -109,13 +100,13 @@
 						
 						<tbody>
 							<tr>
-								<td style="width: 40px; text-align: center;">
+								<td style="width: 40px;">
 									<input type="checkbox" id="checkAll" />
 								</td>
-								<td style="width: 40px; text-align: center;">
+								<td style="width: 40px;">
 									<span class="fa fa-star-o"></span>
 								</td>
-								<td style="width: 40px; text-align: center;">
+								<td style="width: 40px;">
 									<span class="fa fa-paperclip"></span>
 								</td>							
 								<td>김민정</td>
