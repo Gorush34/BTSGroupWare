@@ -14,28 +14,183 @@
 
 $( document ).ready( function() {
 	
+	$( "#D_head" ).slideToggle().hide();
 	
-	$( "#D_allteam" ).slideToggle().hide();
-	$( "#BD_allteam" ).slideToggle().hide();
+	$( "#D_tchteam" ).slideToggle().hide();
+	$( "#D_mngteam" ).slideToggle().hide();
+	$( "#D_stuteam" ).slideToggle().hide();
 	
+	$( "#D_tchteam_one" ).slideToggle().hide();
+	$( "#D_tchteam_two" ).slideToggle().hide();
+	$( "#D_tchteam_three" ).slideToggle().hide();
+	$( "#D_mngteam_one" ).slideToggle().hide();
+	$( "#D_mngteam_two" ).slideToggle().hide();
+	$( "#D_mngteam_three" ).slideToggle().hide();
+	$( "#D_stuteam_one" ).slideToggle().hide();
+	$( "#D_stuteam_two" ).slideToggle().hide();
+	$( "#D_stuteam_three" ).slideToggle().hide();
 	
+	$( "#D_tchteam_one_ssjh" ).slideToggle().hide();
+	$( "#D_tchteam_two_ssjh" ).slideToggle().hide();
+	$( "#D_tchteam_three_ssjh" ).slideToggle().hide();
+	$( "#D_mngteam_one_kdeu" ).slideToggle().hide();
+	$( "#D_mngteam_two_kdeu" ).slideToggle().hide();
+	$( "#D_mngteam_three_kdeu" ).slideToggle().hide();
+	$( "#D_stuteam_one_hmmj" ).slideToggle().hide();
+	$( "#D_stuteam_two_bymg" ).slideToggle().hide();
+	$( "#D_stuteam_three_yrje" ).slideToggle().hide();
 	
-	$( "#All_head" ).click( function() {
-	    $( "#D_allteam" ).slideToggle();
-	    $( "#BD_allteam" ).slideToggle();
+$( "#BD_head" ).slideToggle().hide();
+	
+	$( "#BD_tchteam" ).slideToggle().hide();
+	$( "#BD_mngteam" ).slideToggle().hide();
+	$( "#BD_stuteam" ).slideToggle().hide();
+	
+	$( "#BD_tchteam_one" ).slideToggle().hide();
+	$( "#BD_tchteam_two" ).slideToggle().hide();
+	$( "#BD_tchteam_three" ).slideToggle().hide();
+	$( "#BD_mngteam_one" ).slideToggle().hide();
+	$( "#BD_mngteam_two" ).slideToggle().hide();
+	$( "#BD_mngteam_three" ).slideToggle().hide();
+	$( "#BD_stuteam_one" ).slideToggle().hide();
+	$( "#BD_stuteam_two" ).slideToggle().hide();
+	$( "#BD_stuteam_three" ).slideToggle().hide();
+	
+	$( "#BD_tchteam_one_ssjh" ).slideToggle().hide();
+	$( "#BD_tchteam_two_ssjh" ).slideToggle().hide();
+	$( "#BD_tchteam_three_ssjh" ).slideToggle().hide();
+	$( "#BD_mngteam_one_kdeu" ).slideToggle().hide();
+	$( "#BD_mngteam_two_kdeu" ).slideToggle().hide();
+	$( "#BD_mngteam_three_kdeu" ).slideToggle().hide();
+	$( "#BD_stuteam_one_hmmj" ).slideToggle().hide();
+	$( "#BD_stuteam_two_bymg" ).slideToggle().hide();
+	$( "#BD_stuteam_three_yrje" ).slideToggle().hide();
+	
+//////////////////////////////////////////////////////////////	
+
+	$( "#ALL_head" ).click( function() {
+	    $( "#D_head" ).slideToggle();
+	});    
+
+	$( "#D_head" ).click( function() {
+	    $( "#D_tchteam" ).slideToggle();
+	    $( "#D_mngteam" ).slideToggle();
+	    $( "#D_stuteam" ).slideToggle();
 	});
-	  
+	
+	$( "#D_tchteam" ).click( function() {
+	    $( "#D_tchteam_one" ).slideToggle();
+	    $( "#D_tchteam_two" ).slideToggle();
+	    $( "#D_tchteam_three" ).slideToggle();
+	});
+	
+	$( "#D_mngteam" ).click( function() {
+	    $( "#D_mngteam_one" ).slideToggle();
+	    $( "#D_mngteam_two" ).slideToggle();
+	    $( "#D_mngteam_three" ).slideToggle();
+	});
+	
+	$( "#D_stuteam" ).click( function() {
+	    $( "#D_stuteam_one" ).slideToggle();
+	    $( "#D_stuteam_two" ).slideToggle();
+	    $( "#D_stuteam_three" ).slideToggle();
+	});
+	
+	$( "#D_tchteam_one" ).click( function() {
+	    $( "#D_tchteam_one_ssjh" ).slideToggle();
+	});
+	$( "#D_tchteam_two" ).click( function() {
+	    $( "#D_tchteam_two_ssjh" ).slideToggle();
+	});
+	$( "#D_tchteam_three" ).click( function() {
+	    $( "#D_tchteam_three_ssjh" ).slideToggle();
+	});
+	
+	$( "#D_mngteam_one" ).click( function() {
+	    $( "#D_mngteam_one_kdeu" ).slideToggle();
+	});
+	$( "#D_mngteam_two" ).click( function() {
+	    $( "#D_mngteam_two_kdeu" ).slideToggle();
+	});
+	$( "#D_mngteam_three" ).click( function() {
+	    $( "#D_mngteam_three_kdeu" ).slideToggle();
+	});
+	
+	$( "#D_stuteam_one" ).click( function() {
+	    $( "#D_stuteam_one_hmmj" ).slideToggle();
+	});
+	$( "#D_stuteam_two" ).click( function() {
+	    $( "#D_stuteam_two_bymg" ).slideToggle();
+	});
+	$( "#D_stuteam_three" ).click( function() {
+	    $( "#D_stuteam_three_yrje" ).slideToggle();
+	});
 	
 	
-  	$( "#D_head" ).click( function() {
-    	$( "#D_allteam" ).slideToggle();
-  	});
-  
+	
+	$( "#ALL_head" ).click( function() {
+	    $( "#BD_head" ).slideToggle();
+	});    
+
 	$( "#BD_head" ).click( function() {
-	  $( "#BD_allteam" ).slideToggle();
+	    $( "#BD_tchteam" ).slideToggle();
+	    $( "#BD_mngteam" ).slideToggle();
+	    $( "#BD_stuteam" ).slideToggle();
 	});
-  
-  
+	
+	$( "#BD_tchteam" ).click( function() {
+	    $( "#BD_tchteam_one" ).slideToggle();
+	    $( "#BD_tchteam_two" ).slideToggle();
+	    $( "#BD_tchteam_three" ).slideToggle();
+	});
+	
+	$( "#BD_mngteam" ).click( function() {
+	    $( "#BD_mngteam_one" ).slideToggle();
+	    $( "#BD_mngteam_two" ).slideToggle();
+	    $( "#BD_mngteam_three" ).slideToggle();
+	});
+	
+	$( "#BD_stuteam" ).click( function() {
+	    $( "#BD_stuteam_one" ).slideToggle();
+	    $( "#BD_stuteam_two" ).slideToggle();
+	    $( "#BD_stuteam_three" ).slideToggle();
+	});
+	
+	$( "#BD_tchteam_one" ).click( function() {
+	    $( "#BD_tchteam_one_ssjh" ).slideToggle();
+	});
+	$( "#BD_tchteam_two" ).click( function() {
+	    $( "#BD_tchteam_two_ssjh" ).slideToggle();
+	});
+	$( "#BD_tchteam_three" ).click( function() {
+	    $( "#BD_tchteam_three_ssjh" ).slideToggle();
+	});
+	
+	$( "#BD_mngteam_one" ).click( function() {
+	    $( "#BD_mngteam_one_kdeu" ).slideToggle();
+	});
+	$( "#BD_mngteam_two" ).click( function() {
+	    $( "#BD_mngteam_two_kdeu" ).slideToggle();
+	});
+	$( "#BD_mngteam_three" ).click( function() {
+	    $( "#BD_mngteam_three_kdeu" ).slideToggle();
+	});
+	
+	$( "#BD_stuteam_one" ).click( function() {
+	    $( "#BD_stuteam_one_hmmj" ).slideToggle();
+	});
+	$( "#BD_stuteam_two" ).click( function() {
+	    $( "#BD_stuteam_two_bymg" ).slideToggle();
+	});
+	$( "#BD_stuteam_three" ).click( function() {
+	    $( "#BD_stuteam_three_yrje" ).slideToggle();
+	});
+	
+	
+	
+	
+	
+	
   
   
 }); // end of $( document ).ready( function()
@@ -45,79 +200,61 @@ $( document ).ready( function() {
 <title>조직도</title>
 
 
-<table>
-	
-	
-<div class="treeview-colorful w-20 border border-secondary mx-4 my-4" >
-  <h2 class="pt-3 pl-3">조직도</h2>
-  <hr>
-  
-  <ul class="treeview-colorful-list mb-3">
-    <li class="treeview-colorful-items">
-        <div id="All_head"><i class="fas fa-plus-circle">쌍용그룹</i></div>
-        <div id="ALL_team">
-	      <ul class="nested">
-	    <li class="treeview-colorful-items">
-	        <div id="D_head"><i class="fas fa-plus-circle">대면본부</i></div>
-	      	<div id="D_allteam">
-		      <ul class="nested">
-		        <li>
-		          	대면강사팀
-		        </li>
-		        <li>
-		          	대면매니저팀
-		        </li>
-		        <li>대면교육팀
-		          <ul class="nested">
-		            <li>
-		              	대면1팀
-		            </li>
-		            <li>
-		              	대면2팀
-		            </li>
-		            <li>
-		              	대면3팀
-		            </li>
-		          </ul>
-		        </li>
-		      </ul>
-	      </div>
-	    </li>
-	    
-	    <li class="treeview-colorful-items">
-	        <div id="BD_head"><i class="fas fa-plus-circle">비대면본부</i></div>
-	      	<div id="BD_allteam">
-		      <ul class="nested">
-		        <li>
-		          	비대면강사팀
-		        </li>
-		        <li>
-		          	비대면매니저팀
-		        </li>
-		        <li>비대면교육팀
-		          <ul class="nested">
-		            <li>
-		              	비대면1팀
-		            </li>
-		            <li>
-		              	비대면2팀
-		            </li>
-		            <li>
-		              	비대면3팀
-		            </li>
-		          </ul>
-		        </li>
-		      </ul>
-	      </div>
-	    </li>
-	    </ul>
-	    </div>
-	 </li>
-	 </ul>
+<div class="col-sm-7">
+<h2>Collapsed<br><br></h2>
+<ul>
+	<li class="list-group-item" id="ALL_head">쌍용그룹</li>
+		<li class="list-group-item" id="D_head" style="padding-left:50px;">대면본부</li>
+			<li class="list-group-item" id="D_tchteam" style="padding-left:100px;">대면강사팀</li>
+				<li class="list-group-item" id="D_tchteam_one" style="padding-left:150px;">강사1팀</li>
+					<li class="list-group-item" id="D_tchteam_one_ssjh" style="padding-left:200px;">서순신,서정화</li>
+				<li class="list-group-item" id="D_tchteam_two" style="padding-left:150px;">강사2팀</li>
+					<li class="list-group-item" id="D_tchteam_two_ssjh" style="padding-left:200px;">영순신,영정화</li>
+				<li class="list-group-item" id="D_tchteam_three" style="padding-left:150px;">강사3팀</li>	
+					<li class="list-group-item" id="D_tchteam_three_ssjh" style="padding-left:200px;">학순신,학정화</li>
+			<li class="list-group-item" id="D_mngteam" style="padding-left:100px;">대면매니저팀</li>
+				<li class="list-group-item" id="D_mngteam_one" style="padding-left:150px;">매니저1팀</li>
+					<li class="list-group-item" id="D_mngteam_one_kdeu" style="padding-left:200px;">강길동,강이유</li>
+				<li class="list-group-item" id="D_mngteam_two" style="padding-left:150px;">매니저2팀</li>
+					<li class="list-group-item" id="D_mngteam_two_kdeu" style="padding-left:200px;">태길동,태이유</li>
+				<li class="list-group-item" id="D_mngteam_three" style="padding-left:150px;">매니저3팀</li>
+					<li class="list-group-item" id="D_mngteam_three_kdeu" style="padding-left:200px;">림길동,림이유</li>
+			<li class="list-group-item" id="D_stuteam" style="padding-left:100px;">대면교육생팀</li>
+				<li class="list-group-item" id="D_stuteam_one" style="padding-left:150px;">교육1팀</li>
+					<li class="list-group-item" id="D_stuteam_one_hmmj" style="padding-left:200px;">정환모,김민정</li>
+				<li class="list-group-item" id="D_stuteam_two" style="padding-left:150px;">교육2팀</li>
+					<li class="list-group-item" id="D_stuteam_two_bymg" style="padding-left:200px;">문병윤,성문길</li>
+				<li class="list-group-item" id="D_stuteam_three" style="padding-left:150px;">교육3팀</li>
+					<li class="list-group-item" id="D_stuteam_three_yrje" style="padding-left:200px;">임유리,김지은</li>
+					
+		
+		<li class="list-group-item" id="BD_head" style="padding-left:50px;">비대면본부</li>
+			<li class="list-group-item" id="BD_tchteam" style="padding-left:100px;">비대면강사팀</li>
+				<li class="list-group-item" id="BD_tchteam_one" style="padding-left:150px;">강사1팀</li>
+					<li class="list-group-item" id="BD_tchteam_one_ssjh" style="padding-left:200px;">서순신,서정화</li>
+				<li class="list-group-item" id="BD_tchteam_two" style="padding-left:150px;">강사2팀</li>
+					<li class="list-group-item" id="BD_tchteam_two_ssjh" style="padding-left:200px;">영순신,영정화</li>
+				<li class="list-group-item" id="BD_tchteam_three" style="padding-left:150px;">강사3팀</li>	
+					<li class="list-group-item" id="BD_tchteam_three_ssjh" style="padding-left:200px;">학순신,학정화</li>
+			<li class="list-group-item" id="BD_mngteam" style="padding-left:100px;">비대면매니저팀</li>
+				<li class="list-group-item" id="BD_mngteam_one" style="padding-left:150px;">매니저1팀</li>
+					<li class="list-group-item" id="BD_mngteam_one_kdeu" style="padding-left:200px;">강길동,강이유</li>
+				<li class="list-group-item" id="BD_mngteam_two" style="padding-left:150px;">매니저2팀</li>
+					<li class="list-group-item" id="BD_mngteam_two_kdeu" style="padding-left:200px;">태길동,태이유</li>
+				<li class="list-group-item" id="BD_mngteam_three" style="padding-left:150px;">매니저3팀</li>
+					<li class="list-group-item" id="BD_mngteam_three_kdeu" style="padding-left:200px;">림길동,림이유</li>
+			<li class="list-group-item" id="BD_stuteam" style="padding-left:100px;">비대면교육생팀</li>
+				<li class="list-group-item" id="BD_stuteam_one" style="padding-left:150px;">교육1팀</li>
+					<li class="list-group-item" id="BD_stuteam_one_hmmj" style="padding-left:200px;">정환모,김민정</li>
+				<li class="list-group-item" id="BD_stuteam_two" style="padding-left:150px;">교육2팀</li>
+					<li class="list-group-item" id="BD_stuteam_two_bymg" style="padding-left:200px;">문병윤,성문길</li>
+				<li class="list-group-item" id="BD_stuteam_three" style="padding-left:150px;">교육3팀</li>
+					<li class="list-group-item" id="BD_stuteam_three_yrje" style="padding-left:200px;">임유리,김지은</li>			
+</ul>
 </div>
-	 
+
+
    
   
 	
 	
-</table>

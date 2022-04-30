@@ -67,8 +67,8 @@ body {font-family: 'Noto Sans KR', sans-serif; }
 
 /* addBook_orgChart 시작 */
 
-	#All_head, #D_head , #BD_head {
-		cursor:pointer;
+	#orgChart {
+		curs;
 	}
 	
 
