@@ -397,7 +397,7 @@
         <!-- 오른쪽 섹션 시작 -->
         <div class="col-sm-3" id="section_right">
         	<!-- 웹채팅 시작 -->
-        	<div id="empInfo">
+        	<div id="webChatting">
         		<div id="web_title" style="text-align:center;"></div>
 	        	<div class="profile">
 	        		<span class="photo">
