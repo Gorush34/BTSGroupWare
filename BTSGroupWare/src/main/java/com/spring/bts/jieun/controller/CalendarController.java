@@ -88,6 +88,17 @@ public class CalendarController {
 			return mav;
 		//  /WEB-INF/views/tiles3/fcalenderMain.jsp	페이지를 만들어야 한다.		
 		}
+		
+		// === 일정 등록 페이지 === //	
+		@RequestMapping(value="/calendar/schedualRegister.bts")
+		public ModelAndView schedualRegister(ModelAndView mav) {
+			
+			mav.setViewName("schedualRegister.calendar");
+			
+			return mav;
+		}
+		
+		
 		/*	// === 일정 체크 박스 추가 === //
 		@ResponseBody
 		@RequestMapping(value="/addCalenderName.bts", method={RequestMethod.POST}, produces="text/plain;charset=UTF-8")
