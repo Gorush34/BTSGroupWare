@@ -10,7 +10,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%-- 사이드바 부분 시작 --%>
-<div class="sidebar">
+<%-- <div class="sidebar">
   <a class="active" href="<%= ctxPath%>/mail/mailList.bts">홈</a>
   <a href="<%= ctxPath%>/mail/mailWrite.bts">메일쓰기</a>
   <a href="<%= ctxPath%>/mail/mailList.bts">받은메일함</a>
@@ -19,5 +19,5 @@
   <a href="#temporaryMail">임시보관함</a>
   <a href="#reserveMail">예약메일함</a>
   <a href="#recyclebinMail">휴지통</a>  
-</div>
+</div> --%>
 <%-- 사이드바 부분 끝 --%>
