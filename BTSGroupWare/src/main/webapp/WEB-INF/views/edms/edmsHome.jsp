@@ -7,13 +7,6 @@
 
 <title>내 문서함</title>
 
-<<<<<<< HEAD
-<style>
-	div.card {
-		min-width: 120px;
-		max-width: 
-	}
-=======
 <!-- style_edms.css 는 이미 layout-tiles_edms.jsp 에 선언되어 있으므로 쓸 필요 X! -->
 
 <script type="text/javascript">
@@ -28,27 +21,10 @@
 		<span class="edms_maintitle">전자결재 홈</span>
 		<p style="margin-bottom: 10px;"></p>
 	</div>
->>>>>>> refs/remotes/origin/yuri
 	
-<<<<<<< HEAD
-	div.card-title {
-		font-size: 12pt;
-		line-height: 12pt;
-		text-align: left;
-		padding-left: 12px;
-		margin-top: 12px;
-	}
-</style>
-
-<div id="myedms">
-	<!-- 나의 현황 시작 -->
-	<div id="edms_top">
-		<H2>김다우 님의 현황 입니다.</H2>
-=======
 	<!-- 나의 현황(최근문서) 시작 -->
 	<div id="edms_current">
 		<span class="edms_title">김다우 님의 현황</span>
->>>>>>> refs/remotes/origin/yuri
 		<div class="divClear"></div>
 		
 		<!-- 나의현황 카드 시작 -->
