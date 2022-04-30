@@ -83,7 +83,7 @@ public class CalendarController {
 		@RequestMapping(value="/calendar/calenderMain.bts")
 		public ModelAndView calenderMain(ModelAndView mav) {
 			
-			mav.setViewName("calendar_test.calendar");
+			mav.setViewName("calendarMain.calendar");
 			
 			return mav;
 		//  /WEB-INF/views/tiles3/fcalenderMain.jsp	페이지를 만들어야 한다.		
