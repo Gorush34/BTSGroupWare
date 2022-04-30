@@ -47,5 +47,14 @@ public class MBYController {
      
       return mav;
    }
+   
+   // 상세개인정보
+   @RequestMapping(value="/addBook/addBook_perInfo.bts")
+   public ModelAndView addBook_perInfo(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+      
+      mav.setViewName("addBook_perInfo.addBook");
+     
+      return mav;
+   }
 
 }

@@ -22,11 +22,10 @@ $( document ).ready( function() {
 	
 	$( "#All_head" ).click( function() {
 	    $( "#D_allteam" ).slideToggle();
+	    $( "#BD_allteam" ).slideToggle();
 	});
 	  
-	$( "#All_head" ).click( function() {
-		$( "#BD_allteam" ).slideToggle();
-	});  
+	
 	
   	$( "#D_head" ).click( function() {
     	$( "#D_allteam" ).slideToggle();
@@ -118,21 +117,7 @@ $( document ).ready( function() {
 </div>
 	 
    
-   
-   <!--  <li>
-      <div class="treeview-colorful-element"><i class="far fa-comment ic-w mr-1"></i>Notes
-    </li>
-    <li>
-      <div class="treeview-colorful-element"><i class="fas fa-cogs ic-w mr-1"></i>Settings
-    </li>
-    <li>
-      <div class="treeview-colorful-element"><i class="fas fa-desktop ic-w mr-1"></i>Devices
-    </li>
-    <li>
-      <div class="treeview-colorful-element"><i class="fas fa-trash-alt ic-w mr-1"></i>Deleted Items
-    </li>
-  </ul>
-</div> -->
+  
 	
 	
 </table>

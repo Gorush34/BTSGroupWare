@@ -19,7 +19,7 @@
 	<div id="telAdd_main_tbl" style="text-align:center;">
 	<table>
 		<tr>
-			<td><h2>연락처 추가</h2></td>
+			<td><h2>연락처 추가<br><br></h2></td>
 		</tr>
 		<tr>
 			<td><strong>사진</strong></td>
