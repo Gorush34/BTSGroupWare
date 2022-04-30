@@ -64,6 +64,10 @@
 
 	<style type="text/css">
 	
+		body {
+			margin: auto 0;
+		}
+	
 		div#image > img {
 			max-width: 475px;
 			min-height: 538px;
