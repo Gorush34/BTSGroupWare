@@ -60,6 +60,7 @@ div.modal_content{
 
 /* === 모달창 관련 css 끝 == */
 
+/* 메인 캘린더 파트*/
 div#search{
   border: 1px solid #999;
   position: relative;
@@ -104,4 +105,12 @@ input#searchWord{
 	border: none;
 	background-color: white;
 	margin-left: 3px;
+}
+
+
+/* 캘린더 등록(일정 등록) 파트 */
+table#schedualRegisterContent > tbody > tr > th  {
+	padding: 5px;
+	height: 50px;
+	width: 140px;
 }
