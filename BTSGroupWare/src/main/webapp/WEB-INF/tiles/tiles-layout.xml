@@ -192,7 +192,25 @@
 	</definition>
 	<!-- 메인 테스트 레이아웃 시작 -->
 	
-
+	<!-- 환모 근태 레이아웃 시작 -->
+	<definition name="layout_att"  template="/WEB-INF/tiles/layout/layout-tiles_att.jsp"> 
+		<put-attribute name="header"  value="/WEB-INF/tiles/common/header.jsp" />
+		<put-attribute name="sideinfo"  value="/WEB-INF/tiles/sideinfo/sideinfo_att.jsp" />
+		<put-attribute name="content" value="" />
+		<put-attribute name="footer"  value="/WEB-INF/tiles/common/footer.jsp" />
+	</definition>
+	
+	<definition name="*.att" extends="layout_att">
+		<put-attribute name="content" value="/WEB-INF/views/att/{1}.jsp"/>
+	</definition>
+	<definition name="*/*.att" extends="layout_att">
+		<put-attribute name="content" value="/WEB-INF/views/att/{1}/{2}.jsp"/>
+	</definition>
+	<definition name="*/*/*.att" extends="layout_att">
+		<put-attribute name="content" value="/WEB-INF/views/att/{1}/{2}/{3}.jsp"/>
+	</definition>
+	<!-- 환모 근태 레이아웃 끝 -->
+	
 </tiles-definitions> 
 
 
