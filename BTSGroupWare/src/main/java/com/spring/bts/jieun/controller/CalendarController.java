@@ -98,6 +98,23 @@ public class CalendarController {
 			return mav;
 		}
 		
+		// === 예약 및 자원 관리자 페이지 === //	
+		@RequestMapping(value="/reservation/reservationAdmin.bts")
+		public ModelAndView reservationAdmin(ModelAndView mav) {
+			
+			mav.setViewName("reservationAdmin.calendar");
+			
+			return mav;
+		}
+		
+		// === 예약 및 자원 관리자 페이지 === //	
+		@RequestMapping(value="/reservation/resourceRegister.bts")
+		public ModelAndView resourceRegister(ModelAndView mav) {
+			
+			mav.setViewName("resourceRegister.calendar");
+			
+			return mav;
+		}
 		
 		/*	// === 일정 체크 박스 추가 === //
 		@ResponseBody

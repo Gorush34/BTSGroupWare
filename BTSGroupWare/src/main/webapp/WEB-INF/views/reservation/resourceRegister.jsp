@@ -138,7 +138,7 @@
 							<div id="collapse1" class="panel-collapse collapse" role="tabpanel">
 								<div class="panel-body">
 									<table class="table table-striped" id="reservationTable" style="margin-left: 10px;">
-									<thead class="table-primary" style="color:white;">
+									<thead class="table-primary" style="color:white; ">
 										<tr>
 											<th style="width:500px;">항목</th>
 											<th style="width:300px;">예약</th>
