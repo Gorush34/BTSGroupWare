@@ -57,8 +57,20 @@
 			</div>
 			<table id="schedualRegisterContent">
 				<tr>
-					<td>데이트피커</td>
-					<td><input type="checkbox" id="allday" name="allday"/><label for="allday"> &nbsp;종일</label>&nbsp;&nbsp;&nbsp;<input type="checkbox" id="repeat" name="repeat"/><label for="repeat">&nbsp;반복</label></td>
+					<th>날짜</th>
+					<td>
+						<input type="date" id="startDate" value="${requestScope.chooseDate}" style="height: 30px;"/>&nbsp; 
+						<select id="startHour" class="schedule"></select> 시
+						<select id="startMinute" class="schedule"></select> 분
+						- <input type="date" id="endDate" value="${requestScope.chooseDate}" style="height: 30px;"/>&nbsp;
+						<select id="endHour" class="schedule"></select> 시
+						<select id="endMinute" class="schedule"></select> 분&nbsp;
+						<input type="checkbox" id="allday" name="allday"/><label for="allday"> &nbsp;종일</label>&nbsp;&nbsp;&nbsp;
+						<input type="checkbox" id="repeat" name="repeat"/><label for="repeat">&nbsp;반복</label>
+						
+						<input type="hidden" name="startdate"/>
+						<input type="hidden" name="enddate"/>
+					</td>
 				</tr>
 				<tr>
 					<th>내 캘린더</th>
@@ -87,6 +99,10 @@
 					<div class="displayUserList"></div>
 					<input type="hidden" name="joinuser"/>
 					</td>
+				</tr>
+				<tr>
+					<th>색상</th>
+					<td><input type="color" id="color" name="color" value="#0096c6"/></td>
 				</tr>
 				<tr>
 					<th>장소</th>
