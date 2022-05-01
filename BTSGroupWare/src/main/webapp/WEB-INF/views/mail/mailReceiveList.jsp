@@ -22,13 +22,13 @@
 </script>
 
 <%-- 받은 메일함 목록 보여주기 --%>	
-<div class="container">
-	<div class="row bg-title" style="border-bottom: solid .025em gray;">	
+<div class="container" style="width: 80%;">
+	<div class="row bg-title" style="border-bottom: solid 1.5px #e6e6e6;">	
 		<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
 			<h4 class="page-title" style="color: black;">받은 메일함</h4>
 		</div>
 		
-		<form name="goReceiveListSelectFrm" style="display: inline-block; padding-left: 80px;">		
+		<form name="goReceiveListSelectFrm" style="display: inline-block; padding-left: 160px;">		
 			<div id="mail_searchType">
 				<select class="form-control" id="searchType" name="searchType" style="">
 					<option value="mail_subject" selected="selected">제목</option>

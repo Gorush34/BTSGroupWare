@@ -14,8 +14,9 @@
   table, th, td, input, textarea {border: solid #a0a0a0 0px;}
   
   #table {border-collapse: collapse;
-         width: 1175px;
-         }
+          width: 1175px;
+          }
+         
   #table th, #table td{padding: 5px;}
   #table th{ 
   		background-color: #6F808A; 
@@ -129,7 +130,8 @@ $(document).ready(function (){
 
 </script>
 
-	<div class="row bg-title" style="border-bottom: solid .025em gray;">	
+<div class="container" style="width: 80%;">
+	<div class="row bg-title" style="border-bottom: solid 1.5px #e6e6e6;">	
 		<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
 			<h4 class="page-title" style="color: black;">메일 쓰기</h4>
 		</div>
@@ -168,7 +170,7 @@ $(document).ready(function (){
 			</tr>
 			<tr>
 				<th width="14%">
-					<span style="margin-right: 60px;">제목</span>
+					<span style="margin-right: 40px;">제목</span>
 					<input type="checkbox" checked="checked" />&nbsp;&nbsp;중요!
 				</th>
 				<td width="86%">
@@ -192,7 +194,7 @@ $(document).ready(function (){
 		<table style="border: 0px; width: 800px;">
 			<tr style="border: 0px;">
 				<td width="1200px;" style="border: 0px">
-					<textarea rows="20" cols="100" style="width: 1098px; border: solid 1px gray; height: 400px;" name="mail_content" >					
+					<textarea rows="20" cols="100" style="width: 865px; border: solid 1px gray; height: 400px;" name="mail_content" >					
 					</textarea>					
 				</td>
 			</tr>
@@ -214,7 +216,7 @@ $(document).ready(function (){
 			<span style="margin-left: 20px;"></span>
 		</li>	
 	</ul>	
-
+</div>
 
 <%-- 발송예약 모달 --%>
 

@@ -14,7 +14,7 @@
 <title>게시판</title>
   <!-- Required meta tags -->
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/bootstrap-4.6.0-dist/css/bootstrap.min.css" > 
