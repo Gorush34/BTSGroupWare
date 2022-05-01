@@ -71,9 +71,9 @@
 	   <div id="sidebar" style="font-size: 11pt;">
 		 <h4>캘린더</h4>
 		 
-		   <input type="hidden" value="${sessionScope }" id="fk_emp_no">
+	<%--	   <input type="hidden" value="${sessionScope }" id="fk_emp_no"> --%>
 		 
-			<button type="button" class="btn btn-outline-primary btn-lg " style="margin: 15px auto; width:200px; display:block;" onclick="<%= ctxPath%>/schedualRegister.bts">일정등록</button>
+			<button type="button" class="btn btn-outline-primary btn-lg " style="margin: 15px auto; width:200px; display:block;" onclick="javascript:location.href='<%= ctxPath%>/calendar/schedualRegister.bts'">일정등록</button>
 			<ul style="list-style-type: none; padding: 10px;">
 				<li style="margin-bottom: 15px;">
 					<div id="calenderbtn1" class="calenderbtn">내 캘린더</div>
