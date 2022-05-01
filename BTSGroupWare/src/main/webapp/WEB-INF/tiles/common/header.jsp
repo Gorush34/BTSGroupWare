@@ -31,7 +31,7 @@
     <!-- 상단 네비게이션 시작 -->
    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top mx-4 py-3">
       <!-- Brand/logo --> 
-      <a class="navbar-brand" href="<%= ctxPath %>/index.action" style="margin-right: 5%;"><span style="font-weight: bold;">BTSGroupWare</span></a>
+      <a class="navbar-brand" href="<%= ctxPath %>/index.action" style="margin-right: 5%;"><span style="font-weight: bold;">BTSGroupware</span></a>
       
       <!-- 아코디언 같은 Navigation Bar 만들기 -->
        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
@@ -49,6 +49,14 @@
 	      </li>
 	      <%-- 전자결재 끝 --%>
 	       
+	      <%-- 메일 시작 --%>
+	      <li class="nav-item">
+	        <a class="nav-link" href="#" id="navbar" role="button" aria-expanded="false">
+	        	메일함
+	        </a>
+	      </li>
+	      <%--메일 끝 --%>
+	      
 	       <%--게시판 / 자료실 시작 --%>
 	       <li class="nav-item">
 	        <a class="nav-link" href="#" id="navbar" role="button" aria-expanded="false">
@@ -61,14 +69,6 @@
 	        </a>
 	      </li>
 	      <%-- 게시판 / 자료실 끝 --%>
-	      
-	      <%-- 메일 시작 --%>
-	      <li class="nav-item">
-	        <a class="nav-link" href="#" id="navbar" role="button" aria-expanded="false">
-	        	메일함
-	        </a>
-	      </li>
-	      <%--메일 끝 --%>
 	      
 	      <%-- 일정관리 / 자원관리 시작 --%>
 	      <li class="nav-item">
