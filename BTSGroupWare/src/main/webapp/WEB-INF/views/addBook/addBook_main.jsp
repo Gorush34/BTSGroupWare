@@ -7,15 +7,35 @@
    String ctxPath = request.getContextPath();
   //       /board 
 %>
-
 <script type="text/javascript">
 
-	$( document ).ready( function() {
-		$( "div#fassadd_input" ).slideToggle().hide();
+$( document ).ready( function() {
+
+	$( "div#fassadd_input" ).slideToggle().hide();
 	  $( "button#fastadd" ).click( function() {
 	    $( "div#fassadd_input" ).slideToggle();
 	  });
-	}); // end of $( document ).ready( function()
+	  
+}); // end of $( document ).ready( function()
+
+
+function searchBtn() {
+	$.ajax({
+		url:"<%= ctxPath%>/addBook/test.bts",
+			data:{"search" : $("input#searchText").val(),
+	 		type: "post",
+	 		dataType: 'json',
+	 		success : function(json) {
+	 	    },
+		 error: function(request){
+		 }
+		}
+	});
+}
+	
+			
+			
+			
 
 </script>
 
@@ -25,8 +45,8 @@
 			<td colspan="6" style="text-align: left;"><br><h2>전체주소록</h2><br><br></td>
 			<td>
 				  <div class="d-flex align-items-center">
-				    <input class="form-control" type="search" placeholder="주소록검색" aria-label="Search">
-				    <button id="searchBtn" class="btn btn-outline-success flex-shrink-0" type="submit">검색</button>
+				    <input class="form-control" type="search" id="searchText" value="" placeholder="주소록검색" aria-label="Search">
+				    <button id="searchBtn" class="btn btn-outline-success flex-shrink-0" type="submit" onclick="searchBtn()">검색</button>
 				  </div>
 			</td>
 		</tr>
