@@ -7,6 +7,116 @@
 <!-- ==== 대부분은 namespace에 파일이름 사용(유일하니까) ==== -->
 <mapper namespace="minjeong">
 
+<!-- 
+ 메일 쓰기 (첨부파일이 없는 메일쓰기) 
+<insert id=""></insert>
+
+
+
+
+메일 쓰기 (첨부파일이 있는 메일쓰기)
+<insert id=""></insert>
+
+
+
+
+
+받은메일함 보여주기
+<select id=""></select>
+
+
+
+
+ 받은메일함 내용 읽기
+<select id=""></select>
+
+
+
+
+
+
+보낸메일함 보여주기
+<select id=""></select>
+
+
+
+
+
+
+보낸메일함 내용 읽기
+<select id=""></select>
+
+
+
+
+
+중요메일함 보여주기
+<select id=""></select>
+
+
+
+
+
+중요메일함 내용 읽기
+<select id=""></select>
+
+
+
+
+
+
+임시보관함 보여주기
+<select id=""></select>
+
+
+
+
+
+
+임시보관함 내용 읽기
+<select id=""></select>
+
+
+
+
+
+
+예약메일함 보여주기
+<select id=""></select>
+
+
+
+
+
+예약메일함 내용 읽기
+<select id=""></select>
+
+
+
+
+
+휴지통 목록 보여주기
+<select id=""></select>
+
+
+
+
+
+휴지통 내용 읽기
+<select id=""></select>
+
+
+
+
+
+휴지통 목록 삭제하기
+<delete id=""></delete>
+
+
+
+
+ -->
+
 
 
 </mapper>

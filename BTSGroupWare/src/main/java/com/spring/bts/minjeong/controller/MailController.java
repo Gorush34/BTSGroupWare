@@ -30,6 +30,10 @@ public class MailController {
 	// http://localhost:9090/bts/tiles1/mailList.bts
 	public String mailList(HttpServletRequest request) {
 
+		// 페이징 처리 한 받은메일함 목록 보여주기
+		
+		// 검색 목록
+		
 		return "mailReceiveList.mail";
     //  return "/tiles1/mailList.jsp";	// 아래와 같이 써서 오류가 났음.
 	}
@@ -117,7 +121,7 @@ public class MailController {
 	}		
 			
 	
-	// 휴지통
+	// 휴지통 목록 보여주기
 	@RequestMapping(value = "/mail/mailRecyclebin.bts")	
 	public String mailRecyclebin(HttpServletRequest request) {
 		
@@ -125,7 +129,7 @@ public class MailController {
 		//	value="/WEB-INF/views/mail/{1}.jsp 페이지를 만들어야 한다.
 	}	
 
-	// 휴지통 목록 삭제하기
+	// 휴지통 내용 읽기
 	@RequestMapping(value = "/mail/mailRecyclebinDetail.bts")	
 	public String mailRecyclebinDetail(HttpServletRequest request) {
 		
@@ -133,7 +137,7 @@ public class MailController {
 		//	value="/WEB-INF/views/mail/{1}.jsp 페이지를 만들어야 한다.
 	}		
 	
-	// 휴지통
+	// 휴지통 목록 삭제하기
 	@RequestMapping(value = "/mail/mailRecyclebinClear.bts")	
 	public String mailRecyclebinClear(HttpServletRequest request) {
 		
