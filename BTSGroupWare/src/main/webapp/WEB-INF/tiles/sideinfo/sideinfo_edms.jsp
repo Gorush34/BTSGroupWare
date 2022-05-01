@@ -343,7 +343,12 @@ span.edms_menu:hover {
 		<ul>
 			<li style="list-style: none"><span class="edms_menu" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsHome.bts'">전자결재 홈</span></li>
 			<li style="list-style: none"><span class="edms_menu" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsAdd.bts'">문서작성</span></li>
-			<li style="list-style: none"><span class="edms_menu" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsMydoc.bts'">내문서함(전체문서함/결재대기/결재승인/결재반려)</span></li>
+			
+			<li style="list-style: none"><span class="edms_menu" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsMydoc.bts'">내문서함(전체문서함)</span></li>
+			<li style="list-style: none"><span class="edms_menu" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsMydoc_wait.bts'">내문서함(대기문서함)</span></li>
+			<li style="list-style: none"><span class="edms_menu" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsMydoc_accepted.bts'">내문서함(승인문서함)</span></li>
+			<li style="list-style: none"><span class="edms_menu" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsMydoc_rejected.bts'">내문서함(반려문서함)</span></li>
+			
 			<li style="list-style: none"><span class="edms_menu" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsApprove.bts'">결재하기</span></li>
 		</ul>
 	</div>

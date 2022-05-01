@@ -4,7 +4,7 @@ body {font-family: 'Noto Sans KR', sans-serif; }
 
 #mycontainer	{ padding:20px; }
 #myheader		{ display: flex; min-height:100px; position: relative; top: 60px; }
-#mycontent		{ min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:#fff;
+#mycontent		{ min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:#F2F2F2;
 				  float:right; width:80%; padding: 20px; }
 
 #mysideinfo		{ min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:#000060;
@@ -83,6 +83,11 @@ body {font-family: 'Noto Sans KR', sans-serif; }
 		cursor: pointer;
 		color: #000060;
 	}
+	
+	/* 테이블 배경색깔 */
+/* 	table.edmsList_tbl > thead > tr {
+		background-color: red;
+	} */
 /* 
 민정서식 시작
 */

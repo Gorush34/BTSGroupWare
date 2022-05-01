@@ -6,9 +6,7 @@
 	String ctxPath = request.getContextPath();
 %>
 
-<style type="text/css">
-
-</style>
+<!-- style_edms.css 는 이미 layout-tiles_edms.jsp 에 선언되어 있으므로 쓸 필요 X! -->
 
 <script type="text/javascript">
 	
@@ -53,16 +51,11 @@
 
 
 <div style="display: flex;">
-<div style="margin: auto; padding-left: 3%;">
+	<div style="margin: auto; padding-left: 3%;">
 
 	<h2 style="margin-bottom: 30px;">글쓰기</h2>
 
-
-<form name="">
-
-
-
-<form name="addFrm">
+	<form name="addFrm">
 	<table style="width: 1024px" class="table table-bordered">
 		<tr>
 			<th style="width: 15%; background-color: #DDDDDD">성명</th>
@@ -104,6 +97,6 @@
 		<button type="button" class="btn btn-secondary btn-sm" onclick="javascript:history.back()">취소</button>
 	</div>
 	
-</form>
-</div>
+	</form>
+	</div>
 </div>

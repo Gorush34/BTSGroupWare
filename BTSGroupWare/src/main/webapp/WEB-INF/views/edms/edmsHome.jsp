@@ -5,8 +5,6 @@
 	String ctxPath = request.getContextPath();
 %>
 
-<title>내 문서함</title>
-
 <!-- style_edms.css 는 이미 layout-tiles_edms.jsp 에 선언되어 있으므로 쓸 필요 X! -->
 
 <script type="text/javascript">
@@ -64,7 +62,7 @@
 		
 		<div class="divClear"></div>
 		
-		<table class="table table-sm">
+		<table class="table table-sm table-hover table-light">
 			<thead>
 				<tr>
 					<th scope="col">#</th>
@@ -108,7 +106,7 @@
 		
 		<div class="divClear"></div>
 		
-		<table class="table table-sm">
+		<table class="table table-sm table-hover table-light">
 			<thead>
 				<tr>
 					<th scope="col">#</th>
@@ -122,7 +120,6 @@
 			</thead>
 			<tbody>
 				<%-- 나중에 forEach문 사용해서 뿌려주기 --%>
-				<%-- 이상하게 나옴
 				<c:forEach var="i" begin="1" end="5">
 				<tr>
 					<th scope="row"><p><c:out value="${i}" /></p></th>
@@ -134,63 +131,13 @@
 					<td>20220428-000001</td>
 				</tr>
 				</c:forEach>
-				--%>
-				<tr>
-					<th scope="row"><p><c:out value="${i}" /></p></th>
-					<td>2022.02.02</td>
-					<td>업무기안</td>
-					<td></td>
-					<td>(신규)휴가신청-연차관리연동</td>
-					<td>있음</td>
-					<td>20220428-000001</td>
-				</tr>
-				
-				<tr>
-					<th scope="row"><p><c:out value="${i}" /></p></th>
-					<td>2022.02.02</td>
-					<td>업무기안</td>
-					<td></td>
-					<td>(신규)휴가신청-연차관리연동</td>
-					<td>있음</td>
-					<td>20220428-000001</td>
-				</tr>
-				
-				<tr>
-					<th scope="row"><p><c:out value="${i}" /></p></th>
-					<td>2022.02.02</td>
-					<td>업무기안</td>
-					<td></td>
-					<td>(신규)휴가신청-연차관리연동</td>
-					<td>있음</td>
-					<td>20220428-000001</td>
-				</tr>
-				
-				<tr>
-					<th scope="row"><p><c:out value="${i}" /></p></th>
-					<td>2022.02.02</td>
-					<td>업무기안</td>
-					<td></td>
-					<td>(신규)휴가신청-연차관리연동</td>
-					<td>있음</td>
-					<td>20220428-000001</td>
-				</tr>
-				
-				<tr>
-					<th scope="row"><p><c:out value="${i}" /></p></th>
-					<td>2022.02.02</td>
-					<td>업무기안</td>
-					<td></td>
-					<td>(신규)휴가신청-연차관리연동</td>
-					<td>있음</td>
-					<td>20220428-000001</td>
-				</tr>
-				
 			</tbody>
 		</table>
 		
+		<div class="divClear"></div>
+		
 		<div class="more">
 			<span class="more" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsMydoc.bts'">전체보기</span>
-			<%-- <button type="button" class="more" style="background-color: #000060; color: #fff;">전체보기</button> --%>
 		</div>
 	</div>
 	<!-- 결재진행 문서목록 종료 -->
