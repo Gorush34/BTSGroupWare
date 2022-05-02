@@ -1,7 +1,7 @@
 @charset "UTF-8";
-/*
+
 body {font-family: font-family: 'Noto Sans KR', sans-serif; }
-*/
+
 #mycontainer   { padding:20px; }
 #myheader      { display: flex; min-height:100px; position: relative; top: 60px; }
 #mycontent      { min-height:1200px; top:60px; padding-top: 40px; padding-left:250px; background-color:#FFF;
@@ -60,6 +60,7 @@ div.modal_content{
 
 /* === 모달창 관련 css 끝 == */
 
+/* 메인 캘린더 파트*/
 div#search{
   border: 1px solid #999;
   position: relative;
@@ -68,7 +69,7 @@ div#search{
   margin-left: 800px;
 }
 
-select {
+select#searchType {
   width:80px;
   padding:5px;
   border:0px solid #999;
@@ -105,3 +106,132 @@ input#searchWord{
 	background-color: white;
 	margin-left: 3px;
 }
+
+
+/*예약 페이지 파트*/
+
+
+.md-work-week-cont {
+    position: relative;
+    padding-left: 50px;
+}
+
+.md-work-week-avatar {
+    position: absolute;
+    max-height: 50px;
+    max-width: 50px;
+    top: 21px;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    left: 20px;
+}
+
+.md-work-week-name {
+    font-size: 16px;
+}
+
+.md-work-week-title {
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.md-switching-timeline-view-cont .mbsc-segmented {
+    max-width: 200px;
+    margin: 0 auto;
+    padding: 1px;
+}
+
+.md-work-week-picker {
+    flex: 1 0 auto;
+}
+
+.md-work-week-nav {
+    width: 200px;
+}
+
+.md-switching-timeline-view-cont .mbsc-timeline-resource {
+    display: flex;
+    align-items: center;
+}
+
+.md-switching-timeline-view-cont .mbsc-timeline-resource-col {
+    width: 130px;
+}
+
+@supports (overflow:clip) {
+    .md-switching-timeline-view-cont.mbsc-ltr .mbsc-schedule-event-inner {
+        left: 130px;
+    }
+    .md-switching-timeline-view-cont.mbsc-rtl .mbsc-schedule-event-inner {
+        right: 130px;
+    }
+}
+
+/* material header order */
+
+.mbsc-material.md-work-week-prev {
+    order: 1;
+}
+
+.mbsc-material.md-work-week-next {
+    order: 2;
+}
+
+.mbsc-material.md-work-week-nav {
+    order: 3;
+}
+
+.mbsc-material .md-work-week-picker {
+    order: 4;
+}
+
+.mbsc-material .md-work-week-today {
+    order: 5;
+}
+
+/* windows header order */
+
+.mbsc-windows.md-work-week-nav {
+    order: 1;
+}
+
+.mbsc-windows.md-work-week-prev {
+    order: 2;
+}
+
+.mbsc-windows.md-work-week-next {
+    order: 3;
+}
+
+.mbsc-windows .md-work-week-picker {
+    order: 4;
+}
+
+.mbsc-windows .md-work-week-today {
+    order: 5;
+}
+
+
+/* 캘린더 등록(일정 등록) 파트 */
+table#schedualRegisterContent > tbody > tr > th  {
+	padding: 5px;
+	height: 50px;
+	width: 140px;
+}
+
+table#schedualRegisterContent > tbody  div.panel-heading{
+	margin-bottom: 15px;
+}
+
+table#schedualRegisterContent > tbody  table#reservationTable{
+	padding: 30px;
+}
+
+/* TOOLTIP */
+[data-tooltip]{position:relative;}
+[data-tooltip]:before,
+[data-tooltip]:after{visibility:hidden;opacity:0;position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;transition:all .2s ease;font-size:9px;font-family:dotum;letter-spacing:-1px;}
+[data-tooltip]:before{content:attr(data-tooltip);height:22px;position:absolute;top:-20px;padding:5px 10px;border-radius:5px;color:#fff;background:#025272;box-shadow:0 3px 8px rgba(165, 165, 165, 0.5);}
+[data-tooltip]:after{content: '';border-left:5px solid transparent;top:2px;border-right:5px solid transparent;border-top:5px solid #025272;}
+[data-tooltip]:not([data-tooltip=""]):hover:before{visibility:visible;opacity:1;top:-30px}
+[data-tooltip]:not([data-tooltip=""]):hover:after{visibility:visible;opacity:1;top:-8px}
