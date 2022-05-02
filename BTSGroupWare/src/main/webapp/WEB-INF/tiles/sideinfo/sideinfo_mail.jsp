@@ -10,14 +10,48 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%-- 사이드바 부분 시작 --%>
-<%-- <div class="sidebar">
-  <a class="active" href="<%= ctxPath%>/mail/mailList.bts">홈</a>
-  <a href="<%= ctxPath%>/mail/mailWrite.bts">메일쓰기</a>
-  <a href="<%= ctxPath%>/mail/mailList.bts">받은메일함</a>
-  <a href="">보낸메일함</a>
-  <a href="#importantMail">중요메일함</a>
-  <a href="#temporaryMail">임시보관함</a>
-  <a href="#reserveMail">예약메일함</a>
-  <a href="#recyclebinMail">휴지통</a>  
-</div> --%>
+
+<style type="text/css">
+
+#mailBtn1 > a {
+  color : black;
+}
+
+</style>
+
+<script type="text/javascript">
+
+			
+</script>
+
+	<div>
+	   <div id="sidebar" style="font-size: 11pt;">
+		 <h4>받은 메일함</h4>
+		 	<ul style="list-style-type: none; padding: 10px;">
+				<li style="margin-bottom: 15px;">
+					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailWrite.bts">메일쓰기</a></div>
+				</li>
+				<li style="margin-bottom: 15px;">
+					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailReceiveList.bts">받은메일함</a></div>
+				</li>
+				<li style="margin-bottom: 15px;">
+					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailWrite.bts">보낸메일함</a></div>
+				</li>
+				<li style="margin-bottom: 15px;">
+					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailWrite.bts">중요메일함</a></div>
+				</li>
+				<li style="margin-bottom: 15px;">
+					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailWrite.bts">임시보관함</a></div>
+				</li>		
+				<li style="margin-bottom: 15px;">
+					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailWrite.bts">예약메일함</a></div>
+				</li>												
+				<li style="margin-bottom: 15px;">
+					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailWrite.bts">휴지통</a></div>
+				</li>															
+			</ul>
+			
+		</div>
+	</div>
+	
 <%-- 사이드바 부분 끝 --%>

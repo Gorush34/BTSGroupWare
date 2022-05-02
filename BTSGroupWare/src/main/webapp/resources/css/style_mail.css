@@ -1,13 +1,10 @@
 @charset "UTF-8";
-
-#mycontainer   { padding:20px; background-color:#F2F2F2; }
-#myheader      { display: flex; min-height:100px; position: relative; top: 60px; }
                   
 #mycontent     { min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:white;
                  float:right; width:90%; padding-left: 5%}
                   
-#mysideinfo    { min-height:1200px; position: fixed; top:60px; padding-top: 40px; background-color:white;
-                 float:left; width:250px; }
+#mysideinfo      { min-height:1200px; position: fixed; top:60px; padding-top: 40px; background-color:#FFF;
+                  float:left; width:250px; margin-left: 5px; }
 
 #myfooter      { display: flex; min-height:120px; position: relative; top:60px; background-color:#555555; margin-bottom: 70px; 
                  clear:both; }

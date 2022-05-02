@@ -22,13 +22,13 @@
 </script>
 
 <%-- 받은 메일함 목록 보여주기 --%>	
-<div class="container" style="width: 80%;">
+<div class="container" style="width: 100%; margin: 50px;">
 	<div class="row bg-title" style="border-bottom: solid 1.5px #e6e6e6;">	
 		<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
 			<h4 class="page-title" style="color: black;">받은 메일함</h4>
 		</div>
 		
-		<form name="goReceiveListSelectFrm" style="display: inline-block; padding-left: 160px;">		
+		<form name="goReceiveListSelectFrm" style="display: inline-block; padding-left: 470px;">		
 			<div id="mail_searchType">
 				<select class="form-control" id="searchType" name="searchType" style="">
 					<option value="mail_subject" selected="selected">제목</option>
@@ -70,70 +70,76 @@
 					<table>
 						<thead>
 							<tr>
-								<th style="width: 40px;">
+								<th style="width: 2%;">
 									<input type="checkbox" id="checkAll" />
 								</th>
-								<th style="width: 40px;">
+								<th style="width: 2%;">
 									<span class="fa fa-star-o"></span>
 								</th>
-								<th style="width: 40px;">
+								<th style="width: 2%;">
 									<span class="fa fa-paperclip"></span>
 								</th>
-								<th style="width: 70px;">사원명</th>
-								<th style="width: 500px;">제목</th>
-								<th style="width: 120px;">날짜</th>
+								<th style="width: 10%;" class="text-center">사원명</th>
+								<th style="width: 70%;">제목</th>
+								<th style="width: 20%;" class="text-left">날짜</th>
 							</tr>
 						</thead>
 						
 						<tbody>
 							<tr>
 								<td style="width: 40px;">
-									<input type="checkbox" id="checkAll" />
+									<input type="checkbox" id="checkAll" class="text-center"/>
 								</td>
 								<td style="width: 40px;">
-									<span class="fa fa-star-o"></span>
+									<span class="fa fa-star-o" class="text-center"></span>
 								</td>
 								<td style="width: 40px;">
-									<span class="fa fa-paperclip"></span>
+									<span class="fa fa-paperclip" class="text-center"></span>
 								</td>							
-								<td>김민정</td>
-								<td>메일 제목 확인 JSP</td>
-								<td>2022.04.25</td>
+								<td class="text-center">김민정</td>
+								<td>
+								<a href="<%= ctxPath%>/mail/mailReceiveDetail.bts">메일 제목 확인 JSP</a>
+								</td>
+								<td class="text-left">2022.04.25 15:35:00</td>
 							</tr>						
 							<tr>
 								<td style="width: 40px;">
-									<input type="checkbox" id="checkAll" />
+									<input type="checkbox" id="checkAll" class="text-center"/>
 								</td>
 								<td style="width: 40px;">
-									<span class="fa fa-star-o"></span>
+									<span class="fa fa-star-o" class="text-center"></span>
 								</td>
 								<td style="width: 40px;">
-									<span class="fa fa-paperclip"></span>
+									<span class="fa fa-paperclip" class="text-center"></span>
+								</td>							
+								<td class="text-center">김민정</td>
+								<td>
+								<a href="<%= ctxPath%>/mail/mailReceiveDetail.bts">메일 제목 확인 JSP</a>
 								</td>
-								<td>김민정</td>
-								<td>메일 제목 확인 JSP</td>
-								<td>2022.04.25</td>
+								<td class="text-left">2022.04.25 15:35:00</td>
 							</tr>	
 							<tr>
 								<td style="width: 40px;">
-									<input type="checkbox" id="checkAll" />
+									<input type="checkbox" id="checkAll" class="text-center"/>
 								</td>
 								<td style="width: 40px;">
-									<span class="fa fa-star-o"></span>
+									<span class="fa fa-star-o" class="text-center"></span>
 								</td>
 								<td style="width: 40px;">
-									<span class="fa fa-paperclip"></span>
+									<span class="fa fa-paperclip" class="text-center"></span>
+								</td>							
+								<td class="text-center">김민정</td>
+								<td>
+								<a href="<%= ctxPath%>/mail/mailReceiveDetail.bts">메일 제목 확인 JSP</a>
 								</td>
-								<td>김민정</td>
-								<td>메일 제목 확인 JSP</td>
-								<td>2022.04.25</td>
-							</tr>								
+								<td class="text-left">2022.04.25 15:35:00</td>
+							</tr>															
 						</tbody>
 					</table>
 				</div>	
 				<%-- 페이징 란 --%>
 				<div>
-					<ul class="pagination" style="width: 50%; margin: 20px auto;">
+					<ul class="pagination" style="width: 50%; margin: 20px auto; padding-top: 100px;">
 					  <li class="page-item left"><a class="page-link" href="#">Previous</a></li>
 					  <li class="page-item left"><a class="page-link" href="#">1</a></li>
 					  <li class="page-item left"><a class="page-link" href="#">2</a></li>

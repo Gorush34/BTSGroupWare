@@ -26,7 +26,8 @@
 /*버튼 */   
   .buttonList {
   		display: inline-block;
-  		list-style-type: none; 		
+  		list-style-type: none; 	
+  		size: 10px;	
   }
  
   #buttonGroup {
@@ -41,44 +42,6 @@
   /* 파일첨부 */
   /*input="file" 태그 원래 형태 지우기*/
 
-  
-  #mail_file_upload + label {
-    border: 0px solid gray; /*0px solid #d9e1e8;*/
-    background-color: #fff;
-    color: black; /*#2b90d9;*/
-    padding: 6px 12px 0px 12px;
-    font-weight: 400;
-    font-size: 14px;
-    box-shadow: 1px 2px 3px 0px #f2f2f2;
-    outline: none;
-    margin-left: 10px;
-    margin-bottom: 0px;
-    height: 30px;
-  }
-
-  #mail_file_upload:focus + label,
-  #mail_file_upload + label:hover {
-   	cursor: pointer;
-  }
-  
-  /* named upload */ 
-  .upload-name { 
-  		display: inline-block; 
-  		padding: .5em .75em;
-  		font-size: inherit; 
-  		font-family: inherit; 
-  		line-height: normal; 
-  		vertical-align: middle; 
-  		background-color: #f5f5f5; 
-  		border: 1px solid #ebebeb; 
-  		border-bottom-color: #e2e2e2; 
-  		-webkit-appearance: none; /*요소 자체구성요소 숨기기*/ 
-  		-moz-appearance: none; 
-  		appearance: none; 
-  		height: 30px;
-  		margin-bottom: .30em;
-  		width: 250px;
-  	}   
    
 </style>
 
@@ -91,6 +54,35 @@
 $(document).ready(function(){
 	// 문서가 준비되면 매개변수로 넣은 콜백함수 실행하기
 	
+		<%-- === 스마트 에디터 구현 시작 === --%>
+       //전역변수
+       var obj = [];
+       
+       //스마트에디터 프레임생성
+       nhn.husky.EZCreator.createInIFrame({
+           oAppRef: obj,
+           elPlaceHolder: "content",
+           sSkinURI: "<%= ctxPath%>/resources/smarteditor/SmartEditor2Skin.html",
+           htParams : {
+               // 툴바 사용 여부 (true:사용/ false:사용하지 않음)
+               bUseToolbar : true,            
+               // 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
+               bUseVerticalResizer : true,    
+               // 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
+               bUseModeChanger : true,
+           }
+       });
+       <%-- === 스마트 에디터 구현 끝 === --%>
+	
+       // 메일쓰기 버튼 클릭 시 event 발생
+       $("button#btnMailSend").click(function() {
+	  		 <%-- === 스마트 에디터 구현 시작 === --%>
+	       	//id가 content인 textarea에 에디터에서 대입
+	        	obj.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
+	      	 <%-- === 스마트 에디터 구현 끝 === --%>		
+		});
+       
+       
 	// 직원 주소록 자동 검색 (aJax)
 		// 받는 사람 이메일 입력 시 포함된 키워드를 통해 재직중인 사원 목록 검색, 결과 없으면 유효한 이메일의 형식만 들어오도록 한다.
 		$("receiverInput").autocomplete({
@@ -124,7 +116,7 @@ $(document).ready(function(){
 
 </script>
 
-<div class="container" style="width: 80%;">
+<div class="container" style="width: 100%; margin: 50px;">
 	<div class="row bg-title" style="border-bottom: solid 1.5px #e6e6e6;">	
 		<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
 			<h4 class="page-title" style="color: black;">메일 쓰기</h4>
@@ -133,19 +125,19 @@ $(document).ready(function(){
 
 	<ul id="buttonGroup">
 		<li class="buttonList">
-			<button type="button" id="send" class="btn btn-secondary">
+			<button type="button" id="btnMailSend" class="btn btn-secondary btn-sm">
 			<i class="fa fa-send-o fa-fw" aria-hidden="true"></i>
 			보내기
 			</button>
 		</li>	
 		<li class="buttonList">
-			<button type="button" id="send" class="btn btn-secondary">
+			<button type="button" id="send" class="btn btn-secondary btn-sm">
 			<i class="fa fa-pencil-square-o fa-fw" aria-hidden="true"></i>
 			임시저장
 			</button>
 		</li>	
 		<li class="buttonList">
-			<button type="button" id="send" class="btn btn-secondary">
+			<button type="button" id="send" class="btn btn-secondary btn-sm">
 			<i class="fa fa-refresh fa-fw" aria-hidden="true"></i>
 			새로고침
 			</button>
@@ -157,8 +149,8 @@ $(document).ready(function(){
 		<table id="mailWriteTable">
 			<tr>
 				<th width="14%">받는사람</th>
-				<td width="86%" data-toggle="tooltip" data-placement="top" title="주소록을 이용해주세요.">
-					<input type="text" id="receiverInput" style="width: 89%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
+				<td width="900px" data-toggle="tooltip" data-placement="top" title="">
+					<input type="text" id="receiverInput" style="width: 100%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
 					<div class="receivers_area"></div>
 				</td>
 			</tr>
@@ -167,8 +159,8 @@ $(document).ready(function(){
 					<span style="margin-right: 40px;">제목</span>
 					<input type="checkbox" checked="checked" />&nbsp;&nbsp;중요!
 				</th>
-				<td width="86%">
-					<input type="text" style="width: 89%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray;" />
+				<td width="900px" >
+					<input type="text" style="width: 100%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray;" />
 				</td>
 			</tr>		
 			<tr>
@@ -185,11 +177,11 @@ $(document).ready(function(){
 		<br>
 		
 		<%-- 메일 내용 시작 (스마트 에디터 사용) --%>
-		<table style="border: 0px; width: 800px;">
+		<table style="border: 0px; width: 1110px;">
 			<tr style="border: 0px;">
 				<td width="1200px;" style="border: 0px">
-					<textarea rows="20" cols="100" style="width: 865px; border: solid 1px gray; height: 400px;" name="mail_content" >					
-					</textarea>					
+					<textarea rows="20" cols="100" style="width: 1090px; border: solid 1px gray; height: 400px;" name="content" id="content" >					
+					</textarea>						
 				</td>
 			</tr>
 		</table>

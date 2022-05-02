@@ -56,20 +56,20 @@ $(document).ready(function (){
 
 </script>
 
-<div class="container" style="width: 80%;">
-		<div class="row" style="border-bottom: solid 1.5px #e6e6e6;">	
+<div class="container" style="width: 100%; margin: 50px;">
+		<div class="row bg-title" style="border-bottom: solid 1.5px #e6e6e6;">	
 			<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12" style="padding: 0px;">
 				<h4 class="page-title" style="color: black;">받은 메일함</h4>
 			</div>	
 			<div id="goList">
-				<button type="button" id="btnGoList" onclick="javascript:location.href='${goBackURL}'" style="margin-left: 940px; margin-bottom:10px ">
+				<button type="button" id="btnGoList" class="btn btn-secondary btn-sm" onclick="location.href='<%= ctxPath%>/mail/mailReceiveList.bts'" style="margin-left: 1070px; margin-bottom:10px ">
 				<i class="fa fa-reorder"></i>
 				목록
 				</button>
 			</div>	
 		</div>	
 	
-	<div class="mailDetailWrap" style="width: 80%;">
+	<div class="mailDetailWrap" style="width: 100%;">
 		<div class="" style="margin-left: -50px">
 			<ul class="mailReceiveDetailGroup">
 				<li id="title" class="detailList">
@@ -90,12 +90,12 @@ $(document).ready(function (){
 				<li id="attachFile" class="detailList">
 					<span>첨부 파일 : </span>
 					<span>조직도.jpg</span>
+					<br>
 				</li>													
 			</ul>
 		</div>
-		<br>
-		<div style=>
-			<div style="width: 1000px; margin-left: -10px; margin-top: 20px; border-top: solid 1.5px #e6e6e6;">
+		<div>
+			<div style="margin-left: -10px; margin-top: 5px; border-top: solid 1.5px #e6e6e6;">
 				반갑습니다람쥐
 			</div>
 		</div>	
