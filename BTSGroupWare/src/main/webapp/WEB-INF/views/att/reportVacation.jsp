@@ -126,6 +126,7 @@
 				    <tr style="text-align: center; " id="bold_hr">
 				      <th class="th_title" style="text-align: center;">증빙서류 제출</th>
 				      <td colspan="3" style="text-align: left;">
+				      	<input type="file" name="attach" id="attach" />
 				      	<button type="button" class="btn btn-secondary btn-sm mr-3" id="btn_vac_certification">파일 첨부</button>
 				      	<br>당일휴가시 필수항목 : 당일휴가 증빙서류를 꼭 첨부해주시기 바랍니다.
 				      	<br>훈련휴가시 필수항목 : 훈련참여 증빙서류를 꼭 첨부해주시기 바랍니다.
