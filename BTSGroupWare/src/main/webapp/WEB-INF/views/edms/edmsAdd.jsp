@@ -60,7 +60,7 @@
 		<tr>
 			<th style="width: 15%; background-color: #DDDDDD">성명</th>
 			<td>
-				<%-- BoardVO 에서 가져오는 것이다! MemberVO 가 아님을 유의하자! --%>
+				<%-- BoardVO(이것도 그대로?) 에서 가져오는 것이다! MemberVO 가 아님을 유의하자! --%>
 				<%-- 이 view단은 어차피 로그인해야지만 볼 수 있는 곳이기 때문에 sessionScope을 사용한다 --%>
 				<%-- readonly 변경불가! --%>
 				<input type="hidden" name="fk_userid" value="${sessionScope.loginuser.userid}" />

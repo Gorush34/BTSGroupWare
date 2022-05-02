@@ -19,27 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller /* Bean + controller 기능을 모듀 포함 */
 public class YuriController {
 
-/*	
-	// 주소록 테스트
-	@RequestMapping(value="/addBook/addbook_main.bts")
-	public ModelAndView addbook_main(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
-		
-		mav.setViewName("addbook_main.addBook");
-		// /WEB-INF/views/addBook/{1}.jsp
-		// /WEB-INF/views/addBook/addbook_main.jsp 페이지를 만들어야 한다.
-		return mav;
-	}
-	
-	// 주소록 테스트2
-	@RequestMapping(value="/addBook/addbook_teladd.bts")
-	public ModelAndView addbook_teladd(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
-		
-		mav.setViewName("addbook_teladd.addBook");
-		// /WEB-INF/views/addBook/{1}.jsp
-		// /WEB-INF/views/addBook/addbook_teladd.jsp 페이지를 만들어야 한다.
-		return mav;
-	}
-
+/*
 	// === 전자결재 테스트 페이지 === //
 	@RequestMapping(value="/edms/edmsTest.bts")
 	public ModelAndView edmsTest(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
@@ -47,10 +27,10 @@ public class YuriController {
 		mav.setViewName("edms_test.edms");
 		// /WEB-INF/views/edms/{1}.jsp
 		// /WEB-INF/views/edms/edms_test.jsp 페이지를 만들어야 한다.
-		return mav;
-		
+		return mav;	
 	}
 */
+	
 	
 	// === 전자결재 홈 페이지 === //
 	@RequestMapping(value="/edms/edmsHome.bts")
@@ -63,7 +43,8 @@ public class YuriController {
 		
 	}
 
-
+	
+	
 	// === 전자결재 문서작성 페이지 === //
 	@RequestMapping(value="/edms/edmsAdd.bts", produces="text/plain;charset=UTF-8")
 	public ModelAndView addEdms(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
@@ -76,6 +57,22 @@ public class YuriController {
 		// /WEB-INF/views/edms/edmsAdd.jsp 페이지를 만들어야 한다.
 		return mav;
 	}
+	
+	
+	
+	// === 전자결재 문서 상세보기 페이지 === //
+	@RequestMapping(value="/edms/edmsView.bts", produces="text/plain;charset=UTF-8")
+	public ModelAndView viewEdms(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		
+	//	getCurrentURL(request); // 로그아웃을 했을 때  현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+		// 위의 문장을 주석처리하고 게시판 - 글쓰기 - 로그인 - 로그아웃 을 하면  goBackURL이 없으므로 시작페이지로 간다!
+		
+		mav.setViewName("edmsView.edms");
+		// /WEB-INF/views/edms/{1}.jsp
+		// /WEB-INF/views/edms/edmsView.jsp 페이지를 만들어야 한다.
+		return mav;
+	}
+	
 	
 	
 	// === 전자결재 내문서함(전체문서함) 페이지 === //
@@ -91,6 +88,8 @@ public class YuriController {
 		return mav;
 	}
 	
+	
+	
 	// === 전자결재 내문서함(대기문서함) 페이지 === //
 	@RequestMapping(value="/edms/edmsMydoc_wait.bts", produces="text/plain;charset=UTF-8")
 	public ModelAndView edmsMydoc_wait(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
@@ -103,6 +102,8 @@ public class YuriController {
 		// /WEB-INF/views/edms/edmsMydoc_wait.jsp 페이지를 만들어야 한다.
 		return mav;
 	}
+	
+	
 	
 	// === 전자결재 내문서함(승인문서함) 페이지 === //
 	@RequestMapping(value="/edms/edmsMydoc_accepted.bts", produces="text/plain;charset=UTF-8")
@@ -117,6 +118,8 @@ public class YuriController {
 		return mav;
 	}
 	
+	
+	
 	// === 전자결재 내문서함(반려문서함) 페이지 === //
 	@RequestMapping(value="/edms/edmsMydoc_rejected.bts", produces="text/plain;charset=UTF-8")
 	public ModelAndView edmsMydoc_rejected(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
@@ -130,6 +133,8 @@ public class YuriController {
 		return mav;
 	}
 	
+	
+	
 	// === 전자결재 결재하기 페이지 === //
 	@RequestMapping(value="/edms/edmsApprove.bts", produces="text/plain;charset=UTF-8")
 	public ModelAndView edmsApprove(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
@@ -142,6 +147,4 @@ public class YuriController {
 		// /WEB-INF/views/edms/edmsApprove.jsp 페이지를 만들어야 한다.
 		return mav;
 	}
-
-
 }

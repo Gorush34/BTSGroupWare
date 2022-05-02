@@ -46,9 +46,9 @@
 					<th scope="row"><p><c:out value="${i}" /></p></th>
 					<td>2022.02.02</td>
 					<td>업무기안</td>
-					<td></td>
+					<td><button id="btn_emergency" class="btn btn-outline-danger" style="height: 100%; line-height: 9pt; font-size: 9pt;">긴급</button></td>
 					<td>(신규)휴가신청-연차관리연동</td>
-					<td>있음</td>
+					<td><img src="<%= ctxPath%>/resources/images/disk.gif"></td>
 					<td>20220428-000001</td>
 				</tr>
 				</c:forEach>

@@ -7,9 +7,9 @@ body {font-family: 'Noto Sans KR', sans-serif; }
 #mycontent		{ min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:#F2F2F2;
 				  float:right; width:80%; padding: 20px; }
 
-#mysideinfo		{ min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:#000060;
-				  float:left; width:20%; color:white; }
-
+#mysideinfo      { min-height:1200px; position: fixed; top:60px; padding-top: 40px; background-color:#FFF;
+                  float:left; width:250px; }
+                  
 #myfooter		{ display: flex; min-height:120px; position: relative; top:60px; background-color:#555555; margin-bottom: 70px; 
 				  clear:both; }
 
@@ -19,6 +19,11 @@ body {font-family: 'Noto Sans KR', sans-serif; }
 /*****************************************
  * 전자결재 서식 시작
  *****************************************/
+	
+	/* 사이드바 제목 클릭 시 */
+	span#sideInfo_edmsTitle {
+		cursor: pointer;
+	}
 	
 	/* 전체 제목 */
 	div.edmsHomeTitle {
@@ -48,8 +53,21 @@ body {font-family: 'Noto Sans KR', sans-serif; }
 	/* 내용 사이를 띄워주는 곳 */
 	div.divClear {
 		margin-bottom: 10px;
-		border: solid 1px pink;
+		border: solid 0px pink;
+		margin-left: 10px;
 	}
+	
+	/* 문서작성 버튼 */
+	button#btnEdmsAdd {
+		margin: 4px 0 8px 20px;
+	}
+	/*
+	button#btnEdmsAdd:hover {
+		background-color: #000060;
+		color: #fff;
+	}
+	*/
+	
 	
 	/* 카드 */
 	div.card {
@@ -83,6 +101,34 @@ body {font-family: 'Noto Sans KR', sans-serif; }
 		cursor: pointer;
 		color: #000060;
 	}
+	
+	
+	
+	/* highcharts 한달간 내문서 차트 시작 ************************************************************* */
+	
+	/* highcharts 한달간 내문서 차트 종료 ************************************************************* */
+	
+	
+	
+	
+	
+	/* 모든 전자결재 테이블의 제목 부분 */
+	/* 
+	table.tbl_edms_list > thead > tr > th {
+		line-height: 16pt;
+		font-size: 12pt;
+		text-align: center;
+	}
+	 */
+	
+	/* 모든 전자결재 테이블의 내용 부분 */
+	/* 
+	table.tbl_edms_list > tbody > tr > td {
+		line-height: 16pt;
+		font-size: 12pt;
+		text-align: center;
+	}	
+	 */
 	
 	/* 테이블 배경색깔 */
 /* 	table.edmsList_tbl > thead > tr {
