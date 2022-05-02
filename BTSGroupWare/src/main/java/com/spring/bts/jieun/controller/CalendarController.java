@@ -98,6 +98,15 @@ public class CalendarController {
 			return mav;
 		}
 		
+		// === 예약 메인 페이지 === //	
+		@RequestMapping(value="/reservation/reservationMain.bts")
+		public ModelAndView reservationMain(ModelAndView mav) {
+			
+			mav.setViewName("reservationMain.calendar");
+			
+			return mav;
+		}
+
 		// === 예약 및 자원 관리자 페이지 === //	
 		@RequestMapping(value="/reservation/reservationAdmin.bts")
 		public ModelAndView reservationAdmin(ModelAndView mav) {
@@ -107,7 +116,7 @@ public class CalendarController {
 			return mav;
 		}
 		
-		// === 예약 및 자원 관리자 페이지 === //	
+		// === 자원등록 페이지 === //	
 		@RequestMapping(value="/reservation/resourceRegister.bts")
 		public ModelAndView resourceRegister(ModelAndView mav) {
 			
