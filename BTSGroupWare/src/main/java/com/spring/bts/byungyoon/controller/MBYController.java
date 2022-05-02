@@ -66,17 +66,24 @@ public class MBYController {
       return mav;
    }
    
+   
+   // 상세개인정보
+   @RequestMapping(value="/addBook/addBook_depInfo.bts")
+   public ModelAndView addBook_depInfo(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	   
+      mav.setViewName("addBook_depInfo.addBook");
+     
+      return mav;
+   }
+   
+   
+   // 주소록 메인페이지 주소록 검색창 ajax 
 	@RequestMapping(value="/addBook/test.bts", produces = "application/json; charset=utf-8")
 	public Map<String, Object> addBook_test(HttpServletRequest request, HttpServletResponse response, String search) {
 	   
-		
 	   Map<String, Object> testMap = new HashMap<String, Object>();
 	   String a = mbyService.getNameNumber(1);
-	   System.out.println("테스트");
-	   System.out.println(mbyService.getNameNumber(1));
-	   testMap.put("search", a);
-	   
-	   
+	   testMap.put("search", search);
 	   
 	   return testMap;
 	}

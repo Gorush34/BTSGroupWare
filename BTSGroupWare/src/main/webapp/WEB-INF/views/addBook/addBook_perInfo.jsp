@@ -27,32 +27,32 @@
 		</tr>
 		<tr>
 			<td><strong>이름</strong></td>
-			<td><input type="text" class="form-control" placeholder="문병윤" readonly></td>
+			<td><input type="text" class="form-control" placeholder="문병윤" readonly><br></td>
 		</tr>
 		<tr>
 			<td><strong>회사</strong></td>
-			<td><input type="text" class="form-control" placeholder="쌍용그룹" readonly></td>
+			<td><input type="text" class="form-control" placeholder="쌍용그룹" readonly><br></td>
 		</tr>
 		<tr>
 			<td><strong>부서</strong></td>
-			<td><input type="text" class="form-control" placeholder="BTS" readonly></td>
+			<td><input type="text" class="form-control" placeholder="BTS" readonly><br></td>
 		</tr>
 		<tr>
 			<td><strong>직위</strong></td>
-			<td><input type="text" class="form-control" placeholder="쫄병" readonly></td>
+			<td><input type="text" class="form-control" placeholder="쫄병" readonly><br></td>
 		</tr>
 		<tr>
 			<td><strong>이메일</strong></td>
-			<td><input type="text" class="form-control" placeholder="mby0225@naver.com" readonly></td>
+			<td><input type="text" class="form-control" placeholder="mby0225@naver.com" readonly><br></td>
 		</tr>
 		<tr>
 			<td><strong>휴대폰</strong></td>
-			<td><input type="text" class="form-control" placeholder="010-4646-4376" readonly></td>
+			<td><input type="text" class="form-control" placeholder="010-4646-4376" readonly><br></td>
 		</tr>
 		<tr>
 			
 			<td><strong>주소</strong></td>
-			<td><input type="text" class="form-control" placeholder="서울시 용산구 후암로 22길 24, 101동 202호" style="width: 140%;" readonly></td>
+			<td><input type="text" class="form-control" placeholder="서울시 용산구 후암로 22길 24, 101동 202호" style="width: 140%;" readonly><br></td>
 			
 		</tr>
 		<tr>

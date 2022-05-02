@@ -26,6 +26,7 @@ function searchBtn() {
 	 		type: "post",
 	 		dataType: 'json',
 	 		success : function(json) {
+	 			
 	 	    },
 		 error: function(request){
 		 }
@@ -112,6 +113,9 @@ function searchBtn() {
            <td colspan="6" style="text-align:center;padding-top: 16%; padding-left: 16%;"><strong>새로운 연락처를 등록하세요</strong><br><br><button class="btn btn-info btn-sm" id="" style="border: solid lightgray 1.5px;" onclick="location.href='http://localhost:9090/bts/addBook/addBook_telAdd.bts'">연락처 추가</button></td>
         </tr>
 	</table>
+	
+	
+	
 			<div style="text-align:center; margin-top: 18%; ">
 			<ul class="nav nav-pills justify-content-center"  >
 			  <li role="presentation"><button class="btn btn-default" id="Main_mini_btn"> 맨 앞 </button></li>
