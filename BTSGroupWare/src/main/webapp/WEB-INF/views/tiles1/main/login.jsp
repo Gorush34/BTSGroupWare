@@ -65,7 +65,7 @@
 	<style type="text/css">
 	
 		body {
-			margin: auto 0;
+			margin-top: 100px;
 		}
 	
 		div#image > img {
@@ -75,6 +75,69 @@
 		}
 	
 	</style>
+
+<script type="text/javascript">
+
+	$(document).ready(function(){
+		
+		/* var 변수명 = '1234';
+		    선택자.attr()*/
+		if(localStorage.getItem("keep") != null){
+			var gab = localStorage.getItem("keep");
+			$('#loginUserid').attr('value', gab);
+			$('#keep').attr('checked', "checked");
+		}
+		
+		$("button#btnLOGIN").click(function(){
+			func_Login();
+		});
+		
+		$("input#pwd").keydown(function(event){
+			
+			if(event.keyCode == 13) { // 엔터를 했을 경우
+				func_Login();	
+			}
+		});
+		
+		
+	}); // end of $(document).ready(function(){})-----------
+
+	// Function Declaration
+	function func_Login(){
+		
+		const userid = $("input#userid").val().trim(); 
+        const pwd = $("input#pwd").val().trim(); 
+      
+        if(userid.trim()=="") {
+           alert("아이디를 입력하세요!!");
+          $("input#userid").val(""); 
+          $("input#userid").focus();
+          return; // 종료 
+        }
+      
+        if(pwd.trim()=="") {
+          alert("비밀번호를 입력하세요!!");
+          $("input#pwd").val(""); 
+          $("input#pwd").focus();
+          return; // 종료 
+        }
+        
+        
+        if( $("input:checkbox[id='keep']").prop("checked") ) {
+        	localStorage.setItem('keep',$("input#loginUserid").val());
+        }
+        else {
+        	localStorage.removeItem('keep');
+        }
+        
+        const frm = document.loginFrm
+        frm.action ="<%= ctxPath%>/loginEnd.bts";
+		frm.method = "post";
+		frm.submit();
+		
+	} // end of function func_Login()-------------
+	
+</script>
 
 </head>
 
@@ -95,41 +158,46 @@
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">BTSGroupWare</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">BTSGroupware</h1>
                                     </div>
-                                    <form class="user">
+                                    <form class="loginFrm">
                                         <div class="form-group">
-                                            <input type="email" class="form-control form-control-user"
-                                                id="exampleInputEmail" aria-describedby="emailHelp"
+                                            <input type="text" class="form-control form-control-user"
+                                                name="userid" id="userid" value="" aria-describedby="emailHelp"
                                                 placeholder="아이디">
                                         </div>
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user"
-                                                id="exampleInputPassword" placeholder="비밀번호">
+                                                name="pwd" id="pwd" value="" placeholder="비밀번호">
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
-                                                <input type="checkbox" class="custom-control-input" id="customCheck">
+                                                <input type="checkbox" id="keep" class="custom-control-input input_keep" value="off" id="customCheck">
                                                 <label class="custom-control-label" for="customCheck">아이디 기억하기</label>
                                             </div>
                                         </div>
-                                        <a href="index.html" class="btn btn-primary btn-user btn-block">
+                                        <button type="button" class="btn btn-primary btn-user btn-block" id="btnLOGIN">
                                             	로그인
-                                        </a>
+                                        </button>
                                         <hr>
+                                        <div id="center" style="text-align: center;">
+                                        <span>오늘도 좋은 하루 되세요!</span>
+                                        </div>
+                                        <!-- 
                                         <a href="index.html" class="btn btn-google btn-user btn-block">
                                             <i class="fab fa-google fa-fw"></i> Login with Google
                                         </a>
                                         <a href="index.html" class="btn btn-facebook btn-user btn-block">
-                                            <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
+                                             <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
                                         </a>
+                                        -->
                                     </form>
                                     <hr>
                                     <div class="text-center">
                                         <a href="forgot-password.html">비밀번호 찾기</a>
                                     </div>
                                     <div class="text-center">
-                                        	문의 : 인사과(사원 정환모 / 8887)
+                                        	문의 : 인사과(정환모 / 8887)
                                     </div>
                                 </div>
                             </div>

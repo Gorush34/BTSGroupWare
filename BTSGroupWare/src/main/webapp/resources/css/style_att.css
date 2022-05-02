@@ -1,0 +1,103 @@
+@charset "UTF-8";
+/*
+body {font-family: font-family: 'Noto Sans KR', sans-serif; }
+*/
+#mycontainer   { padding:20px; }
+#myheader      { display: flex; min-height:100px; position: relative; top: 60px; }
+#mycontent      { min-height:1200px; top:60px; padding-top: 40px; padding-left:250px; background-color:#FFF;
+                  float:right; width:90%; padding-left:5%;}
+
+#mysideinfo      { min-height:1200px; position: fixed; top:60px; padding-top: 40px; background-color:#FFF;
+                  float:left; width:250px; }
+
+#myfooter      { display: flex; min-height:120px; position: relative; top:60px; background-color:#555555; margin-bottom: 70px; 
+                 clear:both; }
+ 
+#myheader a {text-decoration:none;}
+
+body {font-family: 'Noto Sans KR', sans-serif; }
+
+/*	myAtt.jsp 서식 시작  */
+
+select {
+  width:80px;
+  padding-bottom:5px;
+  border:1px solid #999;
+  margin-bottom:4px;
+  font-size: 10pt;
+  vertical-align: middle;    
+}
+
+button#btn_vacCnt {
+	margin-bottom:4px;
+}
+
+div#selectYear {
+	margin-bottom: 10px;
+}
+
+table#tbl_vacCnt > thead > tr > th, table#tbl_vacCnt > tbody > tr > td  {
+	border: solid 1px #c9c9c9;	
+	border-right : solid 1px #c9c9c9;	
+	border-bottom: solid 3px #c9c9c9;  
+} 
+
+#tbl_vacList > tbody > tr > td {
+	vertical-align: middle !important;
+	border-bottom: solid 1px #c9c9c9; 
+}
+
+table#tbl_vacList > thead > tr > th {
+	border-bottom: solid 3px #c9c9c9;  
+	border-top: solid 3px #c9c9c9; 
+}
+
+table#vac_dms > thead {
+	background-color: #e9ecef;
+}
+
+table#vac_dms > thead > tr > th, table#vac_dms > tbody > tr > td {
+	border: solid 1px #c9c9c9;	
+} 
+
+/*	myAtt.jsp 서식 끝  */
+
+
+/*	reportVacation.jsp 서식 시작  */
+
+#tbl_reportVacation > tbody > tr > th {
+	background-color: #e9ecef;
+}
+
+#vac_sort > tbody > tr.tr_gray {
+	background-color: gray;
+	color:white;
+	text-align: left;
+	margin-top: 20px;
+}
+
+#vac_sort > tbody > tr > td {
+	text-align: left;
+	padding: 5px;
+	background-color: #f2f2f2; 
+}
+
+#van_common {
+	margin-left: 5px;
+}
+
+#vac_sort > tbody > tr > td > label {
+	min-width:160px;
+	margin-right: 10px;
+	text-align: left;
+}
+
+#tbl_reportVacation > tbody > tr, #tbl_reportVacation > tbody > th {
+	border-bottom: solid 1px #c9c9c9 !important;  
+}
+
+#tbl_reportVacation > tbody > tr > th {
+	vertical-align: middle !important;
+}
+
+/*	reportVacation.jsp 서식 끝  */

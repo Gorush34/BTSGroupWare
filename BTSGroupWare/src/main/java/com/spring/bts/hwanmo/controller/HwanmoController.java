@@ -4,12 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.bts.hwanmo.service.InterHwanmoService;
 import com.spring.bts.service.InterBtsService;
@@ -70,6 +72,30 @@ public class HwanmoController {
 	       return "emp_test.emp";
 	}		
 		
+	// === 일정관리 시작 페이지 ===
+	@RequestMapping(value="/att/attMain.bts")
+	public ModelAndView attMain(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
+		
+		mav.setViewName("attMain.att");
 
+		return mav;
+	}
 	
+	// === 연차내역 페이지 ===
+	@RequestMapping(value="/att/myAtt.bts")
+	public ModelAndView showSchedule(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
+		
+		mav.setViewName("myAtt.att");
+
+		return mav;
+	}
+	
+	// === 일정관리 시작 페이지 ===
+	@RequestMapping(value="/att/reportVacation.bts")
+	public ModelAndView reportVacation(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
+		
+		mav.setViewName("reportVacation.att");
+
+		return mav;
+	}
 }
