@@ -173,7 +173,7 @@
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
                                                 <input type="checkbox" id="keep" class="custom-control-input input_keep" value="off" id="customCheck">
-                                                <label class="custom-control-label" for="customCheck">아이디 기억하기</label>
+                                                <label class="custom-control-label" for="keep">아이디 기억하기</label>
                                             </div>
                                         </div>
                                         <button type="button" class="btn btn-primary btn-user btn-block" id="btnLOGIN">
