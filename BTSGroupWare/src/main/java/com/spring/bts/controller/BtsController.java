@@ -177,5 +177,24 @@ public class BtsController {
 		return mav;
 	} // end of public ModelAndView loginEnd(ModelAndView mav, HttpServletRequest request)------
 	
-	
+	// === #50. 로그아웃 처리하기 === //
+	@RequestMapping(value="/logout.bts")
+	public ModelAndView logout(ModelAndView mav, HttpServletRequest request) {
+		
+		
+		// 로그아웃시 로그인페이지로 돌아가는 것임
+		HttpSession session = request.getSession();
+		session.invalidate();
+		
+		String message = "로그아웃 되었습니다.";
+		String loc = request.getContextPath()+"/login.bts";
+		
+		mav.addObject("message", message);
+		mav.addObject("loc", loc);
+		mav.setViewName("msg");
+		// 
+		
+		return mav;
+		
+	}
 }

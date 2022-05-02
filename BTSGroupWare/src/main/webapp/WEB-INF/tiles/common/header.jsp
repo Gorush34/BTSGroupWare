@@ -111,6 +111,16 @@
       <!-- === #49. 로그인이 성공되어지면 로그인되어진 사용자의 이메일 주소를 출력하기 === -->
       <c:if test="${not empty sessionScope.loginuser}">
          <div style="float: right;">
+         	<li class="nav-item dropdown login_dropdown">
+              <a class="nav-link text-info" href="#" id="navbarDropdown" data-toggle="dropdown">
+              <img src="<%= ctxPath%>/resources/images/mu.png" id="memberProfile" />
+              </a>  
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="#">나의정보</a>
+                  <a class="dropdown-item" href="<%=ctxPath%>/logout.bts">로그아웃</a>
+              </div>
+            </li>
+           
            <span style="color: navy; font-weight: bold;">${sessionScope.loginuser.emp_name}</span> 님 로그인중.. 
          </div>
       </c:if>
