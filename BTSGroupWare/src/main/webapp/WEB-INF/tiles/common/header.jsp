@@ -115,7 +115,7 @@
       <!-- === #49. 로그인이 성공되어지면 로그인되어진 사용자의 이메일 주소를 출력하기 === -->
       <c:if test="${not empty sessionScope.loginuser}">
          <div style="float: right;">
-           <span style="color: navy; font-weight: bold;">${sessionScope.loginuser.email}</span> 님 로그인중.. 
+           <span style="color: navy; font-weight: bold;">${sessionScope.loginuser.uq_email}</span> 님 로그인중.. 
          </div>
       </c:if>
          

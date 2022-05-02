@@ -11,16 +11,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>게시판</title>
+<title>로그인</title>
+
   <!-- Required meta tags -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> 
+  <meta name="description" content="">
+  <meta name="author" content="">
   
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/bootstrap-4.6.0-dist/css/bootstrap.min.css" > 
-
-  <!-- Font Awesome 5 Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   
   <!-- 직접 만든 CSS 1 -->
   <link rel="stylesheet" type="text/css" href="<%=ctxPath %>/resources/css/style1.css" />
@@ -28,39 +28,12 @@
   <!-- Optional JavaScript -->
   <script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery-3.6.0.min.js"></script>
   <script type="text/javascript" src="<%= ctxPath%>/resources/bootstrap-4.6.0-dist/js/bootstrap.bundle.min.js" ></script> 
-  <script type="text/javascript" src="<%= ctxPath%>/resources/smarteditor/js/HuskyEZCreator.js" charset="utf-8"></script> 
-  
-  <%--  ===== 스피너 및 datepicker 를 사용하기 위해  jquery-ui 사용하기 ===== --%>
-  <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.css" />
-  <script type="text/javascript" src="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.js"></script>
-
-  <%-- *** ajax로 파일을 업로드할때 가장 널리 사용하는 방법 ==> ajaxForm *** --%>
-  <script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery.form.min.js"></script>
 
   <!-- 구글 폰트를 쓰기 위한 링크 -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo&family=Noto+Sans+KR&display=swap" rel="stylesheet">
 
-
-<head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>SB Admin 2 - Login</title>
-
-    <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-
-    <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
 	<style type="text/css">
 	
@@ -84,7 +57,7 @@
 		    선택자.attr()*/
 		if(localStorage.getItem("keep") != null){
 			var gab = localStorage.getItem("keep");
-			$('#loginUserid').attr('value', gab);
+			$('#pk_emp_no').attr('value', gab);
 			$('#keep').attr('checked', "checked");
 		}
 		
@@ -92,7 +65,7 @@
 			func_Login();
 		});
 		
-		$("input#pwd").keydown(function(event){
+		$("input#emp_pwd").keydown(function(event){
 			
 			if(event.keyCode == 13) { // 엔터를 했을 경우
 				func_Login();	
@@ -105,33 +78,33 @@
 	// Function Declaration
 	function func_Login(){
 		
-		const userid = $("input#userid").val().trim(); 
-        const pwd = $("input#pwd").val().trim(); 
+		const pk_emp_no = $("input#pk_emp_no").val().trim(); 
+        const emp_pwd = $("input#emp_pwd").val().trim(); 
       
-        if(userid.trim()=="") {
+        if(pk_emp_no.trim()=="") {
            alert("아이디를 입력하세요!!");
-          $("input#userid").val(""); 
-          $("input#userid").focus();
+          $("input#pk_emp_no").val(""); 
+          $("input#pk_emp_no").focus();
           return; // 종료 
         }
       
-        if(pwd.trim()=="") {
+        if(emp_pwd.trim()=="") {
           alert("비밀번호를 입력하세요!!");
-          $("input#pwd").val(""); 
-          $("input#pwd").focus();
+          $("input#emp_pwd").val(""); 
+          $("input#emp_pwd").focus();
           return; // 종료 
         }
         
         
         if( $("input:checkbox[id='keep']").prop("checked") ) {
-        	localStorage.setItem('keep',$("input#loginUserid").val());
+        	localStorage.setItem('keep',$("input#pk_emp_no").val());
         }
         else {
         	localStorage.removeItem('keep');
         }
         
-        const frm = document.loginFrm
-        frm.action ="<%= ctxPath%>/loginEnd.bts";
+        const frm = document.loginFrm;
+        frm.action = "<%= ctxPath%>/loginEnd.bts";
 		frm.method = "post";
 		frm.submit();
 		
@@ -160,15 +133,15 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">BTSGroupware</h1>
                                     </div>
-                                    <form class="loginFrm">
+                                    <form name="loginFrm" class="loginFrm">
                                         <div class="form-group">
                                             <input type="text" class="form-control form-control-user"
-                                                name="userid" id="userid" value="" aria-describedby="emailHelp"
+                                                name="pk_emp_no" id="pk_emp_no" value="" aria-describedby="emailHelp"
                                                 placeholder="아이디">
                                         </div>
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user"
-                                                name="pwd" id="pwd" value="" placeholder="비밀번호">
+                                                name="emp_pwd" id="emp_pwd" value="" placeholder="비밀번호">
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
@@ -210,12 +183,6 @@
         </div>
 
     </div>
-
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
 
 </body>
 
