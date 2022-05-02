@@ -19,6 +19,8 @@ public class MailController {
 	@RequestMapping(value = "/mail/mailWrite.bts")	
 	public String mailWrite(HttpServletRequest request) {
 		
+		// 첨부파일 업로드 하기
+		
 		return "mailWrite.mail";
 		//	value="/WEB-INF/views/mail/{1}.jsp 페이지를 만들어야 한다.
 	}
@@ -45,6 +47,10 @@ public class MailController {
 	// http://localhost:9090/bts/tiles1/mailList.bts
 	public String mailReceiveDetail(HttpServletRequest request) {
 
+		// 첨부파일 다운로드 받기	
+		
+		// 이전글 및 다음글 보여주기
+		
 		return "mailReceiveDetail.mail";
     //  return "/tiles1/mailList.jsp";	// 아래와 같이 써서 오류가 났음.
 	}	
