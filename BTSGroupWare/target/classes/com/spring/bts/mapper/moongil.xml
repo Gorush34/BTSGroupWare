@@ -4,9 +4,135 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
-<!-- ==== 대부분은 namespace에 파일이름 사용(유일하니까) ==== -->
+<!-- ==== 대부분은 user_namespace에 파일이름 사용(유일하니까) ==== -->
 <mapper namespace="moongil">
 
+<!-- 게시판 목록 -->
+    <select id="boardList" resultType="com.spring.bts.moongil.model.BoardVO">
+    
+	  select pk_seq, fk_emp_no, user_name, subject  
+		     , read_count, to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') as write_day
+		     , comment_count
+		from tbl_board
+		where status = 1
+		order by pk_seq desc
+    
+    </select>
 
+	<!-- === #117. 총 게시물 건수(totalCount) 구하기 - 검색이 있을때 와 검색이 없을때로 나뉜다. === -->
+    <select id="getTotalCount" parameterType="HashMap" resultType="int">
+	    select count(*)
+		from tbl_board
+		where status = 1
+		<if test='searchType != ""'>
+		and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+		</if>
+    </select> 
+
+	<select id="boardListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.moongil.model.BoardVO">
+		select pk_seq, fk_emp_no, user_name, subject, read_count, write_day, comment_count,
+		       groupno, fk_seq, depthno,
+		       filename
+		from
+		(
+		    select rownum AS rno,
+		           pk_seq, fk_emp_no, user_name, subject, read_count, write_day, comment_count, 
+		           groupno, fk_seq, depthno,
+		           filename
+		        from
+		        (
+		            select pk_seq, fk_emp_no, user_name, subject, read_count, 
+		                   to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') AS write_day, 
+		                   comment_count,
+		                   groupno, fk_seq, depthno, 
+		                   filename
+		            from tbl_board
+		            where status = 1
+		            <if test='searchType !="" and searchWord != "" '>
+		            and lower(${searchType}) like '%'||lower(#{searchWord}) ||'%'
+		            </if>
+		            start with fk_seq = 0
+		            connect by prior pk_seq = fk_seq
+		            order siblings by groupno desc, pk_seq asc 
+		        ) V
+	     )T
+		 where rno between #{startRno} and #{endRno}
+	</select>
+
+	<select id="boardListNoSearch" resultType="com.spring.bts.moongil.model.BoardVO">
+	    select pk_seq, fk_emp_no, user_name, subject  
+		     , read_count, to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') as write_day
+		     , comment_count
+		from tbl_board
+		where status = 1
+		order by pk_seq desc
+    </select>
+    
+        <!-- ==== #161. (댓글 및 답변글쓰기 및 파일첨부가 있는 게시판에서) 글1개 조회하기 ==== 
+                         먼저 위의 #140 을 주석처리 한 다음에 아래와 같이 한다.
+    -->
+    <select id="getView" parameterType="HashMap" resultType="com.spring.bts.moongil.model.BoardVO">
+		select previousseq, previoussubject
+		     , pk_seq, fk_emp_no, user_name, subject, content, read_count, write_day, pw 
+		     , nextseq, nextsubject 
+		     , groupno, fk_seq, depthno
+		     , filename, orgFilename, fileSize
+		from 
+		(
+		    select lag(pk_seq,1) over(order by pk_seq desc) AS previousseq 
+		         , lag(subject,1) over(order by pk_seq desc) AS previoussubject 
+		         
+		         , pk_seq, fk_emp_no, user_name, subject, content, read_count
+		         , to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') as write_day
+		         , pw 
+		         
+		         , lead(pk_seq,1) over(order by pk_seq desc) AS nextseq
+		         , lead(subject,1) over(order by pk_seq desc) AS nextsubject
+		         
+		         , groupno, fk_seq, depthno
+		         
+		         , fileuser_name, orgFileuser_name, fileSize
+		    from tbl_board
+		    where status = 1
+		    <if test='searchType != "" and searchWord != "" '>
+		    and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+		    </if>
+		) V
+		where V.pk_seq = #{pk_seq}
+    </select>
+    
+    <!-- ==== #67. 글조회수 1증가 하기 ==== -->
+    <update id="setAddread_count" parameterType="String">
+    	update tbl_board set read_count = read_count + 1
+    	where pk_seq = #{pk_seq}
+    </update>
+    
+    
+        <!-- === #111. 검색어 입력시 자동글 완성하기 6 === -->
+    <select id="wordSearchShow" parameterType="HashMap" resultType="String">
+    	<choose>
+    		<when test="searchType eq 'user_name'">
+    			select distinct ${searchType}
+    		</when>
+    		<otherwise>
+    			select ${searchType}
+    		</otherwise>
+    	</choose>
+    	from tbl_board
+    	where status = 1 
+    	and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%' 
+    	<!-- select 문에서 distinct 와 order by 절을 함께 사용할때는 조심해야 한다.
+		     order by 절에는 select 문에서 사용된 컬럼만 들어올 수가 있다.
+		         또는 order by 절을 사용하지 않아야 한다.
+		 -->
+		 <choose>
+    		<when test="searchType neq 'subject'">
+    			order by ${searchType} asc
+    		</when>
+    		<otherwise>
+    			order by pk_seq desc
+    		</otherwise>
+    	</choose>
+    </select>
     
 </mapper>

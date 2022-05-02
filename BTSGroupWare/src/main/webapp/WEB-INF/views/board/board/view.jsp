@@ -151,10 +151,10 @@
 	 	<table>
 	 		<thead style="font-size: 12pt;">
 	 			 <tr >
-	 			  	<th>${boardvo.name}</th>
+	 			  	<th>${boardvo.user_name}</th>
 	 			</tr>
 	 			<tr>
-	 				<th style="font-size:9pt;color:#BDBDBD; font-weight:lighter;">${boardvo.regDate}</th>
+	 				<th style="font-size:9pt;color:#BDBDBD; font-weight:lighter;">${boardvo.write_day}</th>
 	 			</tr>
 	 			
 	 	<!-- 첨부파일이 있다면 보여준다. -->		

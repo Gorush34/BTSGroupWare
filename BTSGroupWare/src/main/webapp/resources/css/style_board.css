@@ -4,11 +4,14 @@ body {font-family: Arial, Helvetica, sans-serif, 돋움; }
 */
 #mycontainer   { padding:20px; }
 #myheader      { display: flex; min-height:100px; position: relative; top: 60px; }
-#mycontent      { min-height:1200px; position: relative; top:60px; padding:20px; background-color:#F2F2F2;	
-                  float:left; width:65%; }
+   
+#mysideinfo      { min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:white;
+                  float:left; width:12.5%; }   
+                  
+#mycontent      { min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:white;
+                  float:right; width:85.5%; }
+                  
 
-#mysideinfo      { min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:#F0FFFF;
-                  float:right; width:33.5%; }
 
 #myfooter      { display: flex; min-height:120px; position: relative; top:60px; background-color:#555555; margin-bottom: 70px; 
                  clear:both; }
@@ -20,7 +23,6 @@ body {font-family: Arial, Helvetica, sans-serif, 돋움; }
 /* 
 민정서식 시작
 */
-
 
 	#secondHeader {
 		display: inline-block;
@@ -42,6 +44,7 @@ body {font-family: Arial, Helvetica, sans-serif, 돋움; }
   	 display: inline-block;
   }	
 
+<%-- 헤더부분 --%>
 * {box-sizing: border-box;}
 
 body { 
@@ -97,6 +100,7 @@ body {
   }
 }
 
+<%-- 사이드바 부분 --%>
 body {
   margin: 0;
   font-family: "Lato", sans-serif;

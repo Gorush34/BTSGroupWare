@@ -41,10 +41,10 @@ public class BoardService implements InterBoardService {
 		
 		if(login_userid != null &&
 		   boardvo != null &&
-		  !login_userid.equals(boardvo.getFk_userid())) {
+		  !login_userid.equals(boardvo.getFk_emp_no())) {
 			// 글조회수 증가는 로그인을 한 상태에서 다른 사람의 글을 읽을때만 증가하도록 한다. 
 			
-			dao.setAddReadCount(boardvo.getSeq());  // 글조회수 1증가 하기 
+			dao.setAddReadCount(boardvo.getPk_seq());  // 글조회수 1증가 하기 
 			boardvo = dao.getView(paraMap); 
 		}
 		

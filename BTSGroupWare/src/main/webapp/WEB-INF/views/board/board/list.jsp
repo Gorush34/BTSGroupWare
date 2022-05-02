@@ -236,19 +236,19 @@ margin: 10px;
 			<c:forEach var="boardvo" items="${requestScope.boardList}" varStatus="status">
 			   <tr>
 			      <td align="center">
-			          ${boardvo.seq}
+			          ${boardvo.pk_seq}
 			      </td>
 		
 					<td>
-				      	 <c:if test="${boardvo.commentCount ne 10}">
-				      	 	<span class="subject" onclick="goView('${boardvo.seq}')">${boardvo.subject} <span style="vertical-align: super;"></span></span>  
+				      	 <c:if test="${boardvo.comment_count ne 10}">
+				      	 	<span class="subject" onclick="goView('${boardvo.pk_seq}')">${boardvo.subject} <span style="vertical-align: super;"></span></span>  
 				      	 </c:if>
 				     </td> 	 
 
 
-				  <td align="center">${boardvo.name}</td>
-				  <td align="center">${boardvo.regDate}</td>
-				  <td align="center">${boardvo.readCount}</td>
+				  <td align="center">${boardvo.user_name}</td>
+				  <td align="center">${boardvo.write_day}</td>
+				  <td align="center">${boardvo.read_count}</td>
 			   </tr>
 			</c:forEach>
 		</tbody>
