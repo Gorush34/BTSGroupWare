@@ -7,61 +7,6 @@
 <!-- ==== 대부분은 namespace에 파일이름 사용(유일하니까) ==== -->
 <mapper namespace="moongil">
 
-<!-- 게시판 목록 -->
-    <select id="boardList" resultType="com.spring.bts.moongil.model.BoardVO">
+
     
-	  select seq, fk_userid, name, subject  
-		     , readCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
-		     , commentCount
-		from tbl_board
-		where status = 1
-		order by seq desc
-    
-    </select>
-
-	<!-- === #117. 총 게시물 건수(totalCount) 구하기 - 검색이 있을때 와 검색이 없을때로 나뉜다. === -->
-    <select id="getTotalCount" parameterType="HashMap" resultType="int">
-	    select count(*)
-		from tbl_board
-		where status = 1
-    </select> 
-
-	<select id="boardListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.moongil.model.BoardVO">
-		select seq, fk_userid, name, subject, readCount, regDate, commentCount,
-		       groupno, fk_seq, depthno,
-		       fileName
-		from
-		(
-		    select rownum AS rno,
-		           seq, fk_userid, name, subject, readCount, regDate, commentCount, 
-		           groupno, fk_seq, depthno,
-		           fileName
-		        from
-		        (
-		            select seq, fk_userid, name, subject, readCount, 
-		                   to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate, 
-		                   commentCount,
-		                   groupno, fk_seq, depthno, 
-		                   fileName
-		            from tbl_board
-		            where status = 1
-		            <if test='searchType !="" and searchWord != "" '>
-		            and lower(${searchType}) like '%'||lower(#{searchWord}) ||'%'
-		            </if>
-		            start with fk_seq = 0
-		            connect by prior seq = fk_seq
-		            order siblings by groupno desc, seq asc 
-		        ) V
-	     )T
-		 where rno between #{startRno} and #{endRno}
-	</select>
-
-<select id="boardListNoSearch" resultType="com.spring.bts.moongil.model.BoardVO">
-	    select seq, fk_userid, name, subject  
-		     , readCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
-		     , commentCount
-		from tbl_board
-		where status = 1
-		order by seq desc
-    </select>
 </mapper>

@@ -5,6 +5,15 @@
 <% String ctxPath = request.getContextPath(); %>
 
 <style>
+
+    .subjectStyle {font-weight: bold;
+    			   color: navy;
+    			   cursor: pointer;}
+	
+	#mycontent > div > div:nth-child(5) > ul > li > a {
+		color: black;
+	}
+
 a#brd_category{
 	color: black;
 	margin: 10px;
@@ -68,14 +77,15 @@ margin: 10px;
 <script type="text/javascript">
 	$(document).ready(function(){
 		
-		$("span.title").bind("mouseover", function(event){
+		
+		$("span.subject").bind("mouseover", function(event){
 			var $target = $(event.target);
-			$target.addClass("titleStyle");
+			$target.addClass("subjectStyle");
 		});
 		
-		$("span.title").bind("mouseout", function(event){
+		$("span.subject").bind("mouseout", function(event){
 			var $target = $(event.target);
-			$target.removeClass("titleStyle");
+			$target.removeClass("subjectStyle");
 		});
 		
 		$("input#searchWord").keyup(function(event){
@@ -91,26 +101,105 @@ margin: 10px;
 			$("input#searchWord").val("${paraMap.searchWord}");
 		}
 		
+		<%-- === #107. 검색어 입력시 자동글 완성하기 2 === --%>
+		  $("div#displayList").hide();
+		  
+		  $("input#searchWord").keyup(function(){
+			  
+			  const wordLength = $(this).val().trim().length;
+			  // 검색어의 길이를 알아온다.
+			  
+			  if(wordLength == 0) {
+				  $("div#displayList").hide();
+				  // 검색어가 공백이거나 검색어 입력후 백스페이스키를 눌러서 검색어를 모두 지우면 검색된 내용이 안 나오도록 해야 한다. 
+			  }
+			  else {
+				  $.ajax({
+					  url:"<%= ctxPath%>/wordSearchShow.bts",
+					  type:"GET",
+					  data:{"searchType":$("select#searchType").val()
+						   ,"searchWord":$("input#searchWord").val()},
+					  dataType:"JSON",
+					  success:function(json){
+						 // json ==> [{"word":"Korea VS Japan 라이벌 축구대결"},{"word":"JSP 가 뭔가요?"},{"word":"프로그램은 JAVA 가 쉬운가요?"},{"word":"java가 재미 있나요?"}]  
+						 
+						 <%-- === #112. 검색어 입력시 자동글 완성하기 7 === --%>
+						 if(json.length > 0) {
+							 // 검색된 데이터가 있는 경우임
+							 
+							 let html = "";
+							 
+							 $.each(json, function(index, item){
+								 const word = item.word;
+								 // word ==> 프로그램은 JAVA 가 쉬운가요? 
+								 
+								 const idx = word.toLowerCase().indexOf($("input#searchWord").val().toLowerCase());	 
+								 //          word ==> 프로그램은 java 가 쉬운가요?	
+								 // 검색어(JaVa)가 나오는 idx 는 6 이 된다.
+								 
+								 const len = $("input#searchWord").val().length;
+								 // 검색어(JaVa)의 길이 len 은 4 가 된다.
+								 
+								/* 
+								 console.log("~~~~~~~~ 시작 ~~~~~~~~~~~~");
+								 console.log(word.substring(0, idx));       // 검색어(JaVa) 앞까지의 글자 => "프로그램은 "
+								 console.log(word.substring(idx, idx+len)); // 검색어(JaVa) 글자 => "JAVA"
+								 console.log(word.substring(idx+len));      // 검색어(JaVa) 뒤부터 끝까지 글자 => " 가 쉬운가요?"
+								 console.log("~~~~~~~~ 끝 ~~~~~~~~~~~~");		 
+								*/ 
+								 
+								 const result = word.substring(0, idx) + "<span style='color:blue;'>"+word.substring(idx, idx+len)+"</span>" + word.substring(idx+len); 
+								
+								 html += "<span style='cursor:pointer;' class='result'>"+result+"</span><br>";
+							 });
+							 
+							 const input_width = $("input#searchWord").css("width"); // 검색어 input 태그 width 알아오기
+							 
+							 $("div#displayList").css({"width":input_width}); // 검색결과 div 의 width 크기를 검색어 입력 input 태그 width 와 일치시키기  
+							 
+							 $("div#displayList").html(html);
+							 $("div#displayList").show();
+						 }
+					  },
+					  error: function(request, status, error){
+							alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+					  }
+				  });
+			  }
+			  
+		  }); // end of $("input#searchWord").keyup -----------------------
+		  
+		  <%-- == #113. 검색어 입력시 자동글 완성하기 8 === --%>
+		  $(document).on("click", "span.result", function(){
+			  const word = $(this).text();
+			  $("input#searchWord").val(word); // 텍스트박스에 검색된 결과의 문자열을 입력해준다.
+			  $("div#displayList").hide();
+			  goSearch();
+		  });
+		
 	});//end of $(document).ready(function(){}
 
 	
 	function goView(seq) {
-			// 현재 페이지 주소를 뷰단으로 넘겨준다.
-			var frm = document.goViewFrm;
-			frm.seq.value = seq;
-			
-			
-			frm.method = "GET";
-			frm.action = "<%= ctxPath%>/noticeView.os";
-			frm.submit();
+
+			const gobackURL = "${requestScope.gobackURL}"; 
+		  
+//		  alert(gobackURL);
+		  
+		  const searchType = $("select#searchType").val();
+		  const searchWord = $("input#searchWord").val();
+		
+		  location.href="<%= ctxPath%>/board/view.bts?seq="+seq+"&gobackURL="+gobackURL+"&searchType="+searchType+"&searchWord="+searchWord; 
 		}// end of function goView(seq){}----------------------------------------------
 		
 		
 		function goSearch() {
-			var frm = document.searchFrm;
-			frm.method = "GET";
-			frm.action = "<%= request.getContextPath()%>/noticeList.os";
-			frm.submit();
+			
+			const frm = document.searchFrm;
+			  frm.method = "GET";
+			  frm.action = "<%= ctxPath%>/board/list.bts";
+			  frm.submit();
+			
 		}// end of function goSearch() {}-----------------------
 	
 </script>
@@ -129,7 +218,7 @@ margin: 10px;
 		<a id="brd_category" href="<%= request.getContextPath()%>/board/list.bts" style="font-weight: bold; text-decoration: underline;">자유게시판</a> 
 		<br></br>
 	</div>
-		<span id = "write" onclick="javascript:location.href='<%= request.getContextPath()%>/noticeAdd.bts'">게시물작성
+		<span id = "write" onclick="javascript:location.href='<%= request.getContextPath()%>/board/write.bts'">게시물작성
 			<i class= "fa  fa-edit" aria-hidden="true"></i>
 		</span>
 		
@@ -149,7 +238,14 @@ margin: 10px;
 			      <td align="center">
 			          ${boardvo.seq}
 			      </td>
-			      <td align="center">${boardvo.subject}</td>
+		
+					<td>
+				      	 <c:if test="${boardvo.commentCount ne 10}">
+				      	 	<span class="subject" onclick="goView('${boardvo.seq}')">${boardvo.subject} <span style="vertical-align: super;"></span></span>  
+				      	 </c:if>
+				     </td> 	 
+
+
 				  <td align="center">${boardvo.name}</td>
 				  <td align="center">${boardvo.regDate}</td>
 				  <td align="center">${boardvo.readCount}</td>
@@ -164,14 +260,16 @@ margin: 10px;
 	</div>
  
     <%-- === #101. 글검색 폼 추가하기 : 글제목, 글쓴이로 검색을 하도록 한다. === --%>
-    <form name="searchFrm" style="margin-top: 20px;">
+    <form name="searchFrm" style="margin-top: 20px; text-align: center;">
 		<select name="searchType" id="searchType" style="height: 26px;">
 			<option value="subject">글제목</option>
 			<option value="name">글쓴이</option>
 		</select>
 		<input type="text" name="searchWord" id="searchWord" size="40" autocomplete="off" /> 
 		<input type="text" style="display: none;"/> <%-- form 태그내에 input 태그가 오로지 1개 뿐일경우에는 엔터를 했을 경우 검색이 되어지므로 이것을 방지하고자 만든것이다. --%> 
-		<button type="button" class="btn btn-secondary btn-sm" onclick="goSearch()">검색</button>
+		<button type="button" style="width: 30px" onclick="goSearch()">
+		<i class="fa fa-search fa-fw" aria-hidden="true"></i>
+		</button>
 	</form>
 	
 

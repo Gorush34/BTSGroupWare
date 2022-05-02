@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 
 
+
+
 @Repository
 public class BoardDAO implements InterBoardDAO {
 
@@ -48,8 +50,26 @@ public class BoardDAO implements InterBoardDAO {
 
 	@Override
 	public List<BoardVO> boardListSearchWithPaging(Map<String, String> paraMap) {
-		List<BoardVO> boardList = sqlsession.selectList("moongil.boardListNoSearch");
+		List<BoardVO> boardList = sqlsession.selectList("moongil.boardListSearchWithPaging", paraMap);
 		return boardList;
+	}
+
+	@Override
+	public BoardVO getView(Map<String, String> paraMap) {
+		BoardVO boardvo = sqlsession.selectOne("moongil.getView", paraMap);
+		return boardvo;
+	}
+
+	@Override
+	public void setAddReadCount(String seq) {
+		sqlsession.update("moongil.setAddReadCount", seq);
+		
+	}
+
+	@Override
+	public List<String> wordSearchShow(Map<String, String> paraMap) {
+		List<String> wordList = sqlsession.selectList("moongil.wordSearchShow", paraMap);
+		return wordList;
 	}
 
 

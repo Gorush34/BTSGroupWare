@@ -1,4 +1,6 @@
 package com.spring.bts.moongil.controller;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -6,16 +8,20 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 
 import com.spring.bts.common.MyUtil;
 import com.spring.bts.moongil.model.BoardVO;
+import com.spring.bts.moongil.model.MemberVO;
 import com.spring.bts.moongil.service.InterBoardService;
 import com.spring.bts.service.InterBtsService;
 
@@ -133,10 +139,12 @@ getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페�
 		
 		int startRno = 0; // 시작 행번호
 		int endRno = 0;   // 끝 행번호
-		
+		 
 		// 총 게시물 건수(totalCount)
 		totalCount = service.getTotalCount(paraMap);
 	//	System.out.println("~~~~~ 확인용 totalCount : " + totalCount);
+		
+//		System.out.println("totalCount = "+totalCount );
 		
 		// 만약에 총 게시물 건수(totalCount)가 127개 이라면
 		// 총 페이지수(totalPage)는 13개가 되어야 한다.
@@ -173,6 +181,7 @@ getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페�
 		
 		startRno = ((currentShowPageNo - 1) * sizePerPage) + 1;
 		endRno = startRno + sizePerPage - 1;
+
 		
 		paraMap.put("startRno", String.valueOf(startRno));
 		paraMap.put("endRno", String.valueOf(endRno));
@@ -242,7 +251,7 @@ getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페�
 		
 		
 		String pageBar = "<ul style='list-style: none;'>";
-		String url = "list.action";
+		String url = "list.bts";
 		
 		// === [맨처음][이전] 만들기 === //
 		if(pageNo != 1) {
@@ -304,8 +313,198 @@ getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페�
 		return mav;
 	
 	}
+	
+	@RequestMapping(value="board/view_2.bts")
+	public ModelAndView view_2(ModelAndView mav, HttpServletRequest request) {
+		
+		getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출 
+		
+		// 조회하고자 하는 글번호 받아오기 
+	 	String seq = request.getParameter("seq");
+	 	
+	 	String searchType = request.getParameter("searchType");
+	 	String searchWord = request.getParameter("searchWord");
+	 	String gobackURL = request.getParameter("gobackURL");
+	 	/*
+	 	System.out.println("~~~~ view2 의 searchType : " + searchType);
+	    System.out.println("~~~~ view2 의 searchWord : " + searchWord);
+	    System.out.println("~~~~ view2 의 gobackURL : " + gobackURL);
+	 	*/
+	 	
+	 	HttpSession session = request.getSession();
+		session.setAttribute("readCountPermission", "yes");
+	 	
+		try {
+	         searchWord = URLEncoder.encode(searchWord, "UTF-8"); // 한글이 웹브라우저 주소창에서 사용되어질때 한글이 ? 처럼 안깨지게 하려고 하는 것임.  
+	         gobackURL = URLEncoder.encode(gobackURL, "UTF-8");   // 한글이 웹브라우저 주소창에서 사용되어질때 한글이 ? 처럼 안깨지게 하려고 하는 것임.
+	        /* 
+	         System.out.println("~~~~ view2 의 URLEncoder.encode(searchWord, \"UTF-8\") : " + searchWord);
+	         System.out.println("~~~~ view2 의 URLEncoder.encode(gobackURL, \"UTF-8\") : " + gobackURL);
+	         
+	         System.out.println(URLDecoder.decode(searchWord, "UTF-8")); // URL인코딩 되어진 한글을 원래 한글모양으로 되돌려 주는 것임. 
+	         System.out.println(URLDecoder.decode(gobackURL, "UTF-8"));  // URL인코딩 되어진 한글을 원래 한글모양으로 되돌려 주는 것임. 
+	         */
+	      } catch (UnsupportedEncodingException e) {
+	         e.printStackTrace();
+	      } 
+		
+	 	mav.setViewName("redirect:/board/view.bts?seq="+seq+"&searchType="+searchType+"&searchWord="+searchWord+"&gobackURL="+gobackURL);
+	 	
+		return mav;
+	}	
+	
+	// === 게시판 글쓰기 ====
+	@RequestMapping(value = "/board/write.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
+    public String board_write(HttpServletRequest request) {
 
-
+		      
+	       return "/board/write.board";
+	}
+	
+	
+	// == 게시판 글쓰기 끝 ==
+	
+	// == 게시판 글 보기 == //
+	// === #62. 글1개를 보여주는 페이지 요청 === //
+	@RequestMapping(value="/board/view.bts")
+	public ModelAndView view(ModelAndView mav, HttpServletRequest request) {
+		
+		getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출 
+		
+		// 조회하고자 하는 글번호 받아오기 
+	 	String seq = request.getParameter("seq");
+	 	
+	 	// 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다. 
+	 	String searchType = request.getParameter("searchType");
+	 	String searchWord = request.getParameter("searchWord");
+	 	
+	 	if(searchType == null) {
+	 		searchType = "";
+	 	}
+	 	
+	 	if(searchWord == null) {
+	 		searchWord = "";
+	 	}
+	 	
+	 	
+	    // === #125. 페이징 처리되어진 후 특정 글제목을 클릭하여 상세내용을 본 이후
+	 	//           사용자가 목록보기 버튼을 클릭했을때 돌아갈 페이지를 알려주기 위해
+	 	//           현재 페이지 주소를 뷰단으로 넘겨준다.
+	 	String gobackURL = request.getParameter("gobackURL");  
+	// 	System.out.println("~~~ 확인용 gobackURL : " + gobackURL);
+	 	// ~~~ 확인용 gobackURL : /list.action
+	 	// ~~~ 확인용 gobackURL : /list.action?searchType= searchWord= currentShowPageNo=2 
+	 	// ~~~ 확인용 gobackURL : /list.action?searchType=subject searchWord=j
+	 	// ~~~ 확인용 gobackURL : /list.action?searchType=subject searchWord=j currentShowPageNo=2 
+	 	
+	 	if( gobackURL != null && gobackURL.contains(" ") ) {
+	 		gobackURL = gobackURL.replaceAll(" ", "&");
+	 	}
+     //	System.out.println("~~~ 확인용 gobackURL : " + gobackURL);
+		// ~~~ 확인용 gobackURL : /list.action
+		// ~~~ 확인용 gobackURL : /list.action?searchType=&searchWord=&currentShowPageNo=2 
+		// ~~~ 확인용 gobackURL : /list.action?searchType=subject&searchWord=j
+		// ~~~ 확인용 gobackURL : /list.action?searchType=subject&searchWord=j&currentShowPageNo=2 
+	 /*	
+	 	System.out.println("~~~~ view 의 searchType : " + searchType);
+	    System.out.println("~~~~ view 의 searchWord : " + searchWord);
+	    System.out.println("~~~~ view 의 gobackURL : " + gobackURL);
+	 */	
+	 	mav.addObject("gobackURL", gobackURL);
+	 	
+	 	// === 125 작업의 끝 === //
+	 	///////////////////////////////////////////////////////////////////////
+	 	
+	 	
+	 	try {
+		 	Integer.parseInt(seq);
+		 	
+		 	Map<String, String> paraMap = new HashMap<>();
+		 	paraMap.put("seq", seq);
+		 	
+		 	paraMap.put("searchType", searchType);
+		 	paraMap.put("searchWord", searchWord);
+		 	
+		 	mav.addObject("paraMap", paraMap); // view.jsp 에서 이전글제목 및 다음글제목 클릭시 사용하기 위해서 임.
+			
+		 	HttpSession session = request.getSession();
+		 	MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+		 	
+		 	String login_userid = null;
+		 	if(loginuser != null) {
+		 	   login_userid = loginuser.getUserid();
+		 	   // login_userid 는 로그인 되어진 사용자의 userid 이다.
+		 	}
+		 	paraMap.put("login_userid", login_userid);
+		 	
+		    // === #68. !!! 중요 !!! 
+	        //     글1개를 보여주는 페이지 요청은 select 와 함께 
+			//     DML문(지금은 글조회수 증가인 update문)이 포함되어져 있다.
+			//     이럴경우 웹브라우저에서 페이지 새로고침(F5)을 했을때 DML문이 실행되어
+			//     매번 글조회수 증가가 발생한다.
+			//     그래서 우리는 웹브라우저에서 페이지 새로고침(F5)을 했을때는
+			//     단순히 select만 해주고 DML문(지금은 글조회수 증가인 update문)은 
+			//     실행하지 않도록 해주어야 한다. !!! === //
+		 	
+		    // 위의 글목록보기 #69. 에서 session.setAttribute("readCountPermission", "yes"); 해두었다. 
+		 	BoardVO boardvo = null;
+		 	if( "yes".equals(session.getAttribute("readCountPermission")) ) {
+		 		// 글목록보기를 클릭한 다음에 특정글을 조회해온 경우이다.
+		 	 
+		 		boardvo = service.getView(paraMap);
+			 	// 글조회수 증가와 함께 글1개를 조회를 해주는 것 
+		 		
+		 		session.removeAttribute("readCountPermission");
+		 		// 중요함!! session 에 저장된 readCountPermission 을 삭제한다.
+		 	}
+		 	else {
+		 		// 웹브라우저에서 새로고침(F5)을 클릭한 경우이다. 
+		 		
+		 		boardvo = service.getViewWithNoAddCount(paraMap);
+			 	// 글조회수 증가는 없고 단순히 글1개 조회만을 해주는 것이다.  
+		 	}
+		 	
+		 	mav.addObject("boardvo", boardvo);
+	 	} catch(NumberFormatException e) {
+	 		
+	 	}
+	 	
+	 	mav.setViewName("board/view.board");
+	 	
+		return mav;
+	}
+	
+	// === #108. 검색어 입력시 자동글 완성하기 3 === //
+	@ResponseBody
+	@RequestMapping(value="/wordSearchShow.bts", method= {RequestMethod.GET}, produces="text/plain;charset=UTF-8")
+	public String wordSearchShow(HttpServletRequest request) {
+		
+		String searchType = request.getParameter("searchType");
+		String searchWord = request.getParameter("searchWord");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("searchType", searchType);
+		paraMap.put("searchWord", searchWord);
+		
+		List<String> wordList = service.wordSearchShow(paraMap);
+		
+		JSONArray jsonArr = new JSONArray(); // []
+		
+		if(wordList != null) {
+			for(String word : wordList) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("word", word);
+				
+				jsonArr.put(jsonObj);
+			}// end of for-----------------
+		}
+		
+		return jsonArr.toString();
+	}
+	
+	// == 게시판 글보기 끝  == //
+	
+	
 	
 	
 	// --- 게시판 끝 --- -------------------

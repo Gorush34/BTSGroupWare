@@ -5,6 +5,9 @@
 <% String ctxPath = request.getContextPath(); %>
 
 <style>
+
+
+
 a#brd_category{
 	color: black;
 	margin: 10px;
@@ -100,7 +103,7 @@ margin: 10px;
 			
 			
 			frm.method = "GET";
-			frm.action = "<%= ctxPath%>/noticeView.os";
+			frm.action = "<%= ctxPath%>/fileboard/view.bts";
 			frm.submit();
 		}// end of function goView(seq){}----------------------------------------------
 		
@@ -108,7 +111,7 @@ margin: 10px;
 		function goSearch() {
 			var frm = document.searchFrm;
 			frm.method = "GET";
-			frm.action = "<%= request.getContextPath()%>/noticeList.os";
+			frm.action = "<%= request.getContextPath()%>/fileboard/list.bts";
 			frm.submit();
 		}// end of function goSearch() {}-----------------------
 	

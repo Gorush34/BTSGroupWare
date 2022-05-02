@@ -31,6 +31,38 @@ public class BoardService implements InterBoardService {
 		return boardList;
 	}
 
+	@Override
+	public BoardVO getView(Map<String, String> paraMap) {
+		BoardVO boardvo = dao.getView(paraMap); // 글1개 조회하기
+		
+		String login_userid = paraMap.get("login_userid");  
+		// paraMap.get("login_userid") 은 로그인을 한 상태이라면 로그인한 사용자의 userid 이고,
+		// 로그인을 하지 않은 상태이라면  paraMap.get("login_userid") 은 null 이다.
+		
+		if(login_userid != null &&
+		   boardvo != null &&
+		  !login_userid.equals(boardvo.getFk_userid())) {
+			// 글조회수 증가는 로그인을 한 상태에서 다른 사람의 글을 읽을때만 증가하도록 한다. 
+			
+			dao.setAddReadCount(boardvo.getSeq());  // 글조회수 1증가 하기 
+			boardvo = dao.getView(paraMap); 
+		}
+		
+		return boardvo;
+	}
+
+	@Override
+	public BoardVO getViewWithNoAddCount(Map<String, String> paraMap) {
+		BoardVO boardvo = dao.getView(paraMap); // 글1개 조회하기
+		return boardvo;
+	}
+
+	@Override
+	public List<String> wordSearchShow(Map<String, String> paraMap) {
+		List<String> wordList = dao.wordSearchShow(paraMap);
+		return wordList;
+	}
+
 
 	
 	

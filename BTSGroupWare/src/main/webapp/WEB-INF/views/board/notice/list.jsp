@@ -101,7 +101,7 @@ margin: 10px;
 			
 			
 			frm.method = "GET";
-			frm.action = "<%= ctxPath%>/noticeView.os";
+			frm.action = "<%= ctxPath%>/notice/view.bts";
 			frm.submit();
 		}// end of function goView(seq){}----------------------------------------------
 		
@@ -109,7 +109,7 @@ margin: 10px;
 		function goSearch() {
 			var frm = document.searchFrm;
 			frm.method = "GET";
-			frm.action = "<%= request.getContextPath()%>/noticeList.os";
+			frm.action = "<%= request.getContextPath()%>/notice/list.bts";
 			frm.submit();
 		}// end of function goSearch() {}-----------------------
 	

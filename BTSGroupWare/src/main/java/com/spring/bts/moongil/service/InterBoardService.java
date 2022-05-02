@@ -11,6 +11,12 @@ public interface InterBoardService {
 
 	List<BoardVO> boardListSearchWithPaging(Map<String, String> paraMap);
 
+	BoardVO getView(Map<String, String> paraMap);
+
+	BoardVO getViewWithNoAddCount(Map<String, String> paraMap);
+
+	List<String> wordSearchShow(Map<String, String> paraMap);
+
 
 
 }
