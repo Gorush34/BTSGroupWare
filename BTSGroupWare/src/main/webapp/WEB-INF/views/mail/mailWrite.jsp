@@ -149,9 +149,9 @@ $(document).ready(function(){
 		<table id="mailWriteTable">
 			<tr>
 				<th width="14%">받는사람</th>
-				<td width="900px" data-toggle="tooltip" data-placement="top" title="">
-					<input type="text" id="receiverInput" style="width: 100%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
-					<div class="receivers_area"></div>
+				<td width="86%" data-toggle="tooltip" data-placement="top" title="">
+					<input type="text" id="receiverInput" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
+					<button type="button" class="btn btn-secondary btn-sm">주소록</button>
 				</td>
 			</tr>
 			<tr>
@@ -159,8 +159,8 @@ $(document).ready(function(){
 					<span style="margin-right: 40px;">제목</span>
 					<input type="checkbox" checked="checked" />&nbsp;&nbsp;중요!
 				</th>
-				<td width="900px" >
-					<input type="text" style="width: 100%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray;" />
+				<td width="110%" >
+					<input type="text" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; display: inline-block;" />
 				</td>
 			</tr>		
 			<tr>
