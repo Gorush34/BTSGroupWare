@@ -7,6 +7,10 @@
 <!-- ==== 대부분은 namespace에 파일이름 사용(유일하니까) ==== -->
 <mapper namespace="hwanmo">
 
-	
+	<select id="idDuplicateCheck" parameterType="String" resultType="boolean">
+  		select count(*)
+		from tbl_employees
+		where pk_emp_no = #{pk_emp_no}
+	</select>
 
 </mapper>
