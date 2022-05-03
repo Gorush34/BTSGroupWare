@@ -33,6 +33,13 @@ public class EmployeeDAO implements InterEmployeeDAO {
 	private SqlSessionTemplate sqlsession;
 	// Type 에 따라 Spring 컨테이너가 알아서 root-context.xml 에 생성된 org.mybatis.spring.SqlSessionTemplate 의 bean 을  sqlsession 에 주입시켜준다. 
 	// 그러므로 sqlsession 는 null 이 아니다. 이름 맘대로해도됨
+
+	// ID 중복검사 (tbl_member 테이블에서 userid 가 존재하면 true를 리턴해주고, userid 가 존재하지 않으면 false를 리턴한다)
+	@Override
+	public boolean idDuplicateCheck(String pk_emp_no) {
+		boolean isExist = sqlsession.selectOne("hwanmo.idDuplicateCheck", pk_emp_no);
+		return isExist;
+	}
 	
 	
 }

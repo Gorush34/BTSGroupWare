@@ -43,10 +43,8 @@
 	<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo&family=Noto+Sans+KR&display=swap" rel="stylesheet">
 	
 	<!-- Optional JavaScript-->
-	
 	<script type="text/javascript" src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-	<script type="text/javascript" src="<%= ctxPath%>/jquery-ui-1.13.1.custom/jquery-ui.js" ></script> 
-	<script type="text/javascript" src="<%= ctxPath%>/js/datepicker.js" ></script> 
+	<script type="text/javascript" src="<%= ctxPath%>/resources/js/datepicker.js" ></script> 
 
 
 </head>

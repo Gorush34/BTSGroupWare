@@ -28,7 +28,7 @@
 			const $target = $(event.target);
 			
 			const name = $target.val().trim();
-			if(name == "" && flagError==false){
+			if(name == ""){
 				
 			//	$target.next().show();
 			// 	또는
@@ -245,9 +245,9 @@
 	 		//	async:true,	   // 비동기처리(기본값)	
 	 			
 	 			success: function(text){
-	 				//console.log("확인용 : text => "+ text);
+	 				console.log("확인용 : text => "+ text);
 	 				// 확인용 : text => {"isExist":false}    
-	 				//console.log("확인용 타입 typeof(text) : "+typeof(text))
+	 				console.log("확인용 타입 typeof(text) : "+typeof(text))
 	 				// 확인용 타입 typeof(text) : string
 	 				
 	 				const json = JSON.parse(text);
@@ -365,6 +365,7 @@
 </script>
 
 	<div id="tbl_regEmp">
+	<form name="registerFrm" action="registerSuccess.bts">
 	<table>
 		<tr>
 			<td><h2>사원 등록<br><br></h2></td>
@@ -380,7 +381,11 @@
 		<tr>
 			<th><label for="pk_emp_no">사번&nbsp;<span id="star">*</span></label></th>
 			<td>
-				<input type="text" class="pk_emp_no" id="pk_emp_no" name="pk_emp_no" size="20"  maxlength='16' />
+				<input required type="text" class="requiredInfo" id="pk_emp_no" name="pk_emp_no" size="20"  maxlength='16' />
+				<span id="isExistIdCheck" class="duplicateCheck" onclick="isExistIdCheck();">사번중복확인&nbsp;&nbsp;<i class="fas fa-angle-right"></i></span>
+				<br>
+				<span class="error">사번을 입력해주세요.</span> 
+				<span id="idcheckResult"></span>
 			</td>    
 		</tr>
 		<tr>
@@ -408,7 +413,7 @@
 		<tr>
 			<td><strong>직위</strong></td>
 			<td>
-				<select name="fk_department_id" id="fk_department_id" style="height: 26px;" >
+				<select name="fk_rank_id" id="fk_rank_id" style="height: 26px;" >
 			         <option value="">직위 선택</option>
 			         <option value="10">사원</option>
 			         <option value="20">주임</option>
@@ -503,13 +508,14 @@
 		<tr>
 			<td></td>
 			<td colspan="10" style="text-align:center; padding-top: 18%; ">
-				<button class="btn btn-info" id="" style="border: solid lightgray 2px;" >저장</button>
-				<button class="btn btn-info" id="" style="border: solid lightgray 2px;" >계속 등록</button>
-				<button class="btn btn-default" id="" style="border: solid lightgray 2px;">목록으로 이동</button>
-				<button class="btn btn-default" id="" style="border: solid lightgray 2px;">취소</button>
+				<button class="btn btn-info" id="btn_register" style="border: solid lightgray 2px;" >저장</button>
+				<button class="btn btn-info" id="btn_continue_reg" style="border: solid lightgray 2px;" >계속 등록</button>
+				<button class="btn btn-default" id="btn_list" style="border: solid lightgray 2px;">목록으로 이동</button>
+				<button class="btn btn-default" id="btn_cancel" style="border: solid lightgray 2px;">취소</button>
 			</td>
 		</tr>
 	</table>
+	</form>
 	</div>
 	
 
