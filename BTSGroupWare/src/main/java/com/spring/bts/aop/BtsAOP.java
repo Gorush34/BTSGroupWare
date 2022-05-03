@@ -53,7 +53,7 @@ public class BtsAOP {
 		HttpSession session = request.getSession();
 		if(session.getAttribute("loginuser") == null ) {
 			String message = "먼저 로그인 하세요~~~";
-			String loc = request.getContextPath()+"/login.action";
+			String loc = request.getContextPath()+"/login.bts";
 			
 			request.setAttribute("message", message);
 			request.setAttribute("loc", loc);
@@ -64,6 +64,7 @@ public class BtsAOP {
 			session.setAttribute("goBackURL", url); // 세션에 rul 정보를 저장시켜둔다.
 			
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/msg.jsp");
+			// dispatcher 를 하면 forward를 해줘야함(forward에는 request, response 필요) 
 			try {
 				dispatcher.forward(request, response);
 			} catch (ServletException | IOException e) {
