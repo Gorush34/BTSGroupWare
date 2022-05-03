@@ -24,7 +24,7 @@
 		$("input#pk_emp_no").focus();
 		
 		// 아이디가 pk_emp_no 제약 조건 
-		$("input#pk_emp_no").blur(() => {
+		$("input#pk_emp_no").blur(() => { 
 			const $target = $(event.target);
 			
 			const name = $target.val().trim();
@@ -223,7 +223,7 @@
 	 	$("#pk_emp_no").keyup(function(e) { 
 	 		if (!(e.keyCode >=37 && e.keyCode<=40)) {
 	 			var v = $(this).val();
-	 			$(this).val(v.replace(/[^a-z0-9]/gi,''));
+	 			$(this).val(v.replace(/[^0-9]/gi,''));
 	 		}
 	 	});
 		
@@ -255,8 +255,8 @@
 	 				if(json.isExist) {	// 입력한 $("input#pk_emp_no").val() 값이 이미 사용중이라면
 	 					$("span#idcheckResult").html($("input#pk_emp_no").val()+"은 중복된 ID 이므로 사용 불가합니다.").css("color","red");
 	  	 				$("input#pk_emp_no").val("");
-	 				} else if($("input#pk_emp_no").val().length < 4 ) {
-	 					$("span#idcheckResult").html("아이디는 4글자 이상 16글자 이하로 작성하세요!").css("color","red");
+	 				} else if($("input#pk_emp_no").val().length != 8 ) {
+	 					$("span#idcheckResult").html("사번은 8자리 숫자로 이루어져야 합니다.").css("color","red");
 	 				} else {	// 입력한 $("input#pk_emp_no").val() 값이 DB테이블(tbl_member)에 존재하지 않는 경우라면
 	 					$("span#idcheckResult").html($("input#pk_emp_no").val()+"은 사용 가능합니다.").css("color","green");
 	 				}
