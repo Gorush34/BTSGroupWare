@@ -1,6 +1,7 @@
 package com.spring.bts.jieun.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,14 +90,19 @@ public class CalendarController {
 		//  /WEB-INF/views/tiles3/fcalenderMain.jsp	페이지를 만들어야 한다.		
 		}
 		
-		// === 일정 등록 페이지 === //	
-		@RequestMapping(value="/calendar/schedualRegister.bts")
-		public ModelAndView schedualRegister(ModelAndView mav) {
+		// === 일정등록 페이지  === //
+		@RequestMapping(value="/calendar/schedualRegister.bts", method= {RequestMethod.POST})
+		public ModelAndView schedualRegister(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 			
+			// form 에서 받아온 날짜. (+ 일정 등록창으로 넘어가는 기능)
+			String chooseDate = request.getParameter("chooseDate");
+			
+			mav.addObject("chooseDate", chooseDate);
 			mav.setViewName("schedualRegister.calendar");
 			
 			return mav;
 		}
+
 		
 		// === 예약 메인 페이지 === //	
 		@RequestMapping(value="/reservation/reservationMain.bts")
@@ -124,6 +130,8 @@ public class CalendarController {
 			
 			return mav;
 		}
+		
+		
 		
 		/*	// === 일정 체크 박스 추가 === //
 		@ResponseBody
