@@ -94,13 +94,13 @@
 	      
 	      <%-- 주소록 / 조직도 시작 --%>
 	      <li class="nav-item">
-	        <a class="nav-link" href="#" id="navbar" role="button" aria-expanded="false">
+	        <a class="nav-link" href="<%= ctxPath %>/addBook/addBook_main.bts" id="navbar" role="button" aria-expanded="false">
 	          	주소록
 	        </a>
 	      </li>
 	      
 	      <li class="nav-item">
-	        <a class="nav-link" href="#" id="navbar" role="button" aria-expanded="false">
+	        <a class="nav-link" href="<%= ctxPath %>/addBook/addBook_orgChart.bts" id="navbar" role="button" aria-expanded="false">
 	          	조직도
 	        </a>
 	      </li>

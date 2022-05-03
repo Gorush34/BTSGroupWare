@@ -2,38 +2,41 @@
 /*
 body {font-family: Arial, Helvetica, sans-serif, 돋움; }
 */
-#mycontainer   { padding:20px; }
+#mycontainer   { padding:20px; background-color:#F2F2F2; }
 #myheader      { display: flex; min-height:100px; position: relative; top: 60px; }
-#mycontent      { min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:#F5F5F5;
-                  float:left; width:65%; }
+#mycontent      { min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:#F2F2F2;
+                  float:right; width:65%; margin-right: 13%;}
 
-#mysideinfo      { min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:#F0FFFF;
-                  float:right; width:33.5%; }
+#mysideinfo      {  min-height:1200px; position: fixed; top:60px; padding-top: 40px; background-color:#FFF;
+                  float:left; width:250px;  }
 
 #myfooter      { display: flex; min-height:120px; position: relative; top:60px; background-color:#555555; margin-bottom: 70px; 
                  clear:both; }
  
 #myheader a {text-decoration:none;}
 
+body {font-family: 'Noto Sans KR', sans-serif; }
+
 /* ///////////////////////////////////////////////////////////////////////////////////////// */
 /* ///////////////////////////////////////////////////////////////////////////////////////// */
 
 /*  addBook_main 시작  */
 
-	table#main_tbl {
+	table#Main_main_tbl {
 		margin:auto;
 		width:90%;
 		text-align:center;
 		font-family: 'Noto Sans KR',맑은 고딕,돋움, malgun gothic, dotum,AppleGothic,Helvetica,sans-serif;
 	}
 	
-	button#mini_btn {
+	button#Main_mini_btn {
 		padding-top: 5px;
 		padding-left: 5px;
 	    padding-right: 5px;
 	    font-size: 10pt;
 	    height: 30px;
 	    border: solid lightgray 1px;
+	    background-color:white;
 	}
 	
 /*  addBook_main 끝  */	
@@ -60,6 +63,21 @@ body {font-family: Arial, Helvetica, sans-serif, 돋움; }
 	
 
 /*  addBook_telAdd 끝  */
+
+
+/* addBook_orgChart 시작 */
+
+	#orgChart {
+		curs;
+	}
+	
+
+
+
+
+/* addBook_orgChart 끝 */
+
+
 
 /* ///////////////////////////////////////////////////////////////////////////////////////// */
 /* ///////////////////////////////////////////////////////////////////////////////////////// */
