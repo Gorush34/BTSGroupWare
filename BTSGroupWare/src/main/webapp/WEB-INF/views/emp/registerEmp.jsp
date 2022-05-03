@@ -20,7 +20,7 @@
 		let b_flagEmailDuplicateClick = false;
 		// 가입하기 버튼 클릭시 "이메일중복확인" 을 클릭했는지 클릭안했는지를 알아보기 위한 용도이다.
 		
-		//$("span.error").hide();
+		$("span.error").hide();
 		$("input#pk_emp_no").focus();
 		
 		// 아이디가 pk_emp_no 제약 조건 
@@ -28,7 +28,7 @@
 			const $target = $(event.target);
 			
 			const name = $target.val().trim();
-			if(name == ""){
+			if(name == "" ){
 				
 			//	$target.next().show();
 			// 	또는
@@ -45,7 +45,7 @@
 		});  // end of $("input#pk_emp_no").blur(() => {------------------------
 		
 		// 아이디가 pwd 제약 조건 
-		$("input#emp_pwd").blur(() => { 
+		$("input#emp_pwd").blur(() => {  
 			const $target = $(event.target);
 			
 			const regExp = new RegExp(/^.*(?=^.{8,16}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g);
@@ -78,9 +78,9 @@
 				$target.prop("disabled",false);
 				$("input#emp_pwd").prop("disabled",false);
 				
-			//	$target.next().show();
+				$target.next().show();
 			// 	또는
-				$target.parent().find(".error").show();
+			//	$target.parent().find(".error").show();
 				
 			} else {
 				// 암호와 암호확인값이 같은 경우
@@ -210,12 +210,12 @@
 		}); // end of $("img#zipcodeSearch").click(function() {-------------------------------------
 			
 		// 아이디값이 변경되면 가입하기 버튼 클릭시 "아이디중복확인" 을 클릭했는지 클릭안했는지를 알아보기 위한 용도를 초기화 시키기
-	 	$("input#pk_emp_no").bind("change",()=>{
+	 	$("input#pk_emp_no").bind("change",()=>{  
 	  	 	b_flagIdDuplicateClick = false;
 	 	});
 		
 		// 이메일값이 변경되면 가입하기 버튼 클릭시 "이메일중복확인" 을 클릭했는지 클릭안했는지를 알아보기 위한 용도를 초기화 시키기
-	 	$("input#uq_email").bind("change",()=>{
+	 	$("input#uq_email").bind("change",()=>{  
 	 		b_flagEmailDuplicateClick = false;
 	 	});
 		
@@ -245,9 +245,9 @@
 	 		//	async:true,	   // 비동기처리(기본값)	
 	 			
 	 			success: function(text){
-	 				console.log("확인용 : text => "+ text);
+	 				// console.log("확인용 : text => "+ text);
 	 				// 확인용 : text => {"isExist":false}    
-	 				console.log("확인용 타입 typeof(text) : "+typeof(text))
+	 				// console.log("확인용 타입 typeof(text) : "+typeof(text))
 	 				// 확인용 타입 typeof(text) : string
 	 				
 	 				const json = JSON.parse(text);
@@ -287,7 +287,7 @@
         */
 		// ==== jQuery 를 이용한 Ajax (Asynchronous JavaScript and XML)처리하기 ====
 	 		$.ajax({
-	 			url:"<%= ctxPath%>/member/emailDuplicateCheck.book",
+	 			url:"<%= ctxPath%>/emp/emailDuplicateCheck.bts",
 	 			data:{"uq_email":$("input#uq_email").val()}, // data 는 MyMVC/member/emailDuplicateCheck.up로 전송해야할 데이터를 말한다.
 	 			type: "post" , // type 은 생략하면 "get" 이다.
 				dataType: "json",
@@ -316,7 +316,7 @@
 	 				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 	 			}
 	 			
-	 		});
+	 		}); // end of $.ajax({})
 	 	
 	} // end of function isExistEmailCheck(){}---------------------------------------
 	
@@ -348,7 +348,7 @@
 		}
 		
 		const frm = document.registerFrm;
-		frm.action = "memberRegister.book";
+		frm.action = "goEmpRegister.bts";
 		frm.method = "post";
 		frm.submit();
 		
@@ -358,14 +358,14 @@
 	// 가입하기 취소 버튼 클릭 시 
 	function registerCancel() {
 		
-		location.href = "<%=ctxPath%>/index.book";
+		location.href = "<%=ctxPath%>/index.bts";
 		
 	}
 	
 </script>
 
 	<div id="tbl_regEmp">
-	<form name="registerFrm" action="registerSuccess.bts">
+	<form name="registerFrm" >
 	<table>
 		<tr>
 			<td><h2>사원 등록<br><br></h2></td>
@@ -508,7 +508,7 @@
 		<tr>
 			<td></td>
 			<td colspan="10" style="text-align:center; padding-top: 18%; ">
-				<button class="btn btn-info" id="btn_register" style="border: solid lightgray 2px;" >저장</button>
+				<button class="btn btn-info" id="btn_register" style="border: solid lightgray 2px;" onClick="goRegister();">저장</button>
 				<button class="btn btn-info" id="btn_continue_reg" style="border: solid lightgray 2px;" >계속 등록</button>
 				<button class="btn btn-default" id="btn_list" style="border: solid lightgray 2px;">목록으로 이동</button>
 				<button class="btn btn-default" id="btn_cancel" style="border: solid lightgray 2px;">취소</button>
