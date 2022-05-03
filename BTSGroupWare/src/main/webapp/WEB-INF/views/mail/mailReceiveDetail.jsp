@@ -99,6 +99,13 @@ $(document).ready(function (){
 				반갑습니다람쥐
 			</div>
 		</div>	
+		<div style="margin-top: 500px;">
+			<span class="move" onclick="''"><i class="fa fa-sort-asc" aria-hidden="true"></i>&nbsp;&nbsp;다음글제목 : 안녕하세요 과장님.</span>
+			<hr>
+			<span class="move" onclick="''"><i class="fa fa-sort-desc" aria-hidden="true"></i>&nbsp;&nbsp;이전글제목 : 구매품의서</span>
+			
+			<br/>
+		</div>
 	</div>
 </div>
 

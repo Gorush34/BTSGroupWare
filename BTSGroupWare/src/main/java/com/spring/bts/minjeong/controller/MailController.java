@@ -40,14 +40,15 @@ public class MailController {
 	@RequestMapping(value = "/mail/mailReceiveList.bts")	
 	// URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
 	// http://localhost:9090/bts/tiles1/mailList.bts
-	public String mailList(HttpServletRequest request) {
+	public ModelAndView mailList(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 
 		// 페이징 처리 한 받은메일함 목록 보여주기
 		
 		// 검색 목록
 		
-		return "mailReceiveList.mail";
-    //  return "/tiles1/mailList.jsp";	// 아래와 같이 써서 오류가 났음.
+		mav.setViewName("mailReceiveList.mail");
+		return mav;
+	  //  return "/tiles1/mailList.jsp";	// 아래와 같이 써서 오류가 났음.
 	}
 	
 	
