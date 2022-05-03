@@ -1,10 +1,15 @@
 package com.spring.bts.minjeong.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.spring.bts.hwanmo.model.EmployeeVO;
 
 @Component
 /* XML에서 빈을 만드는 대신에 클래스명 앞에 @Component 어노테이션을 적어주면 해당 클래스는 bean으로 자동 등록된다. 
@@ -15,14 +20,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller	// Bean 기능 + Controller 기능 ( @Component 를 빼도, 안빼도 무방하다. )
 public class MailController {
 		
-	// 메일 쓰기
-	@RequestMapping(value = "/mail/mailWrite.bts")	
-	public String mailWrite(HttpServletRequest request) {
+	// 메일 쓰기 폼페이지 요청
+	@RequestMapping(value = "/mail/mailWrite.bts", produces = "text/plain; charset=UTF-8")	
+	public ModelAndView mailWrite(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		/*
+		 * // 로그인 세션 요청하기 HttpSession session = request.getSession(); 
+		 * EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
+		 * 
+		 * mav.addObject("loginuser", loginuser);
+		 */
+		// 메일 쓰기 폼 띄우기		
+		mav.setViewName("mailWrite.mail");	// view 단
 		
-		// 첨부파일 업로드 하기
-		
-		return "mailWrite.mail";
-		//	value="/WEB-INF/views/mail/{1}.jsp 페이지를 만들어야 한다.
+		return mav;
 	}
 	
 	

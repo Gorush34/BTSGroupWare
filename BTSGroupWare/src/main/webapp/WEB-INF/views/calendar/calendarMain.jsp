@@ -4,7 +4,6 @@
 
 <%
  	String ctxPath = request.getContextPath();
-	//     /board
 %>
 
 <%-- 캘린더 소스 --%>
@@ -103,7 +102,7 @@
 </script>
 
 <div>
-
+	<h4 style="margin: 0 80px">일정관리</h4>
 	<%-- 검색바를 보여주는 곳 --%>
 	<div id="search">
 		<select id="searchType" name="searchType">
