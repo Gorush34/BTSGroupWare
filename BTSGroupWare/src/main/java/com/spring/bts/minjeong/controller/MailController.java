@@ -1,15 +1,21 @@
 package com.spring.bts.minjeong.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.bts.hwanmo.model.EmployeeVO;
+import com.spring.bts.minjeong.model.MailVO;
+import com.spring.bts.minjeong.service.InterMailService;
 
 @Component
 /* XML에서 빈을 만드는 대신에 클래스명 앞에 @Component 어노테이션을 적어주면 해당 클래스는 bean으로 자동 등록된다. 
@@ -19,7 +25,20 @@ import com.spring.bts.hwanmo.model.EmployeeVO;
 */
 @Controller	// Bean 기능 + Controller 기능 ( @Component 를 빼도, 안빼도 무방하다. )
 public class MailController {
-		
+
+	// #### 의존객체 목록 #### //
+	// Spring 은 항상 Service 가 필요하다! (Controller 는 service를 의존객체로 한다.)
+	@Autowired	// Type에 따라 알아서 Bean 을 주입해준다. (service 를 null 로 만들지 않음.)
+	private InterMailService service;	// 필요할 땐 사용하고, 필요하지 않을땐 사용하지 않기 (느슨한 결합)
+	
+	/*
+	 * // === #155. 파일업로드 및 다운로드를 해주는 FileManager 클래스 의존객체 주입하기(DI : Dependency
+	 * Injection) ===
+	 * 
+	 * @Autowired // Type에 따라 알아서 Bean 을 주입해준다. private FileManager fileManager; //
+	 * type (FileManager) 만 맞으면 다 주입해준다.
+	 */	
+	
 	// 메일 쓰기 폼페이지 요청
 	@RequestMapping(value = "/mail/mailWrite.bts", produces = "text/plain; charset=UTF-8")	
 	public ModelAndView mailWrite(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
@@ -42,11 +61,16 @@ public class MailController {
 	// http://localhost:9090/bts/tiles1/mailList.bts
 	public ModelAndView mailList(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 
-		// 페이징 처리 한 받은메일함 목록 보여주기
+		// 페이징 처리 한 받은메일함 목록 보여주기 (추후 예정)
 		
-		// 검색 목록
+		// 검색 목록 (추후 예정)
 		
+		// receiveMailList
+		List<MailVO> receiveMailList = service.getReceiveMailList();
+		
+		mav.addObject("receiveMailList", receiveMailList);		
 		mav.setViewName("mailReceiveList.mail");
+		
 		return mav;
 	  //  return "/tiles1/mailList.jsp";	// 아래와 같이 써서 오류가 났음.
 	}

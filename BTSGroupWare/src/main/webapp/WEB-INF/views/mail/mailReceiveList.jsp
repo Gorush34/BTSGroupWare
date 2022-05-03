@@ -86,6 +86,7 @@
 						</thead>
 						
 						<tbody>
+						<c:forEach items="${requestScope.receiveMailList}" var="receiveMailList">
 							<tr>
 								<td style="width: 40px;">
 									<input type="checkbox" id="checkAll" class="text-center"/>
@@ -96,44 +97,13 @@
 								<td style="width: 40px;">
 									<span class="fa fa-paperclip" class="text-center"></span>
 								</td>							
-								<td class="text-center">김민정</td>
+								<td class="text-center">${receiveMailList.receiveuser_name}</td>
 								<td>
-								<a href="<%= ctxPath%>/mail/mailReceiveDetail.bts">메일 제목 확인 JSP</a>
+								<a href="<%= ctxPath%>/mail/mailReceiveDetail.bts">${receiveMailList.subject}</a>
 								</td>
-								<td class="text-left">2022.04.25 15:35:00</td>
-							</tr>						
-							<tr>
-								<td style="width: 40px;">
-									<input type="checkbox" id="checkAll" class="text-center"/>
-								</td>
-								<td style="width: 40px;">
-									<span class="fa fa-star-o" class="text-center"></span>
-								</td>
-								<td style="width: 40px;">
-									<span class="fa fa-paperclip" class="text-center"></span>
-								</td>							
-								<td class="text-center">김민정</td>
-								<td>
-								<a href="<%= ctxPath%>/mail/mailReceiveDetail.bts">메일 제목 확인 JSP</a>
-								</td>
-								<td class="text-left">2022.04.25 15:35:00</td>
+								<td class="text-left">${receiveMailList.reg_date}</td>
 							</tr>	
-							<tr>
-								<td style="width: 40px;">
-									<input type="checkbox" id="checkAll" class="text-center"/>
-								</td>
-								<td style="width: 40px;">
-									<span class="fa fa-star-o" class="text-center"></span>
-								</td>
-								<td style="width: 40px;">
-									<span class="fa fa-paperclip" class="text-center"></span>
-								</td>							
-								<td class="text-center">김민정</td>
-								<td>
-								<a href="<%= ctxPath%>/mail/mailReceiveDetail.bts">메일 제목 확인 JSP</a>
-								</td>
-								<td class="text-left">2022.04.25 15:35:00</td>
-							</tr>															
+						</c:forEach>																				
 						</tbody>
 					</table>
 				</div>	
