@@ -36,8 +36,34 @@ public class EmployeeVO {
 
 	/////////////////////////////////////////////////////////////////////
 	
-public EmployeeVO() {};
+	public EmployeeVO() {};
 	
+	public EmployeeVO(int pk_emp_no, int fk_department_id, int fk_rank_id, String emp_name, String emp_pwd
+			, String com_tel, String postal, String address, String detailaddress
+			, String extraaddress, String uq_phone, String uq_email, String birthday, String gender) {
+		super();
+		this.pk_emp_no = pk_emp_no;
+		this.fk_department_id = fk_department_id;
+		this.fk_rank_id = fk_rank_id;
+		this.emp_name = emp_name;
+		this.emp_pwd = emp_pwd;
+		this.com_tel = com_tel;
+		this.postal = postal;
+		this.address = address;
+		this.detailaddress = detailaddress;
+		this.extraaddress = extraaddress;
+		this.uq_phone = uq_phone;
+		this.uq_email = uq_email;
+		// this.img_path = img_path; 나중에 넣어라
+		// this.img_name = img_name;
+		this.birthday = birthday;
+		// this.gradelevel = gradelevel;
+		this.gender = gender;
+		// this.lastpwdchangedate = lastpwdchangedate;
+		// this.pwdchangegap = pwdchangegap;
+		// this.requirePwdChange = requirePwdChange;
+	}
+
 	public EmployeeVO(int pk_emp_no, int fk_department_id, int fk_rank_id, int fk_board_authority_no,
 			int fk_site_authority_no, String emp_name, String emp_pwd, String com_tel, String postal, String address,
 			String detailaddress, String extraaddress, String uq_phone, String uq_email, String hire_date,
