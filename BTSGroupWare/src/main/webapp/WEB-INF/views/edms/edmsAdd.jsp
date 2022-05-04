@@ -20,13 +20,24 @@
 <script type="text/javascript">
 	
 	
-	/* 할 것: 문서양식 선택 안했을 때 alert 띄우기! */
+	
 	
 	
 	$(document).ready(function(){
 		
 		// 글쓰기 버튼
 		$("button#btnWrite").click(function() {
+		
+			// 문서양식 선택여부 검사
+			const apprTemp = $("select#emdsDocFormSelect").val();
+			console.log("양식선택 확인 : " + apprTemp);
+			
+			// 카테고리를 선택하지 않은 경우 에러 메시지 출력
+			if ($("select#cateSel option:selected").length == 0) {
+				$("span.error").show();
+				$("select#catesel").focus();
+			}
+			
 			
 			// 글제목 유효성 검사
 			const subject = $("input#subject").val().trim();
@@ -101,11 +112,10 @@
 		<tr>
 			<th class="edmsView_th">문서양식</th>
           	<td colspan="4">
-				<select name="emdsDocFormSelect">
-					<!-- <optgroup label="일반"> -->
+				<select name="emdsDocFormSelect" id="formSel">
 					<option value="">양식선택</option>
 					<%--
-					<c:forEach items="${docFormList}" var="form">
+					<c:forEach var="map" items="${requestScope.docFormList}" var="form">
 						<option value="${어쩌고.어쩌고no}">${어쩌고.어쩌고name}</option>
 					</c:forEach>
 					--%>
