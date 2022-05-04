@@ -11,14 +11,14 @@
 
 <script type="text/javascript">
 
+	let b_flagIdDuplicateClick = false;
+	// 가입하기 버튼 클릭시 "아이디중복확인" 을 클릭했는지 클릭안했는지를 알아보기 위한 용도이다.
+	
+	let b_flagEmailDuplicateClick = false;
+	// 가입하기 버튼 클릭시 "이메일중복확인" 을 클릭했는지 클릭안했는지를 알아보기 위한 용도이다.
+
 	$(document).ready(function() {
 		
-		
-		let b_flagIdDuplicateClick = false;
-		// 가입하기 버튼 클릭시 "아이디중복확인" 을 클릭했는지 클릭안했는지를 알아보기 위한 용도이다.
-		
-		let b_flagEmailDuplicateClick = false;
-		// 가입하기 버튼 클릭시 "이메일중복확인" 을 클릭했는지 클릭안했는지를 알아보기 위한 용도이다.
 		
 		$("span.error").hide();	
 		$("input#emp_name").focus();
