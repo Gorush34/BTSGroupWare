@@ -1,5 +1,8 @@
 package com.spring.bts.jieun.model;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -29,6 +32,20 @@ public class CalendarDAO implements InterCalendarDAO {
 	private SqlSessionTemplate sqlsession; // 로컬DB mymvc_user 에 연결
 	// Type 에 따라 Spring 컨테이너가 알아서 root-context.xml 에 생성된 org.mybatis.spring.SqlSessionTemplate 의  sqlsession bean 을  sqlsession 에 주입시켜준다. 
     // 그러므로 sqlsession 는 null 이 아니다.
+
+	// === 일정 등록 하기 === //
+	@Override
+	public int scheduleRegisterInsert(Map<String, String> paraMap) {
+		int n = sqlsession.insert("jieun.scheduleRegisterInsert", paraMap);
+		return n;
+	}
+
+	// === 서브 캘린더 가져오기 === //
+	@Override
+	public List<CalendarVO> selectCalNo(Map<String, String> paraMap) {
+		List<CalendarVO> calendarvoList = sqlsession.selectList("jieun.selectCalNo", paraMap);
+		return calendarvoList;
+	}
 	
 
 	// ======== ***** 파이널 옮기기 시작 ***** ======== //

@@ -2,28 +2,36 @@ package com.spring.bts.jieun.model;
 
 public class CalendarVO {
 	
-	private int cal_no;
-	private String cal_name;
-	private String cal_color;
+	private int pk_calno;
+	private String calname;
+	private int fk_emp_no;
+	private int fk_lgcatgono;
+	public int getPk_calno() {
+		return pk_calno;
+	}
+	public void setPk_calno(int pk_calno) {
+		this.pk_calno = pk_calno;
+	}
+	public String getCalname() {
+		return calname;
+	}
+	public void setCalname(String calname) {
+		this.calname = calname;
+	}
+	public int getFk_emp_no() {
+		return fk_emp_no;
+	}
+	public void setFk_emp_no(int fk_emp_no) {
+		this.fk_emp_no = fk_emp_no;
+	}
+	public int getFk_lgcatgono() {
+		return fk_lgcatgono;
+	}
+	public void setFk_lgcatgono(int fk_lgcatgono) {
+		this.fk_lgcatgono = fk_lgcatgono;
+	}
 	
-	public int getCal_no() {
-		return cal_no;
-	}
-	public void setCal_no(int cal_no) {
-		this.cal_no = cal_no;
-	}
-	public String getCal_name() {
-		return cal_name;
-	}
-	public void setCal_name(String cal_name) {
-		this.cal_name = cal_name;
-	}
-	public String getCal_color() {
-		return cal_color;
-	}
-	public void setCal_color(String cal_color) {
-		this.cal_color = cal_color;
-	}
+	
 	
 	
 }

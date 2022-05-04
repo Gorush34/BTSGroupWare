@@ -1,8 +1,11 @@
 package com.spring.bts.jieun.controller;
 
+import java.util.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.bts.jieun.model.CalendarVO;
 import com.spring.bts.jieun.service.InterCalendarService;
 
 /*
@@ -91,18 +95,101 @@ public class CalendarController {
 		}
 		
 		// === 일정등록 페이지  === //
-		@RequestMapping(value="/calendar/schedualRegister.bts", method= {RequestMethod.POST})
-		public ModelAndView schedualRegister(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		@RequestMapping(value="/calendar/scheduleRegister.bts", method= {RequestMethod.POST})
+		public ModelAndView scheduleRegister(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 			
 			// form 에서 받아온 날짜. (+ 일정 등록창으로 넘어가는 기능)
 			String chooseDate = request.getParameter("chooseDate");
 			
 			mav.addObject("chooseDate", chooseDate);
-			mav.setViewName("schedualRegister.calendar");
+			mav.setViewName("scheduleRegister.calendar");
 			
 			return mav;
 		}
-
+		
+		// === 서브 캘린더 가져오기 === //
+		@ResponseBody
+		@RequestMapping(value="/calendar/selectCalNo.bts",method = {RequestMethod.GET}, produces="text/plain;charset=UTF-8") 
+		public String selectCalNo(HttpServletRequest request) {
+			
+			String fk_lgcatgono = request.getParameter("fk_lgcatgono");
+			String fk_emp_no = request.getParameter("fk_emp_no");
+			
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("fk_lgcatgono", fk_lgcatgono);
+			paraMap.put("fk_emp_no", fk_emp_no);
+			
+			List<CalendarVO> calendarvoList = service.selectCalNo(paraMap);
+			
+			JSONArray jsArr = new JSONArray();
+			if(calendarvoList != null) {
+				for(CalendarVO cavo :calendarvoList) {
+					JSONObject jsonObj = new JSONObject();
+					jsonObj.put("pk_calno", cavo.getPk_calno());
+					jsonObj.put("calname", cavo.getCalname());
+					
+					jsArr.put(jsonObj);
+				}
+			}
+			
+			return jsArr.toString();
+		}
+		
+		
+		// === 참석자 추가하기 === //
+	/*	@ResponseBody
+		@RequestMapping(value="/calendar/scheduleRegister/addJoinUser.bts", produces="text/plain;charset=UTF-8")
+		public String addJoinUser(HttpServletRequest request) {
+			
+			String joinUserName = request.getParameter("joinUserName");
+			
+			// 사원 명단 불러오기
+			List<MemberVO> joinUserList = service.joinUserNameList(joinUserName);
+			
+			return "";
+		}*/
+	//	
+		// === 일정 등록 하기 === //
+		@RequestMapping(value="/calendar/scheduleRegisterInsert.bts", method={RequestMethod.POST})
+		public ModelAndView scheduleRegisterInsert(ModelAndView mav, HttpServletRequest request) throws Throwable {
+			
+			String startdate = request.getParameter("startdate");
+			String enddate = request.getParameter("endate");
+			String subject = request.getParameter("subject");
+			String fk_calno = request.getParameter("calSelect");
+			String joinuser = request.getParameter("joinuser");
+			String color = request.getParameter("color");
+			String place = request.getParameter("place");
+			String content = request.getParameter("content");
+			String fk_emp_no = request.getParameter("fk_emp_no");
+			
+			Map<String, String> paraMap = new HashMap<>();
+			
+			paraMap.put("startdate", startdate);
+			paraMap.put("enddate", enddate);
+			paraMap.put("subject", subject);
+			paraMap.put("fk_calno", fk_calno);
+			paraMap.put("joinuser", joinuser);
+			paraMap.put("color", color);
+			paraMap.put("place", place);
+			paraMap.put("content", content);
+			paraMap.put("fk_emp_no", fk_emp_no);
+			
+			int n = service.scheduleRegisterInsert(paraMap);
+			
+			if(n ==0) {
+				mav.addObject("message", "일정 등록에 실패하였습니다.");
+			}
+			else {
+				mav.addObject("message", "일정 등록에 성공하였습니다.");
+			}
+			
+			mav.addObject("loc", request.getContextPath()+"/calendar/scheduleRegister.bts");
+			
+			mav.setViewName("msg");
+			
+			return mav;
+		}
 		
 		// === 예약 메인 페이지 === //	
 		@RequestMapping(value="/reservation/reservationMain.bts")
