@@ -107,7 +107,6 @@ public class EmployeeController {
 	@RequestMapping(value="/emp/registerEmpSubmit.bts", method = {RequestMethod.POST}, produces="text/plain;charset=UTF-8")
 	public ModelAndView registerEmpSubmit(ModelAndView mav, HttpServletRequest request) {
 	
-		System.out.println("옵니까????");
 		
 		int pk_emp_no = Integer.parseInt(request.getParameter("pk_emp_no")); 					/* 사원번호 */
 		int fk_department_id = Integer.parseInt(request.getParameter("fk_department_id")); 		/* 부서명구분번호 */
