@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.bts.common.MyUtil;
 import com.spring.bts.common.Sha256;
 import com.spring.bts.hwanmo.model.EmployeeVO;
 import com.spring.bts.service.*;
@@ -177,5 +178,63 @@ public class BtsController {
 		return mav;
 	} // end of public ModelAndView loginEnd(ModelAndView mav, HttpServletRequest request)------
 	
+	// === #50. 로그아웃 처리하기 === //
+	@RequestMapping(value="/logout.bts")
+	public ModelAndView logout(ModelAndView mav, HttpServletRequest request) {
+		
+		/*
+		// 로그아웃시 로그인페이지로 돌아가는 것임
+		HttpSession session = request.getSession();
+		session.invalidate();
+		
+		String message = "로그아웃 되었습니다.";
+		String loc = request.getContextPath()+"/login.bts";
+		
+		mav.addObject("message", message);
+		mav.addObject("loc", loc);
+		mav.setViewName("msg");
+		// 
+		
+		return mav;
+		*/
+		
+		// 로그아웃시 현재 보았던 페이지로 돌아가는 것임
+		HttpSession session = request.getSession();
+		
+		String goBackURL = (String) session.getAttribute("goBackURL");
+		
+		session.invalidate();
+		
+		String message = "로그아웃 되었습니다.";
+		
+		String loc = "";
+		if(goBackURL != null) {
+			loc = request.getContextPath()+goBackURL;
+		}
+		else {
+			loc = request.getContextPath()+"/login.bts";
+		}
+		mav.addObject("message", message);
+		mav.addObject("loc", loc);
+		mav.setViewName("msg");
+		// 
+		
+		return mav;
+		
+	}
+	
+	
+	
+	
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////
+		
+	// === 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 생성 === //
+	public void getCurrentURL(HttpServletRequest request) {
+	HttpSession session = request.getSession();
+	session.setAttribute("goBackURL", MyUtil.getCurrentURL(request));
+	}
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////
 	
 }

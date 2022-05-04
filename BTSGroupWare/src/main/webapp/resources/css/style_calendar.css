@@ -1,7 +1,7 @@
 @charset "UTF-8";
-/*
+
 body {font-family: font-family: 'Noto Sans KR', sans-serif; }
-*/
+
 #mycontainer   { padding:20px; }
 #myheader      { display: flex; min-height:100px; position: relative; top: 60px; }
 #mycontent      { min-height:1200px; top:60px; padding-top: 40px; padding-left:250px; background-color:#FFF;
@@ -105,6 +105,110 @@ input#searchWord{
 	border: none;
 	background-color: white;
 	margin-left: 3px;
+}
+
+
+/*예약 페이지 파트*/
+
+
+.md-work-week-cont {
+    position: relative;
+    padding-left: 50px;
+}
+
+.md-work-week-avatar {
+    position: absolute;
+    max-height: 50px;
+    max-width: 50px;
+    top: 21px;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    left: 20px;
+}
+
+.md-work-week-name {
+    font-size: 16px;
+}
+
+.md-work-week-title {
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.md-switching-timeline-view-cont .mbsc-segmented {
+    max-width: 200px;
+    margin: 0 auto;
+    padding: 1px;
+}
+
+.md-work-week-picker {
+    flex: 1 0 auto;
+}
+
+.md-work-week-nav {
+    width: 200px;
+}
+
+.md-switching-timeline-view-cont .mbsc-timeline-resource {
+    display: flex;
+    align-items: center;
+}
+
+.md-switching-timeline-view-cont .mbsc-timeline-resource-col {
+    width: 130px;
+}
+
+@supports (overflow:clip) {
+    .md-switching-timeline-view-cont.mbsc-ltr .mbsc-schedule-event-inner {
+        left: 130px;
+    }
+    .md-switching-timeline-view-cont.mbsc-rtl .mbsc-schedule-event-inner {
+        right: 130px;
+    }
+}
+
+/* material header order */
+
+.mbsc-material.md-work-week-prev {
+    order: 1;
+}
+
+.mbsc-material.md-work-week-next {
+    order: 2;
+}
+
+.mbsc-material.md-work-week-nav {
+    order: 3;
+}
+
+.mbsc-material .md-work-week-picker {
+    order: 4;
+}
+
+.mbsc-material .md-work-week-today {
+    order: 5;
+}
+
+/* windows header order */
+
+.mbsc-windows.md-work-week-nav {
+    order: 1;
+}
+
+.mbsc-windows.md-work-week-prev {
+    order: 2;
+}
+
+.mbsc-windows.md-work-week-next {
+    order: 3;
+}
+
+.mbsc-windows .md-work-week-picker {
+    order: 4;
+}
+
+.mbsc-windows .md-work-week-today {
+    order: 5;
 }
 
 

@@ -4,7 +4,6 @@
 
 <%
  	String ctxPath = request.getContextPath();
-	//     /board
 %>
 
 <%-- 캘린더 소스 --%>
@@ -72,13 +71,27 @@
 		        dayMaxEventRows: 3 // adjust to 6 only for timeGridWeek/timeGridDay
 		      }
 		    },
-		    events:function(){
-		    	
+		    // ===================== DB 와 연동 시작 ===================== //
+		    events:function(info, successCallback, failureCallback){
+		    <%--	$.ajax({
+	                 url: '<%= ctxPath%>/schedule/selectSchedule.action',
+	                 data:{"fk_userid":$('input#fk_userid').val()},
+	                 dataType: "json",
+	                 success:function(json) {
+	                	 
+	                	 
+	                 },
+					  error: function(request, status, error){
+				            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+				      }	
+	                                            
+	          }); // end of $.ajax()--------------------------------
+	        --%>
 		    }, // end of events:function(info, successCallback, failureCallback) {}---------------
 		
 		    // 풀캘린더에서 날짜 클릭할 때 발생하는 이벤트(일정 등록창으로 넘어간다)
 	       dateClick: function(info) {
-	      	 // alert('클릭한 Date: ' + info.dateStr); // 클릭한 Date: 2021-11-20
+	      	//  alert('클릭한 Date: ' + info.dateStr); 
 	      	    $(".fc-day").css('background','none'); // 현재 날짜 배경색 없애기
 	      	    info.dayEl.style.backgroundColor = '#b1b8cd'; // 클릭한 날짜의 배경색 지정하기
 	      	    $("form > input[name=chooseDate]").val(info.dateStr);
@@ -88,6 +101,7 @@
 	      	    frm.action="<%= ctxPath%>/calendar/schedualRegister.bts";
 	      	    frm.submit();
 	      	  }, 
+	      	// === 사내캘린더, 내캘린더, 공유받은캘린더의 체크박스에 체크유무에 따라 일정을 보여주거나 일정을 숨기게 하는 것이다. ===
 		    eventDidMount: function(arg){
 		    	
 		    }
@@ -98,12 +112,49 @@
 		}); // end of var calendar = = new FullCalendar.Calendar(calendarEl, {}--------------------------------------
 		
 		calendar.render(); // 캘린더 보여주기
+		
+		// 검색 할 때 엔터를 친 경우
+		  $("input#searchWord").keyup(function(event){
+			 if(event.keyCode == 13){ 
+				 goSearch();
+			 }
+		  });
+		
+		
+		
 	});// end of $(document).ready(function(){}------------------------------------
 
+			
+	// Function declaration
+	// === 검색 기능 === //
+	function goSearch(){
+	
+		if( $("#fromDate").val() > $("#toDate").val() ) {
+			alert("검색 시작날짜가 검색 종료날짜 보다 크므로 검색할 수 없습니다.");
+			return;
+		}
+	    
+		if( $("select#searchType").val()=="" && $("input#searchWord").val()!="" ) {
+			alert("검색대상 선택을 해주세요!!");
+			return;
+		}
+		
+		if( $("select#searchType").val()!="" && $("input#searchWord").val()=="" ) {
+			alert("검색어를 입력하세요!!");
+			return;
+		}
+		
+	   	var frm = document.searchScheduleFrm;
+	    frm.method="get";
+	    frm.action="<%= ctxPath%>/schedule/searchSchedule.action";
+	    frm.submit();
+		
+	}// end of function goSearch(){}--------------------------
+				
 </script>
 
 <div>
-
+	<h4 style="margin: 0 80px">일정관리</h4>
 	<%-- 검색바를 보여주는 곳 --%>
 	<div id="search">
 		<select id="searchType" name="searchType">
@@ -119,3 +170,8 @@
 	<div id="calendar" style="margin: 60px 30px 50px 60px;"></div>
 
 </div>
+
+	<%-- === 마우스로 클릭한 날짜의 일정 등록을 위한 폼 === --%>     
+<form name="dateFrm">
+	<input type="hidden" name="chooseDate" />	
+</form>	
