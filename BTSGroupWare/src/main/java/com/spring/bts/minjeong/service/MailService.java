@@ -1,6 +1,7 @@
 package com.spring.bts.minjeong.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,4 +27,21 @@ public class MailService implements InterMailService {
 		return receiveMailList;
 	}
 
+	// 총 게시물 건수 구해오기 (service 단으로 보내기)
+	@Override
+	public int getTotalCount(Map<String, String> paraMap) {
+		int n = dao.getTotalCount(paraMap);
+		return n;
+	}
+
+	// 페이징처리 한 받은 메일목록 (검색 있든, 없든 모두 다 포함)	
+	@Override
+	public List<MailVO> recMailListSearchWithPaging(Map<String, String> paraMap) {
+		List<MailVO> receiveMailList = dao.recMailListSearchWithPaging(paraMap);
+	//	System.out.println("확인용 서비스");
+
+		return receiveMailList;
+		
+	}
+	
 }

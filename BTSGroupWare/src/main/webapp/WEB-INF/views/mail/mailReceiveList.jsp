@@ -13,10 +13,11 @@
 // function declaration 
 
 // 검색 버튼 클릭시 동작하는 함수
-	function goMailSearch() {
-		
-		
-	
+	function gomailSearch() {
+		const frm = document.goReceiveListSelectFrm;
+		frm.method = "GET";
+		frm.action = "<%= ctxPath%>/mail/mailReceiveList.bts";
+		frm.submit();	
 	}// end of function goMailSearch(){}-------------------------
 
 </script>
@@ -31,8 +32,8 @@
 		<form name="goReceiveListSelectFrm" style="display: inline-block; padding-left: 470px;">		
 			<div id="mail_searchType">
 				<select class="form-control" id="searchType" name="searchType" style="">
-					<option value="mail_subject" selected="selected">제목</option>
-					<option value="emp_name">사원명</option>
+					<option value="subject" selected="selected">제목</option>
+					<option value="receiveuser_name">사원명</option>
 				</select>
 			</div>
 			
@@ -107,15 +108,10 @@
 						</tbody>
 					</table>
 				</div>	
-				<%-- 페이징 란 --%>
-				<div>
-					<ul class="pagination" style="width: 50%; margin: 20px auto; padding-top: 100px;">
-					  <li class="page-item left"><a class="page-link" href="#">Previous</a></li>
-					  <li class="page-item left"><a class="page-link" href="#">1</a></li>
-					  <li class="page-item left"><a class="page-link" href="#">2</a></li>
-					  <li class="page-item left"><a class="page-link" href="#">3</a></li>
-					  <li class="page-item left"><a class="page-link" href="#">Next</a></li>
-					</ul>
+				
+				<%-- 페이징 처리하기 --%>
+				<div align="center" style="border: solid 1px gray; width: 70%; margin: 20px auto;" >
+					${requestScope.pageBar}
 				</div>							
 			</div>
 		</div>	

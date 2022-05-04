@@ -7,11 +7,41 @@
 <!-- ==== 대부분은 namespace에 파일이름 사용(유일하니까) ==== -->
 <mapper namespace="minjeong">
 
+<!-- 받은메일함 목록 보여주기 (검색 X, 페이징 X) -->
+ 
 	<select id="getReceiveMailList" resultType="com.spring.bts.minjeong.model.MailVO">
 		select pk_mail_num, fk_senduser_num, receiveuser_name, subject
 			 , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
 		from tbl_mail
 		order by pk_mail_num desc		
 	</select>
+
+
+	<!--  총 받은메일 개수 구해오기 -->
+	<select id="getTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_mail
+		<if test="searchType != ''">
+		where lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>
+	</select>
+
+
+
+	<!--  페이징처리 한 받은 메일목록 (검색 있든, 없든 모두 다 포함)  -->
+ 	<select id="recMailListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
+		select pk_mail_num, fk_senduser_num, receiveuser_name, subject, reg_date
+		from 
+		(
+		select row_number() over(order by pk_mail_num desc) AS rno,
+		       pk_mail_num, fk_senduser_num, receiveuser_name, subject
+		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+		from tbl_mail
+		<if test='searchType != "" and searchWord !=""'>
+		where lower(${searchType}) like '%'|| lower(#{searchWord}) || '%'
+		</if>
+		) V
+		where rno between #{startRno} and #{endRno}
+	</select> 
 
 </mapper>
