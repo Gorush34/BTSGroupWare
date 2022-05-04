@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%
    String ctxPath = request.getContextPath();
@@ -11,6 +12,7 @@
 
 $( document ).ready( function() {
 
+	
 	$( "div#fassadd_input" ).slideToggle().hide();
 	  $( "button#fastadd" ).click( function() {
 	    $( "div#fassadd_input" ).slideToggle();
@@ -34,7 +36,7 @@ function searchBtn() {
 	});
 }
 	
-			
+		
 			
 			
 
@@ -43,10 +45,10 @@ function searchBtn() {
 
 	<table id="Main_main_tbl">
 		<tr>
-			<td colspan="6" style="text-align: left;"><br><h2>전체주소록</h2><br><br></td>
+			<td colspan="8" style="text-align: left;"><br><h2>전체주소록</h2><br><br></td>
 			<td>
 				  <div class="d-flex align-items-center">
-				    <input class="form-control" type="search" id="searchText" value="" placeholder="주소록검색" aria-label="Search">
+				    <input class="form-control" type="search" id="searchText" value="" style="width:115px;" placeholder="주소록검색" aria-label="Search">
 				    <button id="searchBtn" class="btn btn-outline-success flex-shrink-0" type="submit" onclick="searchBtn()">검색</button>
 				  </div>
 			</td>
@@ -92,26 +94,31 @@ function searchBtn() {
 			</ul>
 		</td>
 		</tr>
-		<tr style="border: solid darkgray 2px;">
-			<td style="width:5%;"><input type="checkbox"></td>
+		<tr style="border: solid darkgray 2px; margin-left:2%">
 			<td style="width:13%;"><strong>이름</strong></td>
-			<td style="width:13%;"><strong>휴대폰</strong></td>
-			<td style="width:13%;"><strong>이메일</strong></td>
+			<td style="width:13%;"><strong>직급</strong></td>
+			<td style="width:22%;"><strong>휴대폰</strong></td>
+			<td style="width:22%;"><strong>이메일</strong></td>
 			<td style="width:13%;"><strong>회사</strong></td>
-			<td style="width:13%;"><strong>회사전화</strong></td>
-			<td style="width:13%;">
-				<select class="form-control" style="margin-left: 20%; width: 50%;">
-					<option>선택</option>
-					<option>선택1</option>
-					<option>선택2</option>
-					<option>선택3</option>
-					<option>선택4</option>
-				</select>
-			</td>
+			<td style="width:22%;"><strong>회사전화</strong></td>
 		</tr>
+		<c:if test="${not empty (requestScope.adbList)}">
+        <c:forEach var="adb" items="${requestScope.adbList}">
+		<tr>
+			<td>${adb.addb_name}</td>
+			<td>${adb.ko_rankname}</td>
+			<td>${adb.phone}</td>
+			<td>${adb.email}</td>
+			<td>${adb.companyname}</td>
+			<td>${adb.com_tel}</td>
+		</tr>
+		</c:forEach>
+		</c:if>
+		<c:if test="${empty (requestScope.adbList)}">
         <tr>
            <td colspan="6" style="text-align:center;padding-top: 16%; padding-left: 16%;"><strong>새로운 연락처를 등록하세요</strong><br><br><button class="btn btn-info btn-sm" id="" style="border: solid lightgray 1.5px;" onclick="location.href='http://localhost:9090/bts/addBook/addBook_telAdd.bts'">연락처 추가</button></td>
         </tr>
+        </c:if>
 	</table>
 	
 	
