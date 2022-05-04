@@ -16,9 +16,9 @@
 	function goTelAdd() {
 		
 		const frm = document.telAddFrm;
-	    frm.action = "<%=ctxPath%>/addBook/addBook_telAdd.bts"
+	    frm.action = "<%=ctxPath%>/addBook/addBook_telAdd_insert.bts"
 	    frm.method = "post"
-//	    frm.submit();
+	    frm.submit();
 	}
 
 

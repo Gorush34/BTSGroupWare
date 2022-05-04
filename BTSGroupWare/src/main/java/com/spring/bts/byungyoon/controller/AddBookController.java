@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.bts.byungyoon.model.AddBookVO;
@@ -50,17 +52,26 @@ public class AddBookController {
    @RequestMapping(value="/addBook/addBook_telAdd.bts")
    public ModelAndView addBook_telAdd(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 	   
-      mav.setViewName("addBook_telAdd.addBook");
       
+	   mav.setViewName("addBook_telAdd.addBook");
+	   
       return mav;
    }
    
    
    // 주소록 연락처 추가 페이지에서 데이터 넣기
-   @RequestMapping(value="/addBook/addBook_telAdd.bts")
-   public ModelAndView addBook_telAdd_insert(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+   @ResponseBody
+   @RequestMapping(value="/addBook/addBook_telAdd_insert.bts" , method = {RequestMethod.POST}, produces="text/plain;charset=UTF-8")
+   public ModelAndView addBook_telAdd_insert(HttpServletRequest request, ModelAndView mav) {
 	   
-      mav.setViewName("addBook_telAdd.addBook");
+	   String name = request.getParameter("name");
+	   
+	   System.out.println(name);
+	   
+	   System.out.println("나와라..");
+	   
+	   
+	   mav.setViewName("addBook_telAdd_insert.addBook");
       
       return mav;
    }
