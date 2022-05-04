@@ -74,13 +74,13 @@
 	       });
 	      <%-- === 스마트 에디터 구현 끝 === --%>
 		
-	       // 메일쓰기 버튼 클릭 시 event 발생
+	       // 보내기 버튼 클릭 시 event 발생
 	       $("button#btnMailSend").click(function() {
 		  		 <%-- === 스마트 에디터 구현 시작 === --%>
 		       	//id가 content인 textarea에 에디터에서 대입
 		        	obj.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
-		      	 <%-- === 스마트 에디터 구현 끝 === --%>		
-		      	 
+		      	 <%-- === 스마트 에디터 구현 끝 === --%>		      	 
+		      	
 		      	 // 받는사람 유효성 검사
 		      	 
 		      	 
@@ -90,6 +90,8 @@
 		      	 
 		      	 
 		      	 // 메일내용 유효성 검사
+		      	 
+		      	 
 		 		<%-- === 스마트에디터 구현 시작 === --%>
 		        //스마트에디터 사용시 무의미하게 생기는 p태그 제거
 		         var contentval = $("textarea#content").val();
@@ -162,7 +164,7 @@
 <div class="container" style="width: 100%; margin: 50px;">
 	<div class="row bg-title" style="border-bottom: solid 1.5px #e6e6e6;">	
 		<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-			<h4 class="page-title" style="color: black;">메일 쓰기</h4>
+			<h4 class="page-title" style="color: black;">보내기</h4>
 		</div>
 	</div>
 
@@ -191,9 +193,9 @@
 	<form name="mailWriteFrm" enctype="multipart/form-data" class="form-horizontal" style="margin-top: 20px;">
 		<table id="mailWriteTable">
 			<tr>
-				<th width="14%">받는사람</th>
+				<th width="14%">받는 사람</th>
 				<td width="86%" data-toggle="tooltip" data-placement="top" title="">
-					<input type="text" id="receiverInput" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
+					<input type="text" id="fk_receiveuser_num" name="fk_receiveuser_num" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
 					<button type="button" class="btn btn-secondary btn-sm">주소록</button>
 				</td>
 			</tr>
