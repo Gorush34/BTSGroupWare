@@ -138,14 +138,15 @@
 			<tr>
 				<th class="edmsView_th">파일첨부</th>
 				<td>
-					<input type="file" name="attach" id="attach" size="100" style="width: 100%;" />
+					로그인시 파일제목 링크 걸어서 다운로드
+					로그인 안했으면 아예 못 오지만 어쨌든 파일제목은 보여지도록
 				</td>
 			</tr>
 		</table>
 	
 	<div style="margin: 20px;">
 		<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnWrite">결재요청</button>
-		<button type="button" class="btn btn-secondary btn-sm" onclick="javascript:history.back()">취소</button>
+		<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnApprCancel">상신취소</button>
 	</div>
 	
 	</form>
