@@ -12,4 +12,15 @@
 	</select>
 
 
+	<!-- 주소록 메인페이지에 select 해오기 -->
+	<select id="addBook_select"  resultType="com.spring.bts.byungyoon.model.AddBookVO">
+		select A.addb_name , R.ko_rankname, A.phone AS phone, A.email AS email, A.companyname, A.com_tel
+		from tbl_EMPLOYEES E 
+		join tbl_ADDBOOK A 
+		on E.EMP_NAME = A.ADDB_NAME
+		join tbl_rank_sort R
+		on R.PK_RANK_NO = E.FK_RANK_ID
+	</select>
+	
+
 </mapper>
