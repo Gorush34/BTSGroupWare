@@ -29,21 +29,5 @@
 	, #{gender}, #{uq_phone}, #{uq_email}, default, default, #{birthday}, default)
 	
 	
-	</insert>
-
-	<select id="emailDuplicateCheck" parameterType="String" resultType="boolean">
-  		select count(*)
-		from tbl_employees
-		where uq_email = #{uq_email}
-	</select>
-	
-	<insert id="registerMember" parameterType="com.spring.bts.hwanmo.model.EmployeeVO" >
-		insert into tbl_employees 
-		(pk_emp_no, fk_department_id, fk_rank_id, fk_board_authority_no, fk_site_authority_no, emp_name, emp_pwd, com_tel, postal, address, detailaddress, extraaddress
-		, gender, uq_phone, uq_email, img_path, img_name, birthday, gradelevel)
-		values                                  
-		(#{pk_emp_no}, #{fk_department_id}, #{fk_rank_id}, default, default, #{emp_name}, #{emp_pwd}, #{com_tel}, #{postal}, #{address}, #{detailaddress}, #{extraaddress}
-		, #{gender}, #{uq_phone}, #{uq_email}, default, default, #{birthday}, default)
-	</insert>
 	
 </mapper>
