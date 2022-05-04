@@ -17,6 +17,14 @@ public interface InterBoardService {
 
 	List<String> wordSearchShow(Map<String, String> paraMap);
 
+	int add(BoardVO boardvo);
+
+	int add_withFile(BoardVO boardvo);
+
+	int totalBoardCnt(Map<String, String> paraMap);
+
+	List<BoardVO> boardListSearchP(Map<String, String> paraMap);
+
 
 
 }

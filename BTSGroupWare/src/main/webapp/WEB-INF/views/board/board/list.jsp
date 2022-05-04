@@ -180,7 +180,7 @@ margin: 10px;
 	});//end of $(document).ready(function(){}
 
 	
-	function goView(seq) {
+	function goView(pk_seq) {
 
 			const gobackURL = "${requestScope.gobackURL}"; 
 		  
@@ -189,7 +189,7 @@ margin: 10px;
 		  const searchType = $("select#searchType").val();
 		  const searchWord = $("input#searchWord").val();
 		
-		  location.href="<%= ctxPath%>/board/view.bts?seq="+seq+"&gobackURL="+gobackURL+"&searchType="+searchType+"&searchWord="+searchWord; 
+		  location.href="<%= ctxPath%>/board/view.bts?pk_seq="+pk_seq+"&gobackURL="+gobackURL+"&searchType="+searchType+"&searchWord="+searchWord; 
 		}// end of function goView(seq){}----------------------------------------------
 		
 		

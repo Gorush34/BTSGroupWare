@@ -9,7 +9,7 @@ public class BoardVO {
 
 	private String pk_seq;
 	private String fk_emp_no;
-	private String subejct;
+	private String subject;
 	private String content;
 	private String user_name;
 	private String write_day;
@@ -30,14 +30,19 @@ public class BoardVO {
 	private String nextseq;          // 다음글번호
 	private String nextsubject;      // 다음글제목	
 	
+	
+	private MultipartFile attach;
+	
 	public BoardVO() {}
 
 
-	public BoardVO(String pk_seq, String fk_emp_no, String subejct, String content, String user_name, String write_day,
-			String ip, String read_count, String pw, String status) {
+	public BoardVO(String pk_seq, String fk_emp_no, String subject, String content, String user_name, String write_day,
+			String ip, String read_count, String pw, String status, String comment_count, String org_filename,
+			String filename, String file_size, String groupno, String fk_seq, String depthno, String previousseq,
+			String previoussubject, String nextseq, String nextsubject, MultipartFile attach) {
 		this.pk_seq = pk_seq;
 		this.fk_emp_no = fk_emp_no;
-		this.subejct = subejct;
+		this.subject = subject;
 		this.content = content;
 		this.user_name = user_name;
 		this.write_day = write_day;
@@ -45,7 +50,22 @@ public class BoardVO {
 		this.read_count = read_count;
 		this.pw = pw;
 		this.status = status;
+		this.comment_count = comment_count;
+		this.org_filename = org_filename;
+		this.filename = filename;
+		this.file_size = file_size;
+		this.groupno = groupno;
+		this.fk_seq = fk_seq;
+		this.depthno = depthno;
+		this.previousseq = previousseq;
+		this.previoussubject = previoussubject;
+		this.nextseq = nextseq;
+		this.nextsubject = nextsubject;
+		this.attach = attach;
 	}
+
+
+
 
 
 	public String getPk_seq() {
@@ -68,13 +88,13 @@ public class BoardVO {
 	}
 
 
-	public String getSubejct() {
-		return subejct;
+	public String getSubject() {
+		return subject;
 	}
 
 
-	public void setSubejct(String subejct) {
-		this.subejct = subejct;
+	public void setSubject(String subject) {
+		this.subject = subject;
 	}
 
 
@@ -255,6 +275,15 @@ public class BoardVO {
 
 	public void setNextsubject(String nextsubject) {
 		this.nextsubject = nextsubject;
+	}
+
+
+	public MultipartFile getAttach() {
+		return attach;
+	}
+
+	public void setAttach(MultipartFile attach) {
+		this.attach = attach;
 	}
 	
 	

@@ -157,28 +157,7 @@
 	 				<th style="font-size:9pt;color:#BDBDBD; font-weight:lighter;">${boardvo.write_day}</th>
 	 			</tr>
 	 			
-	 	<!-- 첨부파일이 있다면 보여준다. -->		
-	 	  <c:if test="${boardvo.orgFilename != null}">
-	 		<tr>
-				<th style="font-size:9pt;">첨부파일</th>
-				<td style="font-size:9pt;">
-				
-					<c:if test="${sessionScope.loginemp != null}">
-						<a href="<%= request.getContextPath()%>/download.os?seq=${boardvo.seq}">${boardvo.orgFilename}</a> 
-					<span style="font-size:10pt;color:#BDBDBD;">
-					<fmt:formatNumber value="${boardvo.fileSize}" pattern="#,###" />bytes
-					</span>	
-					</c:if>
-					
-					<c:if test="${sessionScope.loginemp == null}">
-						${boardvo.orgFilename}
-						<fmt:formatNumber value="${boardvo.fileSize}" pattern="#,###" />bytes
-					</c:if>
-				</td>
-			</tr>
-			 
-	 	  </c:if>
-	 	<!-- 첨부파일이 있다면 보여주기 끝  -->		
+	
 	 	   
 	 		</thead>
 	 		 
@@ -193,8 +172,8 @@
 	 </div>
 	 <!-- 게시글 내용 시작끝-------------------------------------------- -->
 	 <div style="font-size: 9pt; margin-left: 10px;">
-		 <span>댓글 ${boardvo.commentCount}개   | </span>
-		 <span>조회수 ${boardvo.readCount} </span>
+		 <span>댓글 ${boardvo.comment_count} 개   | </span>
+		 <span>조회수 ${boardvo.read_count} 회 </span>
 	 </div >
 	 
 	 <hr>
@@ -216,13 +195,13 @@
 	  <div id="commentFrm">
 	  <span></span>
 			<form name="addWriteFrm" style="margin-top: 20px; text-align: center;">
-				      <input type="hidden" name="fk_emp_no" value="${sessionScope.loginemp.emp_no}" /> 
-				      <input type="hidden" name="name" value="${sessionScope.loginemp.emp_name}" /> 
+				      <input type="text" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" /> 
+				      <input type="text" name="user_name" value="${sessionScope.loginuser.emp_name}" /> 
 				
 				<input id="commentContent" type="text" name="content" class="long" /> 
 				
 				<%-- 댓글에 달리는 원게시물 글번호(즉, 댓글의 부모글 글번호) --%>
-				<input type="hidden" name="parentSeq" value="${boardvo.seq}" />
+				<input type="hidden" name="parentSeq" value="${boardvo.pk_seq}" />
 				<button id="btnComment" type="button" onclick="goAddWrite()">댓글 작성</button> 
 			</form>
 	 </div>
@@ -234,6 +213,6 @@
  
  	</div>
  	
- 	<div style="margin-bottom: 1%;">이전글&nbsp;&nbsp;<span class="move" onclick="javascript:location.href='view_2.bts?seq=${requestScope.boardvo.previousseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.boardvo.previoussubject}</span></div>
-    <div style="margin-bottom: 1%;">다음글&nbsp;&nbsp;<span class="move" onclick="javascript:location.href='view_2.bts?seq=${requestScope.boardvo.nextseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.boardvo.nextsubject}</span></div>
+ 	<div style="margin-bottom: 1%;">이전글&nbsp;&nbsp;<span class="move" onclick="javascript:location.href='view_2.bts?pk_seq=${requestScope.boardvo.previousseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.boardvo.previoussubject}</span></div>
+    <div style="margin-bottom: 1%;">다음글&nbsp;&nbsp;<span class="move" onclick="javascript:location.href='view_2.bts?pk_seq=${requestScope.boardvo.nextseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.boardvo.nextsubject}</span></div>
     	

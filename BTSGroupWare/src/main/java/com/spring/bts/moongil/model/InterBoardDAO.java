@@ -19,5 +19,11 @@ public interface InterBoardDAO {
 	void setAddReadCount(String seq);
 
 	List<String> wordSearchShow(Map<String, String> paraMap);
+
+	int getGroupnoMax();
+
+	int add_withFile(BoardVO boardvo);
+
+	int add(BoardVO boardvo);
 	
 }

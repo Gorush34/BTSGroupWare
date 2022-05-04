@@ -160,11 +160,11 @@ margin: 10px;
 			  <%-- 파일첨부가 없을때 --%>
 			    <c:if test="${empty board.fileName}"> 
 			 	
-					   <c:if test="${board.commentCount > 0}">
-					   <span class="title" onclick="goView('${board.seq}')"><span id="head">[ ${board.header} ]</span>${board.title} <span style="vertical-align: super;">[<span style="color: red; font-size: 9pt; font-style: italic; font-weight: bold;">${board.commentCount}</span>]</span> </span> 
+					   <c:if test="${board.comment_count > 0}">
+					   <span class="title" onclick="goView('${board.seq}')"><span id="head">[ ${board.header} ]</span>${board.title} <span style="vertical-align: super;">[<span style="color: red; font-size: 9pt; font-style: italic; font-weight: bold;">${board.comment_count}</span>]</span> </span> 
 					   </c:if>
 					   
-					   <c:if test="${board.commentCount == 0}">
+					   <c:if test="${board.comment_count == 0}">
 					   <span class="title" onclick="goView('${board.seq}')"><span id="head">[ ${board.header} ]</span> ${board.title}</span>  
 					   </c:if>
 				  
@@ -175,7 +175,7 @@ margin: 10px;
 			 	 <%-- 첨부파일이 있는 경우 --%>
 			 <c:if test="${not empty board.fileName}">
 					   <c:if test="${board.commentCount > 0}">
-					   <span class="title" onclick="goView('${board.seq}')"><span id="head">[ ${board.header} ]</span> ${board.title} <span style="vertical-align: super;">[<span style="color: red; font-size: 9pt; font-style: italic; font-weight: bold;">${board.commentCount}</span>]</span> </span> &nbsp;<i class="fa fa-file-o"></i>
+					   <span class="title" onclick="goView('${board.seq}')"><span id="head">[ ${board.header} ]</span> ${board.title} <span style="vertical-align: super;">[<span style="color: red; font-size: 9pt; font-style: italic; font-weight: bold;">${board.comment_count}</span>]</span> </span> &nbsp;<i class="fa fa-file-o"></i>
 					   </c:if>
 					   
 					   <c:if test="${board.commentCount == 0}">

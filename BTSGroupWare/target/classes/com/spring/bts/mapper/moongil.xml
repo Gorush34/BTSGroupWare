@@ -76,7 +76,7 @@
 		     , pk_seq, fk_emp_no, user_name, subject, content, read_count, write_day, pw 
 		     , nextseq, nextsubject 
 		     , groupno, fk_seq, depthno
-		     , filename, orgFilename, fileSize
+		     , filename, org_Filename, file_size
 		from 
 		(
 		    select lag(pk_seq,1) over(order by pk_seq desc) AS previousseq 
@@ -91,7 +91,7 @@
 		         
 		         , groupno, fk_seq, depthno
 		         
-		         , fileuser_name, orgFileuser_name, fileSize
+		         , filename, org_Filename, file_size
 		    from tbl_board
 		    where status = 1
 		    <if test='searchType != "" and searchWord != "" '>
@@ -134,5 +134,20 @@
     		</otherwise>
     	</choose>
     </select>
+    
+	<!-- === #146. tbl_board 테이블에서  groupno 컬럼의 최대값 알아오기 === -->
+	<select id="getGroupnoMax" resultType="int">
+		select nvl(max(groupno), 0)
+		from tbl_board
+	</select>    
+    
+    <!--  ==== #147. 원글쓰기 또는 답변글쓰기(파일첨부가 없는 글쓰기) ==== 
+	                     먼저  #57 을 주석처리한 후 아래처럼 해야 한다. -->
+	<insert id="add" parameterType="com.spring.bts.moongil.model.BoardVO">
+		     insert into tbl_board(pk_seq, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno)
+		     values(boardseq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, default, default)   
+	</insert>
+    
+    
     
 </mapper>

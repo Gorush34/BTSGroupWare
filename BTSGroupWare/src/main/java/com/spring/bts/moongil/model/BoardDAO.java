@@ -72,6 +72,24 @@ public class BoardDAO implements InterBoardDAO {
 		return wordList;
 	}
 
+	@Override
+	public int getGroupnoMax() {
+		int maxgroupno = sqlsession.selectOne("moongil.getGroupnoMax");
+		return maxgroupno;
+	}
+
+	@Override
+	public int add_withFile(BoardVO boardvo) {
+		int n = sqlsession.insert("moongil.add_withFile", boardvo);
+		return n;
+	}
+
+	@Override
+	public int add(BoardVO boardvo) {
+		int n = sqlsession.insert("moongil.add", boardvo);
+		return n;
+	}
+
 
 	
 

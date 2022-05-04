@@ -35,7 +35,7 @@ public class BoardService implements InterBoardService {
 	public BoardVO getView(Map<String, String> paraMap) {
 		BoardVO boardvo = dao.getView(paraMap); // 글1개 조회하기
 		
-		String login_userid = paraMap.get("login_userid");  
+		String login_userid = paraMap.get("login_fk_emp_no");  
 		// paraMap.get("login_userid") 은 로그인을 한 상태이라면 로그인한 사용자의 userid 이고,
 		// 로그인을 하지 않은 상태이라면  paraMap.get("login_userid") 은 null 이다.
 		
@@ -61,6 +61,50 @@ public class BoardService implements InterBoardService {
 	public List<String> wordSearchShow(Map<String, String> paraMap) {
 		List<String> wordList = dao.wordSearchShow(paraMap);
 		return wordList;
+	}
+
+	@Override
+	public int add(BoardVO boardvo) {
+
+		  // == 원글쓰기인지, 답변글쓰기 인지 구분하기 시작 == //
+			if("".contentEquals(boardvo.getFk_seq())) {
+				// 원글쓰기인 경우
+				// groupno 컬럼의 값은 groupno 컬럼의 최대값(max)+1 로 해야한다.
+				int groupno = dao.getGroupnoMax() + 1;
+				boardvo.setGroupno(String.valueOf(groupno));
+			}
+		  // == 원글쓰기인지, 답변글쓰기 인지 구분하기 끝 == //	
+			
+			
+			int n = dao.add(boardvo);
+			return n;
+	}
+
+	@Override
+	public int add_withFile(BoardVO boardvo) {
+		if("".contentEquals(boardvo.getFk_seq())) {
+			// 원글쓰기인 경우
+			// groupno 컬럼의 값은 groupno 컬럼의 최대값(max)+1 로 해야한다.
+			int groupno = dao.getGroupnoMax() + 1;
+			boardvo.setGroupno(String.valueOf(groupno));
+		}
+ 	    // == 원글쓰기인지, 답변글쓰기 인지 구분하기 끝 == //
+		
+		int n = dao.add_withFile(boardvo); // 첨부파일이 있는 경우
+		
+		return n;
+	}
+
+	@Override
+	public int totalBoardCnt(Map<String, String> paraMap) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public List<BoardVO> boardListSearchP(Map<String, String> paraMap) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
