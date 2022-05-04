@@ -67,7 +67,7 @@
 			frm.userCertificationCode.value = $("input#input_confirmCode").val();
 			frm.userid.value = $("input#userid").val();
 			
-			frm.action = "<%= ctxPath%>/login/verifyCertification.up";
+			frm.action = "<%= ctxPath%>/verifyCertification.up";
 			frm.method = "post";
 			frm.submit();
 			
@@ -81,7 +81,7 @@
 	function goFind() {
 		// 아이디 및 이메일에 대한 유효성 검사(정규표현식)은 생략함(전에 배우던 거에 있음)
 		const frm = document.pwdFindFrm;
-		frm.action = "<%= ctxPath%>/login/pwdFind.up";
+		frm.action = "<%= ctxPath%>/pwdFind.up";
 		frm.method = "post"; 
 		frm.submit(); // "POST" 방식으로 보내준다
 	} // end of function goFind()-------------------------------
