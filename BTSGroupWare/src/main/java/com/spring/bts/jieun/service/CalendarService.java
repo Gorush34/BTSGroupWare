@@ -1,8 +1,12 @@
 package com.spring.bts.jieun.service;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.bts.jieun.model.CalendarVO;
 import com.spring.bts.jieun.model.InterCalendarDAO;
 
 
@@ -16,6 +20,24 @@ public class CalendarService implements InterCalendarService {
 	private InterCalendarDAO dao;
 	// Type 에 따라 Spring 컨테이너가 알아서 bean 으로 등록된 com.spring.board.model.BoardDAO 의 bean 을  dao 에 주입시켜준다. 
     // 그러므로 dao 는 null 이 아니다.
+
+	
+	// === 서브 캘린더 가져오기 === //
+	@Override
+	public List<CalendarVO> selectCalNo(Map<String, String> paraMap) {
+		List<CalendarVO> calendarvoList = dao.selectCalNo(paraMap);
+		return calendarvoList;
+	}
+	
+	
+	// === 일정 등록 하기 === //
+	@Override
+	public int scheduleRegisterInsert(Map<String, String> paraMap) {
+		int n = dao.scheduleRegisterInsert(paraMap);
+		return n;
+	}
+
+	
 	
 	// ======== ***** 파이널 옮기기 시작 ***** ======== //
 	/*	// === 일정 체크 박스 추가 === //

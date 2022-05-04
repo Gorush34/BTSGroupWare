@@ -73,7 +73,7 @@
 		 
 	<%--	   <input type="hidden" value="${sessionScope }" id="fk_emp_no"> --%>
 		 
-			<button type="button" class="btn btn-outline-primary btn-lg " style="margin: 15px auto; width:200px; display:block;" onclick="javascript:location.href='<%= ctxPath%>/calendar/schedualRegister.bts'">일정등록</button>
+			<button type="button" class="btn btn-outline-primary btn-lg " style="margin: 15px auto; width:200px; display:block;" onclick="javascript:location.href='<%= ctxPath%>/calendar/scheduleRegister.bts'">일정등록</button>
 			<ul style="list-style-type: none; padding: 10px;">
 				<li style="margin-bottom: 15px;">
 					<div id="calenderbtn1" class="calenderbtn">내 캘린더</div>
@@ -87,27 +87,9 @@
 				   				</tbody>	
 			   				</table>	
 						</div>
-						<span id="addmyschedual" data-toggle="modal" data-target="#addMyScheModal">&nbsp;&nbsp;+ 내 캘린더 추가</span>
+						<span id="addmyschedule" data-toggle="modal" data-target="#addMyScheModal">&nbsp;&nbsp;+ 내 캘린더 추가</span>
 							
-							<%-- 모달로 추가창 띄우기 --%>
-							  <div class="modal fade" id="addMyScheModal" data-backdrop="static">
-							  	<div class="modal-dialog modal-dialog-centered">
-							  		<div class="modal-content">
-									  <div class="modal-header">
-								        <h5 class="modal-title">내 캘린더 추가</h5>
-								        <button type="button" class="close" data-dismiss="modal">&times;</button>
-								      </div>
-								      <div class="modal-body">
-								      	<input type="hidden" name="fk_사원번호" id="fk_사원번호"/>
-								        <input type="text" name="cal_name" id="cal_name"/>
-								      </div>
-								      <div class="modal-footer">
-								        <button type="button" class="btn btn-primary btn-sm" onclick="goAddCheckbox()">확인</button>
-								        <button type="button" class="btn btn-outline-primary btn-sm" data-dismiss="modal">취소</button>
-								      </div>
-								    </div>
-						   		</div>
-					    	 </div>
+							
 				</li>
 				<li style="margin-bottom: 15px;">
 					<div id="calenderbtn2" class="calenderbtn">관심 캘린더</div>
@@ -122,28 +104,9 @@
 			   				</table>				
 						</div>
 						
-						<span id="addschedual" data-toggle="modal" data-target="#addScheModal">&nbsp;&nbsp;+ 관심 캘린더 추가</span>
+						<span id="addschedule" data-toggle="modal" data-target="#addScheModal">&nbsp;&nbsp;+ 관심 캘린더 추가</span>
 							
-							<%-- 모달로 추가창 띄우기 : --%>
-							  <div class="modal fade" id="addScheModal" data-backdrop="static">
-							  	<div class="modal-dialog modal-dialog-centered">
-							  		<div class="modal-content">
-									  <div class="modal-header">
-								        <h5 class="modal-title">관심 캘린더 추가</h5>
-								        <button type="button" class="close" data-dismiss="modal">&times;</button>
-								      </div>
-								      <div class="modal-body">
-								        <input type="text" name="searchMember" id="searchMember" autocomplete="off" placeholder="이름/아이디/부서/직책/이메일/전화"/>
-								        <div >
-								        </div>
-								      </div>
-								      <div class="modal-footer">
-								        <button type="button" class="btn btn-primary btn-sm" onclick="goAddCheckbox()">확인</button>
-								        <button type="button" class="btn btn-outline-primary btn-sm" data-dismiss="modal">취소</button>
-								      </div>
-								    </div>
-						   		</div>
-					    	 </div>	
+							
 				</li>
 			</ul>
 			<hr>
@@ -165,3 +128,44 @@
 		</div>
 	</div>
 	
+	
+	<%-- 모달로 추가창 띄우기 --%>
+  <div class="modal fade" id="addMyScheModal" data-backdrop="static">
+  	<div class="modal-dialog modal-dialog-centered">
+  		<div class="modal-content">
+		  <div class="modal-header">
+	        <h5 class="modal-title">내 캘린더 추가</h5>
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	      </div>
+	      <div class="modal-body">
+	      	<input type="hidden" name="fk_emp_no" id="fk_emp_no"/>
+	        <input type="text" name="cal_name" id="cal_name"/>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-primary btn-sm" onclick="goAddCheckbox()">확인</button>
+	        <button type="button" class="btn btn-outline-primary btn-sm" data-dismiss="modal">취소</button>
+	      </div>
+	    </div>
+  		</div>
+  	 </div>
+  	 
+  	 <%-- 모달로 추가창 띄우기 : --%>
+	  <div class="modal fade" id="addScheModal" data-backdrop="static">
+	  	<div class="modal-dialog modal-dialog-centered">
+	  		<div class="modal-content">
+			  <div class="modal-header">
+		        <h5 class="modal-title">관심 캘린더 추가</h5>
+		        <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      </div>
+		      <div class="modal-body">
+		        <input type="text" name="searchMember" id="searchMember" autocomplete="off" placeholder="이름/아이디/부서/직책/이메일/전화"/>
+		        <div >
+		        </div>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-primary btn-sm" onclick="goAddCheckbox()">확인</button>
+		        <button type="button" class="btn btn-outline-primary btn-sm" data-dismiss="modal">취소</button>
+		      </div>
+		    </div>
+   		</div>
+   	 </div>	
