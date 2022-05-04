@@ -8,7 +8,20 @@
 
 <!-- style_edms.css 는 이미 layout-tiles_edms.jsp 에 선언되어 있으므로 쓸 필요 X! -->
 
+<!-- datepicker를 사용하기 위한 링크 / 나중에 헤더에 추가되면 지우기 -->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+
+<!-- 긴급버튼 토글을 사용하기 위한 링크 -->
+<!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script> -->
+
 <script type="text/javascript">
+	
+	
+	/* 할 것: 문서양식 선택 안했을 때 alert 띄우기! */
+	
 	
 	$(document).ready(function(){
 		
@@ -44,6 +57,21 @@
 			
 		}); // end of $("button#btnWrite").click(function(){}) --------------------
 		
+		
+		// 긴급버튼
+		/* var check = $("input[type='checkbox']");
+		check.click(function() {
+			$("p").toggle();
+		}); */
+
+		// datepicker
+		$("#datepicker").datepicker({
+			showOn : "button",
+			buttonImage : "<%= ctxPath%>/resources/images/calendar.gif",
+			buttonImageOnly: true,
+			buttonText: "Select date"
+		});
+		
 	}); // end of $(document).ready(function(){}) --------------------
 	
 </script>
@@ -65,128 +93,95 @@
 		<p style="margin-bottom: 10px;"></p>
 	</div>
 
-	<form name="addFrm">
 	<!-- 문서작성 시작 -->
-	<div id="edms_view_auto">
+	<form name="addFrm">
+	<div>
 	
-	<span class="edms_title">기본정보</span>
-	
-		<table style="width: 100%" class="table table-bordered">
-			<colgroup>
-				<col style="width: 15%; background-color: #e8e8e8;">
-				<col style="width: 30%;" />
-				<col style="width: 15%; background-color: #e8e8e8;">
-				<col />
-			</colgroup>
-			
-			<tr>
-				<th class="edmsView_th">문서양식</th>
-				<td>
-					<select>
-						<optgroup label="일반">
-							<option value="edmsGen1">업무기안</option>
-							<option value="edmsGen2">업무협조</option>
-							<option value="edmsGen3">업무품의서</option>
-							<option value="edmsGen4">회계품의서</option>
-						</optgroup>
-						
-						<optgroup label="지원">
-							<option value="edmsSupp1">헤외출장신청</option>
-							<option value="edmsSupp2">경조화신청</option>
-							<option value="edmsSupp3">차량사고보고</option>
-							<option value="edmsSupp4">하도급계약요청서</option>
-							<option value="edmsSupp4">증명서신청(개인)</option>
-							<option value="edmsSupp4">증명서신청(회사)</option>
-						</optgroup>		
-					</select>
-				</td>
+	<table style="width: 100%" class="table table-bordered">
+		<tr>
+			<th class="edmsView_th">문서양식</th>
+          	<td colspan="4">
+				<select name="emdsDocFormSelect">
+					<!-- <optgroup label="일반"> -->
+					<option value="">양식선택</option>
+					<%--
+					<c:forEach items="${docFormList}" var="form">
+						<option value="${어쩌고.어쩌고no}">${어쩌고.어쩌고name}</option>
+					</c:forEach>
+					--%>
+					<option value="edmsDocForm1">업무기안</option>
+					<option value="edmsDocForm2">업무품의서</option>
+					<option value="edmsDocForm3">증명서신청</option>
+					<!-- </optgroup> -->
+				</select>
+			</td>
+		</tr>
+		
+		<tr>
+			<th class="edmsView_th">작성자</th>
+          	<td colspan="4">김다우</td>
+		</tr>
+		<tr>
+			<th class="edmsView_th">긴급</th>
+			<td colspan="4">
+				<label class="switch-button">
+					<input type="checkbox" name="emergency" value="1" >&nbsp;긴급
+					<%-- name 전달할 값의 이름, value 전달될 값 --%>
+				</label>
+			</td>
+		</tr>
+		
+		<tr>
+			<th class="edmsView_th" rowspan="2">
+				<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnApprSelect" onclick="getAppr()">결재선 지정</button>
+			</th>
+			<td colspan="2" style="width: 30%;">부서1</td>
+			<td style="width: 30%;">직급1</td>
+			<td style="width: 30%;">이름1</td>
+		</tr>
+		
+		<tr>
+			<td colspan="2">부서1</td>
+			<td>직급1</td>
+			<td>이름1</td>
+		</tr>
 				
-				<td colspan="3" rowspan="4">
-					<span>결재선 지정</span>&nbsp;<button type="button" class="btn btn-outline-dark">조직도 검색</button>
-				</td>
-				<td colspan="4">중간</td>
-				<td colspan="2">최종</td>
-			</tr>
-					
-			
-			<tr>
-				<th class="edmsView_th">작성자 [소속]</th>
-				<td>
-					<input type="hidden" name="fk_userid" value="${sessionScope.loginuser.userid}" readonly="readonly"/>
-					<span>김다우</span>
-				</td>
-				<td colspan="4">대리</td>
-				<td colspan="4">비비빅</td>
-				<td colspan="4">도장꽝</td>
-			</tr>
-			
-			<tr>
-				<th class="edmsView_th">소속</th>
-				<td>
-					<input type="hidden" name="fk_userid" value="${sessionScope.loginuser.userid}" readonly="readonly"/>
-					<span>IT팀</span>
-				</td>
-				<td colspan="4">본부장</td>
-				<td colspan="4">수박바</td>
-				<td colspan="4">도장꽝</td>
-			</tr>
+		<tr>
+			<th class="edmsView_th">시행일자</th>
+			<td colspan="4">
+				<input type="text" id="datepicker">
+			</td>
+		</tr>
+		<tr>
+			<th class="edmsView_th">제목</th>
+			<td colspan="4">
+				<input type="text" name="subject" id="subject" size="100" style="width: 100%;"/>
+			</td>
+		</tr>
+		<tr>
+			<th class="edmsView_th">내용</th>
+			<td colspan="4">
+				<textarea style="width: 100%; height: 612px;" name="content" id="content"></textarea>
+			</td>
+		</tr>
+		
+		<tr>
+			<th class="edmsView_th">파일첨부</th>
+			<td colspan="4">
+				<input type="file" name="attach" id="attach" size="100" style="width: 100%;" />
+			</td>
+		</tr>
+	</table>
+	</div>
 
-			<tr>
-				<th class="edmsView_th">작성일자</th>
-				<td>2022년 05월 02일</td>
-				<td>-</td>
-			</tr>
-			
-		</table>
+	<div>
+		<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnWrite">결재요청</button>
+		<button type="button" class="btn btn-secondary btn-sm" onclick="javascript:history.back()">작성취소</button>
 	</div>
 	</form>
-	
 	<!-- 문서작성 종료 -->
 	
 	
-	<span class="edms_title">상세정보</span>
-	<form name="addFrm">
-	<table style="width: 1024px" class="table table-bordered">
-		<tr>
-			<th style="width: 15%; background-color: #DDDDDD">성명</th>
-			<td>
-				<%-- BoardVO(이것도 그대로?) 에서 가져오는 것이다! MemberVO 가 아님을 유의하자! --%>
-				<%-- 이 view단은 어차피 로그인해야지만 볼 수 있는 곳이기 때문에 sessionScope을 사용한다 --%>
-				<%-- readonly 변경불가! --%>
-				<input type="hidden" name="fk_userid" value="${sessionScope.loginuser.userid}" />
-				<input type="text" name="name" value="${sessionScope.loginuser.name}" readonly />
-			</td>
-		</tr>
-		
-		<tr>
-			<th style="width: 15%; background-color: #DDDDDD">제목</th>
-			<td>
-				<input type="text" name="subject" id="subject" size="100" />
-			</td>
-		</tr>
-		
-		<tr>
-			<th style="width: 15%; background-color: #DDDDDD">글내용</th>
-			<td>
-				<textarea style="width: 100%; height: 612px;" name="content" id="content"></textarea>
-				<%-- 15% 쓰고 남은 85%의 100%를 쓰겠다는 뜻! --%>
-			</td>
-		</tr>
-		
-		<tr>
-			<th style="width: 15%; background-color: #DDDDDD">글암호</th>
-			<td>
-				<input type="password" name="pw" id="pw" size="100" />
-			</td>
-		</tr>
-		
-	</table>
 	
-	<div style="margin: 20px;">
-		<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnWrite">글쓰기</button>
-		<button type="button" class="btn btn-secondary btn-sm" onclick="javascript:history.back()">취소</button>
-	</div>
 	
-	</form>
-	</div>
-</div>
+	

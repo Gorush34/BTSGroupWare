@@ -17,15 +17,20 @@
 		// 캘린더 클릭시 일정 체크 박스 보이기, 숨기기
 	//	$("div.slideTogglebox").hide();
 		
-		$("div#calenderbtn1").click(function(){
+		$("div#slideTogglebox1").show();
+		$("div#slideTogglebox2").show();
+		$("div#slideTogglebox3").show();
+		
+		
+		$("div#edmsSideBar1").click(function(){
 			$("div#slideTogglebox1").slideToggle();
 		});
 		
-		$("div#calenderbtn2").click(function(){
+		$("div#edmsSideBar2").click(function(){
 			$("div#slideTogglebox2").slideToggle();
 		});
 		
-		$("div#calenderbtn3").click(function(){
+		$("div#edmsSideBar3").click(function(){
 			$("div#slideTogglebox3").slideToggle();
 		});
 			
@@ -52,43 +57,39 @@
 			<li style="margin-bottom: 15px;">
 				
 				<!-- 문서작성 시작 -->
-				<div id="calenderbtn1" class="calenderbtn">문서작성<i class="bi bi-pencil-square"></i></div>
+				<div id="edmsSideBar1" class="edmsSideMenu">
+					문서작성
+				</div>
 				
 				<div id="slideTogglebox1" class="slideTogglebox">
 					<table style="margin: 0 20px;">
-						
-							<tr id="schecheck">
-								<td>
-									<label for="mySche"><span style="margin-left: 5px;">결재양식</span></label>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<label for="mySche"><span style="margin-left: 5px;">결재양식</span></label>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<label for="mySche"><span style="margin-left: 5px;">결재양식</span></label>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<label for="mySche"><span style="margin-left: 5px;">결재양식</span></label>
-								</td>
-							</tr>
+						<tr>
+							<td>
+								<label for="mySche"><span style="margin-left: 5px;">결재양식</span></label>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="mySche"><span style="margin-left: 5px;">결재양식</span></label>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="mySche"><span style="margin-left: 5px;">결재양식</span></label>
+							</td>
+						</tr>
 					</table>
 				</div>
 				<!-- 문서작성 종료 -->
 				
 				
 				<!-- 내문서함 시작 -->
-				<div id="calenderbtn2" class="calenderbtn">내문서함<i class="bi bi-pencil-square"></i></div>
+				<div id="edmsSideBar2" class="edmsSideMenu">내문서함</div>
 				
 				<div id="slideTogglebox2" class="slideTogglebox2">
 					<table style="margin: 0 20px;">
 						
-							<tr id="schecheck">
+							<tr>
 								<td>
 									<label for="mySche"><span style="margin-left: 5px;">대기문서함</span></label>
 								</td>
@@ -113,12 +114,12 @@
 				<!-- 내문서함 종료 -->
 				
 				<!-- 부서 문서함 시작 -->
-				<div id="calenderbtn3" class="calenderbtn">부서 문서함<i class="bi bi-pencil-square"></i></div>
+				<div id="edmsSideBar3" class="edmsSideMenu">부서 문서함</div>
 				
 				<div id="slideTogglebox3" class="slideTogglebox3">
 					<table style="margin: 0 20px;">
 						
-							<tr id="schecheck">
+							<tr>
 								<td>
 									<label for="mySche"><span style="margin-left: 5px;">대기문서함</span></label>
 								</td>
