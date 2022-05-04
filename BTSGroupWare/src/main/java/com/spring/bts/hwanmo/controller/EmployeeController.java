@@ -65,7 +65,7 @@ public class EmployeeController {
 		jsonObj.put("isExist", isExist);			// {"isExist":true} 또는 {"isExist":false} 으로 만들어준다. 
 			
 			String json = jsonObj.toString();	// 문자열 형태인 "{"isExist":true}" 또는 "{"isExist":false}" 으로 만들어준다.
-			System.out.println(">>> 확인용 json =>"+ json );	
+		//	System.out.println(">>> 확인용 json =>"+ json );	
 		//	>>> 확인용 json =>{"isExist":false}
 		//	또는	
 		//	>>> 확인용 json =>{"isExist":true}
@@ -84,7 +84,7 @@ public class EmployeeController {
 	
 		String uq_email = request.getParameter("uq_email"); 
 		// System.out.println(">>> 확인용 uq_email =>"+ uq_email );	// 내가 입력한 아이디 값
-			
+		
 		boolean isExist = empService.emailDuplicateCheck(uq_email);
 		
 		JSONObject jsonObj = new JSONObject(); 	// {}
@@ -104,9 +104,11 @@ public class EmployeeController {
 	
 	
 	@ResponseBody
-	@RequestMapping(value="emp/goEmpRegister.bts", method = {RequestMethod.POST}, produces="text/plain;charset=UTF-8")
-	public ModelAndView empRegister(ModelAndView mav, HttpServletRequest request) {
+	@RequestMapping(value="/emp/registerEmpSubmit.bts", method = {RequestMethod.POST}, produces="text/plain;charset=UTF-8")
+	public ModelAndView registerEmpSubmit(ModelAndView mav, HttpServletRequest request) {
 	
+		System.out.println("옵니까????");
+		
 		int pk_emp_no = Integer.parseInt(request.getParameter("pk_emp_no")); 					/* 사원번호 */
 		int fk_department_id = Integer.parseInt(request.getParameter("fk_department_id")); 		/* 부서명구분번호 */
 		int fk_rank_id = Integer.parseInt(request.getParameter("fk_rank_id")); 					/* 직급구분번호 */
@@ -150,7 +152,7 @@ public class EmployeeController {
 			int n = empService.registerMember(empvo);
 			
 			if(n==1) {
-				message = "회원가입 성공";
+				message = "회원가입 성공!";
 				loc =  request.getContextPath()+"/emp/registerEmp.bts"; 
 			}
 		
