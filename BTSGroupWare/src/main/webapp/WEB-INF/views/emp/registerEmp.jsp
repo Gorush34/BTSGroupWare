@@ -11,33 +11,37 @@
 
 <script type="text/javascript">
 
+	let b_flagIdDuplicateClick = false;
+	// 가입하기 버튼 클릭시 "아이디중복확인" 을 클릭했는지 클릭안했는지를 알아보기 위한 용도이다.
+	
+	let b_flagEmailDuplicateClick = false;
+	// 가입하기 버튼 클릭시 "이메일중복확인" 을 클릭했는지 클릭안했는지를 알아보기 위한 용도이다.
+
 	$(document).ready(function() {
 		
-	
-		let b_flagIdDuplicateClick = false;
-		// 가입하기 버튼 클릭시 "아이디중복확인" 을 클릭했는지 클릭안했는지를 알아보기 위한 용도이다.
 		
-		let b_flagEmailDuplicateClick = false;
-		// 가입하기 버튼 클릭시 "이메일중복확인" 을 클릭했는지 클릭안했는지를 알아보기 위한 용도이다.
+		$("span.error").hide();	
+		$("input#emp_name").focus();
 		
-		//$("span.error").hide();
-		$("input#pk_emp_no").focus();
-		
-		// 아이디가 pk_emp_no 제약 조건 
+		// 아이디가 pk_emp_no 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 		$("input#pk_emp_no").blur(() => { 
 			const $target = $(event.target);
 			
 			const name = $target.val().trim();
-			if(name == ""){
-				
+			if(name == "" ){
+				// 입력하지 않거나 공백만 입력했을 경우
+			    $("table#tblEmpRegister :input").prop("disabled", true);
+			    $target.prop("disabled", false);
 			//	$target.next().show();
 			// 	또는
 				$target.parent().find(".error").show();
+			
+				$target.focus();
 				
 				
 			} else {
 				// 공백이 아닌 글자를 입력했을 경우
-				
+				$("table#tblEmpRegister :input").prop("disabled", false);
 				//	$target.next().hide();
 				// 	또는
 				$target.parent().find(".error").hide();
@@ -45,7 +49,7 @@
 		});  // end of $("input#pk_emp_no").blur(() => {------------------------
 		
 		// 아이디가 pwd 제약 조건 
-		$("input#emp_pwd").blur(() => { 
+		$("input#emp_pwd").blur(() => {  
 			const $target = $(event.target);
 			
 			const regExp = new RegExp(/^.*(?=^.{8,16}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g);
@@ -54,36 +58,46 @@
 			const bool = regExp.test($target.val());  
 			
 			if(!bool){ // !bool == false 암호가 정규표현식에 위배된 경우
-				// 입력하지 않거나 공백만 입력했을 경우
-				$target.prop("disabled",false);
-			//	$target.next().show();
-			// 	또는
-				$target.parent().find(".error").show();
+				// 암호가 정규표현식에 위배된 경우 
+				  $("table#tblEmpRegister :input").prop("disabled", true);
+				  $target.prop("disabled", false);
+				  
+			   // $target.next().show();
+			   // 또는
+			      $target.parent().find(".error").show();
+				  
+				  $target.focus();
+			
 				
 			} else {
 				// bool == true 암호가 정규표현식에 맞는 경우
+				$("table#tblEmpRegister :input").prop("disabled", false);
+				
 				$target.parent().find(".error").hide();
 			}
 		 
 		}); // end of $("input#emp_pwd").blur(() => {})---------------------------------------
 		
 		// pwdcheck 제약 조건 패스워드 확인 검사
-		$("input#pwdcheck").blur(() => {
+		$("input#pwdCheck").blur( () => {
 			const $target = $(event.target);
 
 			const pwd = $("input#emp_pwd").val();
 			const pwdcheck = $target.val();
 			
-			if(pwdcheck != pwd){ // 암호와 암호확인값이 다른 경우 
-				$target.prop("disabled",false);
-				$("input#emp_pwd").prop("disabled",false);
+			if(pwd != pwdcheck){ // 암호와 암호확인값이 다른 경우 
+				$("table#tblEmpRegister :input").prop("disabled", true);
+				$target.prop("disabled", false);
+				$("input#emp_pwd").prop("disabled", false);
 				
-			//	$target.next().show();
+				$target.next().show();
 			// 	또는
-				$target.parent().find(".error").show();
+			//	$target.parent().find(".error").show();
+				$("input#emp_pwd").focus();
 				
 			} else {
 				// 암호와 암호확인값이 같은 경우
+				$("table#tblEmpRegister :input").prop("disabled", false);
 				//	$target.next().hide();
 				// 	또는
 				$target.parent().find(".error").hide();
@@ -96,15 +110,19 @@
 			
 			const name = $target.val().trim();
 			if(name == ""){
-				
+				// 입력하지 않거나 공백만 입력했을 경우
+				$("table#tblEmpRegister :input").prop("disabled", true);
+				$target.prop("disabled", false);
 			//	$target.next().show();
 			// 	또는
 				$target.parent().find(".error").show();
+			
+				$target.focus();
 				
 				
 			} else {
 				// 공백이 아닌 글자를 입력했을 경우
-				
+				$("table#tblEmpRegister :input").prop("disabled", false);
 				//	$target.next().hide();
 				// 	또는
 				$target.parent().find(".error").hide();
@@ -121,14 +139,20 @@
 	         const bool = regExp.test($target.val());  
 	        
 			if(!bool){ // !bool == false 이메일이 정규표현식에 위배된 경우
-				// 입력하지 않거나 공백만 입력했을 경우
+				// 이메일이 정규표현식에 위배된 경우 
+				$("table#tblEmpRegister :input").prop("disabled", true);
+				$target.prop("disabled", false);
 				
 			//	$target.next().show();
 			// 	또는
 				$target.parent().find(".error").show();
+			
+				$target.focus();
 				
 			} else {
 				// bool == true 이메일이 정규표현식에 맞는 경우
+				$("table#tblEmpRegister :input").prop("disabled", false);
+				
 				//	$target.next().hide();
 				// 	또는
 				$target.parent().find(".error").hide();
@@ -146,17 +170,52 @@
 	         const bool = regExp.test($target.val());  
 	        
 			if(!bool){ // !bool == false 국번이 정규표현식에 위배된 경우
+				$("table#tblEmpRegister :input").prop("disabled", true);
+				  $target.prop("disabled", false);
+			
 			//	$target.next().show();
 			// 	또는
 				$target.parent().find(".error").show();
 				
+				$target.focus();
 			} else {
 				// bool == true 국번이 정규표현식에 맞는 경우
+				$("table#tblEmpRegister :input").prop("disabled", false);
+				
 				//	$target.next().hide();
 				// 	또는
 				$target.parent().find(".error").hide();
 			}
 		});  // end of $("input#hp2").blur(() => {})----------------------------------
+		
+		// 아이디가 hp3인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
+		
+		$("input#hp3").blur(() => {
+			const $target = $(event.target);
+			
+	        const regExp = new RegExp(/^[1-9][0-9]{3}$/g); 
+	        // 숫자 4자리만 들어오도록 검사해주는 정규표현식 객체 생성(첫글자는 숫자 1~9까지만 가능함)
+		    
+	         const bool = regExp.test($target.val());  
+	        
+			if(!bool){ // !bool == false 국번이 정규표현식에 위배된 경우
+				$("table#tblEmpRegister :input").prop("disabled", true);
+				  $target.prop("disabled", false);
+			
+			//	$target.next().show();
+			// 	또는
+				$target.parent().find(".error").show();
+				
+				$target.focus();
+			} else {
+				// bool == true 국번이 정규표현식에 맞는 경우
+				$("table#tblEmpRegister :input").prop("disabled", false);
+				
+				//	$target.next().hide();
+				// 	또는
+				$target.parent().find(".error").hide();
+			}
+		});  // end of $("input#hp3").blur(() => {})----------------------------------
 		
 		// 우편번호찾기 클릭시
 		$("img#zipcodeSearch").click(function() {
@@ -209,13 +268,15 @@
 	 			
 		}); // end of $("img#zipcodeSearch").click(function() {-------------------------------------
 			
+		//////////////////////////////////////////////////////////////////////////////////////////	
+		
 		// 아이디값이 변경되면 가입하기 버튼 클릭시 "아이디중복확인" 을 클릭했는지 클릭안했는지를 알아보기 위한 용도를 초기화 시키기
-	 	$("input#pk_emp_no").bind("change",()=>{
+	 	$("input#pk_emp_no").bind("change",()=>{  
 	  	 	b_flagIdDuplicateClick = false;
 	 	});
 		
 		// 이메일값이 변경되면 가입하기 버튼 클릭시 "이메일중복확인" 을 클릭했는지 클릭안했는지를 알아보기 위한 용도를 초기화 시키기
-	 	$("input#uq_email").bind("change",()=>{
+	 	$("input#uq_email").bind("change",()=>{  
 	 		b_flagEmailDuplicateClick = false;
 	 	});
 		
@@ -245,9 +306,9 @@
 	 		//	async:true,	   // 비동기처리(기본값)	
 	 			
 	 			success: function(text){
-	 				console.log("확인용 : text => "+ text);
+	 				// console.log("확인용 : text => "+ text);
 	 				// 확인용 : text => {"isExist":false}    
-	 				console.log("확인용 타입 typeof(text) : "+typeof(text))
+	 				// console.log("확인용 타입 typeof(text) : "+typeof(text))
 	 				// 확인용 타입 typeof(text) : string
 	 				
 	 				const json = JSON.parse(text);
@@ -287,7 +348,7 @@
         */
 		// ==== jQuery 를 이용한 Ajax (Asynchronous JavaScript and XML)처리하기 ====
 	 		$.ajax({
-	 			url:"<%= ctxPath%>/member/emailDuplicateCheck.book",
+	 			url:"<%= ctxPath%>/emp/emailDuplicateCheck.bts",
 	 			data:{"uq_email":$("input#uq_email").val()}, // data 는 MyMVC/member/emailDuplicateCheck.up로 전송해야할 데이터를 말한다.
 	 			type: "post" , // type 은 생략하면 "get" 이다.
 				dataType: "json",
@@ -316,7 +377,7 @@
 	 				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 	 			}
 	 			
-	 		});
+	 		}); // end of $.ajax({})
 	 	
 	} // end of function isExistEmailCheck(){}---------------------------------------
 	
@@ -329,6 +390,7 @@
 		$("input.requiredInfo").each(function(index, item) {
 			const data = $(item).val().trim();
 			if(data == ""){
+				console.log("item : " + data);
 				alert("*표시된 필수입력사항은 모두 입력하셔야 합니다.");
 				b_FlagRequiredInfo = true;
 				return false; // each문에서 for문에서 break; 와 같은 기능이다.
@@ -336,6 +398,7 @@
 		});
 		
 		if(b_FlagRequiredInfo) {
+			console.log("b_FlagRequiredInfo : " + b_FlagRequiredInfo);
 			return;
 		}
 		
@@ -344,29 +407,39 @@
 		
 		if(genderCheckedLength == 0){
 			alert("성별을 선택하셔야 합니다.");
+			console.log("genderCheckedLength : " + genderCheckedLength);
 			return; // 종료
 		}
 		
+		// *** 아이디 중복확인을 클릭했는지 검사한다. *** //
+		if(!b_flagIdDuplicateClick) {
+			// "아이디중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도임.
+			alert("아이디중복확인 클릭하여 ID중복검사를 하세요!!");
+			return; // 종료
+		}
+		  
+		  
+		// *** 이메일 중복확인을 클릭했는지 검사한다. *** //
+		if(!b_flagEmailDuplicateClick) {
+			// "이메일중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도임.
+			alert("이메일중복확인 클릭하여 email 중복검사를 하세요!!");
+			return; // 종료
+		}
+		
+		
 		const frm = document.registerFrm;
-		frm.action = "memberRegister.book";
-		frm.method = "post";
+		frm.action = "<%= ctxPath%>/emp/registerEmpSubmit.bts";
+		frm.method = "POST";
 		frm.submit();
 		
 		
 	}// end of 	function goRegister()--------------------------------
 	
-	// 가입하기 취소 버튼 클릭 시 
-	function registerCancel() {
-		
-		location.href = "<%=ctxPath%>/index.book";
-		
-	}
-	
 </script>
 
 	<div id="tbl_regEmp">
-	<form name="registerFrm" action="registerSuccess.bts">
-	<table>
+	<form name="registerFrm" >
+	<table id="tblEmpRegister">
 		<tr>
 			<td><h2>사원 등록<br><br></h2></td>
 		</tr>
@@ -382,7 +455,7 @@
 			<th><label for="pk_emp_no">사번&nbsp;<span id="star">*</span></label></th>
 			<td>
 				<input required type="text" class="requiredInfo" id="pk_emp_no" name="pk_emp_no" size="20"  maxlength='16' />
-				<span id="isExistIdCheck" class="duplicateCheck" onclick="isExistIdCheck();">사번중복확인&nbsp;&nbsp;<i class="fas fa-angle-right"></i></span>
+				<span id="isExistIdCheck" class="duplicateCheck" onclick="isExistIdCheck();">&nbsp;사번중복확인&nbsp;&nbsp;<i class="fas fa-angle-right"></i>&nbsp;</span>
 				<br>
 				<span class="error">사번을 입력해주세요.</span> 
 				<span id="idcheckResult"></span>
@@ -390,14 +463,14 @@
 		</tr>
 		<tr>
 			<th><label for="emp_pwd">비밀번호&nbsp;<span id="star">*</span></label></th>
-			<td><input type="password" class="requiredInfo" id="emp_pwd" name="emp_pwd" size="20" maxlength="20" required />&nbsp;(영문 대소문자/숫자/특수문자 모두 조합, 8자~16자)<br><span class="error" style="margin-left: 200px;">암호가 올바르지 않습니다.</span></td>
+			<td><input type="password" class="requiredInfo" id="emp_pwd" name="emp_pwd" size="20" maxlength="20" required autoComplete="off" />&nbsp;(영문 대소문자/숫자/특수문자 모두 조합, 8자~16자)<br><span class="error" style="margin-left: 200px;">암호가 올바르지 않습니다.</span></td>
 		</tr>
 		<tr>
 			<th><label for="pwdCheck">비밀번호확인&nbsp;<span id="star">*</span></label></th>
-			<td><input type="password" class="requiredInfo" id="pwdCheck" size="20" maxlength="20" required /><span class="error">암호가 일치하지 않습니다.</span></td>
+			<td><input type="password" class="requiredInfo" id="pwdCheck" size="20" maxlength="20" required autoComplete="off" /><span class="error">암호가 일치하지 않습니다.</span></td>
 		</tr>
 		<tr>
-			<td><strong>부서</strong></td>
+			<td><strong>부서</strong> &nbsp;<span id="star">*</span></td>
 			<td>
 				<select name="fk_department_id" id="fk_department_id" style="height: 26px;" >
 			         <option value="">부서 선택</option>
@@ -411,7 +484,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td><strong>직위</strong></td>
+			<td><strong>직위</strong> &nbsp;<span id="star">*</span></td>
 			<td>
 				<select name="fk_rank_id" id="fk_rank_id" style="height: 26px;" >
 			         <option value="">직위 선택</option>
@@ -486,7 +559,7 @@
 			<th>이메일 &nbsp;<span id="star">*</span></th>
 			<td>
 				<input type="email" class="requiredInfo" id="uq_email" name="uq_email" size="20" maxlength="20" required placeholder="example@gmail.com" />
-				<span id="isExistIdCheck" class="duplicateCheck" onclick="isExistEmailCheck();">이메일중복확인&nbsp;&nbsp;<i class="fas fa-angle-right"></i></span>
+				<span id="isExistIdCheck" class="duplicateCheck" onclick="isExistEmailCheck();">&nbsp;이메일중복확인&nbsp;&nbsp;<i class="fas fa-angle-right"></i>&nbsp;</span>
 				<br>
 				<span class="error">올바른 이메일 양식이 아닙니다.</span>
 				<span id="emailCheckResult"></span>
@@ -505,17 +578,16 @@
 	           <input type="radio" id="female" name="gender" value="2" style="margin-left: 10%;" /><label for="female" style="margin-left: 2%;">여자</label>
 	        </td>
 	    </tr>
-		<tr>
-			<td></td>
-			<td colspan="10" style="text-align:center; padding-top: 18%; ">
-				<button class="btn btn-info" id="btn_register" style="border: solid lightgray 2px;" >저장</button>
-				<button class="btn btn-info" id="btn_continue_reg" style="border: solid lightgray 2px;" >계속 등록</button>
-				<button class="btn btn-default" id="btn_list" style="border: solid lightgray 2px;">목록으로 이동</button>
-				<button class="btn btn-default" id="btn_cancel" style="border: solid lightgray 2px;">취소</button>
-			</td>
-		</tr>
+		
 	</table>
 	</form>
+	<div>
+		<button class="btn btn-info" id="btn_register" style="border: solid lightgray 2px;" onclick="goRegister();">저장</button>
+		<button class="btn btn-default" id="btn_list" style="border: solid lightgray 2px;">목록으로 이동</button>
+		<button class="btn btn-default" id="btn_cancel" style="border: solid lightgray 2px;">취소</button>
+	</div>
+	
+	 	
 	</div>
 	
 

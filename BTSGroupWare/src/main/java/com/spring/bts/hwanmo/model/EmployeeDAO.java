@@ -1,5 +1,7 @@
 package com.spring.bts.hwanmo.model;
 
+import java.sql.SQLException;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -39,6 +41,19 @@ public class EmployeeDAO implements InterEmployeeDAO {
 	public boolean idDuplicateCheck(String pk_emp_no) {
 		boolean isExist = sqlsession.selectOne("hwanmo.idDuplicateCheck", pk_emp_no);
 		return isExist;
+	}
+
+	// email 중복검사 (tbl_member 테이블에서 email 이 존재하면 true를 리턴해주고, email 이 존재하지 않으면 false를 리턴한다) 
+	@Override
+	public boolean emailDuplicateCheck(String uq_email) {
+		boolean isExist = sqlsession.selectOne("hwanmo.emailDuplicateCheck", uq_email);
+		return isExist;
+	}
+
+	@Override
+	public int registerMember(EmployeeVO empvo) throws SQLException {
+		int n = sqlsession.insert("hwanmo.registerMember", empvo);
+		return n;
 	}
 	
 	

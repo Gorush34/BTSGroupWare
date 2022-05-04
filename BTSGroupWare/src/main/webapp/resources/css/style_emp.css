@@ -51,5 +51,18 @@ img#empProfile {
 	margin-bottom: 5px;
 }
 
+#tblEmpRegister > tbody > tr {
+	
+}
+
+select#hp1 {
+	width: 54px;
+}
+
+span#isExistIdCheck {
+	margin-left: 10px;
+	border: solid 1px #c9c9c9;
+	border-radius: 5%;
+}
 
 /* 사원 스타일 끝 */

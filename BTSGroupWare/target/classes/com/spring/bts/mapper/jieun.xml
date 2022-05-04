@@ -7,6 +7,24 @@
 <!-- ==== 대부분은 namespace에 파일이름 사용(유일하니까) ==== -->
 <mapper namespace="jieun">
 
+
+	<!-- 등록 폼에 서브캘린더 가져오기 -->
+	<select id="selectCalNo" parameterType="HashMap" resultType="com.spring.bts.jieun.model.CalendarVO">
+		select pk_calno, fk_lgcatgono, calname
+		from tbl_calendar
+		where fk_lgcatgono = #{fk_lgcatgono} and fk_emp_no =#{fk_emp_no}
+		order by pk_calno asc
+	</select>
+
+	<!-- 일정등록 하기  -->
+	<insert id="scheduleRegisterInsert" parameterType="HashMap">
+		insert into tbl_schedule(pk_schno, fk_emp_no, fk_calno, subject, startdate, enddate, content, color, place, joinuser, fk_lgcatgono)
+		values(seq_schno.nextval, #{fk_emp_no}, #{fk_calno}, #{subject}, to_date(#{startdate}, 'yyyymmddhh24miss'), to_date(#{enddate}, 'yyyymmddhh24miss'), #{content}, #{color}, #{place}, #{joinuser}, #{fk_lgcatgono} )
+	</insert>
+
+
+
+
 <!-- // ======== ***** 파이널 옮기기 시작 ***** ======== //
 	// === 일정 체크 박스 추가 === // -->
 	

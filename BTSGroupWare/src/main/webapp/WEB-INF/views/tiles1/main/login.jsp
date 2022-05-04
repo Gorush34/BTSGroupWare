@@ -167,7 +167,7 @@
                                     </form>
                                     <hr>
                                     <div class="text-center">
-                                        <a href="forgot-password.html">비밀번호 찾기</a>
+                                        <a href="<%= ctxPath%>/pwdFind.bts">비밀번호 찾기</a>
                                     </div>
                                     <div class="text-center">
                                         	문의 : 인사과(정환모 / 8887)
