@@ -24,14 +24,14 @@ $( document ).ready( function() {
 function searchBtn() {
 	$.ajax({
 		url:"<%= ctxPath%>/addBook/test.bts",
-			data:{"search" : $("input#searchText").val(),
-	 		type: "post",
-	 		dataType: 'json',
-	 		success : function(json) {
-	 			
-	 	    },
-		 error: function(request){
-		 }
+		data:{"search" : $("input#searchText").val()},
+		type: "post",
+		dataType: 'json',
+		success : function(json) {
+			console.log(json)
+		},
+		error: function(request){
+			
 		}
 	});
 }

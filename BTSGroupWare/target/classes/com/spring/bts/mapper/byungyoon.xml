@@ -7,13 +7,18 @@
 <!-- ==== 대부분은 namespace에 파일이름 사용(유일하니까) ==== -->
 <mapper namespace="byungyoon">
 	
+	<!-- 주소록 메인페이지에서 주소록검색 ajax 쓰기 -->
 	<select id="mby_test" parameterType="int" resultType="String">
 		select name from mby_test where no = #{no}
+	</select>
+	
+	<select id="mby_rank" parameterType="int" resultType="String">
+		select rank from mby_test where no = #{no}
 	</select>
 
 
 	<!-- 주소록 메인페이지에 select 해오기 -->
-	<select id="addBook_select"  resultType="com.spring.bts.byungyoon.model.AddBookVO">
+	<select id="addBook_main_select"  resultType="com.spring.bts.byungyoon.model.AddBookVO">
 		select A.addb_name , R.ko_rankname, A.phone AS phone, A.email AS email, A.companyname, A.com_tel
 		from tbl_EMPLOYEES E 
 		join tbl_ADDBOOK A 
@@ -21,6 +26,37 @@
 		join tbl_rank_sort R
 		on R.PK_RANK_NO = E.FK_RANK_ID
 	</select>
+	
+	
+	<!-- 주소록 연락처에 insert 하기 -->
+	<insert id="addBook_telAdd_insert" parameterType="com.spring.bts.byungyoon.model.AddBookVO" >
+	<!-- insert into tbl_ADDBOOK(PK_ADDBOOK_NO, FK_EMP_NO, FK_DEPT_NO, FK_RANK_NO, ADDB_NAME, COMPANYNAME, EMAIL, PHONE, COMPANY_ADDRESS, MEMO)
+		values(#{pk_addbook_no}, #{fk_emp_no}, #{fk_dept_no}, #{fk_rank_no}, '#{addb_name}', '#{companyname}', '#{email}', '#{phone}' , '#{company_address}' , '#{memo}') -->
+	</insert>
+	
+	
+	<!-- 상세부서정보 페이지 사원목록 불러오기 -->
+	<select id="addBook_depInfo_select_sales" resultType="com.spring.bts.hwanmo.model.EmployeeVO">
+		select E.emp_name , R.ko_rankname , D.ko_depname , R.pk_rank_no
+		from tbl_EMPLOYEES E
+		join tbl_rank_sort R
+		on E.fk_rank_id = R.pk_rank_no
+		join tbl_dep_sort D
+		on E.fk_department_id = D.pk_dep_no
+		where D.ko_depname = '영업'
+		order by R.pk_rank_no
+	</select>
+	<select id="addBook_depInfo_select_marketing" resultType="com.spring.bts.hwanmo.model.EmployeeVO">
+		select E.emp_name , R.ko_rankname , D.ko_depname , R.pk_rank_no
+		from tbl_EMPLOYEES E
+		join tbl_rank_sort R
+		on E.fk_rank_id = R.pk_rank_no
+		join tbl_dep_sort D
+		on E.fk_department_id = D.pk_dep_no
+		where D.ko_depname = '마케팅'
+		order by R.pk_rank_no
+	</select>
+	
 	
 
 </mapper>
