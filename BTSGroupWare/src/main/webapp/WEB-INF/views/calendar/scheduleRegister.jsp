@@ -10,6 +10,9 @@
 
 	$(document).ready(function(){
 		
+		// 캘린더 소분류 카테고리 숨기기
+		$("select.calNo").hide();
+		
 		// === *** 달력(type="date") 관련 시작 *** === //
 		// 시작시간, 종료시간		
 		var html="";
@@ -63,7 +66,141 @@
 			}
 		});
 		
-	//	$('#question').tooltip(options)
+		// 서브캘린더 가져오기 //
+		$("select.calSelect").change(function(){
+			var fk_lgcatgono = $("select.calSelect").val();
+			var fk_emp_no = $("input[name=fk_emp_no]").val();
+			
+			if(fk_lgcatgono != "") { // 선택하세요 가 아니라면
+				$.ajax({
+						url: "<%= ctxPath%>/calendar/selectCalNo.bts",
+						data: {"fk_lgcatgono":fk_lgcatgono, 
+							   "fk_emp_no":fk_emp_no},
+						dataType: "json",
+						success:function(json){
+							var html ="";
+							if(json.length>0){
+								
+								$.each(json, function(index, item){
+									html+="<option value='"+item.fk_calno+"'>"+item.fk_calno+"</option>"
+								});
+								$("select.calNo").html(html);
+								$("select.calNo").show();
+							}
+						},
+						error: function(request, status, error){
+				            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+						}
+				});
+			}
+			
+			else {
+				// 선택하세요 이라면
+				$("select.calNo").hide();
+			}
+			
+		});
+		
+		
+		
+		
+		// == 참석자 추가 하기 == //
+		$("input#joinUserName").bind("keyup", function(){
+			var joinUserName = $(this).val();
+			
+			$.ajax({
+				url:"<%= ctxPath%>/calendar/scheduleRegister/addJoinUser.bts",
+				data:{"joinUserName":joinUserName},
+				dataType:"json",
+				success:function(json){
+					var joinUserArr = [];
+					
+					if(json.length > 0)
+					
+				}// end of success----------------------------------
+			});
+		});// end of $("input#joinUserName").bind("keyup", function(){}-----------------------------
+		
+		
+		// ====== >>> *** 일정등록하기 시작 *** <<< ====== //
+		$("button#register").click(function(){
+			
+			// 일자 유효성 검사 (시작일자 > 종료일자 X)	
+			var startDate = $("input#startDate").val();
+			var startArr = startDate.split("-");
+			startDate = "";
+			for(var i = 0; i<startArr.length; i++){
+				startDate += startArr[i];
+			}
+			
+			var endDate = $("input#endDate").val();
+			var endArr = endDate.split("-");
+			endDate = "";
+			for(var i = 0; i<endArr.length; i++){
+				endDate += endArr[i];
+			}
+			
+			var startHour= $("select#startHour").val();
+	     	var endHour = $("select#endHour").val();
+	     	var startMinute= $("select#startMinute").val();
+	     	var endMinute= $("select#endMinute").val();
+	     	
+	     	// 시작일자 > 종료일자 : 경고
+	     	if(Number(endDate) - Number(startDate) <0){
+	     		alert("종료일이 시작일 보다 빠릅니다.")
+	     		return;
+	     	}
+	     	else if(Number(endDate) == Number(startDate)){
+	     		
+	     		if(Number(startHour) > Number(endHour)){
+	     			alert("종료일이 시작일 보다 빠릅니다.")
+		     		return;
+	     		}
+	     		else if(Number(startHour) == Number(endHour)){
+	     			if(Number(startMinute) > Number(endMinute)){
+		     			alert("종료일이 시작일 보다 빠릅니다.")
+			     		return;
+		     		}
+	     			else if(Number(startMinute) == Number(endMinute)){
+	        			alert("시작일과 종료일이 동일합니다."); 
+	        			return;
+	        		}
+	     		}
+	     	}// end of else if----------------------------------------
+	     	
+	     	// 제목 유효성 검사
+	     	var subject = $(input#subject).val().trim();
+	     	if(subject == ""){
+	     		alert("제목을 입력하시오.")
+	     		return;
+	     	}
+	     	
+	     	// 캘린더 선택 유무 검사
+	     	var calSelect = $("select.calSelect").val().trim();
+	     	if(calSelect == ""){
+	     		alert("캘린더를 선택하시오.")
+	     		return;
+	     	}
+	     	
+	     	// 시작일과 종료일, 오라클에 들어갈 date 형식으로  변경
+	     	var sdate = startDate+$("select#startHour").val()+$("select#startMinute").val()+"00";
+	     	var edate = endDate+$("select#endHour").val()+$("select#endMinute").val()+"00";
+	     	
+	     	$("input[name=startdate]").val(sdate);
+	     	$("input[name=enddate]").val(edate);
+	     	
+	     	// 공유자 넣어주기 
+	     	
+	     	var frm = document.scheduleRegisterFrm;
+	     	frm.action = "<%= ctxPath%>/calendar/scheduleRegisterInsert.bts";
+	     	frm.method="POST";
+	     	frm.submit();
+	     	
+		});//end of $("button#register").click(function(){}--------------------------------------
+		// ====== >>> *** 일정등록하기 끝 *** <<< ====== //
+		
+
+		//button#$("input#estion').tooltip(options)
 
 	// Collapse로 화면이 펼치기 전에 호출
 /*	$('.collapse').on('show.bs.collapse', function () {
@@ -99,16 +236,16 @@
 
 </script>
 
-<div id="schedualRegister">
+<div id="scheduleRegister">
 <h4 style="margin: 0 80px">일정등록</h4>
-	<form name="schedualRegister">
-		<div id="srFrm" style="margin:50px 100px;">
+	<div id="srFrm" style="margin:50px 100px;">
+		<form name="scheduleRegisterFrm">
 			<div>
 				<input type="text" id="subject" name="subject" size="50"/>&nbsp;&nbsp;
 				<input type="checkbox" id="secret" name="secret"/><label for="secret">비공개</label> &nbsp;&nbsp;&nbsp;
 				<span class="tooltip-right" data-tooltip="비공개 일정은 참석자만 확인가능합니다."><i class="bi bi-question-circle-fill"></i></span>
 			</div>
-			<table id="schedualRegisterContent">
+			<table id="scheduleRegisterContent">
 				<tr>
 					<th>날짜</th>
 					<td>
@@ -127,10 +264,10 @@
 				<tr>
 					<th>내 캘린더</th>
 					<td>
-						<select class="calSelect">
+						<select class="calSelect" name="fk_lgcatgono">
 						<c:choose>
 							 <%-- 일정등록시 사내캘린더 등록은 oginuser.gradelevel =='10' 인 사용자만 등록이 가능하도록 한다. --%> 
-							<c:when test="${loginuser.gradelevel =='10'}"> 
+							<c:when test="${loginuser.gradelevel =='1'}"> 
 								<option value="">선택하세요</option>
 								<option value="1">내 캘린더</option>
 								<option value="2">사내 캘린더</option>
@@ -141,7 +278,8 @@
 								<option value="1">내 캘린더</option>
 							</c:otherwise >
 						</c:choose>
-						</select>
+						</select> &nbsp;
+						<select class="calNo schedule" name="fk_calNo"></select>
 					</td>
 				</tr>
 				<tr>
@@ -267,13 +405,15 @@
 					</div>
 				 </td>
 			 </tr>
+			 
 				
 			</table>
-			<div style="text-align: center;">
-			<button type="button" class="btn btn-primary btn-sm" >확인</button>
-			<button type="button" class="btn btn-outline-primary btn-sm" onclick="javascript:location.href='<%= ctxPath%>/calendar/calendarMain.bts'">취소</button>
-			</div>
+			<input type="hidden" value="${sessionScope.loginuser.userid}" name="fk_emp_no"/>
+			</form>
 			
-	  </div>
-	</form>
+		<div style="text-align: center;">
+		<button type="button" class="btn btn-primary btn-sm" id="register" >확인</button>
+		<button type="button" class="btn btn-outline-primary btn-sm" onclick="javascript:location.href='<%= ctxPath%>/calendar/calendarMain.bts'">취소</button>
+		</div>
+	 </div>	
 </div>
