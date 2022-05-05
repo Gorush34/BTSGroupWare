@@ -5,194 +5,223 @@
 	String ctxPath = request.getContextPath();
 %>
 
-<title>내 문서함</title>
-
 <!-- style_edms.css 는 이미 layout-tiles_edms.jsp 에 선언되어 있으므로 쓸 필요 X! -->
+
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		
+		/* 차트보기 버튼 클릭 시 모달창 띄우기 */		
 		
 	});
 </script>
 
 <%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
-
+	
 	<div class="edmsHomeTitle">
 		<span class="edms_maintitle">전자결재 홈</span>
+		<button id="btnEdmsAdd" type="button" class="btn btn-light" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsAdd.bts'" >문서작성</button>
+		<button id="btnEdmsAdd" type="button" class="btn btn-light" onclick="" >차트보기</button>
 		<p style="margin-bottom: 10px;"></p>
 	</div>
 	
 	<!-- 나의 현황(최근문서) 시작 -->
 	<div id="edms_current">
 		<span class="edms_title">김다우 님의 현황</span>
-		<div class="divClear"></div>
+		<!-- <button id="btnEdmsAdd" type="button" class="btn btn-light">문서작성</button> -->
 		
-		<!-- 나의현황 카드 시작 -->
+		<%-- 결재 대기 중인 문서가 있을 때 시작 --%>
+		
+		<div class="divClear"></div>
+				
+		<!-- 반응형 웹 시작 -->
 		<div class="row">
+		
+			<!-- 나의현황 카드 시작 -->
 			<%-- 나중에 c:forEach 으로 여러 개 불러오기 --%>
-			<c:forEach var="i" begin="1" end="6">
+ 			<c:forEach var="i" begin="1" end="6">
 				<div class="col-2">
 					<div class="card">
 						<div class="card-body">
-							<p><c:out value="${i}" /></p>
+							<%-- <p style="display: none;"><c:out value="${i}" /></p> --%>
+							<span style="border: none; background-color: #A6C76C; width: 32px; color: #fff;">대기중</span>&nbsp;<span><c:out value="${i}" />&nbsp;(hidden)</span>
 							<h5 class="card-title">기안서 제목 </h5>
-							<h6 class="card-subtitle mb-2 text-muted">진행상태</h6>
+							<h6 class="card-subtitle mb-2 text-muted">
+								기안자 : 김부장
+							</h6>
 							<hr>
 							<!-- <a href="/bts/edms/edmsMydoc.bts" class="stretched-link btn btn-sm text-primary" class="card-link">자세히 보기</a> -->
-							<span onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsMydoc.bts'" class="stretched-link btn btn-sm text-primary" class="card-link">자세히 보기</span>
+							<span onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsView.bts'" class="stretched-link btn btn-sm text-primary" class="card-link">자세히 보기</span>
 						</div>
 					</div>
 				</div>
-			</c:forEach>	
+			</c:forEach>
+			<!-- 나의현황 카드 종료 -->
 		</div>
-		<!-- 나의현황 카드 종료 -->
-
+		<!-- 반응형 웹 종료 -->
 		
 		<div class="divClear"></div>
 		
 		<div class="more">
-			<span class="more" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsMydoc.bts'">전체보기</span>
+			<span class="more" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsMydoc_wait.bts'">전체보기</span>
 		</div>
+		
+		<div class="divClear"></div>
+		<%-- 결재 대기 중인 문서가 있을 때 종료 --%>
+		<!-- 나의현황 카드 종료 -->
+
+		<%-- 결재 대기 중인 문서가 없을 때 시작 --%>
+		<div class="divClear"></div>
+		<table class="table table-sm table-light">
+			<tr>
+				<td style="border-top: solid 1px #D3D3D3;">&nbsp;</td>
+			</tr>
+			<tr>
+				<td style="text-align: center; font-size: 12pt;">결재대기 문서가 없습니다.</td>
+			</tr>
+			<tr>
+				<td style="border-bottom: solid 1px #D3D3D3;">&nbsp;</td>
+			</tr>
+		</table>
+		<%-- 결재 대기 중인 문서가 없을 때 종료 --%>
 	</div>
 	<!-- 나의 현황 종료 -->
 	
-	<div class="divClear"></div>
-
-	<!-- 결재진행 문서목록 시작 -->
-	<div id="edms_accepted">
-		<span class="edms_title">결재완료 목록보기</span>
-		
-		<div class="divClear"></div>
-		
-		<table class="table table-sm">
-			<thead>
-				<tr>
-					<th scope="col">#</th>
-					<th scope="col">기안일</th>
-					<th scope="col">결재양식</th>
-					<th scope="col">긴급</th>
-					<th scope="col">제목</th>
-					<th scope="col">첨부</th>
-					<th scope="col">문서번호</th>
-				</tr>
-			</thead>
-			<tbody>
-				<%-- 나중에 forEach문 사용해서 뿌려주기 --%>
-				<c:forEach var="i" begin="1" end="5">
-				<tr>
-					<th scope="row"><p><c:out value="${i}" /></p></th>
-					<td>2022.02.02</td>
-					<td>업무기안</td>
-					<td></td>
-					<td>(신규)휴가신청-연차관리연동</td>
-					<td>있음</td>
-					<td>20220428-000001</td>
-				</tr>
-				</c:forEach>
-			</tbody>
-		</table>
-		
-		<div class="divClear"></div>
-		
-		<div class="more">
-			<span class="more" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsMydoc.bts'">전체보기</span>
-		</div>
-	</div>
-	<!-- 결재진행 문서목록 종료 -->
+	
 	
 	<div class="divClear"></div>
 
-	<!-- 결재진행 문서목록 시작 -->
-	<div id="edms_rejected">
-		<span class="edms_title">결재반려 목록보기</span>
+	<!-- 결재승인 문서목록 시작 -->
+	<div id="edms_accepted">
+		<span class="edms_title">결재승인 목록보기</span>
 		
+		<%-- 결재승인 목록이 있을 때 시작 --%>
 		<div class="divClear"></div>
 		
-		<table class="table table-sm">
-			<thead>
+		<table class="table table-sm table-hover table-light">
+		<!-- <table class="table table-sm table-hover tbl_edms_list" style="background-color: #fff"> -->
+			<thead class="thead-light">
 				<tr>
-					<th scope="col">#</th>
-					<th scope="col">기안일</th>
-					<th scope="col">결재양식</th>
-					<th scope="col">긴급</th>
-					<th scope="col">제목</th>
-					<th scope="col">첨부</th>
-					<th scope="col">문서번호</th>
+					<th scope="col" width="3%">#</th>
+					<th scope="col" width="13%">기안일</th>
+					<th scope="col" width="10%">결재양식</th>
+					<th scope="col" width="9%">긴급</th>
+					<th scope="col" width="31%">제목</th>
+					<th scope="col" width="6%">첨부</th>
+					<th scope="col" width="20%">문서번호</th>
+					<th scope="col" width="8%">상태</th>
 				</tr>
 			</thead>
 			<tbody>
-				<%-- 나중에 forEach문 사용해서 뿌려주기 --%>
-				<%-- 이상하게 나옴
-				<c:forEach var="i" begin="1" end="5">
+				<%-- 나중에 forEach문 사용해서 뿌려주기 시작 --%>
+ 				<c:forEach var="i" begin="1" end="5">
 				<tr>
 					<th scope="row"><p><c:out value="${i}" /></p></th>
 					<td>2022.02.02</td>
 					<td>업무기안</td>
-					<td></td>
+					<td><button id="btn_emergency" class="btn btn-outline-danger" style="height: 100%; line-height: 9pt; font-size: 9pt;">긴급</button></td>
 					<td>(신규)휴가신청-연차관리연동</td>
-					<td>있음</td>
+					<td><img src="<%= ctxPath%>/resources/images/disk.gif" style="height: 16px; width: 16px;"></td>
 					<td>20220428-000001</td>
+					<td>승인됨</td>
 				</tr>
 				</c:forEach>
-				--%>
-				<tr>
-					<th scope="row"><p><c:out value="${i}" /></p></th>
-					<td>2022.02.02</td>
-					<td>업무기안</td>
-					<td></td>
-					<td>(신규)휴가신청-연차관리연동</td>
-					<td>있음</td>
-					<td>20220428-000001</td>
-				</tr>
-				
-				<tr>
-					<th scope="row"><p><c:out value="${i}" /></p></th>
-					<td>2022.02.02</td>
-					<td>업무기안</td>
-					<td></td>
-					<td>(신규)휴가신청-연차관리연동</td>
-					<td>있음</td>
-					<td>20220428-000001</td>
-				</tr>
-				
-				<tr>
-					<th scope="row"><p><c:out value="${i}" /></p></th>
-					<td>2022.02.02</td>
-					<td>업무기안</td>
-					<td></td>
-					<td>(신규)휴가신청-연차관리연동</td>
-					<td>있음</td>
-					<td>20220428-000001</td>
-				</tr>
-				
-				<tr>
-					<th scope="row"><p><c:out value="${i}" /></p></th>
-					<td>2022.02.02</td>
-					<td>업무기안</td>
-					<td></td>
-					<td>(신규)휴가신청-연차관리연동</td>
-					<td>있음</td>
-					<td>20220428-000001</td>
-				</tr>
-				
-				<tr>
-					<th scope="row"><p><c:out value="${i}" /></p></th>
-					<td>2022.02.02</td>
-					<td>업무기안</td>
-					<td></td>
-					<td>(신규)휴가신청-연차관리연동</td>
-					<td>있음</td>
-					<td>20220428-000001</td>
-				</tr>
-				
+				<%-- 나중에 forEach문 사용해서 뿌려주기 시작 --%>
 			</tbody>
 		</table>
 		
+		<div class="divClear"></div>
+		
 		<div class="more">
-			<span class="more" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsMydoc.bts'">전체보기</span>
-			<%-- <button type="button" class="more" style="background-color: #000060; color: #fff;">전체보기</button> --%>
+			<span class="more" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsMydoc_accepted.bts'">전체보기</span>
 		</div>
+		
+		<div class="divClear"></div>
+		<%-- 결재승인 목록이 있을 때 종료 --%>
+		
+		<%-- 결재승인 목록이 없을 때 시작 --%>
+		<div class="divClear"></div>
+		<table class="table table-sm table-light">
+			<tr>
+				<td style="border-top: solid 1px #D3D3D3;">&nbsp;</td>
+			</tr>
+			<tr>
+				<td style="text-align: center; font-size: 12pt;">결재완료 문서가 없습니다.</td>
+			</tr>
+			<tr>
+				<td style="border-bottom: solid 1px #D3D3D3;">&nbsp;</td>
+			</tr>
+		</table>
+		<%-- 결재승인 목록이 없을 때 종료 --%>
+		
 	</div>
-	<!-- 결재진행 문서목록 종료 -->
+	<!-- 결재승인 문서목록 종료 -->
+	
+	<div class="divClear"></div>
+
+	<!-- 결재반려 문서목록 시작 -->
+	<div id="edms_rejected">
+		<span class="edms_title">결재반려 목록보기</span>
+		
+		<%-- 결재반려 목록이 있을 때 시작 --%>
+		<div class="divClear"></div>
+		
+		<table class="table table-sm table-hover table-light">
+			<thead class="thead-light">
+				<tr>
+					<th scope="col" width="3%">#</th>
+					<th scope="col" width="13%">기안일</th>
+					<th scope="col" width="10%">결재양식</th>
+					<th scope="col" width="9%">긴급</th>
+					<th scope="col" width="31%">제목</th>
+					<th scope="col" width="6%">첨부</th>
+					<th scope="col" width="20%">문서번호</th>
+					<th scope="col" width="8%">상태</th>
+				</tr>
+			</thead>
+			<tbody>
+				<%-- 나중에 forEach문 사용해서 뿌려주기 시작 --%>
+ 				<c:forEach var="i" begin="1" end="5">
+				<tr>
+					<th scope="row"><p><c:out value="${i}" /></p></th>
+					<td>2022.02.02</td>
+					<td>업무기안</td>
+					<td>&nbsp;</td>
+					<td>(신규)휴가신청-연차관리연동</td>
+					<td><img src="<%= ctxPath%>/resources/images/disk.gif" style="height: 16px; width: 16px;"></td>
+					<td>20220428-000001</td>
+					<td>반려됨</td>
+				</tr>
+				</c:forEach>
+				<%-- 나중에 forEach문 사용해서 뿌려주기 시작 --%>
+			</tbody>
+		</table>
+		
+		<div class="divClear"></div>
+		
+		<div class="more">
+			<span class="more" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsMydoc_rejected.bts'">전체보기</span>
+		</div>
+		
+		<div class="divClear"></div>
+		<%-- 결재반려 목록이 있을 때 종료 --%>
+		
+		<%-- 결재반려 목록이 없을 때 시작 --%>
+		<div class="divClear"></div>
+		<table class="table table-sm table-light">
+			<tr>
+				<td style="border-top: solid 1px #D3D3D3;">&nbsp;</td>
+			</tr>
+			<tr>
+				<td style="text-align: center; font-size: 12pt;">결재반려 문서가 없습니다.</td>
+			</tr>
+			<tr>
+				<td style="border-bottom: solid 1px #D3D3D3;">&nbsp;</td>
+			</tr>
+		</table>
+		<%-- 결재반려 목록이 없을 때 종료 --%>
+		
+	</div>
+	<!-- 결재반려 문서목록 종료 -->
 	
 	<div class="divClear"></div>

@@ -16,17 +16,15 @@
 <%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
 
 	<div class="edmsHomeTitle">
-		<span class="edms_maintitle">전체문서함</span>
+		<span class="edms_maintitle">대기문서함</span>
 		<p style="margin-bottom: 10px;"></p>
 	</div>
 
 
-	<!-- 전체문서 문서목록 시작 -->
-	<div id="edms_all">
-		<div>
-			<span class="edms_title">전체문서 목록보기</span>
-		</div>
-		
+	<!-- 결재대기 문서목록 시작 -->
+	<div id="edms_wait">
+		<span class="edms_title">결재대기 목록보기</span>
+
 		<div class="dropdown">
 			<button class="btn btn-primart-outline dropdown-toggle" type="button" data-toggle="dropdown"
 					aria-haspopup="true" aria-expanded="false">10개 보기</button>
@@ -36,8 +34,8 @@
 				<a class="dropdown-item" href="#">50개 보기</a>
 			</div>
 		</div>
-		
-		<%-- 전체문서 목록이 있을 때 시작 --%>
+				
+		<%-- 결재대기 목록이 있을 때 시작 --%>
 		<div class="divClear"></div>
 		
 		<table class="table table-sm table-hover table-light">
@@ -71,10 +69,10 @@
 			</tbody>
 		</table>
 		
-		<div class="divClear"></div>		
-		<%-- 전체문서 목록이 있을 때 종료 --%>
+		<div class="divClear"></div>
+		<%-- 결재대기 목록이 있을 때 종료 --%>
 		
-		<%-- 전체문서 목록이 없을 때 시작 --%>
+		<%-- 결재대기 목록이 없을 때 시작 --%>
 		<div class="divClear"></div>
 		<table class="table table-sm table-light">
 			<tr>
@@ -87,13 +85,12 @@
 				<td style="border-bottom: solid 1px #D3D3D3;">&nbsp;</td>
 			</tr>
 		</table>
-		<%-- 전체문서 목록이 없을 때 종료 --%>
-			<div class="divClear"></div>	
+		<%-- 결재대기 목록이 없을 때 종료 --%>
+		<div class="divClear"></div>	
 	</div>
-	<!-- 전체문서 문서목록 종료 -->
+	<!-- 결재대기 문서목록 종료 -->
 	
-	
-		<!-- 페이지바 -->
+	<!-- 페이지바 -->
 	<div class="pagination">
 		<nav aria-label="Page navigation">
 			<ul class="pagination justify-content-center">

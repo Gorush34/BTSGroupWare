@@ -16,16 +16,16 @@
 <%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
 
 	<div class="edmsHomeTitle">
-		<span class="edms_maintitle">전체문서함</span>
+		<span class="edms_maintitle">승인문서함</span>
 		<p style="margin-bottom: 10px;"></p>
 	</div>
 
 
-	<!-- 전체문서 문서목록 시작 -->
-	<div id="edms_all">
-		<div>
-			<span class="edms_title">전체문서 목록보기</span>
-		</div>
+
+	<!-- 결재승인 문서목록 시작 -->
+	<div id="edms_accepted">
+		<span class="edms_title">결재승인 목록보기</span>
+		
 		
 		<div class="dropdown">
 			<button class="btn btn-primart-outline dropdown-toggle" type="button" data-toggle="dropdown"
@@ -37,10 +37,12 @@
 			</div>
 		</div>
 		
-		<%-- 전체문서 목록이 있을 때 시작 --%>
+				
+		<%-- 결재승인 목록이 있을 때 시작 --%>
 		<div class="divClear"></div>
 		
 		<table class="table table-sm table-hover table-light">
+		<!-- <table class="table table-sm table-hover tbl_edms_list" style="background-color: #fff"> -->
 			<thead class="thead-light">
 				<tr>
 					<th scope="col" width="3%">#</th>
@@ -60,40 +62,39 @@
 					<th scope="row"><p><c:out value="${i}" /></p></th>
 					<td>2022.02.02</td>
 					<td>업무기안</td>
-					<td>&nbsp;</td>
+					<td><button id="btn_emergency" class="btn btn-outline-danger" style="height: 100%; line-height: 9pt; font-size: 9pt;">긴급</button></td>
 					<td>(신규)휴가신청-연차관리연동</td>
 					<td><img src="<%= ctxPath%>/resources/images/disk.gif" style="height: 16px; width: 16px;"></td>
 					<td>20220428-000001</td>
-					<td>대기중</td>
+					<td>승인됨</td>
 				</tr>
 				</c:forEach>
 				<%-- 나중에 forEach문 사용해서 뿌려주기 시작 --%>
 			</tbody>
 		</table>
 		
-		<div class="divClear"></div>		
-		<%-- 전체문서 목록이 있을 때 종료 --%>
+		<div class="divClear"></div>
+		<%-- 결재승인 목록이 있을 때 종료 --%>
 		
-		<%-- 전체문서 목록이 없을 때 시작 --%>
+		<%-- 결재승인 목록이 없을 때 시작 --%>
 		<div class="divClear"></div>
 		<table class="table table-sm table-light">
 			<tr>
 				<td style="border-top: solid 1px #D3D3D3;">&nbsp;</td>
 			</tr>
 			<tr>
-				<td style="text-align: center; font-size: 12pt;">대기 중인 문서가 없습니다.</td>
+				<td style="text-align: center; font-size: 12pt;">결재완료 문서가 없습니다.</td>
 			</tr>
 			<tr>
 				<td style="border-bottom: solid 1px #D3D3D3;">&nbsp;</td>
 			</tr>
 		</table>
-		<%-- 전체문서 목록이 없을 때 종료 --%>
-			<div class="divClear"></div>	
+		<%-- 결재승인 목록이 없을 때 종료 --%>
+		
 	</div>
-	<!-- 전체문서 문서목록 종료 -->
+	<!-- 결재승인 문서목록 종료 -->
 	
-	
-		<!-- 페이지바 -->
+	<!-- 페이지바 -->
 	<div class="pagination">
 		<nav aria-label="Page navigation">
 			<ul class="pagination justify-content-center">
