@@ -118,85 +118,87 @@
 			<tr>
 				<td><button class="btn btn-default" id="y_team" style="width:150px; border: solid darkgray 2px;">영업팀</button></td>
 			</tr>
-			<c:forEach var="emp" items="${requestScope.empList_sales}">
+			<c:forEach var="emp" items="${requestScope.empList}">
+			<c:if test="${emp.ko_depname  eq '영업'}">
 			<tr>
 			<td>
 				<div id="y_teamwon">
-						<p style="text-align:center;">${emp.emp_name}<br></p>
+						<p style="text-align:center;">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</p>
 				</div>
 			</td>
 			</tr>
+			</c:if>
 	   		</c:forEach>
 			<tr>
 				<td><button class="btn btn-default" id="m_team" style="width:150px; border: solid darkgray 2px;">마케팅팀</button></td>
 			</tr>
+			<c:forEach var="emp" items="${requestScope.empList}">
+			<c:if test="${emp.ko_depname  eq '마케팅'}">
 			<tr>
 			<td>
 				<div id="m_teamwon">
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
+						<p style="text-align:center;">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</p>
 				</div>
 			</td>
 			</tr>
+			</c:if>
+	   		</c:forEach>
 			<tr>
 				<td><button class="btn btn-default" id="g_team" style="width:150px; border: solid darkgray 2px;">기획팀</button></td>
 			</tr>
+			<c:forEach var="emp" items="${requestScope.empList}">
+			<c:if test="${emp.ko_depname  eq '기획'}">
 			<tr>
 			<td>
 				<div id="g_teamwon">
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
+						<p style="text-align:center;">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</p>
 				</div>
 			</td>
 			</tr>
+			</c:if>
+	   		</c:forEach>
 			<tr>
 				<td><button class="btn btn-default" id="c_team" style="width:150px; border: solid darkgray 2px;">총무팀</button></td>
 			</tr>
+			<c:forEach var="emp" items="${requestScope.empList}">
+			<c:if test="${emp.ko_depname  eq '총무'}">
 			<tr>
 			<td>
 				<div id="c_teamwon">
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
+						<p style="text-align:center;">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</p>
 				</div>
 			</td>
 			</tr>
+			</c:if>
+	   		</c:forEach>
 			<tr>
 				<td><button class="btn btn-default" id="i_team" style="width:150px; border: solid darkgray 2px;">인사팀</button></td>
 			</tr>
+			<c:forEach var="emp" items="${requestScope.empList}">
+			<c:if test="${emp.ko_depname  eq '인사'}">
 			<tr>
 			<td>
 				<div id="i_teamwon">
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
+						<p style="text-align:center;">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</p>
 				</div>
 			</td>
 			</tr>
+			</c:if>
+	   		</c:forEach>
 			<tr>
 				<td><button class="btn btn-default" id="h_team" style="width:150px; border: solid darkgray 2px;">회계팀</button></td>
 			</tr>
+			<c:forEach var="emp" items="${requestScope.empList}">
+			<c:if test="${emp.ko_depname  eq '회계'}">
 			<tr>
 			<td>
 				<div id="h_teamwon">
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
-						<p style="text-align:center;">홍길동 <br>[부장]</p>
+						<p style="text-align:center;">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</p>
 				</div>
 			</td>
 			</tr>
+			</c:if>
+	   		</c:forEach>
 			
   	</table>
   	

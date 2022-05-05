@@ -128,11 +128,9 @@ public class AddBookController {
    @RequestMapping(value="/addBook/addBook_depInfo.bts")
    public ModelAndView addBook_depInfo(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 	   
-	   List<EmployeeVO> empList_sales = service.addBook_depInfo_select_sales();
-	   List<EmployeeVO> empList_marketing = service.addBook_depInfo_select_marketing();
+	   List<EmployeeVO> empList = service.addBook_depInfo_select(); 
 	   
-	   mav.addObject("empList_sales", empList_sales);
-	   mav.addObject("empList_marketing", empList_marketing);
+	   mav.addObject("empList", empList);
 	   
 	   mav.setViewName("addBook_depInfo.addBook");
 	   

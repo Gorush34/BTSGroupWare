@@ -36,26 +36,16 @@
 	
 	
 	<!-- 상세부서정보 페이지 사원목록 불러오기 -->
-	<select id="addBook_depInfo_select_sales" resultType="com.spring.bts.hwanmo.model.EmployeeVO">
+	<select id="addBook_depInfo_select" resultType="com.spring.bts.hwanmo.model.EmployeeVO">
 		select E.emp_name , R.ko_rankname , D.ko_depname , R.pk_rank_no
 		from tbl_EMPLOYEES E
 		join tbl_rank_sort R
 		on E.fk_rank_id = R.pk_rank_no
 		join tbl_dep_sort D
 		on E.fk_department_id = D.pk_dep_no
-		where D.ko_depname = '영업'
 		order by R.pk_rank_no
 	</select>
-	<select id="addBook_depInfo_select_marketing" resultType="com.spring.bts.hwanmo.model.EmployeeVO">
-		select E.emp_name , R.ko_rankname , D.ko_depname , R.pk_rank_no
-		from tbl_EMPLOYEES E
-		join tbl_rank_sort R
-		on E.fk_rank_id = R.pk_rank_no
-		join tbl_dep_sort D
-		on E.fk_department_id = D.pk_dep_no
-		where D.ko_depname = '마케팅'
-		order by R.pk_rank_no
-	</select>
+
 	
 	
 
