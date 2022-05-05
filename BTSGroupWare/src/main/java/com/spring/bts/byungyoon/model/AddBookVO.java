@@ -27,7 +27,8 @@ public class AddBookVO {
 	private String companyname;			// 회사명
 	private String memo;				// 메모사항
 	private String ko_rankname;			// 직급
-	private String company_address;
+	private String ko_depname;			// 부서
+	private String company_address;		// 회사주소
 	
 	
 	
@@ -36,7 +37,7 @@ public class AddBookVO {
 	public AddBookVO(int pk_addbook_no, int fk_emp_no, String fk_dept_no, String fk_rank_no, String addb_name, String com_tel,
 			String postcode, String address, String detailaddress,
 			String referenceaddress, String phone, String email,
-			String photofilepath, String photofilename, String companyname, String memo, String ko_rankname, String company_address, EmployeeVO evo) {
+			String photofilepath, String photofilename, String companyname, String memo, String ko_rankname, String ko_depname, String company_address, EmployeeVO evo) {
 		super();
 		this.evo = evo;
 		
@@ -57,6 +58,7 @@ public class AddBookVO {
 		this.companyname= companyname;
 		this.memo= memo;
 		this.ko_rankname = ko_rankname;
+		this.ko_depname = ko_depname;
 		this.company_address = company_address;
 	}
 
@@ -210,6 +212,14 @@ public class AddBookVO {
 
 	public void setCompany_address(String company_address) {
 		this.company_address = company_address;
+	}
+
+	public String getKo_depname() {
+		return ko_depname;
+	}
+
+	public void setKo_depname(String ko_depname) {
+		this.ko_depname = ko_depname;
 	}
 	
 	

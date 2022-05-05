@@ -10,6 +10,10 @@
 	<select id="mby_test" parameterType="int" resultType="String">
 		select name from mby_test where no = #{no}
 	</select>
+	
+	<select id="mby_rank" parameterType="int" resultType="String">
+		select rank from mby_test where no = #{no}
+	</select>
 
 
 	<!-- 주소록 메인페이지에 select 해오기 -->
@@ -21,6 +25,13 @@
 		join tbl_rank_sort R
 		on R.PK_RANK_NO = E.FK_RANK_ID
 	</select>
+	
+	
+	<!-- 주소록 연락처에 insert 하기 -->
+	<insert id="addBook_insert" parameterType="com.spring.bts.byungyoon.model.AddBookVO" >
+		insert into tbl_ADDBOOK(PK_ADDBOOK_NO, FK_EMP_NO, FK_DEPT_NO, FK_RANK_NO, ADDB_NAME, COMPANYNAME, EMAIL, PHONE, COMPANY_ADDRESS, MEMO)
+		values(#{pk_addbook_no}, #{fk_emp_no}, #{fk_dept_no}, #{fk_rank_no}, '#{addb_name}', '#{companyname}', '#{email}', '#{phone}' , '#{company_address}' , '#{memo}');
+	</insert>
 	
 
 </mapper>

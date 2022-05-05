@@ -80,18 +80,14 @@
 			<td><strong>메모사항</strong></td>
 			<td><input type="text" class="form-control" id="memo" name="memo" placeholder="메모사항" style="width:120%; height: 80px;"></td>
 		</tr>
-		
-		<tr>
-			<td></td>
-			<td colspan="10" style="text-align:center; padding-top: 18%; ">
-				<input type="submit" class="btn btn-info" style="border: solid lightgray 2px;" value="확인" onclick="location.href='http://localhost:9090/bts/addBook/addBook_main.bts'" />
+		</table>
+		</form>
+			<div>
+				<input type="submit" class="btn btn-info" style="border: solid lightgray 2px;" value="확인" onclick="goTelAdd()" />
 				<input type="submit" class="btn btn-info" style="border: solid lightgray 2px;" value="계속 등록" onclick="location.href='http://localhost:9090/bts/addBook/addBook_telAdd.bts'" />
 				<input type="button" class="btn btn-default" style="border: solid lightgray 2px;" value="목록으로 이동" onclick="location.href='http://localhost:9090/bts/addBook/addBook_main.bts'" />
 				<input type="reset" class="btn btn-default" style="border: solid lightgray 2px;" value="취소"  onclick="location.href='http://localhost:9090/bts/addBook/addBook_main.bts'"  />
-			</td>
-		</tr>
-	</table>
-	</form>
+			</div>
 	</div>
 	
 

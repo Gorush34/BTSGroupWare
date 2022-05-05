@@ -28,6 +28,17 @@ public class AddBookService implements InterAddBookService  {
 	//	System.out.println("여기는 서비스");
 		
 		return adbList;
-}
+		
+	}
+
+	// 주소록 연락처에 insert 하기
+	@Override
+	public int addBook_insert(AddBookVO avo) {
+		
+		
+		int n = dao.addBook_insert(avo);
+		
+		return n;
+	}
 	
 }

@@ -14,7 +14,6 @@ public interface InterAddBookService {
 	// 주소록 메인페이지에 select 해오기
 	List<AddBookVO> addBook_select(); 
 	
-	
-	
-	
+	// 주소록 연락처에 insert 하기
+	int addBook_insert(AddBookVO avo);
 }

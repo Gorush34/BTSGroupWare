@@ -31,4 +31,13 @@ public class AddBookDAO implements InterAddBookDAO {
 		
 		return adbList;
 	}
+
+	// 주소록 연락처에 insert 하기
+	@Override
+	public int addBook_insert(AddBookVO avo) {
+		
+		int n = sqlsession.insert("byungyoon.addBook_insert", avo);
+		
+		return n;
+	}
 }
