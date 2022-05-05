@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.bts.byungyoon.model.AddBookVO;
 import com.spring.bts.byungyoon.service.InterAddBookService;
+import com.spring.bts.hwanmo.model.EmployeeVO;
 
 //=== 컨트롤러 선언 === //
 /* 
@@ -30,26 +31,37 @@ public class AddBookController {
 	@Autowired
 	private InterAddBookService service;
    
+	// 주소록 메인페이지에서 주소록검색 ajax 쓰기
+	@RequestMapping(value="/addBook/test.bts", produces = "application/json; charset=utf-8")
+	public Map<String, Object> addBook_test(HttpServletRequest request, HttpServletResponse response, String search) {
+	   
+	   Map<String, Object> testMap = new HashMap<String, Object>();
+	   String a = service.getNameNumber(1);
+	   
+	   testMap.put("search", search);
+	   testMap.put("name", a);
+	   
+	   return testMap;
+	}
+	
+	
    // 주소록 메인페이지
    @RequestMapping(value="/addBook/addBook_main.bts")
    public ModelAndView addBook_main(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
       
-	   List<AddBookVO> adbList = service.addBook_select();
+	   List<AddBookVO> adbList = service.addBook_main_select();
 	   
 	   mav.addObject("adbList", adbList);
 	   
-	//   System.out.println("여기는 컨트롤러");
-	   
 	   mav.setViewName("addBook_main.addBook");
-	   
 	   
       return mav;
    }
    
+   
    // 주소록 연락처 추가 페이지 
    @RequestMapping(value="/addBook/addBook_telAdd.bts")
    public ModelAndView addBook_telAdd(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
-	   
       
 	   mav.setViewName("addBook_telAdd.addBook");
 	   
@@ -57,40 +69,41 @@ public class AddBookController {
    }
    
    
-   // 주소록 연락처 추가 페이지에서 데이터 넣기
+   // 주소록 연락처 추가 페이지에서 데이터 넣기 ( 환모형이랑 상의 후 물어보기)
    @ResponseBody
    @RequestMapping(value="/addBook/addBook_telAdd_insert.bts" , method = {RequestMethod.POST}, produces="text/plain;charset=UTF-8")
    public ModelAndView addBook_telAdd_insert(HttpServletRequest request, ModelAndView mav) {
 	   
 	   
 	   String addb_name = request.getParameter("name");
-	   String companyname = request.getParameter("company");
 	   String ko_depname = request.getParameter("department");
 	   String ko_rankname = request.getParameter("rank");
 	   String email = request.getParameter("email");
 	   String phone = request.getParameter("phone");
+	   String companyname = request.getParameter("company");
 	   String company_address = request.getParameter("company_address");
 	   String memo = request.getParameter("memo");
 	  
 	   AddBookVO avo = new AddBookVO();
 	   
 	   //성공했는지 확인했는지
-	   int result = 0;
+	   int n = 0;
 	   
-	   result = service.addBook_insert(avo);
-	   
-	   if(result == 1) {
-		   //성공
-		  
-	   }else {
-		   //실패
-	   }
+	   n = service.addBook_telAdd_insert(avo);
 	   
 	   String message = "";
-		String loc = "";
-			message = "개발자가 되고싶다";
+	   String loc = "";
+	   
+	   if(n == 1) {
+		   //성공
+		    message = "주소록이 추가가 완료 되었습니다";
 			loc =  request.getContextPath()+"/addBook/addBook_telAdd.bts"; 
-		
+	   }else {
+		   //실패
+		   message = "실패했습니다";
+		   loc =  request.getContextPath()+"/addBook/addBook_telAdd.bts"; 
+	   }
+	   
 		
 		mav.addObject("message", message);
 		mav.addObject("loc", loc);
@@ -99,7 +112,6 @@ public class AddBookController {
       
       return mav;
    }
-   
    
    
    // 상세개인정보 페이지
@@ -116,25 +128,22 @@ public class AddBookController {
    @RequestMapping(value="/addBook/addBook_depInfo.bts")
    public ModelAndView addBook_depInfo(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 	   
+	   List<EmployeeVO> empList_sales = service.addBook_depInfo_select_sales();
+	   List<EmployeeVO> empList_marketing = service.addBook_depInfo_select_marketing();
+	   
+	   mav.addObject("empList_sales", empList_sales);
+	   mav.addObject("empList_marketing", empList_marketing);
+	   
 	   mav.setViewName("addBook_depInfo.addBook");
 	   
 	   return mav;
-
    }
    
    
-   // 주소록 메인페이지 주소록 검색창 ajax
-	@RequestMapping(value="/addBook/test.bts", produces = "application/json; charset=utf-8")
-	public Map<String, Object> addBook_test(HttpServletRequest request, HttpServletResponse response, String search) {
-	   
-	   Map<String, Object> testMap = new HashMap<String, Object>();
-	   String a = service.getNameNumber(1);
-	   
-	   testMap.put("search", search);
-	   testMap.put("name", a);
-	   
-	   return testMap;
-	}
+
+   
+   
+
 	
 	
 	

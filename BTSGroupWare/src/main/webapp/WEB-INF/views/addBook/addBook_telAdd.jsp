@@ -51,16 +51,33 @@
 			<td><input type="text" class="form-control" id="name" name="name" placeholder="이름"></td>
 		</tr>
 		<tr>
-			<td><strong>회사</strong></td>
-			<td><input type="text" class="form-control" id="company" name="company" placeholder="회사"></td>
-		</tr>
-		<tr>
 			<td><strong>부서</strong></td>
-			<td><input type="text" class="form-control" id="department" name="department" placeholder="부서"></td>
+			<td>
+				<select id="department" name="department" class="form-control">
+				  <option selected >--</option>
+				  <option value="1">영업</option>
+				  <option value="2">마케팅</option>
+				  <option value="4">기획</option>
+				  <option value="5">총무</option>
+				  <option value="6">인사</option>
+				  <option value="7">회계</option>
+				</select>
+			</td>
 		</tr>
 		<tr>
 			<td><strong>직위</strong></td>
-			<td><input type="text" class="form-control" id="rank" name="rank" placeholder="직위"></td>
+			<td>
+				<select id="rank" name="rank" class="form-control">
+				  <option selected >--</option>
+				  <option value="1">사원</option>
+				  <option value="2">주임</option>
+				  <option value="4">과장</option>
+				  <option value="5">차장</option>
+				  <option value="6">부장</option>
+				  <option value="7">전무</option>
+				  <option value="8">사장</option>
+				</select>
+			</td>
 		</tr>
 		<tr>
 			<td><strong>이메일</strong></td>
@@ -71,9 +88,13 @@
 			<td><input type="text" class="form-control" id="phone" name="phone" placeholder="휴대폰"></td>
 		</tr>
 		<tr>
+			<td><strong>회사</strong></td>
+			<td><input type="text" class="form-control" id="company" name="company" placeholder="회사"></td>
+		</tr>
+		<tr>
 			
 			<td><strong>회사주소</strong></td>
-			<td><input type="text" class="form-control" id="company_address" name="company_address" placeholder="회사주소" style="width: 110%;"></td>
+			<td><input type="text" class="form-control" id="company_address" name="company_address" placeholder="회사주소" style="width: 120%;"></td>
 			
 		</tr>
 		<tr>
@@ -82,12 +103,13 @@
 		</tr>
 		</table>
 		</form>
-			<div>
+			<div id="buttonmenu">
 				<input type="submit" class="btn btn-info" style="border: solid lightgray 2px;" value="확인" onclick="goTelAdd()" />
 				<input type="submit" class="btn btn-info" style="border: solid lightgray 2px;" value="계속 등록" onclick="location.href='http://localhost:9090/bts/addBook/addBook_telAdd.bts'" />
 				<input type="button" class="btn btn-default" style="border: solid lightgray 2px;" value="목록으로 이동" onclick="location.href='http://localhost:9090/bts/addBook/addBook_main.bts'" />
 				<input type="reset" class="btn btn-default" style="border: solid lightgray 2px;" value="취소"  onclick="location.href='http://localhost:9090/bts/addBook/addBook_main.bts'"  />
 			</div>
+			
 	</div>
 	
 

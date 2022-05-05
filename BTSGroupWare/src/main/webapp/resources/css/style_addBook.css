@@ -61,6 +61,11 @@ body {font-family: 'Noto Sans KR', sans-serif; }
 	    font-weight: bold;
 	}
 	
+	div#buttonmenu {
+		padding-top: 5%;
+		padding-right: 28%;
+	}
+	
 
 /*  addBook_telAdd 끝  */
 
