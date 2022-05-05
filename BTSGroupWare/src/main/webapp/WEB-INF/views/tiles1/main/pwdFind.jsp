@@ -75,7 +75,7 @@
 		
 		
 		
-	}); // $(document).ready(function(){})-------------------------
+	}); // $(document).ready(function(){})------------------------- 
 	
 	// Function Declaration
 	function goFind() {
