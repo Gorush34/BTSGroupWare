@@ -23,13 +23,13 @@ body {font-family: font-family: 'Noto Sans KR', sans-serif; }
 div.calenderbtn{cursor: pointer;}	
 
 
-span#addmyschedual, #addschedual{
+span#addmyschedule, #addschedule{
 	color:#ccc;
 	cursor: pointer;
 }
 	
 
-span#addmyschedual:hover, #addschedual:hover{
+span#addmyschedule:hover, #addschedule:hover{
 	color: #00ace6;
 	font-weight: bold;
 	cursor: pointer;
@@ -213,17 +213,17 @@ input#searchWord{
 
 
 /* 캘린더 등록(일정 등록) 파트 */
-table#schedualRegisterContent > tbody > tr > th  {
+table#scheduleRegisterContent > tbody > tr > th  {
 	padding: 5px;
 	height: 50px;
 	width: 140px;
 }
 
-table#schedualRegisterContent > tbody  div.panel-heading{
+table#scheduleRegisterContent > tbody  div.panel-heading{
 	margin-bottom: 15px;
 }
 
-table#schedualRegisterContent > tbody  table#reservationTable{
+table#scheduleRegisterContent > tbody  table#reservationTable{
 	padding: 30px;
 }
 

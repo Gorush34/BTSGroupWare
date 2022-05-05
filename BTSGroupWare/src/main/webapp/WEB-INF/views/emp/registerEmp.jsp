@@ -581,7 +581,7 @@
 		
 	</table>
 	</form>
-	<div>
+	<div style="padding-left: 200px;">
 		<button class="btn btn-info" id="btn_register" style="border: solid lightgray 2px;" onclick="goRegister();">저장</button>
 		<button class="btn btn-default" id="btn_list" style="border: solid lightgray 2px;">목록으로 이동</button>
 		<button class="btn btn-default" id="btn_cancel" style="border: solid lightgray 2px;">취소</button>
