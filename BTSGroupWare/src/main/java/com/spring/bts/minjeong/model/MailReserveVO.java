@@ -4,9 +4,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class MailReserveVO {
 
-	private String pk_mail_num;                  // NOT NULL NUMBER(14) 메일번호    
-	private String fk_senduser_num;              // NUMBER(8)     		보낸사람 사원번호
-	private String fk_receiveuser_num;           // NUMBER(8)     		받는사람 사원번호
+	private String pk_mail_num;             // NOT NULL NUMBER(14) 메일번호    
+	private String fk_senduser_num;         // NUMBER(8)     		보낸사람 사원번호
+	private String fk_receiveuser_num;      // NUMBER(8)     		받는사람 사원번호
 	private String receiveuser_name;        // VARCHAR2(10)  		받는사람 이름
 	private String subject;                 // VARCHAR2(100) 		메일 제목
 	private String content;                 // VARCHAR2(256) 		메일 내용
@@ -19,7 +19,7 @@ public class MailReserveVO {
 	private String reg_date;                // DATE          		메일쓰기 일자
 	private String reservation_date;        // DATE          		발송예약 날짜
 	private String senduser_del_status;     // NUMBER(2)     		보낸사람 삭제 여부 (1:삭제O, 0:삭제X)
-	private String rcvuser_del_status;          // NUMBER(2)			받는사람 삭제 여부 (1:삭제O, 0:삭제x)
+	private String rcvuser_del_status;      // NUMBER(2)			받는사람 삭제 여부 (1:삭제O, 0:삭제x)
 	
 	// 메일 상세내용 보기
 	private String prev_seq;		// 이전글번호
