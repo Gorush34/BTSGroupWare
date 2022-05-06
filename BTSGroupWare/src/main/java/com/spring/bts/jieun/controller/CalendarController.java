@@ -10,7 +10,6 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -129,7 +128,7 @@ public class CalendarController {
 		}
 		
 		
-		// === 내 캘린더에서 내캘린더 소분류 보여주기  === //
+		// === 사내 캘린더에서 사내캘린더 소분류 보여주기  === //
 		@ResponseBody
 		@RequestMapping(value="/calendar/showCompanyCalendar.bts", method= {RequestMethod.GET}, produces="text/plain;charset=UTF-8")
 		public String showCompanyCalendar() {
@@ -149,6 +148,52 @@ public class CalendarController {
 			
 			return jsonArr.toString();
 		}
+		
+			
+		// === 내 캘린더에 내 캘린더 소분류 추가하기 === //
+		@ResponseBody
+		@RequestMapping(value="/calendar/addMyCalendar.bts", method= {RequestMethod.POST})
+		public String addMyCalendar(HttpServletRequest request) throws Throwable {
+			
+			String addMy_calname  = request.getParameter("addMy_calname");
+			String fk_emp_no = request.getParameter("fk_emp_no");
+			
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("addMy_calname", addMy_calname);
+			paraMap.put("fk_emp_no", fk_emp_no);
+			
+			int n = service.addMyCalendar(paraMap);
+			
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("n", n);
+			
+			return jsonObj.toString();
+		}
+		
+		
+		// === 내 캘린더에서 내캘린더 소분류 보여주기  === //
+		@ResponseBody
+		@RequestMapping(value="/calendar/showMyCalendar.bts", method= {RequestMethod.GET}, produces="text/plain;charset=UTF-8")
+		public String showMyCalendar(HttpServletRequest request) {
+			
+			String fk_emp_no = request.getParameter("fk_emp_no");
+			
+			List<CalendarVO> myCalList = service.showMyCalendar(fk_emp_no);
+			
+			JSONArray jsonArr = new JSONArray();
+			
+			if(myCalList != null) {
+				for(CalendarVO cavo : myCalList) {
+					JSONObject jsonObj = new JSONObject();
+					jsonObj.put("pk_calno", cavo.getPk_calno());
+					jsonObj.put("calname", cavo.getCalname());
+					jsonArr.put(jsonObj);
+				}
+			}
+			
+			return jsonArr.toString();
+		}
+		
 		
 		
 		// === 서브 캘린더 가져오기 === //
@@ -178,6 +223,9 @@ public class CalendarController {
 			
 			return jsArr.toString();
 		}
+		
+		
+	
 		
 		
 		// === 참석자 추가하기 === //
