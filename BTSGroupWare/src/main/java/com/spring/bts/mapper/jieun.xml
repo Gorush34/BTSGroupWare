@@ -16,6 +16,12 @@
 		order by pk_calno asc
 	</select>
 
+	<!-- 사내 캘린더에 사내 캘린더 소분류 추가하기  -->
+	<insert id="addComCalendar" parameterType="HashMap">
+		insert into tbl_calendar(pk_calno, fk_lgcatgono, calname, fk_emp_no)
+		values (seq_calno.nextval, 2, #{addCom_calname}, #{fk_emp_no})
+	</insert>
+
 	<!-- 일정등록 하기  -->
 	<insert id="scheduleRegisterInsert" parameterType="HashMap">
 		insert into tbl_schedule(pk_schno, fk_emp_no, fk_calno, subject, startdate, enddate, content, color, place, joinuser, fk_lgcatgono)

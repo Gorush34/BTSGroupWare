@@ -37,6 +37,13 @@ public class CalendarService implements InterCalendarService {
 		return n;
 	}
 
+	// === 사내 캘린더에 사내 캘린더 소분류 추가하기 === //
+	@Override
+	public int addComCalendar(Map<String, String> paraMap) {
+		int n = dao.addComCalendar(paraMap);
+		return n;
+	}
+
 	
 	
 	// ======== ***** 파이널 옮기기 시작 ***** ======== //
