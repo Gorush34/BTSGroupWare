@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -106,6 +107,49 @@ public class CalendarController {
 			
 			return mav;
 		}
+		
+		// === 사내 캘린더에 사내 캘린더 소분류 추가하기 === //
+		@ResponseBody
+		@RequestMapping(value="/calendar/addComCalendar.bts", method= {RequestMethod.POST})
+		public String addComCalendar(HttpServletRequest request) throws Throwable {
+			
+			String addCom_calname  = request.getParameter("addCom_calname");
+			String fk_emp_no = request.getParameter("fk_emp_no");
+			
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("addCom_calname", addCom_calname);
+			paraMap.put("fk_emp_no", fk_emp_no);
+			
+			int n = service.addComCalendar(paraMap);
+			
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("n", n);
+			
+			return jsonObj.toString();
+		}
+		
+		
+		// === 내 캘린더에서 내캘린더 소분류 보여주기  === //
+		@ResponseBody
+		@RequestMapping(value="/calendar/showCompanyCalendar.bts", method= {RequestMethod.GET}, produces="text/plain;charset=UTF-8")
+		public String showCompanyCalendar() {
+			
+			List<CalendarVO> companyCalList = service.showCompanyCalendar();
+			
+			JSONArray jsonArr = new JSONArray();
+			
+			if(companyCalList != null) {
+				for(CalendarVO cavo : companyCalList) {
+					JSONObject jsonObj = new JSONObject();
+					jsonObj.put("pk_calno", cavo.getPk_calno());
+					jsonObj.put("calname", cavo.getCalname());
+					jsonArr.put(jsonObj);
+				}
+			}
+			
+			return jsonArr.toString();
+		}
+		
 		
 		// === 서브 캘린더 가져오기 === //
 		@ResponseBody
