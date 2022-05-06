@@ -16,13 +16,16 @@ public interface InterCalendarService {
 	// === 사내 캘린더에 사내 캘린더 소분류 추가하기 === //
 	int addComCalendar(Map<String, String> paraMap);
 
-	// === 내 캘린더에서 내캘린더 소분류 보여주기  === //
+	// === 사내 캘린더에서 사내캘린더 소분류 보여주기  === //
 	List<CalendarVO> showCompanyCalendar();
+
+	// === 내 캘린더에 내 캘린더 소분류 추가하기 === //
+	int addMyCalendar(Map<String, String> paraMap);
+
+	// === 내 캘린더에서 내캘린더 소분류 보여주기  === //
+	List<CalendarVO> showMyCalendar(String fk_emp_no);
 
 	
 
-	// ======== ***** 파이널 옮기기 시작 ***** ======== //
-		// === 일정 체크 박스 추가 === //
-		//int addCalenderName(CalenderVO calendervo); 
 	
 }
