@@ -2,12 +2,12 @@ package com.spring.bts.minjeong.model;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class MailVO {
-
-	// 메일 VO
+public class MailRecyclebinVO {
+	
+	// 메일 휴지통 VO
 	private String pk_mail_num;             // NOT NULL NUMBER(14) 메일번호    
 	private String fk_senduser_num;         // NUMBER(8)     		보낸사람 사원번호
-	private String fk_receiveuser_num;     	// NUMBER(8)     		받는사람 사원번호
+	private String fk_receiveuser_num;      // NUMBER(8)     		받는사람 사원번호
 	private String receiveuser_name;        // VARCHAR2(10)  		받는사람 이름
 	private String subject;                 // VARCHAR2(100) 		메일 제목
 	private String content;                 // VARCHAR2(256) 		메일 내용
@@ -33,13 +33,14 @@ public class MailVO {
 	// form 태그에서 type="file" 인 파일을 받아서 저장되는 필드이다. 
     // 진짜파일 ==> WAS(톰캣) 디스크에 저장됨.
 	
-	public MailVO() {}
+	public MailRecyclebinVO() {}
 	
 	
 	// 생성자
-	public MailVO(String pk_mail_num, String fk_senduser_num, String fk_receiveuser_num, String receiveuser_name,
+	public MailRecyclebinVO(String pk_mail_num, String fk_senduser_num, String fk_receiveuser_num, String receiveuser_name,
 			String subject, String content, String importance, String reservation_status, String read_status,
 			String reg_date, String reservation_date, String senduser_del_status, String rcvuser_del_status) {
+		
 		super();
 		this.pk_mail_num = pk_mail_num;
 		this.fk_senduser_num = fk_senduser_num;
@@ -227,6 +228,5 @@ public class MailVO {
 	}	
 	
 		
-	
 	
 }

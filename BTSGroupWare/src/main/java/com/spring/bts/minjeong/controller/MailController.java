@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.bts.hwanmo.model.EmployeeVO;
@@ -41,7 +43,7 @@ public class MailController {
 	 * type (FileManager) 만 맞으면 다 주입해준다.
 	 */	
 	
-	// 메일 쓰기 폼페이지 요청
+	// 메일 쓰기 폼페이지 요청 (추후 로그인 AOP 추가 requiredLogin_) 
 	@RequestMapping(value = "/mail/mailWrite.bts", produces = "text/plain; charset=UTF-8")	
 	public ModelAndView mailWrite(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		/*
@@ -55,6 +57,25 @@ public class MailController {
 		
 		return mav;
 	}
+	
+	// 메일 쓰기 완료 페이지 요청
+	@RequestMapping(value = "/mail/mailWriteEnd.bts", method= {RequestMethod.POST})	
+	public String mailWriteEnd(MultipartHttpServletRequest mrequest) {
+
+		// form 태그로 보낸 정보들을 받아오자.
+		// 받는사원번호 및 사원명이 여러명이므로 배열로 받아온다.
+		
+		
+		
+		
+		// 성공 시 보낸 쪽지함으로 이동
+		
+		// 실패 시 메일쓰기로 이동 (back)
+		
+		return "";
+	}	
+	
+	
 	
 	
 	// 받은메일함 목록 보기 페이지 요청 (페이징 처리 및 검색기능 포함)

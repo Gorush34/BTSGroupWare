@@ -81,17 +81,23 @@
 		        	obj.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
 		      	 <%-- === 스마트 에디터 구현 끝 === --%>		      	 
 		      	
+		    // 	  alert("클릭 확인");
+		      	 
 		      	 // 받는사람 유효성 검사
-		      	 
-		      	 
+		      	 var fk_receiveuser_num = $("input#fk_receiveuser_num").val().trim();
+		      	 if(fk_receiveuser_num == "") {
+		      		 alert("받는 사람을 입력해주세요.");
+		      		 return false;
+		      	 }
 		      	 
 		      	 // 메일제목 유효성 검사
+		      	 var subject = $("input#subject").val().trim();
+		      	 if(subject == "") {
+		      		 alert("제목을 입력해주세요.");
+		      		 return false;
+		      	 }
 		      	 
-		      	 
-		      	 
-		      	 // 메일내용 유효성 검사
-		      	 
-		      	 
+		      	 // 메일내용 유효성 검사 (스마트 에디터)
 		 		<%-- === 스마트에디터 구현 시작 === --%>
 		        //스마트에디터 사용시 무의미하게 생기는 p태그 제거
 		         var contentval = $("textarea#content").val();
@@ -126,6 +132,24 @@
 		          // alert(contentval);
 		      	<%-- === 스마트에디터 구현 끝 === --%>	      	 
 		      	 
+		      	// 중요 체크박스에 체크되어있는지 확인
+		      	var importanceVal = 0;
+		      	if($("input[name=importance]").prop("checked")) {
+		      		// 중요 체크박스에 체크되어 있을 때 중요메일함에 들어가도록 하기
+		      		importanceVal = 1;
+		      	}
+		 
+		      	var frm = document.mailWriteFrm;
+		      	frm.importanceVal.value = importanceVal;
+		      	frm.method = "POST";
+		      	frm.action = "<%= ctxPath%>/mail/mailWriteEnd.bts";
+		    //  frm.submit();
+		      	
+		   	//	console.log(frm);		// form 태그 전체
+		   	//	console.log(frm.importanceVal.value);	// 체크 안했을 때 0
+		   	//	console.log(frm.method); 	// post
+		  		
+		   
 			});
 	       
 	   
@@ -202,19 +226,20 @@
 			<tr>
 				<th width="14%">
 					<span style="margin-right: 40px;">제목</span>
-					<input type="checkbox" checked="checked" />&nbsp;&nbsp;중요!
+					<c:if test="${not empty mailTempvo && mailTempvo.importance == 1}">
+						<input type="checkbox" checked="checked" id="importance" name="importance" />&nbsp;&nbsp;중요!
+					</c:if>
+						<input type="checkbox" id="importance" name="importance" />&nbsp;&nbsp;중요!
+						<input type="hidden" id="importanceVal" name="importanceVal" />&nbsp;&nbsp;중요!
 				</th>
 				<td width="110%" >
-					<input type="text" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; display: inline-block;" />
+					<input type="text" id="subject" name="subject" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; display: inline-block;" />
 				</td>
 			</tr>		
 			<tr>
 				<th width="14%">파일첨부</th>
 				<td width="86%" style="padding-top: 9px">
 					<input type="file" name="mail_attach" id="mail_file_upload" style="width: 30%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 0px solid gray;" />
-			<!--	<label for="mail_file_upload">		
-			 		<i class="fa fa-file-o"></i>&nbsp;파일선택</label>
-					<input class="upload-name" disabled="disabled" style="border-radius: 3px;" /> -->
 				</td>
 			</tr>			
 		</table>	
