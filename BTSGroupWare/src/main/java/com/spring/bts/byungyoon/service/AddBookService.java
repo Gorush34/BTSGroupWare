@@ -38,7 +38,10 @@ public class AddBookService implements InterAddBookService  {
 	@Override
 	public int addBook_telAdd_insert(AddBookVO avo) {
 		
+		System.out.println("service 단" + avo.getAddb_name());
+		
 		int n = dao.addBook_telAdd_insert(avo);
+		
 		
 		return n;
 	}

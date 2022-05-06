@@ -113,8 +113,7 @@
   <!-- 부서원 목록  -->
   <div class="tab-pane fade" id="depInfo">
   
-	  <table style="float:left;">
-	  
+	  <table style="float:left; text-align:center;">
 			<tr>
 				<td><button class="btn btn-default" id="y_team" style="width:150px; border: solid darkgray 2px;">영업팀</button></td>
 			</tr>
@@ -123,7 +122,7 @@
 			<tr>
 			<td>
 				<div id="y_teamwon">
-						<p style="text-align:center;">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</p>
+					<button class="btn btn-default">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
 				</div>
 			</td>
 			</tr>
@@ -137,7 +136,7 @@
 			<tr>
 			<td>
 				<div id="m_teamwon">
-						<p style="text-align:center;">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</p>
+					<button class="btn btn-default">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
 				</div>
 			</td>
 			</tr>
@@ -151,7 +150,7 @@
 			<tr>
 			<td>
 				<div id="g_teamwon">
-						<p style="text-align:center;">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</p>
+					<button class="btn btn-default">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
 				</div>
 			</td>
 			</tr>
@@ -165,7 +164,7 @@
 			<tr>
 			<td>
 				<div id="c_teamwon">
-						<p style="text-align:center;">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</p>
+					<button class="btn btn-default">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
 				</div>
 			</td>
 			</tr>
@@ -179,7 +178,7 @@
 			<tr>
 			<td>
 				<div id="i_teamwon">
-						<p style="text-align:center;">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</p>
+					<button class="btn btn-default">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
 				</div>
 			</td>
 			</tr>
@@ -193,7 +192,7 @@
 			<tr>
 			<td>
 				<div id="h_teamwon">
-						<p style="text-align:center;">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</p>
+					<button class="btn btn-default">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
 				</div>
 			</td>
 			</tr>

@@ -39,7 +39,11 @@ public class AddBookDAO implements InterAddBookDAO {
 	@Override
 	public int addBook_telAdd_insert(AddBookVO avo) {
 		
+		System.out.println("dao 단" + avo.getAddb_name());
+		
 		int n = sqlsession.insert("byungyoon.addBook_telAdd_insert", avo);
+		
+		
 		
 		return n;
 	}

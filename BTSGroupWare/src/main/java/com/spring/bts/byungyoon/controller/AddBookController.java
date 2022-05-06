@@ -75,32 +75,54 @@ public class AddBookController {
    public ModelAndView addBook_telAdd_insert(HttpServletRequest request, ModelAndView mav) {
 	   
 	   
-	   String addb_name = request.getParameter("name");
-	   String ko_depname = request.getParameter("department");
-	   String ko_rankname = request.getParameter("rank");
+	   String addb_name = request.getParameter("addb_name");
+	   int fk_dept_no = Integer.parseInt(request.getParameter("department"));
+	   int fk_rank_no = Integer.parseInt(request.getParameter("rank"));
 	   String email = request.getParameter("email");
 	   String phone = request.getParameter("phone");
 	   String companyname = request.getParameter("company");
+	   String com_tel = request.getParameter("com_tel");
 	   String company_address = request.getParameter("company_address");
 	   String memo = request.getParameter("memo");
-	  
+	   
+	   System.out.println("addb_name : " + addb_name);
+	   System.out.println("fk_dept_no : " + fk_dept_no);
+	   System.out.println("fk_rank_no : " + fk_rank_no);
+	   System.out.println("email : " + email);
+	   System.out.println("phone : " + phone);
+	   System.out.println("companyname : " + companyname);
+	   System.out.println("com_tel : " + com_tel);
+	   System.out.println("company_address : " + company_address);
+	   System.out.println("memo : " + memo);
+	   
 	   AddBookVO avo = new AddBookVO();
 	   
-	   //성공했는지 확인했는지
-	   int n = 0;
+	   avo.setAddb_name(addb_name);
+	   avo.setFk_dept_no(fk_dept_no);
+	   avo.setFk_rank_no(fk_rank_no);
+	   avo.setEmail(email);
+	   avo.setPhone(phone);
+	   avo.setCompanyname(companyname);
+	   avo.setCom_tel(com_tel);
+	   avo.setCompany_address(company_address);
+	   avo.setMemo(memo);
 	   
-	   n = service.addBook_telAdd_insert(avo);
+	   
+	   
+	   //성공했는지 확인했는지
+	   
+	   int n = service.addBook_telAdd_insert(avo);
 	   
 	   String message = "";
 	   String loc = "";
 	   
 	   if(n == 1) {
 		   //성공
-		    message = "주소록이 추가가 완료 되었습니다";
+		    message = "주소록에 연락처 추가가 완료 되었습니다";
 			loc =  request.getContextPath()+"/addBook/addBook_telAdd.bts"; 
 	   }else {
 		   //실패
-		   message = "실패했습니다";
+		   message = "주소록에 연락처 추가가 실패했습니다";
 		   loc =  request.getContextPath()+"/addBook/addBook_telAdd.bts"; 
 	   }
 	   

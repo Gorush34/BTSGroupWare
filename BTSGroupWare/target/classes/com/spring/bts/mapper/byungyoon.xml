@@ -20,18 +20,16 @@
 	<!-- 주소록 메인페이지에 select 해오기 -->
 	<select id="addBook_main_select"  resultType="com.spring.bts.byungyoon.model.AddBookVO">
 		select A.addb_name , R.ko_rankname, A.phone AS phone, A.email AS email, A.companyname, A.com_tel
-		from tbl_EMPLOYEES E 
-		join tbl_ADDBOOK A 
-		on E.EMP_NAME = A.ADDB_NAME
+		from tbl_ADDBOOK A 
 		join tbl_rank_sort R
-		on R.PK_RANK_NO = E.FK_RANK_ID
+		on R.PK_RANK_NO = A.fk_rank_no
 	</select>
 	
 	
 	<!-- 주소록 연락처에 insert 하기 -->
 	<insert id="addBook_telAdd_insert" parameterType="com.spring.bts.byungyoon.model.AddBookVO" >
-	<!-- insert into tbl_ADDBOOK(PK_ADDBOOK_NO, FK_EMP_NO, FK_DEPT_NO, FK_RANK_NO, ADDB_NAME, COMPANYNAME, EMAIL, PHONE, COMPANY_ADDRESS, MEMO)
-		values(#{pk_addbook_no}, #{fk_emp_no}, #{fk_dept_no}, #{fk_rank_no}, '#{addb_name}', '#{companyname}', '#{email}', '#{phone}' , '#{company_address}' , '#{memo}') -->
+		insert into tbl_ADDBOOK(PK_ADDBOOK_NO, FK_DEPT_NO, FK_RANK_NO, ADDB_NAME, COM_TEL, POSTCODE, ADDRESS, DETAILADDRESS, REFERENCEADDRESS, PHONE, EMAIL, PHOTOFILEPATH, PHOTOFILENAME, COMPANYNAME, MEMO, COMPANY_ADDRESS, KO_RANKNAME, KO_DEPNAME, FK_EMP_NO  )
+		values( addbook_seq.nextval , #{fk_dept_no} ,#{fk_rank_no} , #{addb_name} ,#{com_tel} ,default ,default ,default ,default ,#{phone} ,#{email} ,default ,default ,#{companyname} ,#{memo} ,#{company_address} ,default ,default, default  ) 
 	</insert>
 	
 	
