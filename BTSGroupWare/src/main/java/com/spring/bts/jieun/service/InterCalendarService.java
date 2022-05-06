@@ -16,6 +16,9 @@ public interface InterCalendarService {
 	// === 사내 캘린더에 사내 캘린더 소분류 추가하기 === //
 	int addComCalendar(Map<String, String> paraMap);
 
+	// === 내 캘린더에서 내캘린더 소분류 보여주기  === //
+	List<CalendarVO> showCompanyCalendar();
+
 	
 
 	// ======== ***** 파이널 옮기기 시작 ***** ======== //

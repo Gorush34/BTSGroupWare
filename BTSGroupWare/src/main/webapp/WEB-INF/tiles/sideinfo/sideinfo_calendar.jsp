@@ -18,6 +18,10 @@
 
 	$(document).ready(function(){
 		
+		// === 사내 캘린더에 사내캘린더 소분류 보여주기 ===
+		showCompanyCal();
+
+		
 		// 캘린더 클릭시 일정 체크 박스 보이기, 숨기기
 	//	$("div.slideTogglebox").hide();
 		
@@ -58,7 +62,7 @@
 		
 	 	else {
 	 		 $.ajax({
-	 			 url: "<%= ctxPath%>/schedule/addComCalendar.bts",
+	 			 url: "<%= ctxPath%>/calendar/addComCalendar.bts",
 	 			 type: "post",
 	 			 data: {"addCom_calname": $("input.addCom_calname").val(), 
 	 				    "fk_emp_no": "${sessionScope.loginuser.pk_emp_no}"},
@@ -87,20 +91,41 @@
 	// === 내 캘린더에서 내캘린더 소분류 보여주기  === //
 	function showCompanyCal(){
 		$.ajax({
-			url:"<%= ctxPath%>/calendar/showshowCompanyCalendar.bts",
+			url:"<%= ctxPath%>/calendar/showCompanyCalendar.bts",
 			type:"get",
 			dataType:"json",
 			success:function(json){
+				
 				var html = "";
 				
-				if(json.length>0){
+				if(json.length > 0){
 					
+					html += "<table style='margin: 0 20px;'>";
+					html += "<tbody>";
+					$.each(json, function(index, item){
+					
+						html += "<tr id='schecheck'>";
+						html += "<td style='width:110%;'><input type='checkbox' name='com_calno' class='calendar_checkbox com_calno' value='"+item.pk_calno+"' id='com_calno_'"+index+"' checked />&nbsp;&nbsp;<label for='com_calno_'"+index+"'>"+item.calname+"</label></td>";
+					
+						if("${sessionScope.loginuser.gradelevel}" =='1') {
+							 html += "<td style='width:20%; vertical-align: text-top; text-align: right;'><button class='btn_edit' style='background-color: #fff; border: none; outline:none;' data-target='editCal' onclick='editComCalendar("+item.pk_calno+",\""+item.calname+"\")'><i class='fas fa-edit'></i></button></td>";  
+							 html += "<td style='width:20%; vertical-align: text-top; text-align: right;'><button class='btn_edit delCal' style='background-color: #fff; border: none;' onclick='delCalendar("+item.pk_calno+",\""+item.calname+"\")'><i class='fas fa-trash'></i></button></td>";
+						 }
+						
+						html += "</tr>";
+					});
+					html += "</tbody>";
+					html += "</table>";
 				}
-			},error: function(request, status, error){
+				
+				$("div#companyCal").html(html);
+				
+			},
+			error: function(request, status, error){
   	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
    	     	}	
 		});
-	}
+	}// end of function showCompanyCal()------------------
 	
 	
 </script>
@@ -117,7 +142,7 @@
 					<div id="calenderbtn1" class="calenderbtn">사내 캘린더</div>
 						<div id="slideTogglebox1"  class="slideTogglebox">
 							<%-- 사내 캘린더를 보여주는 곳 --%>
-							<div id="companyCal" style="margin-left: 50px; margin-bottom: 10px;"></div>			
+							<div id="companyCal" style="margin-bottom: 10px;"></div>			
 						</div>
 						<%-- 사내 캘린더 추가를 할 수 있는 직원은 직위코드가 3 이면서 부서코드가 4 에 근무하는 사원이 로그인 한 경우에만 가능하도록 조건을 걸어둔다.  	
 	     				<c:if test="${sessionScope.loginuser.fk_pcode =='3' && sessionScope.loginuser.fk_dcode == '4' }"> --%>
@@ -128,7 +153,8 @@
 				</li>
 				<li style="margin-bottom: 15px;">
 					<div id="calenderbtn2" class="calenderbtn">관심 캘린더</div>
-						<div id="slideTogglebox2"  class="slideTogglebox">	
+						<div id="slideTogglebox2"  class="slideTogglebox">
+						<div>	
 							<table style="margin: 0 20px;">
 								<tbody>
 									<tr id="schecheck">
@@ -141,7 +167,7 @@
 				   				</tbody>	
 			   				</table>				
 						</div>
-						
+						</div>
 						<span id="addschedule" onclick="">&nbsp;&nbsp;+ 내 캘린더 추가</span>		
 				</li>
 			</ul>

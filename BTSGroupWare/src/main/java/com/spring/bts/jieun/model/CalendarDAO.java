@@ -53,6 +53,14 @@ public class CalendarDAO implements InterCalendarDAO {
 		int n = sqlsession.insert("jieun.addComCalendar", paraMap);
 		return n;
 	}
+
+	// === 사내 캘린더에 사내 캘린더 소분류 보여주기 === //
+	@Override
+	public List<CalendarVO> showCompanyCalendar() {
+		List<CalendarVO> companyCalList = sqlsession.selectList("jieun.showCompanyCalendar");
+		return companyCalList;
+	}
+	
 	
 
 	// ======== ***** 파이널 옮기기 시작 ***** ======== //
