@@ -124,7 +124,7 @@
               </a>  
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item" href="#">나의정보</a>
-                  <a class="dropdown-item" href="<%=ctxPath%>/emp/registerEmp.bts">관리자 페이지</a>
+                  <a class="dropdown-item" href="<%=ctxPath%>/emp/registerEmp.bts">사원등록</a>
                   <a class="dropdown-item" href="<%=ctxPath%>/logout.bts">로그아웃</a>
               </div>
             </li>
