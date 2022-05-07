@@ -21,17 +21,17 @@ public class AttendanceDAO implements InterAttendanceDAO {
 	   
 	   //     3. @Inject    ==> Java 에서 지원하는 어노테이션이다.
 	    //                       스프링 컨테이너에 담겨진 의존객체를 주입할때 타입을 찾아서 연결(의존객체주입)한다.   
-	
-	/*
-	@Resource
-	private SqlSessionTemplate sqlsession; // 로컬DB mymvc_user 에 연결
-	// Type 에 따라 Spring 컨테이너가 알아서 root-context.xml 에 생성된 org.mybatis.spring.SqlSessionTemplate 의  sqlsession bean 을  sqlsession 에 주입시켜준다. 
-	// 그러므로 sqlsession 는 null 이 아니다.
-	*/
 
 	@Autowired
 	private SqlSessionTemplate sqlsession;
 	// Type 에 따라 Spring 컨테이너가 알아서 root-context.xml 에 생성된 org.mybatis.spring.SqlSessionTemplate 의 bean 을  sqlsession 에 주입시켜준다. 
 	// 그러므로 sqlsession 는 null 이 아니다. 이름 맘대로해도됨
+
+	// 가입과 동시에 연차테이블 등록하기
+	@Override
+	public int registerLeave(int pk_emp_no) {
+		int m = sqlsession.insert("hwanmo.registerLeave", pk_emp_no);
+		return m;
+	}
 	
 }
