@@ -30,7 +30,7 @@ public class AddBookController {
 
 	@Autowired
 	private InterAddBookService service;
-   
+ /*  
 	// 주소록 메인페이지에서 주소록검색 ajax 쓰기
 	@RequestMapping(value="/addBook/test.bts", produces = "application/json; charset=utf-8")
 	public Map<String, Object> addBook_test(HttpServletRequest request, HttpServletResponse response, String search) {
@@ -41,10 +41,12 @@ public class AddBookController {
 	   testMap.put("search", search);
 	   testMap.put("name", a);
 	   
+	   System.out.println(search);
+	   System.out.println(a);
 	   
 	   return testMap;
 	}
-	
+*/	
 	
    // 주소록 메인페이지
    @RequestMapping(value="/addBook/addBook_main.bts")
@@ -148,13 +150,16 @@ public class AddBookController {
    }
    
    // 상세부서정보 페이지에서 사원상세정보 ajax로 select 해오기
-	@RequestMapping(value="/addBook/addBook_depInfo_ajax.bts", produces = "application/json; charset=utf-8")
-	public Map<String, Object> addBook_test(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	@RequestMapping(value="/addBook/addBook_depInfo_select_ajax.bts", produces = "application/json; charset=utf-8")
+	public String addBook_depInfo_selectAjax(HttpServletRequest request, HttpServletResponse response) {
 	   
-	   Map<String, Object> testMap = new HashMap<String, Object>();
+	   String pk_emp_no = request.getParameter("pk_emp_no");
+	   
+	   List<EmployeeVO> empList = service.addBook_depInfo_select(); 
 	   
 	   
-	   return testMap;
+	   
+	   return "";
 	}
    
    

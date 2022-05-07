@@ -40,10 +40,28 @@
 	  $( "button#h_team" ).click( function() {
 	    $( "div#h_teamwon" ).slideToggle();
 	  });
-			
 	  
 	}); // end of $( document ).ready( function()
 
+			
+	function teamwonInfo(i)	{
+		$.ajax({
+			url:"<%= ctxPath%>/addBook/addBook_depInfo_select_ajax.bts",
+			data:{"pk_emp_no" : $("input#pk_emp_no_"+i).val()},
+			type: "post",
+			dataType: 'json',
+			success : function(json) {
+				
+			},
+			error: function(request){
+				
+			}
+		});
+	}	
+			
+			
+			
+			
 </script>
 
 <style type="text/css">
@@ -117,15 +135,14 @@
 			<tr>
 				<td><button class="btn btn-default" id="y_team" style="width:150px; border: solid darkgray 2px;">영업팀</button></td>
 			</tr>
-			<c:forEach var="emp" items="${requestScope.empList}">
+			<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
 			<c:if test="${emp.ko_depname  eq '영업'}">
 			<tr>
 			<td>
-				<form action=>
 				<div id="y_teamwon">
-					<button class="btn btn-default">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
+					<input type="text" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly />
+					<button class="btn btn-default" onclick="teamwonInfo(${i.count})" >${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
 				</div>
-				</form>
 			</td>
 			</tr>
 			</c:if>
@@ -138,7 +155,8 @@
 			<tr>
 			<td>
 				<div id="m_teamwon">
-					<button class="btn btn-default">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
+					<input type="text" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly />
+					<button class="btn btn-default" onclick="teamwonInfo(${i.count})" >${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
 				</div>
 			</td>
 			</tr>
@@ -152,7 +170,8 @@
 			<tr>
 			<td>
 				<div id="g_teamwon">
-					<button class="btn btn-default">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
+					<input type="text" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly />
+					<button class="btn btn-default" onclick="teamwonInfo(${i.count})" >${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
 				</div>
 			</td>
 			</tr>
@@ -166,7 +185,8 @@
 			<tr>
 			<td>
 				<div id="c_teamwon">
-					<button class="btn btn-default">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
+					<input type="text" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly />
+					<button class="btn btn-default" onclick="teamwonInfo(${i.count})" >${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
 				</div>
 			</td>
 			</tr>
@@ -180,7 +200,8 @@
 			<tr>
 			<td>
 				<div id="i_teamwon">
-					<button class="btn btn-default">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
+					<input type="text" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly />
+					<button class="btn btn-default" onclick="teamwonInfo(${i.count})" >${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
 				</div>
 			</td>
 			</tr>
@@ -194,7 +215,8 @@
 			<tr>
 			<td>
 				<div id="h_teamwon">
-					<button class="btn btn-default">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
+					<input type="text" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly />
+					<button class="btn btn-default" onclick="teamwonInfo(${i.count})" >${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
 				</div>
 			</td>
 			</tr>

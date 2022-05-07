@@ -837,7 +837,6 @@ public class BoardController {
 			String fk_seq = request.getParameter("fk_seq");
 			// 글 수정해야할 글1개 내용 가져오기 
 
-
 			
 			Map<String, String> paraMap = new HashMap<>();
 			paraMap.put("pk_seq", pk_seq);
