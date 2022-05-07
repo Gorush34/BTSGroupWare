@@ -26,7 +26,6 @@
 	<div id="edms_accepted">
 		<span class="edms_title">결재승인 목록보기</span>
 		
-		
 		<div class="dropdown">
 			<button class="btn btn-primart-outline dropdown-toggle" type="button" data-toggle="dropdown"
 					aria-haspopup="true" aria-expanded="false">10개 보기</button>
