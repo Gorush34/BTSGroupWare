@@ -105,7 +105,7 @@
 		
 		
 		// == 참석자 추가 하기 == //
-		$("input#joinUserName").bind("keyup", function(){
+		<%--$("input#joinUserName").bind("keyup", function(){
 			var joinUserName = $(this).val();
 			
 			$.ajax({
@@ -115,12 +115,14 @@
 				success:function(json){
 					var joinUserArr = [];
 					
-					if(json.length > 0)
+					if(json.length > 0){
+						
+					}
 					
 				}// end of success----------------------------------
 			});
 		});// end of $("input#joinUserName").bind("keyup", function(){}-----------------------------
-		
+		--%>
 		
 		// ====== >>> *** 일정등록하기 시작 *** <<< ====== //
 		$("button#register").click(function(){
@@ -169,7 +171,7 @@
 	     	}// end of else if----------------------------------------
 	     	
 	     	// 제목 유효성 검사
-	     	var subject = $(input#subject).val().trim();
+	     	var subject = $("input#subject").val().trim();
 	     	if(subject == ""){
 	     		alert("제목을 입력하시오.")
 	     		return;
@@ -408,7 +410,7 @@
 			 
 				
 			</table>
-			<input type="hidden" value="${sessionScope.loginuser.userid}" name="fk_emp_no"/>
+			<input type="text" value="${sessionScope.loginuser.pk_emp_no}" name="fk_emp_no"/>
 			</form>
 			
 		<div style="text-align: center;">

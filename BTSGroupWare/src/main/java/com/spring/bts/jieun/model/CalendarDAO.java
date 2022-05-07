@@ -46,16 +46,54 @@ public class CalendarDAO implements InterCalendarDAO {
 		List<CalendarVO> calendarvoList = sqlsession.selectList("jieun.selectCalNo", paraMap);
 		return calendarvoList;
 	}
-	
 
-	// ======== ***** 파이널 옮기기 시작 ***** ======== //
-	// === 일정 체크 박스 추가 === //
-/*	@Override
-	public int addCalenderName(CalenderVO calendervo) {
-		int n = sqlsession.insert("jieun.addCalenderName", calendervo);
+	// === 사내 캘린더에 사내 캘린더 소분류 추가하기 === //
+	@Override
+	public int addComCalendar(Map<String, String> paraMap) {
+		int n = sqlsession.insert("jieun.addComCalendar", paraMap);
 		return n;
 	}
-*/
+		// 사내 캘린더에 캘린더 소분류 명 존재 여부 알아오기
+		@Override
+		public int existComCalendar(String addCom_calname) {
+			int m = sqlsession.selectOne("jieun.existComCalendar", addCom_calname);
+			return m;
+		}
+		
+
+	// === 사내 캘린더에 사내 캘린더 소분류 보여주기 === //
+	@Override
+	public List<CalendarVO> showCompanyCalendar() {
+		List<CalendarVO> companyCalList = sqlsession.selectList("jieun.showCompanyCalendar");
+		return companyCalList;
+	}
+
+	// === 내 캘린더에 내 캘린더 소분류 추가하기 === //
+	@Override
+	public int addMyCalendar(Map<String, String> paraMap) {
+		int n = sqlsession.insert("jieun.addMyCalendar", paraMap);
+		return n;
+	}
+			// 내 캘린더에 캘린더 소분류 명 존재 여부 알아오기
+			@Override
+			public int existMyCalendar(String addMy_calname) {
+				int n = sqlsession.selectOne("jieun.existMyCalendar", addMy_calname);
+				return n;
+			}
+
+	// === 내 캘린더에 내 캘린더 소분류 보여주기 === //
+	@Override
+	public List<CalendarVO> showMyCalendar(String fk_emp_no) {
+		List<CalendarVO> myCalList = sqlsession.selectList("jieun.showMyCalendar", fk_emp_no);
+		return myCalList;
+	}
+
+	
+
+	
+	
+
+	
 	
 	
 }

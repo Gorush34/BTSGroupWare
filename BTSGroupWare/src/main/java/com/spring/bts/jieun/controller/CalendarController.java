@@ -107,6 +107,95 @@ public class CalendarController {
 			return mav;
 		}
 		
+		// === 사내 캘린더에 사내 캘린더 소분류 추가하기 === //
+		@ResponseBody
+		@RequestMapping(value="/calendar/addComCalendar.bts", method= {RequestMethod.POST})
+		public String addComCalendar(HttpServletRequest request) throws Throwable {
+			
+			String addCom_calname  = request.getParameter("addCom_calname");
+			String fk_emp_no = request.getParameter("fk_emp_no");
+			
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("addCom_calname", addCom_calname);
+			paraMap.put("fk_emp_no", fk_emp_no);
+			
+			int n = service.addComCalendar(paraMap);
+			
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("n", n);
+			
+			return jsonObj.toString();
+		}
+		
+		
+		// === 사내 캘린더에서 사내캘린더 소분류 보여주기  === //
+		@ResponseBody
+		@RequestMapping(value="/calendar/showCompanyCalendar.bts", method= {RequestMethod.GET}, produces="text/plain;charset=UTF-8")
+		public String showCompanyCalendar() {
+			
+			List<CalendarVO> companyCalList = service.showCompanyCalendar();
+			
+			JSONArray jsonArr = new JSONArray();
+			
+			if(companyCalList != null) {
+				for(CalendarVO cavo : companyCalList) {
+					JSONObject jsonObj = new JSONObject();
+					jsonObj.put("pk_calno", cavo.getPk_calno());
+					jsonObj.put("calname", cavo.getCalname());
+					jsonArr.put(jsonObj);
+				}
+			}
+			
+			return jsonArr.toString();
+		}
+		
+			
+		// === 내 캘린더에 내 캘린더 소분류 추가하기 === //
+		@ResponseBody
+		@RequestMapping(value="/calendar/addMyCalendar.bts", method= {RequestMethod.POST})
+		public String addMyCalendar(HttpServletRequest request) throws Throwable {
+			
+			String addMy_calname  = request.getParameter("addMy_calname");
+			String fk_emp_no = request.getParameter("fk_emp_no");
+			
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("addMy_calname", addMy_calname);
+			paraMap.put("fk_emp_no", fk_emp_no);
+			
+			int n = service.addMyCalendar(paraMap);
+			
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("n", n);
+			
+			return jsonObj.toString();
+		}
+		
+		
+		// === 내 캘린더에서 내캘린더 소분류 보여주기  === //
+		@ResponseBody
+		@RequestMapping(value="/calendar/showMyCalendar.bts", method= {RequestMethod.GET}, produces="text/plain;charset=UTF-8")
+		public String showMyCalendar(HttpServletRequest request) {
+			
+			String fk_emp_no = request.getParameter("fk_emp_no");
+			
+			List<CalendarVO> myCalList = service.showMyCalendar(fk_emp_no);
+			
+			JSONArray jsonArr = new JSONArray();
+			
+			if(myCalList != null) {
+				for(CalendarVO cavo : myCalList) {
+					JSONObject jsonObj = new JSONObject();
+					jsonObj.put("pk_calno", cavo.getPk_calno());
+					jsonObj.put("calname", cavo.getCalname());
+					jsonArr.put(jsonObj);
+				}
+			}
+			
+			return jsonArr.toString();
+		}
+		
+		
+		
 		// === 서브 캘린더 가져오기 === //
 		@ResponseBody
 		@RequestMapping(value="/calendar/selectCalNo.bts",method = {RequestMethod.GET}, produces="text/plain;charset=UTF-8") 
@@ -134,6 +223,9 @@ public class CalendarController {
 			
 			return jsArr.toString();
 		}
+		
+		
+	
 		
 		
 		// === 참석자 추가하기 === //

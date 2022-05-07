@@ -27,8 +27,31 @@
 	values                                  
 	(#{pk_emp_no}, #{fk_department_id}, #{fk_rank_id}, default, default, #{emp_name}, #{emp_pwd}, #{com_tel}, #{postal}, #{address}, #{detailaddress}, #{extraaddress}
 	, #{gender}, #{uq_phone}, #{uq_email}, default, default, #{birthday}, default)
+	
+	
 	</insert>
 	
-	 
+	<select id="findEmpNo" parameterType="HashMap" resultType="String">
+	select pk_emp_no
+	from tbl_employees
+	where ishired = 1
+	and emp_name = #{emp_name} and uq_email = #{uq_email}
+	
+	</select>
 
+	<select id="isUserExist" parameterType="HashMap" resultType="String">
+	select pk_emp_no
+	from tbl_employees
+	where ishired = 1
+	and pk_emp_no = #{pk_emp_no} and uq_email = #{uq_email}
+	
+	</select>
+	
+	<update id="pwdUpdate" parameterType="HashMap">
+		update tbl_employees set emp_pwd = #{emp_pwd}, lastpwdchangedate = sysdate
+		where pk_emp_no = #{pk_emp_no}
+	</update>
+	
+	<!-- 왜이러는거야~~ -->
+	
 </mapper>

@@ -167,6 +167,7 @@
                                     </form>
                                     <hr>
                                     <div class="text-center">
+                                    	<a href="<%= ctxPath%>/idFind.bts">ID 찾기</a><span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;</span>
                                         <a href="<%= ctxPath%>/pwdFind.bts">비밀번호 찾기</a>
                                     </div>
                                     <div class="text-center">

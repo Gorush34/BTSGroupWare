@@ -18,9 +18,13 @@
 
 	$(document).ready(function(){
 		
-		// 캘린더 클릭시 일정 체크 박스 보이기, 숨기기
-	//	$("div.slideTogglebox").hide();
+		// === 사내 캘린더에 사내캘린더 소분류 보여주기 ===
+		showCompanyCal();
+
+		// === 내 캘린더에 내캘린더 소분류 보여주기 ===
+		showMyCal();
 		
+		// === 캘린더 클릭시 일정 체크 박스 보이기, 숨기기 ===
 		$("div#calenderbtn1").click(function(){
 			$("div#slideTogglebox1").slideToggle();
 		})
@@ -28,8 +32,7 @@
 		$("div#calenderbtn2").click(function(){
 			$("div#slideTogglebox2").slideToggle();
 		})
-		
-		// 일정 체크 박스 추가
+	
 		
 	
 		
@@ -40,96 +43,214 @@
 			
 	//Function Declaration
 	
-	// 일정 체크 박스 추가
-	function goAddCheckbox(){
+	<%-- 사내 캘린더 관련 --%>
+	
+	// === 사내 캘린더 추가 클릭시 ===
+	function addComCalendar(){
+		$('#addComCalModal').modal('show'); // 모달창 보여주기	
+	}// end of function addComCalendar(){}--------------------
 		
-		const cal_name = $("input#cal_name").val().trim();
-		if(addSche == ""){
-			alert("추가할 일정을 입력하세요");
-			return; 
-		}
-<%--		else{
-			$.ajax({
-				url:"<%= ctxPath%>/addCalenderName.bts",
-				data:{"cal_name":$("input#cal_name").val()
-					, "fk_emp_no":($"input#fk_emp_no").val()},
-				type:"POST",
-				dataType:"JSON",
-				success:function(json){
+		
+	// === 사내 캘린더 추가 모달창에서 추가 버튼 클릭시 ===
+	function goAddComCal(){
+		
+		if($("input.addCom_calname").val().trim() == ""){
+	 		  alert("추가할 사내캘린더 소분류명을 입력하세요!!");
+	 		  return;
+	 	}
+		
+	 	else {
+	 		 $.ajax({
+	 			 url: "<%= ctxPath%>/calendar/addComCalendar.bts",
+	 			 type: "post",
+	 			 data: {"addCom_calname": $("input.addCom_calname").val(), 
+	 				    "fk_emp_no": "${sessionScope.loginuser.pk_emp_no}"},
+	 			 dataType: "json",
+	 			 success:function(json){
+	 				 if(json.n != 1){
+	  					alert("이미 존재하는 '사내캘린더 소분류명' 입니다.");
+	  					return;
+	  				 }
+	 				 else if(json.n == 1){
+	 					 $('#addComCalModal').modal('hide'); // 모달창 감추기				
+	 					 alert("사내 캘린더에 "+$("input.addCom_calname").val()+" 소분류명이 추가되었습니다.");
+	 					 
+	 					 $("input.addCom_calname").val("");
+	 					 showCompanyCal();  // 사내 캘린더 소분류 보여주기
+	 				 }
+	 			 },
+	 			 error: function(request, status, error){
+	  	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	    	     }	 
+	 		 });
+	 	  }
+		
+	}// end of function goAddComCal(){}------------------------------------
+
+	// === 사내 캘린더에서 사내캘린더 소분류 보여주기  === //
+	function showCompanyCal(){
+		$.ajax({
+			url:"<%= ctxPath%>/calendar/showCompanyCalendar.bts",
+			type:"get",
+			dataType:"json",
+			success:function(json){
+				
+				var html = "";
+				
+				if(json.length > 0){
 					
-				},
-				error: function(request, status, error){
-		            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-		        }
-			});
-		} --%>
-	}// end of function goAddCheckbox()------------------------------------------------
-			
+					html += "<table style='margin: 0 20px;'>";
+					html += "<tbody>";
+					$.each(json, function(index, item){
+					
+						html += "<tr id='schecheck'>";
+						html += "<td style='width:110%;'><input type='checkbox' name='com_calno' class='calendar_checkbox com_calno' value='"+item.pk_calno+"' id='com_calno_'"+index+"' checked />&nbsp;&nbsp;<label for='com_calno_'"+index+"'>"+item.calname+"</label></td>";
+					
+						if("${sessionScope.loginuser.gradelevel}" =='1') {
+							 html += "<td style='width:20%; vertical-align: text-top; text-align: right;'><button class='btn_edit' style='background-color: #fff; border: none; outline:none;' data-target='editCal' onclick='editComCalendar("+item.pk_calno+",\""+item.calname+"\")'><i class='fas fa-edit'></i></button></td>";  
+							 html += "<td style='width:20%; vertical-align: text-top; text-align: right;'><button class='btn_edit delCal' style='background-color: #fff; border: none;' onclick='delCalendar("+item.pk_calno+",\""+item.calname+"\")'><i class='fas fa-trash'></i></button></td>";
+						 }
+						
+						html += "</tr>";
+					});
+					html += "</tbody>";
+					html += "</table>";
+				}
+				
+				$("div#companyCal").html(html);
+				
+			},
+			error: function(request, status, error){
+  	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+   	     	}	
+		});
+	}// end of function showCompanyCal()------------------
+	
+	
+	
+	
+	<%-- 내 캘린더 관련 --%>
+	
+	// === 내 캘린더 추가 클릭시 ===
+	function addMyCalendar(){
+		$('#addMyCalModal').modal('show'); // 모달창 보여주기	
+	}// end of function addComCalendar(){}--------------------
+		
+		
+	// === 내 캘린더 추가 모달창에서 추가 버튼 클릭시 ===
+	function goAddMyCal(){
+		
+		if($("input.addMy_calname").val().trim() == ""){
+	 		  alert("추가할 사내캘린더 소분류명을 입력하세요!!");
+	 		  return;
+	 	}
+		
+	 	else {
+	 		 $.ajax({
+	 			 url: "<%= ctxPath%>/calendar/addMyCalendar.bts",
+	 			 type: "post",
+	 			 data: {"addMy_calname": $("input.addMy_calname").val(), 
+	 				    "fk_emp_no": "${sessionScope.loginuser.pk_emp_no}"},
+	 			 dataType: "json",
+	 			 success:function(json){
+	 				 if(json.n != 1){
+	  					alert("이미 존재하는 '내캘린더 소분류명' 입니다.");
+	  					return;
+	  				 }
+	 				 else if(json.n == 1){
+	 					 $('#addMyCalModal').modal('hide'); // 모달창 감추기				
+	 					 alert("내 캘린더에 "+$("input.addMy_calname").val()+" 소분류명이 추가되었습니다.");
+	 					 
+	 					 $("input.addMy_calname").val("");
+	 					 showMyCal();  // 사내 캘린더 소분류 보여주기
+	 				 }
+	 			 },
+	 			 error: function(request, status, error){
+	  	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	    	     }	 
+	 		 });
+	 	  }
+		
+	}// end of function goAddMyCal(){}------------------------------------
+
+	// === 내 캘린더에서 내캘린더 소분류 보여주기  === //
+	function showMyCal(){
+		$.ajax({
+			url:"<%= ctxPath%>/calendar/showMyCalendar.bts",
+			type:"get",
+			data:{"fk_emp_no":"${sessionScope.loginuser.pk_emp_no}"},
+			dataType:"json",
+			success:function(json){
+				
+				var html = "";
+				
+				if(json.length > 0){
+					
+					html += "<table style='margin: 0 20px;'>";
+					html += "<tbody>";
+					$.each(json, function(index, item){
+					
+						html += "<tr id='schecheck'>";
+						html += "<td style='width:110%;'><input type='checkbox' name='com_calno' class='calendar_checkbox com_calno' value='"+item.pk_calno+"' id='com_calno_'"+index+"' checked />&nbsp;&nbsp;<label for='com_calno_'"+index+"'>"+item.calname+"</label></td>";				
+						html += "<td style='width:20%; vertical-align: text-top; text-align: right;'><button class='btn_edit' style='background-color: #fff; border: none; outline:none;' data-target='editCal' onclick='editComCalendar("+item.pk_calno+",\""+item.calname+"\")'><i class='fas fa-edit'></i></button></td>";  
+						html += "<td style='width:20%; vertical-align: text-top; text-align: right;'><button class='btn_edit delCal' style='background-color: #fff; border: none;' onclick='delCalendar("+item.pk_calno+",\""+item.calname+"\")'><i class='fas fa-trash'></i></button></td>";
+						html += "</tr>";
+					});
+					html += "</tbody>";
+					html += "</table>";
+				}
+				
+				$("div#myCal").html(html);
+				
+			},
+			error: function(request, status, error){
+  	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+   	     	}	
+		});
+	}// end of function showMyCal()------------------
+	
+	
 </script>
 
 	<div>
 	   <div id="sidebar" style="font-size: 11pt;">
 		 <h4>캘린더</h4>
 		 
-	<%--	   <input type="hidden" value="${sessionScope }" id="fk_emp_no"> --%>
-		 
-			<button type="button" class="btn btn-outline-primary btn-lg " style="margin: 15px auto; width:200px; display:block;" onclick="javascript:location.href='<%= ctxPath%>/calendar/scheduleRegister.bts'">일정등록</button>
+			<input type="hidden" value="${sessionScope.loginuser.pk_emp_no}" id="fk_emp_no"/>
+		
+		<button type="button" class="btn btn-outline-primary btn-lg " style="margin: 15px auto; width:200px; display:block;" onclick="javascript:location.href='<%= ctxPath%>/calendar/scheduleRegister.bts'">일정등록</button>
 			<ul style="list-style-type: none; padding: 10px;">
 				<li style="margin-bottom: 15px;">
-					<div id="calenderbtn1" class="calenderbtn">내 캘린더</div>
+					<div id="calenderbtn1" class="calenderbtn">사내 캘린더</div>
 						<div id="slideTogglebox1"  class="slideTogglebox">
-							<table style="margin: 0 20px;">
-								<tbody>
-									<tr id="schecheck">
-										<td><input type="checkbox" name="mySche" id="mySche" style="vertical-align: top;"/></td>
-					   					<td><label for="mySche"><span style="margin-left: 5px;">내 일정<i class="bi bi-trash3"></i></span></label></td>
-					   				</tr>	
-				   				</tbody>	
-			   				</table>	
+							<%-- 사내 캘린더를 보여주는 곳 --%>
+							<div id="companyCal" style="margin-bottom: 10px;"></div>			
 						</div>
-						<span id="addmyschedule" data-toggle="modal" data-target="#addMyScheModal">&nbsp;&nbsp;+ 내 캘린더 추가</span>
-							
-							
+						<%-- 사내 캘린더 추가를 할 수 있는 직원은 직위코드가 3 이면서 부서코드가 4 에 근무하는 사원이 로그인 한 경우에만 가능하도록 조건을 걸어둔다.  	
+	     				<c:if test="${sessionScope.loginuser.fk_pcode =='3' && sessionScope.loginuser.fk_dcode == '4' }"> --%>
+	     				<c:if test="${sessionScope.loginuser.gradelevel =='1'}"> 
+						<span id="addComCalendar" onclick="addComCalendar()">&nbsp;&nbsp;+ 사내 캘린더 추가</span>
+						</c:if> 
+						<%-- </c:if>	--%>
 				</li>
 				<li style="margin-bottom: 15px;">
 					<div id="calenderbtn2" class="calenderbtn">관심 캘린더</div>
-						<div id="slideTogglebox2"  class="slideTogglebox">	
-							<table style="margin: 0 20px;">
-								<tbody>
-									<tr id="schecheck">
-										<td><input type="checkbox" name="allSche" id="allSche" style="vertical-align: top;"/></td>
-			   							<td><label for="allSche"><span style="margin-left: 5px;">전체</span></label></td>
-			   						</tr>	
-				   				</tbody>	
-			   				</table>				
+						<div id="slideTogglebox2"  class="slideTogglebox">
+						<div>
+ 							<%-- 내 캘린더를 보여주는 곳 --%>
+							<div id="myCal" style="margin-bottom: 10px;"></div>					
 						</div>
-						
-						<span id="addschedule" data-toggle="modal" data-target="#addScheModal">&nbsp;&nbsp;+ 관심 캘린더 추가</span>
-							
-							
+						</div>
+						<span id="addMyCalendar" onclick="addMyCalendar()">&nbsp;&nbsp;+ 내 캘린더 추가</span>		
 				</li>
 			</ul>
-			<hr>
-			
-			<table style="margin: 20px;">
-				<tbody>
-					<tr id="schecheck">
-						<td><input type="checkbox" name="comSche" id="comSche" style="vertical-align: top;"/></td>
-	   					<td style="vertical-align: middle;"><label for="comSche"><span style="margin-left: 5px;">전사일정</span></label></td>
-	   				</tr>
-	   				<tr id="schecheck">
-						<td><input type="checkbox" name="excSche" id="excSche" style="vertical-align: top;"/></td>
-	   					<td><label for="excSche"><span style="margin-left: 5px;">임원일정</span></label></td>
-	   				</tr>	
-   				</tbody>	
-  			</table>	
-			
-			
-		</div>
+		<input type="checkbox" id="sharedCal" class="calendar_checkbox" value="0" checked/>&nbsp;&nbsp;<label for="sharedCal">공유받은 캘린더</label> 
+	</div>
+		
 	</div>
 	
 	
-	<%-- 모달로 추가창 띄우기 --%>
+	<%-- 모달로 추가창 띄우기 
   <div class="modal fade" id="addMyScheModal" data-backdrop="static">
   	<div class="modal-dialog modal-dialog-centered">
   		<div class="modal-content">
@@ -147,9 +268,9 @@
 	      </div>
 	    </div>
   		</div>
-  	 </div>
+  	 </div>--%>
   	 
-  	 <%-- 모달로 추가창 띄우기 : --%>
+  	 <%-- 모달로 추가창 띄우기 : 
 	  <div class="modal fade" id="addScheModal" data-backdrop="static">
 	  	<div class="modal-dialog modal-dialog-centered">
 	  		<div class="modal-content">
@@ -168,4 +289,4 @@
 		      </div>
 		    </div>
    		</div>
-   	 </div>	
+   	 </div>--%>	

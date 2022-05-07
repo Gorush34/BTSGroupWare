@@ -8,6 +8,48 @@
 <mapper namespace="jieun">
 
 
+	
+	<!-- 사내 캘린더에 사내 캘린더 소분류 추가하기  -->
+	<insert id="addComCalendar" parameterType="HashMap">
+		insert into tbl_calendar(pk_calno, fk_lgcatgono, calname, fk_emp_no)
+		values (seq_calno.nextval, 2, #{addCom_calname}, #{fk_emp_no})
+	</insert>
+
+			<!-- // 사내 캘린더에 캘린더 소분류 명 존재 여부 알아오기  -->
+			<select id="existComCalendar" parameterType="String" resultType="int">
+				select  count(*)
+				from tbl_calendar
+				where fk_lgcatgono = 2 and calname = #{addCom_calname}
+			</select>
+	
+	<!-- 사내 캘린더에 사내 캘린더 소분류 보여주기 -->
+	<select id="showCompanyCalendar" resultType="com.spring.bts.jieun.model.CalendarVO">
+		select pk_calno, fk_lgcatgono, calname
+		from tbl_calendar
+		where fk_lgcatgono = 2
+		order by pk_calno asc
+	</select>
+	
+	<!-- 내 캘린더에 내 캘린더 소분류 추가하기  -->
+	<insert id="addMyCalendar" parameterType="HashMap">
+		insert into tbl_calendar(pk_calno, fk_lgcatgono, calname, fk_emp_no)
+		values (seq_calno.nextval, 1, #{addMy_calname}, #{fk_emp_no})
+	</insert>
+			<!-- 내 캘린더에 캘린더 소분류 명 존재 여부 알아오기 -->
+			<select id="existMyCalendar" parameterType="String" resultType="int">
+				select count(*)
+				from tbl_calendar
+				where fk_lgcatgono = 1 and calname = #{addMy_calname}
+			</select>
+	
+	<!-- 내 캘린더에 내 캘린더 소분류 보여주기 -->
+	<select id="showMyCalendar" parameterType="String" resultType="com.spring.bts.jieun.model.CalendarVO">
+		select pk_calno, fk_lgcatgono, calname
+		from tbl_calendar
+		where fk_lgcatgono = 1 and fk_emp_no = #{fk_emp_no}
+		order by pk_calno asc
+	</select>
+	
 	<!-- 등록 폼에 서브캘린더 가져오기 -->
 	<select id="selectCalNo" parameterType="HashMap" resultType="com.spring.bts.jieun.model.CalendarVO">
 		select pk_calno, fk_lgcatgono, calname
@@ -15,7 +57,8 @@
 		where fk_lgcatgono = #{fk_lgcatgono} and fk_emp_no =#{fk_emp_no}
 		order by pk_calno asc
 	</select>
-
+	
+	
 	<!-- 일정등록 하기  -->
 	<insert id="scheduleRegisterInsert" parameterType="HashMap">
 		insert into tbl_schedule(pk_schno, fk_emp_no, fk_calno, subject, startdate, enddate, content, color, place, joinuser, fk_lgcatgono)
@@ -25,15 +68,7 @@
 
 
 
-<!-- // ======== ***** 파이널 옮기기 시작 ***** ======== //
-	// === 일정 체크 박스 추가 === // -->
-	
-<!--  	<insert id="addCalenderName" parameterType="com.spring.board.model.CalenderVO">
-		insert into tbl_calender(cal_no, fk_사원번호 ,cal_name, cal_color) 
-      		values(calenderSeq.nextval, #{cal_name}, #{fk_사원번호},#{name}, default)
 
-	</insert>
- --> 
 
 
 </mapper>

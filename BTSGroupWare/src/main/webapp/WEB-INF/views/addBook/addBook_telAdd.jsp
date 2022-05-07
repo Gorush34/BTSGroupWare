@@ -11,13 +11,34 @@
 
 <script type="text/javascript">
 
+	
+
+	function goTelAdd() {
+		
+		const frm = document.telAddFrm;
+	    frm.action = "<%=ctxPath%>/addBook/addBook_telAdd_insert.bts"
+	    frm.method = "post"
+	    frm.submit();
+	}
+
+
 
 </script>
+
+<style type="text/css">
+
+#tbl_telAdd_ { 
+		border-collapse: separate;
+		border-spacing: 0 12px;
+	}
+
+</style>
 
 <title>연락처추가페이지</title>
 
 	<div id="telAdd_main_tbl" style="text-align:center;">
-	<table>
+	<form name="telAddFrm"> 
+	<table id="tbl_telAdd_">
 		<tr>
 			<td><h2>연락처 추가<br><br></h2></td>
 		</tr>
@@ -26,79 +47,75 @@
 			<td><img src="<%=ctxPath %>/resources/images/addBook_telAdd_sample.jpg" alt="..." class="img-rounded"><button class="btn btn-default" id="telAdd_mini_btn">삭제</button></td>
 		</tr>
 		<tr>
-			<td><strong>성</strong></td>
-			<td><input type="text" class="form-control" placeholder="성"></td>
-		</tr>
-		<tr>
 			<td><strong>이름</strong></td>
-			<td><input type="text" class="form-control" placeholder="이름"></td>
-		</tr>
-		<tr>
-			<td><strong>영문이름</strong></td>
-			<td><input type="text" class="form-control" placeholder="영문이름"></td>
-		</tr>
-		<tr>
-			<td><strong>회사</strong></td>
-			<td><input type="text" class="form-control" placeholder="회사"></td>
+			<td><input type="text" class="form-control" id="name" name="name" placeholder="이름"></td>
 		</tr>
 		<tr>
 			<td><strong>부서</strong></td>
-			<td><input type="text" class="form-control" placeholder="부서"></td>
-		</tr>
-		<tr>
-			<td><strong>직위</strong></td>
-			<td><input type="text" class="form-control" placeholder="직위"></td>
-		</tr>
-		<tr>
-			<td><strong>그룹</strong></td>
-			<td><button class="btn btn-default" data-toggle="modal" data-target="#myModal">+그룹추가</button></td>
-			
-		</tr>
-		<tr>
-			<td><strong>이메일</strong></td>
-			<td><input type="text" class="form-control" placeholder="이메일"></td>
-		</tr>
-		<tr>
-			<td><strong>휴대폰</strong></td>
-			<td><input type="text" class="form-control" placeholder="휴대폰"></td>
-		</tr>
-		<tr>
-			
-			<td><strong>회사주소</strong></td>
-			<td><input type="text" class="form-control" placeholder="회사주소" style="width: 110%;"></td>
-			
-		</tr>
-		<tr>
-			<td><strong>메모사항</strong></td>
-			<td><input type="text" class="form-control" placeholder="메모사항" style="width:120%; height: 80px;"></td>
-		</tr>
-		<tr>
-			<td><strong>항목추가</strong></td>
 			<td>
-				<select class="form-control" style="width: 120%;">
-					<option>추가할 항목을 선택하세요</option>
-					<option>생일</option>
-					<option>집전화</option>
-					<option>집주소</option>
-					<option>등등</option>
+				<select id="department" name="department" class="form-control">
+				  <option selected >--</option>
+				  <option value="1">영업</option>
+				  <option value="2">마케팅</option>
+				  <option value="4">기획</option>
+				  <option value="5">총무</option>
+				  <option value="6">인사</option>
+				  <option value="7">회계</option>
 				</select>
 			</td>
 		</tr>
 		<tr>
-			<td></td>
-			<td colspan="10" style="text-align:center; padding-top: 18%; ">
-				<button class="btn btn-info" id="" style="border: solid lightgray 2px;" >저장</button>
-				<button class="btn btn-info" id="" style="border: solid lightgray 2px;" >계속 등록</button>
-				<button class="btn btn-default" id="" style="border: solid lightgray 2px;">목록으로 이동</button>
-				<button class="btn btn-default" id="" style="border: solid lightgray 2px;">취소</button>
+			<td><strong>직위</strong></td>
+			<td>
+				<select id="rank" name="rank" class="form-control">
+				  <option selected >--</option>
+				  <option value="1">사원</option>
+				  <option value="2">주임</option>
+				  <option value="4">과장</option>
+				  <option value="5">차장</option>
+				  <option value="6">부장</option>
+				  <option value="7">전무</option>
+				  <option value="8">사장</option>
+				</select>
 			</td>
 		</tr>
-	</table>
+		<tr>
+			<td><strong>이메일</strong></td>
+			<td><input type="text" class="form-control" id="email" name="email" placeholder="이메일"></td>
+		</tr>
+		<tr>
+			<td><strong>휴대폰</strong></td>
+			<td><input type="text" class="form-control" id="phone" name="phone" placeholder="휴대폰"></td>
+		</tr>
+		<tr>
+			<td><strong>회사</strong></td>
+			<td><input type="text" class="form-control" id="company" name="company" placeholder="회사"></td>
+		</tr>
+		<tr>
+			
+			<td><strong>회사주소</strong></td>
+			<td><input type="text" class="form-control" id="company_address" name="company_address" placeholder="회사주소" style="width: 120%;"></td>
+			
+		</tr>
+		<tr>
+			<td><strong>메모사항</strong></td>
+			<td><input type="text" class="form-control" id="memo" name="memo" placeholder="메모사항" style="width:120%; height: 80px;"></td>
+		</tr>
+		</table>
+		</form>
+			<div id="buttonmenu">
+				<input type="submit" class="btn btn-info" style="border: solid lightgray 2px;" value="확인" onclick="goTelAdd()" />
+				<input type="submit" class="btn btn-info" style="border: solid lightgray 2px;" value="계속 등록" onclick="location.href='http://localhost:9090/bts/addBook/addBook_telAdd.bts'" />
+				<input type="button" class="btn btn-default" style="border: solid lightgray 2px;" value="목록으로 이동" onclick="location.href='http://localhost:9090/bts/addBook/addBook_main.bts'" />
+				<input type="reset" class="btn btn-default" style="border: solid lightgray 2px;" value="취소"  onclick="location.href='http://localhost:9090/bts/addBook/addBook_main.bts'"  />
+			</div>
+			
 	</div>
 	
 
 
 	<!-- 모달 -->
+	<!--  
 	<div class="modal fade" id="myModal" role="dialog"> 
 		<div class="modal-dialog"> 
 			<div class="modal-content"> 
@@ -114,4 +131,5 @@
 			</div> 
 		</div> 
 	</div>
+	-->
 
