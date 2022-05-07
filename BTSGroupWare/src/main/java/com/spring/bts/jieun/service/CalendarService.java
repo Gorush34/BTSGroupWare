@@ -22,6 +22,52 @@ public class CalendarService implements InterCalendarService {
     // 그러므로 dao 는 null 이 아니다.
 
 	
+	
+	// === 사내 캘린더에 사내 캘린더 소분류 추가하기 === //
+	@Override
+	public int addComCalendar(Map<String, String> paraMap) {
+		int n = 0;
+		String addCom_calname = paraMap.get("addCom_calname");
+		
+		// 사내 캘린더에 캘린더 소분류 명 존재 여부 알아오기
+		int m = dao.existComCalendar(addCom_calname);
+		
+		if(m==0) {
+			n = dao.addComCalendar(paraMap);
+		}
+		return n;
+	}
+
+	// === 사내 캘린더에 사내 캘린더 소분류 보여주기 === //
+	@Override
+	public List<CalendarVO> showCompanyCalendar() {
+		List<CalendarVO> companyCalList = dao.showCompanyCalendar();
+		return companyCalList;
+	}
+
+	// === 내 캘린더에 내 캘린더 소분류 추가하기 === //
+	@Override
+	public int addMyCalendar(Map<String, String> paraMap) {
+		int n = 0;
+		String addMy_calname = paraMap.get("addMy_calname");
+		
+		// 내 캘린더에 캘린더 소분류 명 존재 여부 알아오기
+		int m = dao.existMyCalendar(addMy_calname);
+		
+		if(m==0) {
+			n = dao.addMyCalendar(paraMap);
+		}		
+		return n;
+	}
+
+	// === 내 캘린더에 내 캘린더 소분류 보여주기 === //
+	@Override
+	public List<CalendarVO> showMyCalendar(String fk_emp_no) {
+		List<CalendarVO> myCalList = dao.showMyCalendar(fk_emp_no);
+		return myCalList;
+	}
+
+
 	// === 서브 캘린더 가져오기 === //
 	@Override
 	public List<CalendarVO> selectCalNo(Map<String, String> paraMap) {
@@ -38,13 +84,12 @@ public class CalendarService implements InterCalendarService {
 	}
 
 	
+
+
 	
-	// ======== ***** 파이널 옮기기 시작 ***** ======== //
-	/*	// === 일정 체크 박스 추가 === //
-		@Override
-		public int addCalenderName(CalenderVO calendervo) {
-			int n = dao.addCalenderName(calendervo);
-			return n;
-		}
-	*/
+
+
+	
+	
+	
 }

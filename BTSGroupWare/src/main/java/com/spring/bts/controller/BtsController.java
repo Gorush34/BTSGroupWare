@@ -223,16 +223,6 @@ public class BtsController {
 		
 	}
 	
-	// 비밀번호 찾기 페이지 요청
-	@RequestMapping(value="/pwdFind.bts")
-	public ModelAndView pwdFind(ModelAndView mav, HttpServletRequest request) {
-		
-		
-		mav.setViewName("/tiles1/main/pwdFind");
-		
-		return mav;
-	} // public ModelAndView pwdFind(ModelAndView mav, HttpServletRequest request) ----
-	
 	
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////

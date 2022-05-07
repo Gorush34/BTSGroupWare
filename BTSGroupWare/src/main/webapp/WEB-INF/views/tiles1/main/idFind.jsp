@@ -66,53 +66,32 @@
 		}
 		else if( method == "POST") {
 			$("div#div_findResult").show();
-			
-			$("input#pk_emp_no").val("${requestScope.pk_emp_no}");
-			$("input#uq_email").val("${requestScope.uq_email}");
 		}
 		
-		if(${requestScope.sendMailSuccess == true}) {
-			$("div#div_btnFind").hide();
-		}	 
-		
-		$("button#btnPwdFind").click(function(){
-			func_pwdFind();
+		$("button#btnIdFind").click(function(){
+			func_idFind();
 		});
 		
 		$("input#uq_email").keydown(function(event){
 			
 			if(event.keyCode == 13) { // 엔터를 했을 경우
-				func_pwdFind();	
+				func_idFind();	
 			}
 		});
 		
-		// 인증하기
-		$("button#btnConfirmCode").click(function(){
-			
-			const frm = document.verifyCertificationFrm;
-			
-			frm.userCertificationCode.value = $("input#input_confirmCode").val();
-			frm.pk_emp_no.value = $("input#pk_emp_no").val();
-			
-			frm.action = "<%= ctxPath%>/emp/verifyCertification.bts";
-			frm.method = "post";
-			frm.submit();
-			
-		});
 		
-		 
-	}); // end of $(document).ready(function(){})------------------
+	}); 
 
 	// Function Declaration
-	function func_pwdFind(){
+	function func_idFind(){
       
-		var pk_emp_no = $("input#pk_emp_no").val() == undefined ? "" : $("input#pk_emp_no").val().trim();
+		var emp_name = $("input#emp_name").val() == undefined ? "" : $("input#emp_name").val().trim();
 		var uq_email = $("input#uq_email").val() == undefined ? "" : $("input#uq_email").val().trim();
 		
-        if(pk_emp_no.trim()=="") {
-           alert("사번을 입력하세요!!");
-          $("input#pk_emp_no").val(""); 
-          $("input#pk_emp_no").focus();
+        if(emp_name.trim()=="") {
+           alert("성함을 입력하세요!!");
+          $("input#emp_name").val(""); 
+          $("input#emp_name").focus();
           return; // 종료 
         }
       
@@ -124,8 +103,8 @@
         }
         
         
-        const frm = document.pwdFindFrm;
-        frm.action = "<%= ctxPath%>/pwdFindEnd.bts";
+        const frm = document.idFindFrm;
+        frm.action = "<%= ctxPath%>/idFindEnd.bts";
 		frm.method = "post";
 		frm.submit();
 		
@@ -154,43 +133,32 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">BTSGroupware</h1>
                                     </div>
-                                    <form name="pwdFindFrm" class="pwdFindFrm">
+                                    <form name="idFindFrm" class="idFindFrm">
                                         <div class="form-group">
                                             <input type="text" class="form-control form-control-user"
-                                                name="pk_emp_no" id="pk_emp_no" value="" aria-describedby="pk_emp_no"
-                                                placeholder="사번">
+                                                name="emp_name" id="emp_name" value="" aria-describedby="emp_name"
+                                                placeholder="사원명">
                                         </div>
                                         <div class="form-group">
                                             <input type="text" class="form-control form-control-user"
                                                 name="uq_email" id="uq_email" value="" placeholder="이메일">
                                         </div>
-                                        <button type="button" class="btn btn-primary btn-user btn-block" id="btnPwdFind">
-                                            	비밀번호 찾기
+                                        <button type="button" class="btn btn-primary btn-user btn-block" id="btnIdFind">
+                                            	ID 찾기
                                         </button>
                                         <hr>
-                                        <div class="my-3" id="div_findResult">
-									        <p class="text-center">
-									        	<c:if test="${requestScope.isUserExist == false }">
-									        		<span style="color: red;">사용자 정보가 없습니다.</span>
-									        	</c:if>   
-									        	
-									        	<c:if test="${requestScope.isUserExist == true && requestScope.sendMailSuccess == true }">
-										        	 <span style="font-size: 10pt;">인증코드가 ${requestScope.uq_email}로 발송되었습니다.</span><br>
-										             <span style="font-size: 10pt;">인증코드를 입력해주세요.</span><br>
-										             <input type="text" name="input_confirmCode" id="input_confirmCode" required />
-										             <br><br>
-										             <button type="button" class="btn btn-info" id="btnConfirmCode">인증하기</button>
-									        	</c:if>
-									           
-									            <c:if test="${requestScope.isUserExist == true && requestScope.sendMailSuccess == false }">
-									        		<span style="color: red;">메일 발송이 실패했습니다.</span>
-									        	</c:if> 
-									        </p>
-									   </div>
+                                        <div class="center" id="div_findResult" style="text-align: center;">
+	                                       	<c:if test="${not empty requestScope.pk_emp_no}">
+	                                         	사원번호 :&nbsp;<span style="color: red; font-size: 16pt; font-weight: bold;">${requestScope.pk_emp_no}</span> 
+	                                    	</c:if>
+	                                    	
+	                                    	<c:if test="${empty requestScope.pk_emp_no}">
+	                                        	 <span style="color: red; font-size: 16px; font-weight: bold;">입력하신 정보와 일치하는 사원번호가 없습니다.</span> 
+	                                    	</c:if>
+                                        </div>
                                     </form>
                                     <hr>
                                     <div class="text-center">
-                                    	<a href="<%= ctxPath%>/idFind.bts">ID 찾기</a><span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;</span>
                                     	<a href="<%= ctxPath%>/login.bts">로그인 화면으로</a><br>
                                         	문의 : 인사과(정환모 / 8887)
                                     </div>
@@ -205,12 +173,6 @@
         </div>
 
     </div>
-    
-    <form name="verifyCertificationFrm">
-	<input type="hidden" name="userCertificationCode">
-	<input type="hidden" name="pk_emp_no" value="${requestScope.pk_emp_no}">
-	
-</form>
 
 </body>
 

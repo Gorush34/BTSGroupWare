@@ -25,6 +25,8 @@ public class EmployeeVO {
 	private String gender;              // 성별   남자:1  / 여자:2
 	private String lastpwdchangedate; // 마지막으로 암호를 변경한 날짜  
 	
+    private String ko_rankname;         // 직급
+    private String ko_depname;         // 부서
 	
 	private int pwdchangegap;		 // select 용. 지금으로 부터 마지막으로 암호를 변경한지가 몇개월인지 알려주는 개월수(3개월 동안 암호를 변경 안 했을시 암호를 변경하라는 메시지를 보여주기 위함)
 	
@@ -286,6 +288,22 @@ public class EmployeeVO {
 
 	public void setRequirePwdChange(boolean requirePwdChange) {
 		this.requirePwdChange = requirePwdChange;
+	}
+
+	public String getKo_rankname() {
+		return ko_rankname;
+	}
+
+	public void setKo_rankname(String ko_rankname) {
+		this.ko_rankname = ko_rankname;
+	}
+
+	public String getKo_depname() {
+		return ko_depname;
+	}
+
+	public void setKo_depname(String ko_depname) {
+		this.ko_depname = ko_depname;
 	}
 	
 	

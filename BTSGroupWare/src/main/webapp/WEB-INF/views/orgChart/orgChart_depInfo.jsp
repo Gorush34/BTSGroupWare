@@ -41,7 +41,7 @@
 	    $( "div#h_teamwon" ).slideToggle();
 	  });
 			
-	  
+		  
 	}); // end of $( document ).ready( function()
 
 </script>
@@ -114,19 +114,20 @@
   <div class="tab-pane fade" id="depInfo">
   
 	  <table style="float:left;">
-	  
 			<tr>
 				<td><button class="btn btn-default" id="y_team" style="width:150px; border: solid darkgray 2px;">영업팀</button></td>
 			</tr>
-			<c:forEach var="emp" items="${requestScope.empList_sales}">
 			<tr>
 			<td>
 				<div id="y_teamwon">
-						<p style="text-align:center;">${emp.emp_name}<br></p>
+						<p style="text-align:center;">홍길동 <br>[부장]</p>
+						<p style="text-align:center;">홍길동 <br>[부장]</p>
+						<p style="text-align:center;">홍길동 <br>[부장]</p>
+						<p style="text-align:center;">홍길동 <br>[부장]</p>
+						<p style="text-align:center;">홍길동 <br>[부장]</p>
 				</div>
 			</td>
 			</tr>
-	   		</c:forEach>
 			<tr>
 				<td><button class="btn btn-default" id="m_team" style="width:150px; border: solid darkgray 2px;">마케팅팀</button></td>
 			</tr>
@@ -197,7 +198,6 @@
 				</div>
 			</td>
 			</tr>
-			
   	</table>
   	
   
@@ -212,31 +212,31 @@
 			</tr>
 			<tr>
 				<td><strong>이름</strong></td>
-				<td style="padding-top:25px;"><input type="text" class="form-control" placeholder="문병윤" readonly><br></td>
+				<td><input type="text" class="form-control" placeholder="문병윤" readonly><br></td>
 			</tr>
 			<tr>
-				<td style="padding-bottom:25px;"><strong>회사</strong></td>
+				<td><strong>회사</strong></td>
 				<td><input type="text" class="form-control" placeholder="쌍용그룹" readonly><br></td>
 			</tr>
 			<tr>
-				<td style="padding-bottom:25px;"><strong>부서</strong></td>
+				<td><strong>부서</strong></td>
 				<td><input type="text" class="form-control" placeholder="BTS" readonly><br></td>
 			</tr>
 			<tr>
-				<td style="padding-bottom:25px;"><strong>직위</strong></td>
+				<td><strong>직위</strong></td>
 				<td><input type="text" class="form-control" placeholder="쫄병" readonly><br></td>
 			</tr>
 			<tr>
-				<td style="padding-bottom:25px;"><strong>이메일</strong></td>
+				<td><strong>이메일</strong></td>
 				<td><input type="text" class="form-control" placeholder="mby0225@naver.com" readonly><br></td>
 			</tr>
 			<tr>
-				<td style="padding-bottom:25px;"><strong>휴대폰</strong></td>
+				<td><strong>휴대폰</strong></td>
 				<td><input type="text" class="form-control" placeholder="010-4646-4376" readonly><br></td>
 			</tr>
 			<tr>
 				
-				<td style="padding-bottom:25px;"><strong>주소</strong></td>
+				<td><strong>주소</strong></td>
 				<td><input type="text" class="form-control" placeholder="서울시 용산구 후암로 22길 24, 101동 202호" style="width: 140%;" readonly><br></td>
 				
 			</tr>
