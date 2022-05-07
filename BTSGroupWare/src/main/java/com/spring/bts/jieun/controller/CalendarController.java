@@ -194,7 +194,29 @@ public class CalendarController {
 			return jsonArr.toString();
 		}
 		
-		
+		// === 캘린더 소분류 수정하기 === //
+		@ResponseBody
+		@RequestMapping(value="/calendar/editCalendar.bts", method= {RequestMethod.POST})
+		public String editCalendar(HttpServletRequest request) throws Throwable {
+			
+			String pk_calno = request.getParameter("pk_calno");
+			String calname = request.getParameter("calname");
+			String fk_emp_no = request.getParameter("fk_emp_no");
+			String caltype = request.getParameter("caltype");
+			
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("pk_calno", pk_calno);
+			paraMap.put("calname", calname);
+			paraMap.put("fk_emp_no", fk_emp_no);
+			paraMap.put("caltype", caltype);
+			
+			int n = service.editCalendar(paraMap);
+			
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("n", n);
+			
+			return jsonObj.toString();
+		}
 		
 		// === 서브 캘린더 가져오기 === //
 		@ResponseBody
@@ -312,20 +334,5 @@ public class CalendarController {
 		
 		
 		
-		/*	// === 일정 체크 박스 추가 === //
-		@ResponseBody
-		@RequestMapping(value="/addCalenderName.bts", method={RequestMethod.POST}, produces="text/plain;charset=UTF-8")
-		public String addCalenderName(HttpServletRequest request) {
-			
 		
-			
-			int n = service.addCalenderName();
-			
-			JSONObject jsonObj = new JSONObject();
-			jsonObj.put("n", n);
-			
-	
-			return jsonObj.toString();
-		}
-			*/	
 }

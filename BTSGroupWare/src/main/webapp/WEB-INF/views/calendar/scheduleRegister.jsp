@@ -66,7 +66,7 @@
 			}
 		});
 		
-		// 서브캘린더 가져오기 //
+		// 서브캘린더 select로 가져오기 //
 		$("select.calSelect").change(function(){
 			var fk_lgcatgono = $("select.calSelect").val();
 			var fk_emp_no = $("input[name=fk_emp_no]").val();

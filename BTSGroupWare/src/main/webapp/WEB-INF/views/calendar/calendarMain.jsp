@@ -153,59 +153,7 @@
 				
 </script>
 
-<%-- 
-<div id="sidebar" style="font-size: 11pt;">
-		<input type="hidden" value="${sessionScope.loginuser.pk_emp_no}" id="emp_no"/>
-		
-		<button type="button" class="btn btn-outline-primary btn-lg " style="margin: 15px auto; width:200px; display:block;" onclick="javascript:location.href='<%= ctxPath%>/calendar/scheduleRegister.bts'">일정등록</button>
-			<ul style="list-style-type: none; padding: 10px;">
-				<li style="margin-bottom: 15px;">
-					<div id="calenderbtn1" class="calenderbtn">사내 캘린더</div>
-						<div id="slideTogglebox1"  class="slideTogglebox">
-							<table style="margin: 0 20px;">
-								<tbody>
-									<tr id="schecheck">
-										<td>
-											<input type="checkbox" id="allComCal" class="calendar_checkbox" checked/>&nbsp;&nbsp;<label for="allComCal">사내 캘린더</label>--%>
-											 <%-- 사내 캘린더를 보여주는 곳 --%>
-										<%-- 	<div id="companyCal" style="margin-left: 50px; margin-bottom: 10px;"></div>
-										</td>
-									</tr>	
-				   				</tbody>	
-			   				</table>	
-						</div>--%>
-						<%-- 사내 캘린더 추가를 할 수 있는 직원은 직위코드가 3 이면서 부서코드가 4 에 근무하는 사원이 로그인 한 경우에만 가능하도록 조건을 걸어둔다.  	
-	     				<c:if test="${sessionScope.loginuser.fk_pcode =='3' && sessionScope.loginuser.fk_dcode == '4' }"> --%>
-	     			<%--	<c:if test="${sessionScope.loginuser.gradelevel =='1'}"> 
-						<span id="addmyschedule" onclick="addComCalendar()">&nbsp;&nbsp;+ 사내 캘린더 추가</span>
-						</c:if> --%>
-						<%-- </c:if>	--%>
-			<%--	</li>
-				<li style="margin-bottom: 15px;">
-					<div id="calenderbtn2" class="calenderbtn">관심 캘린더</div>
-						<div id="slideTogglebox2"  class="slideTogglebox">	
-							<table style="margin: 0 20px;">
-								<tbody>
-									<tr id="schecheck">
-										<td>			  
-	    									<input type="checkbox" id="allMyCal" class="calendar_checkbox" checked/>&nbsp;&nbsp;<label for="allMyCal">내 캘린더</label>--%>
-	    									<%-- 내 캘린더를 보여주는 곳 --%>
-									<%--		<div id="myCal" style="margin-left: 50px; margin-bottom: 10px;"></div>
-	    								</td>
-	   								</tr>	
-				   				</tbody>	
-			   				</table>				
-						</div>
-						
-						<span id="addschedule" onclick="">&nbsp;&nbsp;+ 내 캘린더 추가</span>		
-				</li>
-			</ul>
-		<input type="checkbox" id="sharedCal" class="calendar_checkbox" value="0" checked/>&nbsp;&nbsp;<label for="sharedCal">공유받은 캘린더</label> 
-</div>--%>
-
-
-
-<div>
+<div id="calendarMain">
 	<h4 style="margin: 0 80px">일정관리</h4>
 	<%-- 검색바를 보여주는 곳 --%>
 	<div id="search">

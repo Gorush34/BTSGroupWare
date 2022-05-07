@@ -67,6 +67,20 @@ public class CalendarService implements InterCalendarService {
 		return myCalList;
 	}
 
+	// === 캘린더 소분류 수정하기 === //
+	@Override
+	public int editCalendar(Map<String, String> paraMap) {
+		int n = 0;
+		
+		// 캘린더에 이름이 있는지 확인
+		int m = dao.existsCalendar(paraMap); 
+		
+		if(m==0) {
+			n = dao.editCalendar(paraMap);
+		}
+		return n;
+	}
+
 
 	// === 서브 캘린더 가져오기 === //
 	@Override
@@ -83,6 +97,7 @@ public class CalendarService implements InterCalendarService {
 		return n;
 	}
 
+	
 	
 
 

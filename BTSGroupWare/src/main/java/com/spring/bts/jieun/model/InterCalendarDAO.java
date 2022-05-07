@@ -28,6 +28,12 @@ public interface InterCalendarDAO {
 	List<CalendarVO> showMyCalendar(String fk_emp_no);
 
 	
+	// === 캘린더 소분류 수정하기 === //
+	int editCalendar(Map<String, String> paraMap);
+			// 캘린더에 이름이 있는지 확인
+			int existsCalendar(Map<String, String> paraMap);
+
+	
 
 	
 

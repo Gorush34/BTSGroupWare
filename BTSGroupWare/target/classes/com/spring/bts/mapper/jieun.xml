@@ -50,6 +50,22 @@
 		order by pk_calno asc
 	</select>
 	
+	<!-- 캘린더 소분류 수정하기 -->
+	<update id="editCalendar" parameterType="HashMap">
+		update tbl_calendar set calname = #{calname}
+		where pk_calno = #{pk_calno} and
+	</update>
+	
+	<!-- 캘린더에 이름이 있는지 확인 -->
+	<select id="existsCalendar" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_calendar
+		where fk_lgcatgono = #{caltype} 
+		and fk_emp_no = #{fk_emp_no} 
+		and calname = #{calname}
+	</select>
+	
+	
 	<!-- 등록 폼에 서브캘린더 가져오기 -->
 	<select id="selectCalNo" parameterType="HashMap" resultType="com.spring.bts.jieun.model.CalendarVO">
 		select pk_calno, fk_lgcatgono, calname

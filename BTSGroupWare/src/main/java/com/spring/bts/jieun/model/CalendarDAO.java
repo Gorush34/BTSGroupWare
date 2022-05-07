@@ -88,6 +88,19 @@ public class CalendarDAO implements InterCalendarDAO {
 		return myCalList;
 	}
 
+	// === 캘린더 소분류 수정하기 === //
+	@Override
+	public int editCalendar(Map<String, String> paraMap) {
+		int n = sqlsession.update("jieun.editCalendar", paraMap);
+		return n;
+	}
+			// 캘린더에 이름이 있는지 확인
+			@Override
+			public int existsCalendar(Map<String, String> paraMap) {
+				int m = sqlsession.selectOne("jieun.existsCalendar", paraMap);
+				return m;
+			}
+
 	
 
 	
