@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.bts.hwanmo.model.EmployeeVO;
 import com.spring.bts.jieun.model.CalendarVO;
 import com.spring.bts.jieun.model.InterCalendarDAO;
 
@@ -21,7 +22,6 @@ public class CalendarService implements InterCalendarService {
 	// Type 에 따라 Spring 컨테이너가 알아서 bean 으로 등록된 com.spring.board.model.BoardDAO 의 bean 을  dao 에 주입시켜준다. 
     // 그러므로 dao 는 null 이 아니다.
 
-	
 	
 	// === 사내 캘린더에 사내 캘린더 소분류 추가하기 === //
 	@Override
@@ -95,6 +95,12 @@ public class CalendarService implements InterCalendarService {
 		return calendarvoList;
 	}
 	
+	// === 참석자 추가하기 : 사원 명단 불러오기 === //
+	@Override
+	public List<EmployeeVO> searchJoinUser(String joinUserName) {
+		List<EmployeeVO> joinUserList = dao.searchJoinUser(joinUserName);
+		return joinUserList;
+	}
 	
 	// === 일정 등록 하기 === //
 	@Override
@@ -102,6 +108,7 @@ public class CalendarService implements InterCalendarService {
 		int n = dao.scheduleRegisterInsert(paraMap);
 		return n;
 	}
+
 
 	
 

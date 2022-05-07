@@ -1,11 +1,15 @@
 package com.spring.bts.jieun.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.bts.common.AES256;
+import com.spring.bts.hwanmo.model.EmployeeVO;
 import com.spring.bts.jieun.model.CalendarVO;
 import com.spring.bts.jieun.service.InterCalendarService;
 
@@ -84,6 +90,10 @@ public class CalendarController {
 
 	@Autowired    // Type에 따라 알아서 Bean 을 주입해준다.
     private InterCalendarService service;
+	
+/*	@Autowired
+	private AES256 aes;*/
+	
 	// === 캘린더 일정 페이지 === //	
 	@RequestMapping(value="/calendar/calenderMain.bts")
 	public ModelAndView calenderMain(ModelAndView mav) {
@@ -221,11 +231,13 @@ public class CalendarController {
 	// === 캘린더 소분류 삭제하기 === //
 	@ResponseBody
 	@RequestMapping(value="/calendar/deleteCalendar.bts", method= {RequestMethod.POST})
-	public String deleteCalendar(HttpServletRequest request)  throws Throwable  {
+	public String deleteCalendar(HttpServletRequest request) throws Throwable  {
 		
 		String pk_calno = request.getParameter("pk_calno");
+		System.out.println("확인용"+ pk_calno);
 		
 		int n = service.deleteCalendar(pk_calno);
+		System.out.println("확인용" + n);
 		
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("n", n);
@@ -264,29 +276,44 @@ public class CalendarController {
 	
 	
 
-	
-	
 	// === 참석자 추가하기 === //
-/*	@ResponseBody
-	@RequestMapping(value="/calendar/scheduleRegister/addJoinUser.bts", produces="text/plain;charset=UTF-8")
-	public String addJoinUser(HttpServletRequest request) {
+	@ResponseBody
+	@RequestMapping(value="/calendar/scheduleRegister/searchJoinUser.bts", produces="text/plain;charset=UTF-8")
+	public String searchJoinUser(HttpServletRequest request) throws JSONException, NoSuchAlgorithmException, UnsupportedEncodingException, GeneralSecurityException {
 		
 		String joinUserName = request.getParameter("joinUserName");
 		
 		// 사원 명단 불러오기
-		List<MemberVO> joinUserList = service.joinUserNameList(joinUserName);
+		List<EmployeeVO> joinUserList = service.searchJoinUser(joinUserName);
 		
-		return "";
-	}*/
+		JSONArray jsonArr = new JSONArray();
+		if(joinUserList != null && joinUserList.size() > 0) {
+			for(EmployeeVO mvo : joinUserList) {
+				JSONObject jsObj = new JSONObject();
+				//jsObj.put("email", aes.decrypt(mvo.getUq_email()) );
+				jsObj.put("name", mvo.getEmp_name());
+				
+				jsonArr.put(jsObj);
+			}
+		}
+		
+		return jsonArr.toString();
+	}
+
 //	
 	// === 일정 등록 하기 === //
 	@RequestMapping(value="/calendar/scheduleRegisterInsert.bts", method={RequestMethod.POST})
 	public ModelAndView scheduleRegisterInsert(ModelAndView mav, HttpServletRequest request) throws Throwable {
 		
+		String method = request.getMethod();
+		mav.addObject("method", method);
+		System.out.println("확인용 : "+method);
+		
 		String startdate = request.getParameter("startdate");
-		String enddate = request.getParameter("endate");
+		String enddate = request.getParameter("enddate");
 		String subject = request.getParameter("subject");
-		String fk_calno = request.getParameter("calSelect");
+		String fk_lgcatgono= request.getParameter("fk_lgcatgono");
+		String fk_calno = request.getParameter("fk_calNo");
 		String joinuser = request.getParameter("joinuser");
 		String color = request.getParameter("color");
 		String place = request.getParameter("place");
@@ -298,6 +325,7 @@ public class CalendarController {
 		paraMap.put("startdate", startdate);
 		paraMap.put("enddate", enddate);
 		paraMap.put("subject", subject);
+		paraMap.put("fk_lgcatgono",fk_lgcatgono);
 		paraMap.put("fk_calno", fk_calno);
 		paraMap.put("joinuser", joinuser);
 		paraMap.put("color", color);
@@ -314,7 +342,7 @@ public class CalendarController {
 			mav.addObject("message", "일정 등록에 성공하였습니다.");
 		}
 		
-		mav.addObject("loc", request.getContextPath()+"/calendar/scheduleRegister.bts");
+		mav.addObject("loc", request.getContextPath()+"/calendar/calenderMain.bts");
 		
 		mav.setViewName("msg");
 		

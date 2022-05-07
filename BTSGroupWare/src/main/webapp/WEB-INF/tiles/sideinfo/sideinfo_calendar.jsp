@@ -128,21 +128,21 @@
 	
 	// === 사내 캘린더 수정하기 === //
 	function editComCalendar(pk_calno, calname){
-		$("#editComCalModal").moda('show');
+		$("#editComCalModal").modal('show');
 		$("input.editCom_pk_calno").val(pk_calno);
 		$("input.editCom_calname").val(calname);
 	}
 	
 	function goEditComCal(){
 		
-		if($("input.editCom_calname").val().trim()= ""){
+		if($("input.editCom_calname").val().trim()== ""){
 			alert("수정할 사내캘린더 소분류명을 입력하세요!!");
 	  		return;
 		}
 		else {
 			
 			$.ajax({
-				uri:"<%= ctxPath%>/calendar/editCalendar.bts",
+				url:"<%= ctxPath%>/calendar/editCalendar.bts",
 				data:{"pk_calno":$("input.editCom_pk_calno").val(),
 					  "calname":$("input.editCom_calname").val(),
 					  "fk_emp_no":"${sessionScope.loginuser.pk_emp_no}",
@@ -251,21 +251,21 @@
 	
 	// === 사내 캘린더 수정하기 === //
 	function editMyCalendar(pk_calno, calname){
-		$("#editMyCalModal").moda('show');
+		$("#editMyCalModal").modal('show');
 		$("input.editMy_pk_calno").val(pk_calno);
 		$("input.editMy_calname").val(calname);
 	}
 	
 	function goEditMyCal(){
 		
-		if($("input.editMy_calname").val().trim()= ""){
+		if($("input.editMy_calname").val().trim() == ""){
 			alert("수정할 사내캘린더 소분류명을 입력하세요!!");
 	  		return;
 		}
 		else {
 			
 			$.ajax({
-				uri:"<%= ctxPath%>/calendar/editCalendar.bts",
+				url:"<%= ctxPath%>/calendar/editCalendar.bts",
 				data:{"pk_calno":$("input.editMy_pk_calno").val(),
 					  "calname":$("input.editMy_calname").val(),
 					  "fk_emp_no":"${sessionScope.loginuser.pk_emp_no}",
@@ -298,9 +298,10 @@
 		
 		var bool = confirm(calname + " 캘린더를 삭제 하시겠습니까?");
 		
+		
 		if(bool){
 			$.ajax({
-				uri:"<%= ctxPath%>/calendar/deleteCalendar.bts"
+				url:"<%= ctxPath%>/calendar/deleteCalendar.bts",
 				data:{"pk_calno":pk_calno},
 				dataType:"json",
 				type:"post",

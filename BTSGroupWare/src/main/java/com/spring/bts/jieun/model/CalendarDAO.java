@@ -8,6 +8,8 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.spring.bts.hwanmo.model.EmployeeVO;
+
 //=== #32. DAO 선언 === 
 @Repository
 public class CalendarDAO implements InterCalendarDAO {
@@ -33,19 +35,6 @@ public class CalendarDAO implements InterCalendarDAO {
 	// Type 에 따라 Spring 컨테이너가 알아서 root-context.xml 에 생성된 org.mybatis.spring.SqlSessionTemplate 의  sqlsession bean 을  sqlsession 에 주입시켜준다. 
     // 그러므로 sqlsession 는 null 이 아니다.
 
-	// === 일정 등록 하기 === //
-	@Override
-	public int scheduleRegisterInsert(Map<String, String> paraMap) {
-		int n = sqlsession.insert("jieun.scheduleRegisterInsert", paraMap);
-		return n;
-	}
-
-	// === 서브 캘린더 가져오기 === //
-	@Override
-	public List<CalendarVO> selectCalNo(Map<String, String> paraMap) {
-		List<CalendarVO> calendarvoList = sqlsession.selectList("jieun.selectCalNo", paraMap);
-		return calendarvoList;
-	}
 
 	// === 사내 캘린더에 사내 캘린더 소분류 추가하기 === //
 	@Override
@@ -108,8 +97,28 @@ public class CalendarDAO implements InterCalendarDAO {
 		return n;
 	}
 
+	// === 서브 캘린더 가져오기 === //
+	@Override
+	public List<CalendarVO> selectCalNo(Map<String, String> paraMap) {
+		List<CalendarVO> calendarvoList = sqlsession.selectList("jieun.selectCalNo", paraMap);
+		return calendarvoList;
+	}
 	
-
+	// === 참석자 추가하기 : 사원 명단 불러오기 === //
+	@Override
+	public List<EmployeeVO> searchJoinUser(String joinUserName) {
+		List<EmployeeVO> joinUserList = sqlsession.selectList("jieun.searchJoinUser", joinUserName);
+		return joinUserList;
+	}
+	
+	// === 일정 등록 하기 === //
+	@Override
+	public int scheduleRegisterInsert(Map<String, String> paraMap) {
+		int n = sqlsession.insert("jieun.scheduleRegisterInsert", paraMap);
+		return n;
+	}
+	
+	
 	
 	
 

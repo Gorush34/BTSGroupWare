@@ -53,7 +53,7 @@
 	<!-- 캘린더 소분류 수정하기 -->
 	<update id="editCalendar" parameterType="HashMap">
 		update tbl_calendar set calname = #{calname}
-		where pk_calno = #{pk_calno} and
+		where pk_calno = #{pk_calno}
 	</update>
 	
 	<!-- 캘린더에 이름이 있는지 확인 -->
@@ -80,6 +80,12 @@
 		order by pk_calno asc
 	</select>
 	
+	<!-- 참석자 추가하기 : 사원 명단 불러오기 -->
+	<select id="searchJoinUser" parameterType="String" resultType="com.spring.bts.hwanmo.model.EmployeeVO">
+		select uq_email, emp_name
+		from tbl_employees
+		where lower(emp_name) like '%'|| lower(#{joinUserName}) ||'%'
+	</select>
 	
 	<!-- 일정등록 하기  -->
 	<insert id="scheduleRegisterInsert" parameterType="HashMap">
