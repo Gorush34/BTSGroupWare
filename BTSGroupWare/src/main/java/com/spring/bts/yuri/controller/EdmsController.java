@@ -55,7 +55,7 @@ public class EdmsController {
 		// /WEB-INF/views/edms/edmsHome.jsp 페이지를 만들어야 한다.
 		return mav;		
 	}
-
+	
 	
 	
 	// === 전자결재 문서작성 폼페이지 요청 === //
@@ -64,17 +64,6 @@ public class EdmsController {
 		
 	//	getCurrentURL(request); // 로그아웃을 했을 때  현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
 		// 위의 문장을 주석처리하고 게시판 - 글쓰기 - 로그인 - 로그아웃 을 하면  goBackURL이 없으므로 시작페이지로 간다!
-		
-		String userid = request.getParameter("pk_emp_no");
-		String pwd = request.getParameter("emp_pwd");
-		
-		Map<String, String> paraMap = new HashMap<>();
-		paraMap.put("userid", userid);
-		paraMap.put("pwd", Sha256.encrypt(pwd));
-		
-		EmployeeVO loginuser = service.getLoginMember(paraMap);
-
-		mav.addObject("loginuser", loginuser);
 		
 		mav.setViewName("edmsAdd.edms");
 		// /WEB-INF/views/edms/{1}.jsp
@@ -88,8 +77,18 @@ public class EdmsController {
 	@RequestMapping(value="/edms/edmsAddEnd.bts", method= {RequestMethod.POST})
 	public ModelAndView edmsAddEnd(Map<String,String> paraMap, ModelAndView mav, ApprVO apprvo, MultipartHttpServletRequest mrequest) { // <== After Advice 를 사용하기 및 파일 첨부하기
 		
+		
+		// 전자결재 양식선택(업무기안서, 휴가신청서 등..)을 위한 것
+		List<String> apprsortList = service.getApprsortList();
+		
+		mav.addObject("apprsortList", apprsortList);
+		
+		
+		
 		// 파일첨부가 없는 전자결재 문서작성
-		int n = service.edmsAdd(apprvo);
+		int n = 0;
+		
+		n = service.edmsAdd(apprvo);
 		
 		if(n==1) {
 			mav.setViewName("redirect:/edmsList.action");

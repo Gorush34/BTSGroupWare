@@ -1,5 +1,6 @@
 package com.spring.bts.yuri.model;
 
+import java.util.List;
 import java.util.Map;
 
 import com.spring.bts.hwanmo.model.EmployeeVO;
@@ -10,7 +11,10 @@ public interface InterEdmsDAO {
 	EmployeeVO getLoginMember(Map<String, String> paraMap);
 
 	// 파일첨부가 없는 전자결재 문서작성
-	int add(ApprVO apprvo);
+	int edmsAdd(ApprVO apprvo);
+
+	// 전자결재 양식선택(업무기안서, 휴가신청서 등..)을 위한 것
+	List<String> getApprsortList();
 
 	// 파일첨부가 있는 전자결재 문서작성
 	

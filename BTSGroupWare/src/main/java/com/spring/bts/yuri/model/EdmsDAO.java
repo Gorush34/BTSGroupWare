@@ -1,5 +1,6 @@
 package com.spring.bts.yuri.model;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -43,23 +44,33 @@ public class EdmsDAO implements InterEdmsDAO {
 	// Type 에 따라 Spring 컨테이너가 알아서 root-context.xml 에 생성된
 	// org.mybatis.spring.SqlSessionTemplate 의  sqlsession bean 을  sqlsession 에 주입시켜준다. 
     // 그러므로 sqlsession 는 null 이 아니다.
-
 	
+	
+	
+	// 로그인 멤버 정보 가져오기
+	@Override
+	public EmployeeVO getLoginMember(Map<String, String> paraMap) {
+		EmployeeVO loginuser = sqlsession.selectOne("yuri.getLoginMember", paraMap);
+		return loginuser;
+	}
 		
 	// 파일첨부가 없는 전자결재 문서작성
 	@Override
-	public int add(ApprVO apprvo) {
-		int n = sqlsession.insert("yuri.add", apprvo);
+	public int edmsAdd(ApprVO apprvo) {
+		int n = sqlsession.insert("yuri.edmsAdd", apprvo);
 		return n;
 	}
 
-
-
+	// 전자결재 양식선택(업무기안서, 휴가신청서 등..)을 위한 것
 	@Override
-	public EmployeeVO getLoginMember(Map<String, String> paraMap) {
-		// TODO Auto-generated method stub
+	public List<String> getApprsortList() {
+		sqlsession.selectList("yuri.getApprsortList");
 		return null;
 	}
+
+
+
+
 	
 	
 	

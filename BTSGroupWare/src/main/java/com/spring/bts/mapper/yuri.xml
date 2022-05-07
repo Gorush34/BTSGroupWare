@@ -14,13 +14,13 @@
 		3. myBatis 에서 제공하는 if 엘리먼트나 choose 엘리먼트 안에서 사용할때는
 		그냥 <if test="key명"> <when test="key명"> 으로 사용한다. -->
 	
-
-
-	<!-- 로그인처리하기 ? -->
-	
-
-
-
+	<!-- 전자결재 양식선택(업무기안서, 휴가신청서 등..)을 위한 것 -->
+	<select id="getApprsortList">
+		SELECT appr_name
+		FROM tbl_appr a
+		LEFT OUTER JOIN tbl_appr_sort s
+		ON a.fk_appr_sortno = s.pk_appr_sortno;
+	</select>
 
 	<!-- 파일첨부가 없는 전자결재 문서작성 -->
 	<insert id="edmsAdd" parameterType="com.spring.bts.yuri.model.ApprVO">

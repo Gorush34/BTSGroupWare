@@ -10,7 +10,7 @@
 
 <!-- datepicker를 사용하기 위한 링크 / 나중에 헤더에 추가되면 지우기 -->
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
-<link rel="stylesheet" href="/resources/demos/style.css">
+<!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
 
@@ -25,7 +25,7 @@
 		//전역변수
 		var obj = [];	
 		
-       //스마트에디터 프레임생성
+		//스마트에디터 프레임생성
 		nhn.husky.EZCreator.createInIFrame({
 			oAppRef: obj,
 			elPlaceHolder: "contents",
@@ -57,11 +57,19 @@
 			console.log("양식선택 확인 : " + docform);
 			
 			// 카테고리를 선택하지 않은 경우 에러 메시지 출력
-			if ($("select#docform option:selected").length == 0) {
-				alert("글제목을 입력하세요!!");
+			// if ($("select#docform option:selected").length == 0) {
+			if(docform == "" || docform == null) {
+				alert("양식을 입력하세요!!");
 				return;
 			}
-			
+						
+			// 카레고리 선택값 받아오기
+			$("select#docform").on("change", function() {   
+		         const docform = $(this).val();
+				// let docform = $("select#docform > option:selected").attr("value");
+				 $("input#docformName").val(docform);
+				
+		      });//end of $("select#cateSel").on("change", function() 
 			
 			// 긴급버튼 체크 시 값 전달
 			$("input:checkbox[name=emergency]").each(function(index, item) {
@@ -132,7 +140,7 @@
 			const frm = document.addFrm;
 			frm.method = "POST";
 			frm.action = "<%= ctxPath%>/edmsAddEnd.bts";
-		//	frm.submit();
+			frm.submit();
 			
 		}); // end of $("button#btnWrite").click(function(){}) --------------------
 		
@@ -182,10 +190,17 @@
 				<select name="docform" id="docform">
 					<option value="">양식선택</option>
 					<%-- ApprVO에서 가져오나 ApprSortVO에서 가져오나? --%>
-					<c:forEach var="map" items="${requestScope.fk_appr_sortno}" var="form">
-						<option value="${requestScope.fk_appr_sortno}">${requestScope.fk_appr_sortno}</option>
-					</c:forEach>
+					<%-- 오류  <c:forEach var="map" items="${requestScope.fk_appr_sortno}" var="form"> var 가 2번 쓰여서! --%>
+					<%-- <c:forEach var="apprsort" items="${requestScope.apprsortList}"> --%>
+					<%-- var="이름" items="${컨트롤러에 선언된 list명}" --%>
+						<%-- <option value="${apprsort.apprsortList}">어쩌고</option> --%>
+					<%-- </c:forEach> --%>
+					<option value="9">업무기안서</option>
+					<option value="10">업무협조서</option>
+					<option value="11">증명서신청</option>
+					<option value="12">휴가신청서</option>
 				</select>
+				<input type="hidden" id="docformName" name="docformName" value="">
 			</td>
 		</tr>
 		
@@ -194,7 +209,8 @@
           	<td colspan="4">
           		<!-- EmployeeVO 가 아닌 ApprVO 에서 가져오는 것이다! 근데 왜 굳이 EmployeeVO를 놔두고? 모르겠음 -->
           		<%-- 이 view단은 어차피 로그인해야지만 볼 수 있는 곳이기 때문에 sessionScope을 사용한다 / 컨트롤러에서 loginuser에 userid라고 저장해줬으니까 이렇게?--%>
-				<input type="text" name="fk_userid" value="${sessionScope.loginuser.userid}" />
+          		<%-- EmployeeVO에서 가져와야 하므로  userid가 아니라 get 뒤의 ~를 가져와야 함 --%>
+				<input type="text" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
 				<input type="text" name="name" value="${sessionScope.loginuser.emp_name}" readonly />
 				
 			</td>
@@ -214,8 +230,8 @@
 				<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnApprSelect" onclick="getAppr()">결재선 지정</button>
 			</th>
 			<td colspan="2" style="width: 30%;">부서1</td>
-			<td style="width: 30%;">직급1 : ${requestScope.fk_mid_approver_no}</td>
-			<td style="width: 30%;">이름1 : ${requestScope.fk_fin_approver_no}</td>
+			<td style="width: 30%;">직급1 : </td>
+			<td style="width: 30%;">이름1 : </td>
 		</tr>
 		
 		<tr>

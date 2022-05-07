@@ -2,6 +2,28 @@
 
 body {font-family: 'Noto Sans KR', sans-serif; }
 
+/* 헤더 스타일  시작 */
+
+li.login_dropdown  { 
+   list-style: none;
+   display: inline-block;
+}
+
+img#memberProfile {
+   max-width: 40px;
+   max-height: 40px;
+   border-radius: 100%;
+}
+
+ul#secondHeaderGroup, .secondHeaderList {
+      list-style-type: none;
+      display: inline-block;
+}
+
+/* 헤더 스타일  끝 */
+
+
+
 #mycontainer	{ padding:20px; }
 #myheader		{ display: flex; min-height:100px; position: relative; top: 60px; }
 #mycontent		{ min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:#F2F2F2;
