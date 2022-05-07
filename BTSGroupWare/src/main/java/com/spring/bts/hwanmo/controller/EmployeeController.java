@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,7 +42,7 @@ public class EmployeeController {
 	@Autowired
 	private InterEmployeeService empService;
 	
-	// 로그인 페이지 요청
+	// 사원등록 페이지 요청
 	@RequestMapping(value="/emp/registerEmp.bts")
 	public ModelAndView requiredLogin_registerEmp(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
@@ -77,7 +79,7 @@ public class EmployeeController {
 	
 	
 	
-	
+	// 이메일 중복체크
 	@ResponseBody
 	@RequestMapping(value="/emp/emailDuplicateCheck.bts", method = {RequestMethod.POST}, produces="text/plain;charset=UTF-8")
 	public String emailDuplicateCheck(HttpServletRequest request) { 
@@ -102,7 +104,7 @@ public class EmployeeController {
 		
 	} // public String emailDuplicateCheck(HttpServletRequest request) { }----------------------
 	
-	
+	// 사원등록 버튼 클릭시
 	@ResponseBody
 	@RequestMapping(value="/emp/registerEmpSubmit.bts", method = {RequestMethod.POST}, produces="text/plain;charset=UTF-8")
 	public ModelAndView registerEmpSubmit(ModelAndView mav, HttpServletRequest request) {
@@ -198,6 +200,46 @@ public class EmployeeController {
 		
 		
 	} // public String emailDuplicateCheck(HttpServletRequest request) { }----------------------
+	
+	@RequestMapping(value="/idFind.bts", method = {RequestMethod.GET})
+	public ModelAndView idFind(ModelAndView mav, HttpServletRequest request) {
+		
+		String method = request.getMethod();
+		mav.addObject("method", method);
+		
+		mav.setViewName("/tiles1/main/idFind");
+		
+		return mav;
+	}
+	
+	// 아이디찾기 버튼 클릭시
+	@RequestMapping(value="/idFindEnd.bts")
+	public ModelAndView idFindEnd(ModelAndView mav, HttpServletRequest request) {
+		
+		String method = request.getMethod();
+		mav.addObject("method", method);
+		
+		String emp_name = request.getParameter("emp_name");
+		String uq_email = request.getParameter("uq_email");
+		
+		try {
+			uq_email = aes.encrypt(request.getParameter("uq_email"));	 /* 이메일 */
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}	
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("emp_name", emp_name);
+		paraMap.put("uq_email", uq_email);
+		
+		String pk_emp_no = empService.findEmpNo(paraMap);
+		
+		mav.addObject("pk_emp_no", pk_emp_no);
+		mav.setViewName("/tiles1/main/idFind");
+		
+		
+		return mav;
+	}
 	
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////

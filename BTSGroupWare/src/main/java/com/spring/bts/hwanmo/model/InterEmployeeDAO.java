@@ -1,6 +1,7 @@
 package com.spring.bts.hwanmo.model;
 
 import java.sql.SQLException;
+import java.util.Map;
 
 public interface InterEmployeeDAO {
 
@@ -12,5 +13,8 @@ public interface InterEmployeeDAO {
 
 	// 사원 가입하기
 	int registerMember(EmployeeVO empvo) throws SQLException;
+
+	// 아이디 찾기
+	String findEmpNo(Map<String, String> paraMap);
 
 }
