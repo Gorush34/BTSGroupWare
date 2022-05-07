@@ -43,8 +43,6 @@ public class AddBookDAO implements InterAddBookDAO {
 		
 		int n = sqlsession.insert("byungyoon.addBook_telAdd_insert", avo);
 		
-		
-		
 		return n;
 	}
 

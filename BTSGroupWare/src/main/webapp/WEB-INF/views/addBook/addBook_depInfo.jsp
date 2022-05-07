@@ -121,9 +121,11 @@
 			<c:if test="${emp.ko_depname  eq '영업'}">
 			<tr>
 			<td>
+				<form action=>
 				<div id="y_teamwon">
 					<button class="btn btn-default">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
 				</div>
+				</form>
 			</td>
 			</tr>
 			</c:if>

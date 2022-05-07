@@ -25,7 +25,7 @@ import com.spring.bts.hwanmo.model.EmployeeVO;
    즉, 여기서 bean의 이름은 boardController 이 된다. 
    여기서는 @Controller 를 사용하므로 @Component 기능이 이미 있으므로 @Component를 명기하지 않아도 BoardController 는 bean 으로 등록되어 스프링컨테이너가 자동적으로 관리해준다. 
 */
-@RestController/* Bean + controller 기능을 모듀 포함 */
+@RestController/* Bean + controller 기능을 모두 포함 */
 public class AddBookController {
 
 	@Autowired
@@ -40,6 +40,7 @@ public class AddBookController {
 	   
 	   testMap.put("search", search);
 	   testMap.put("name", a);
+	   
 	   
 	   return testMap;
 	}
@@ -69,7 +70,7 @@ public class AddBookController {
    }
    
    
-   // 주소록 연락처 추가 페이지에서 데이터 넣기 ( 환모형이랑 상의 후 물어보기)
+   // 주소록 연락처 추가 페이지에서 데이터 넣기
    @ResponseBody
    @RequestMapping(value="/addBook/addBook_telAdd_insert.bts" , method = {RequestMethod.POST}, produces="text/plain;charset=UTF-8")
    public ModelAndView addBook_telAdd_insert(HttpServletRequest request, ModelAndView mav) {
@@ -85,16 +86,6 @@ public class AddBookController {
 	   String company_address = request.getParameter("company_address");
 	   String memo = request.getParameter("memo");
 	   
-	   System.out.println("addb_name : " + addb_name);
-	   System.out.println("fk_dept_no : " + fk_dept_no);
-	   System.out.println("fk_rank_no : " + fk_rank_no);
-	   System.out.println("email : " + email);
-	   System.out.println("phone : " + phone);
-	   System.out.println("companyname : " + companyname);
-	   System.out.println("com_tel : " + com_tel);
-	   System.out.println("company_address : " + company_address);
-	   System.out.println("memo : " + memo);
-	   
 	   AddBookVO avo = new AddBookVO();
 	   
 	   avo.setAddb_name(addb_name);
@@ -106,8 +97,6 @@ public class AddBookController {
 	   avo.setCom_tel(com_tel);
 	   avo.setCompany_address(company_address);
 	   avo.setMemo(memo);
-	   
-	   
 	   
 	   //성공했는지 확인했는지
 	   
@@ -125,7 +114,6 @@ public class AddBookController {
 		   message = "주소록에 연락처 추가가 실패했습니다";
 		   loc =  request.getContextPath()+"/addBook/addBook_telAdd.bts"; 
 	   }
-	   
 		
 		mav.addObject("message", message);
 		mav.addObject("loc", loc);
@@ -158,6 +146,16 @@ public class AddBookController {
 	   
 	   return mav;
    }
+   
+   // 상세부서정보 페이지에서 사원상세정보 ajax로 select 해오기
+	@RequestMapping(value="/addBook/addBook_depInfo_ajax.bts", produces = "application/json; charset=utf-8")
+	public Map<String, Object> addBook_test(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	   
+	   Map<String, Object> testMap = new HashMap<String, Object>();
+	   
+	   
+	   return testMap;
+	}
    
    
 

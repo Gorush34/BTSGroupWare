@@ -100,7 +100,7 @@
 	      </li>
 	      
 	      <li class="nav-item">
-	        <a class="nav-link" href="<%= ctxPath %>/addBook/addBook_orgChart.bts" id="navbar" role="button" aria-expanded="false">
+	        <a class="nav-link" href="<%= ctxPath %>/addBook/addBook_depInfo.bts" id="navbar" role="button" aria-expanded="false">
 	          	조직도
 	        </a>
 	      </li>
