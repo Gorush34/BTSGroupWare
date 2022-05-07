@@ -1,0 +1,272 @@
+package com.spring.bts.yuri.model;
+
+import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
+
+@Repository
+public class ApprVO {
+	
+	private String pk_appr_no;			/* 결재번호 */
+	private String fk_appr_sortno;		/* 결재구분번호 */
+	private String fk_emp_no;			/* 사원번호 */
+	private String fk_mid_approver_no;	/* 중간승인자 */
+	private String fk_fin_approver_no;	/* 최종승인자 */
+	private String emergency;			/* 긴급여부 - DEFAULT 0 */
+	private String title;				/* 제목 */
+	private String contents;			/* 내용 */
+	private String filename;			/* 서버파일명 */
+	private String orgfilename;			/* 실제파일명 */
+	private String filepath;			/* 파일경로 */
+	private String status;				/* 결재진행상태 - DEFAULT 0 */
+	private String mid_accept;			/* 중간승인여부 - DEFAULT 0 */
+	private String fin_accept;			/* 최종승인여부 - DEFAULT 0*/
+	private String mid_opinion;			/* 중간승인자의견 */
+	private String fin_opinion;			/* 최종승인자의견 */
+	private String writeday;			/* 결재작성일자 */
+	private String viewcnt;				/* 파일읽음여부 - DEFAULT 0*/
+	
+	private String previousseq;			/* 이전글번호 */ 
+	private String previoussubject;		/* 이전글제목 */
+	private String nextseq;				/* 다음글번호 */
+	private String nextsubject;			/* 다음글제목 */ 	
+	
+	private MultipartFile attach;
+	/*
+	 * form 태그에서 type="file" 인 파일을 받아서 저장되는 필드이다.
+	 * 진짜파일 ==> WAS(톰캣) 디스크에 저장됨.
+	 * 조심할것은 MultipartFile attach 는 오라클 데이터베이스 tbl_board 테이블의 컬럼이 아니다.
+	 * /Board/src/main/webapp/WEB-INF/views/tiles1/board/add.jsp 파일에서
+	 * input type="file" 인 name 의 이름(attach)과 동일해야만 파일첨부가 가능해진다.!!!!
+	 */
+	
+	// 기본생성자
+	public ApprVO() {}
+
+	// 생성자 1
+	public ApprVO(String pk_appr_no, String fk_appr_sortno, String fk_emp_no, String fk_mid_approver_no,
+			String fk_fin_approver_no, String emergency, String title, String contents, String filename,
+			String orgfilename, String filepath, String status, String mid_accept, String fin_accept,
+			String mid_opinion, String fin_opinion, String writeday, String viewcnt) {
+		
+		this.pk_appr_no = pk_appr_no;
+		this.fk_appr_sortno = fk_appr_sortno;
+		this.fk_emp_no = fk_emp_no;
+		this.fk_mid_approver_no = fk_mid_approver_no;
+		this.fk_fin_approver_no = fk_fin_approver_no;
+		this.emergency = emergency;
+		this.title = title;
+		this.contents = contents;
+		this.filename = filename;
+		this.orgfilename = orgfilename;
+		this.filepath = filepath;
+		this.status = status;
+		this.mid_accept = mid_accept;
+		this.fin_accept = fin_accept;
+		this.mid_opinion = mid_opinion;
+		this.fin_opinion = fin_opinion;
+		this.writeday = writeday;
+		this.viewcnt = viewcnt;
+	}
+
+	
+	
+	// Getter Setter
+	public String getPk_appr_no() {
+		return pk_appr_no;
+	}
+
+	public void setPk_appr_no(String pk_appr_no) {
+		this.pk_appr_no = pk_appr_no;
+	}
+
+	public String getFk_appr_sortno() {
+		return fk_appr_sortno;
+	}
+
+	public void setFk_appr_sortno(String fk_appr_sortno) {
+		this.fk_appr_sortno = fk_appr_sortno;
+	}
+
+	public String getFk_emp_no() {
+		return fk_emp_no;
+	}
+
+	public void setFk_emp_no(String fk_emp_no) {
+		this.fk_emp_no = fk_emp_no;
+	}
+
+	public String getFk_mid_approver_no() {
+		return fk_mid_approver_no;
+	}
+
+	public void setFk_mid_approver_no(String fk_mid_approver_no) {
+		this.fk_mid_approver_no = fk_mid_approver_no;
+	}
+
+	public String getFk_fin_approver_no() {
+		return fk_fin_approver_no;
+	}
+
+	public void setFk_fin_approver_no(String fk_fin_approver_no) {
+		this.fk_fin_approver_no = fk_fin_approver_no;
+	}
+
+	public String getEmergency() {
+		return emergency;
+	}
+
+	public void setEmergency(String emergency) {
+		this.emergency = emergency;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getContents() {
+		return contents;
+	}
+
+	public void setContents(String contents) {
+		this.contents = contents;
+	}
+
+	public String getFilename() {
+		return filename;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+
+	public String getOrgfilename() {
+		return orgfilename;
+	}
+
+	public void setOrgfilename(String orgfilename) {
+		this.orgfilename = orgfilename;
+	}
+
+	public String getFilepath() {
+		return filepath;
+	}
+
+	public void setFilepath(String filepath) {
+		this.filepath = filepath;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getMid_accept() {
+		return mid_accept;
+	}
+
+	public void setMid_accept(String mid_accept) {
+		this.mid_accept = mid_accept;
+	}
+
+	public String getFin_accept() {
+		return fin_accept;
+	}
+
+	public void setFin_accept(String fin_accept) {
+		this.fin_accept = fin_accept;
+	}
+
+	public String getMid_opinion() {
+		return mid_opinion;
+	}
+
+	public void setMid_opinion(String mid_opinion) {
+		this.mid_opinion = mid_opinion;
+	}
+
+	public String getFin_opinion() {
+		return fin_opinion;
+	}
+
+	public void setFin_opinion(String fin_opinion) {
+		this.fin_opinion = fin_opinion;
+	}
+
+	public String getWriteday() {
+		return writeday;
+	}
+
+	public void setWriteday(String writeday) {
+		this.writeday = writeday;
+	}
+
+	public String getViewcnt() {
+		return viewcnt;
+	}
+
+	public void setViewcnt(String viewcnt) {
+		this.viewcnt = viewcnt;
+	}
+
+	
+	
+	
+	////////////////////////////////////////////////////////////
+	
+	
+	
+	public String getPreviousseq() {
+		return previousseq;
+	}
+
+	public void setPreviousseq(String previousseq) {
+		this.previousseq = previousseq;
+	}
+
+	public String getPrevioussubject() {
+		return previoussubject;
+	}
+
+	public void setPrevioussubject(String previoussubject) {
+		this.previoussubject = previoussubject;
+	}
+
+	public String getNextseq() {
+		return nextseq;
+	}
+
+	public void setNextseq(String nextseq) {
+		this.nextseq = nextseq;
+	}
+
+	public String getNextsubject() {
+		return nextsubject;
+	}
+
+	public void setNextsubject(String nextsubject) {
+		this.nextsubject = nextsubject;
+	}
+
+	public MultipartFile getAttach() {
+		return attach;
+	}
+
+	public void setAttach(MultipartFile attach) {
+		this.attach = attach;
+	}
+	
+	
+
+	
+	
+	
+	
+	
+}

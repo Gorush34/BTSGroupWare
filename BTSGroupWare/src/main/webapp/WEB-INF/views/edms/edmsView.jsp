@@ -147,6 +147,8 @@
 	<div style="margin: 20px;">
 		<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnWrite">결재요청</button>
 		<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnApprCancel">상신취소</button>
+		<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnApprCancel">문서수정</button>
+		<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnApprCancel">문서삭제</button>
 	</div>
 	
 	</form>

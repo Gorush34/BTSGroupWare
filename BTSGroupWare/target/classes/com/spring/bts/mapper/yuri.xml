@@ -1,12 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- ==== #29. mapper 기본설정 ==== -->
+<!-- ==== mapper 기본설정 ==== -->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<!-- ==== 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <!-- ==== 대부분은 namespace에 파일이름 사용(유일하니까) ==== -->
 <mapper namespace="yuri">
 
+<!-- #### 중요 #### 
+		HashMap 타입으로 매개변수를 받아온 것을 꺼내서 사용할 때
+		1. 데이터로 사용할 때는 #{key명} 이고, 
+		2. 식별자(테이블명, 컬럼명)로 사용할때는 ${key명} 이고, 
+		3. myBatis 에서 제공하는 if 엘리먼트나 choose 엘리먼트 안에서 사용할때는
+		그냥 <if test="key명"> <when test="key명"> 으로 사용한다. -->
+	
 
+
+	<!-- 로그인처리하기 ? -->
+	
+
+
+
+
+	<!-- 파일첨부가 없는 전자결재 문서작성 -->
+	<insert id="edmsAdd" parameterType="com.spring.bts.yuri.model.ApprVO">
+		INSERT INTO tbl_appr(pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_approver_no, fk_fin_approver_no, emergency,
+            title, contents,
+            status, mid_accept, fin_accept,
+            mid_opinion, fin_opinion,
+            writeday, viewcnt)
+		VALUES(seq_apprno.nextval, #{fk_appr_sortno}, #{fk_emp_no}, #{fk_mid_approver_no}, #{fk_fin_approver_no}, #{emergency}, 
+            #{title}, #{contents},
+            default, default, default,
+            #{mid_opinion}, #{fin_opinion},
+            default, default)
+	</insert>
 
 </mapper>
