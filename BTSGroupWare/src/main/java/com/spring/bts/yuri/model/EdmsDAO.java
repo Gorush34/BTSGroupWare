@@ -1,9 +1,13 @@
 package com.spring.bts.yuri.model;
 
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
+
+import com.spring.bts.hwanmo.model.EmployeeVO;
 
 // === DAO 선언 === //
 @Repository
@@ -47,6 +51,14 @@ public class EdmsDAO implements InterEdmsDAO {
 	public int add(ApprVO apprvo) {
 		int n = sqlsession.insert("yuri.add", apprvo);
 		return n;
+	}
+
+
+
+	@Override
+	public EmployeeVO getLoginMember(Map<String, String> paraMap) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

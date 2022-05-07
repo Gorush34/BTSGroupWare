@@ -8,6 +8,8 @@ public class ApprSortVO {
 	private String pk_appr_sortno;		/* 결재문서 구분번호 */
 	private String appr_name;			/* 결재문서 구분이름 */
 	
+	// 기본생성자
+	public ApprSortVO() {}
 	
 	
 	public ApprSortVO(String pk_appr_sortno, String appr_name) {

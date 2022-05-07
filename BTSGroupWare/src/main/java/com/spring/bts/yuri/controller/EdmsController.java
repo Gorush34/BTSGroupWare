@@ -74,6 +74,8 @@ public class EdmsController {
 		
 		EmployeeVO loginuser = service.getLoginMember(paraMap);
 
+		mav.addObject("loginuser", loginuser);
+		
 		mav.setViewName("edmsAdd.edms");
 		// /WEB-INF/views/edms/{1}.jsp
 		// /WEB-INF/views/edms/edmsAdd.jsp 페이지를 만들어야 한다.
