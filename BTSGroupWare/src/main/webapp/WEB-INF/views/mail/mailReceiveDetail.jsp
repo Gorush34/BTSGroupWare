@@ -43,7 +43,6 @@
 
 </style>
 
-<script src="<%= request.getContextPath()%>/resources/ckeditor/ckeditor.js"></script> 
 <script src="<%= request.getContextPath()%>/resources/plugins/bower_components/jquery/dist/jquery.min.js"></script>
 
 <script type="text/javascript">
@@ -73,15 +72,15 @@ $(document).ready(function (){
 		<div class="" style="margin-left: -50px">
 			<ul class="mailReceiveDetailGroup">
 				<li id="title" class="detailList">
-					<h5 style="font-weight: bold; padding:10px 0 20px 0">제목 : 그룹웨어 메일내용 보기 테스트입니다.</h5>
+					<h5 style="font-weight: bold; padding:10px 0 20px 0">${requestScope.mailvo.subject}</h5>
 				</li>
 				<li id="sender" class="detailList">
 					<span>보낸 사람 : </span>
-					<span>임유리 < limyl@bts.com > </span>
+					<span>임유리 < ${requestScope.mailvo.email} > </span>
 				</li>
 				<li id="receiver" class="detailList">
 					<span>받는 사람 : </span>
-					<span>김민정 < kimmj@bts.com > </span>
+					<span>김민정 < ${requestScope.mailvo.email} > </span>
 				</li>
 				<li id="sendDate" class="detailList">
 					<span>보낸 날짜 :</span>
@@ -96,19 +95,19 @@ $(document).ready(function (){
 		</div>
 		<div>
 			<div style="margin-left: -10px; margin-top: 5px; border-top: solid 1.5px #e6e6e6;">
-				반갑습니다람쥐
+				<p style="word-break: break-all;">${requestScope.mailvo.content}</p>
 			</div>
 		</div>	
+
+
+	<%-- 이전글, 다음글 영역 --%>
 		<div style="margin-top: 500px;">
-			<span class="move" onclick="''"><i class="fa fa-sort-asc" aria-hidden="true"></i>&nbsp;&nbsp;다음글제목 : 안녕하세요 과장님.</span>
-			<hr>
 			<span class="move" onclick="''"><i class="fa fa-sort-desc" aria-hidden="true"></i>&nbsp;&nbsp;이전글제목 : 구매품의서</span>
-			
+			<hr>
+			<span class="move" onclick="''"><i class="fa fa-sort-asc" aria-hidden="true"></i>&nbsp;&nbsp;다음글제목 : 안녕하세요 과장님.</span>			
 			<br/>
 		</div>
 	</div>
 </div>
-
-<%-- 이전글, 다음글 영역 --%>
 
 

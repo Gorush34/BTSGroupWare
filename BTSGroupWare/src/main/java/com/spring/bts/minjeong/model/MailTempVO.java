@@ -7,8 +7,9 @@ public class MailTempVO {
 	// 메일 임시보관함 VO
 	private String pk_mail_num;             // NOT NULL NUMBER(14) 메일번호    
 	private String fk_senduser_num;         // NUMBER(8)     		보낸사람 사원번호
-	private String fk_receiveuser_num;      // NUMBER(8)     		받는사람 사원번호
-	private String receiveuser_name;        // VARCHAR2(10)  		받는사람 이름
+	private String fk_receiveuser_num;     	// NUMBER(8)     		받는사람 사원번호
+	private String empname;        			// VARCHAR2(10)  		받는사람 이름
+	private String email;					// VARCHAR2(100)		이메일
 	private String subject;                 // VARCHAR2(100) 		메일 제목
 	private String content;                 // VARCHAR2(256) 		메일 내용
 	private String filename;                // VARCHAR2(100) 		파일 저장되는 이름(disk)
@@ -37,14 +38,14 @@ public class MailTempVO {
 	
 	
 	// 생성자
-	public MailTempVO(String pk_mail_num, String fk_senduser_num, String fk_receiveuser_num, String receiveuser_name,
+	public MailTempVO(String pk_mail_num, String fk_senduser_num, String fk_receiveuser_num, String empname,
 			String subject, String content, String importance, String reservation_status, String read_status,
 			String reg_date, String reservation_date, String senduser_del_status, String rcvuser_del_status) {
 		super();
 		this.pk_mail_num = pk_mail_num;
 		this.fk_senduser_num = fk_senduser_num;
 		this.fk_receiveuser_num = fk_receiveuser_num;
-		this.receiveuser_name = receiveuser_name;
+		this.empname = empname;
 		this.subject = subject;
 		this.content = content;
 		this.importance = importance;
@@ -82,12 +83,12 @@ public class MailTempVO {
 		this.fk_receiveuser_num = fk_receiveuser_num;
 	}
 
-	public String getReceiveuser_name() {
-		return receiveuser_name;
+	public String getEmpname() {
+		return empname;
 	}
 
-	public void setReceiveuser_name(String receiveuser_name) {
-		this.receiveuser_name = receiveuser_name;
+	public void setEmpname(String empname) {
+		this.empname = empname;
 	}
 
 	public String getSubject() {
@@ -225,5 +226,13 @@ public class MailTempVO {
 	public void setAttach(MultipartFile attach) {
 		this.attach = attach;
 	}	
-	
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}	
+		
 }

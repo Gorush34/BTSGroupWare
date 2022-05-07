@@ -10,7 +10,7 @@
 <!-- 받은메일함 목록 보여주기 (검색 X, 페이징 X) -->
  
 	<select id="getReceiveMailList" resultType="com.spring.bts.minjeong.model.MailVO">
-		select pk_mail_num, fk_senduser_num, receiveuser_name, subject
+		select pk_mail_num, fk_senduser_num, empname, subject
 			 , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
 		from tbl_mail
 		order by pk_mail_num desc		
@@ -30,11 +30,11 @@
 
 	<!--  페이징처리 한 받은 메일목록 (검색 있든, 없든 모두 다 포함)  -->
  	<select id="recMailListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
-		select pk_mail_num, fk_senduser_num, receiveuser_name, subject, reg_date
+		select pk_mail_num, fk_senduser_num, empname, subject, reg_date
 		from 
 		(
 		select row_number() over(order by pk_mail_num desc) AS rno,
-		       pk_mail_num, fk_senduser_num, receiveuser_name, subject
+		       pk_mail_num, fk_senduser_num, empname, subject
 		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
 		from tbl_mail
 		<if test='searchType != "" and searchWord !=""'>
@@ -44,4 +44,62 @@
 		where rno between #{startRno} and #{endRno}
 	</select> 
 
+	<!-- 페이징처리 / 검색기능 포함 된 받은메일함 목록에서 상세내용 조회하기 (이전글, 다음글 추가예정) -->
+
+	<select id="getRecMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">	
+		select pk_mail_num, fk_senduser_num, fk_receiveuser_num, empname, email, subject, content, reg_date
+			 , filename, orgfilename, filesize
+				from
+				(
+				    select pk_mail_num, fk_senduser_num, fk_receiveuser_num, empname, email, subject, content
+				         , to_char(reg_date, 'yyyy-mm-dd hh24:mi:ss') as reg_date         
+				         , fileName, orgFilename, fileSize
+				    from tbl_mail
+					<if test='searchType != "" and searchWord != "" '>
+					where and lower(${searchType}) like '%'|| lower(#{searchWord}) || '%'
+					</if>	    
+				) V
+		where V.pk_mail_num = #{pk_mail_num}
+	</select>
+
+
+	<!-- 페이징처리 / 검색기능 포함 된 받은메일함 목록에서 상세내용 조회하기 (이전글, 다음글 포함) -->
+<!--
+	<select id="getRecMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">	
+		select prev_seq, prev_subject
+			  , pk_mail_num, fk_senduser_num, fk_receiveuser_num, empname, email, subject, content, reg_date
+			  , next_seq, next_subject
+			  , filename, orgfilename, filesize
+				from
+				(
+				    select lag(pk_mail_num,1) over(order by pk_mail_num desc) AS prev_seq            
+				         , lag(subject,1) over(order by pk_mail_num desc) AS prev_subject
+				         , fk_senduser_num, fk_receiveuser_num, empname, email, subject, content
+				         , to_char(reg_date, 'yyyy-mm-dd hh24:mi:ss') as reg_date				         
+				         , lead(pk_mail_num,1) over(order by pk_mail_num desc) AS next_seq
+				         , lead(subject,1) over(order by pk_mail_num desc) AS next_subject	         
+				         , fileName, orgFilename, fileSize
+				    from tbl_mail
+					<if test='searchType != "" and searchWord != "" '>
+					where and lower(${searchType}) like '%'|| lower(#{searchWord}) || '%'
+					</if>	    
+				) V
+		where V.pk_mail_num = #{pk_mail_num}
+	</select>
+-->	
+	
+	<!-- 메일쓰기 (파일첨부가 없는 메일쓰기) -->
+	<insert id="add" parameterType="com.spring.bts.minjeong.model.MailVO">
+		insert into tbl_mail(pk_mail_num, fk_senduser_num, fk_receiveuser_num, empname, email, subject, content, reg_date
+		                   , importance, reservation_status, read_status) 
+		values(SEQ_MAIL.nextval, #{fk_senduser_num}, #{fk_receiveuser_num}, #{empname}, #{email}, #{subject}, #{content}, default
+		      , default, default, default)
+    </insert>
+
+	
+	<!-- 메일쓰기 (파일첨부가 있는 메일쓰기) -->
+	<insert id="add_withFile" parameterType="com.spring.bts.minjeong.model.MailVO">
+	
+	</insert>
+	
 </mapper>

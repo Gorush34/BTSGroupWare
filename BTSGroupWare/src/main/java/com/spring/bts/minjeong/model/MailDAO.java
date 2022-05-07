@@ -63,4 +63,25 @@ public class MailDAO implements InterMailDAO {
 		return receiveMailList;
 	}
 
+	// 메일쓰기 (파일첨부가 없는 메일쓰기)
+	@Override
+	public int add(MailVO mailvo) {
+		int n = sqlsession.insert("minjeong.add", mailvo);
+		return n;
+	}
+
+	// 메일쓰기 (파일첨부가 있는 메일쓰기)
+	@Override
+	public int add_withFile(MailVO mailvo) {
+		int n = sqlsession.insert("minjeong.add_withFile", mailvo);
+		return n;
+	}
+
+	// 메일 1개 상세내용을 읽어오기
+	@Override
+	public MailVO getRecMailView(Map<String, String> paraMap) {
+		MailVO mailvo = sqlsession.selectOne("minjeong.getRecMailView", paraMap);
+		return mailvo;
+	}
+
 }

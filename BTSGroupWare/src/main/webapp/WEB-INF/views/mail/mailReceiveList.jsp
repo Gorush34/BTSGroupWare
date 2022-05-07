@@ -8,11 +8,18 @@
     //    /bts
 %>
 
+<style type="text/css">
+
+	span.subject
+	{cursor: pointer;}
+
+</style>
+
 <script type="text/javascript">
 
 // function declaration 
 
-// 검색 버튼 클릭시 동작하는 함수
+	// 검색 버튼 클릭시 동작하는 함수
 	function gomailSearch() {
 		const frm = document.goReceiveListSelectFrm;
 		frm.method = "GET";
@@ -20,6 +27,15 @@
 		frm.submit();	
 	}// end of function goMailSearch(){}-------------------------
 
+	// 글제목 클릭 시 글내용 보여주기 (고유한 글번호인 pk_mail_num 를 넘겨준다.)
+	function goRecMailView(pk_mail_num) {
+		const searchType = $("select#searchType").val();
+		const searchWord = $("input#searchWord").val();
+		
+		location.href = "<%= ctxPath%>/mail/mailReceiveDetail.bts?pk_mail_num="+pk_mail_num+"&searchType="+searchType+"&searchWord="+searchWord;
+<%-- 	<a href="<%= ctxPath%>/mail/mailReceiveDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${mailvo.subject}</a> --%>
+	}
+	
 </script>
 
 <%-- 받은 메일함 목록 보여주기 --%>	
@@ -33,7 +49,7 @@
 			<div id="mail_searchType">
 				<select class="form-control" id="searchType" name="searchType" style="">
 					<option value="subject" selected="selected">제목</option>
-					<option value="receiveuser_name">사원명</option>
+					<option value="empname">사원명</option>
 				</select>
 			</div>
 			
@@ -87,7 +103,7 @@
 						</thead>
 						
 						<tbody>
-						<c:forEach items="${requestScope.receiveMailList}" var="receiveMailList">
+						<c:forEach items="${requestScope.receiveMailList}" var="mailvo">
 							<tr>
 								<td style="width: 40px;">
 									<input type="checkbox" id="checkAll" class="text-center"/>
@@ -98,11 +114,14 @@
 								<td style="width: 40px;">
 									<span class="fa fa-paperclip" class="text-center"></span>
 								</td>							
-								<td class="text-center">${receiveMailList.receiveuser_name}</td>
+								<td class="text-center">${mailvo.empname}</td>
 								<td>
-								<a href="<%= ctxPath%>/mail/mailReceiveDetail.bts">${receiveMailList.subject}</a>
+								<%--
+								<a href="<%= ctxPath%>/mail/mailReceiveDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${mailvo.subject}</a>
+								--%>
+								<span class="subject" onclick="goRecMailView('${mailvo.pk_mail_num}')">${mailvo.subject}</span>
 								</td>
-								<td class="text-left">${receiveMailList.reg_date}</td>
+								<td class="text-left">${mailvo.reg_date}</td>
 							</tr>	
 						</c:forEach>																				
 						</tbody>

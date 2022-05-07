@@ -143,7 +143,7 @@
 		      	frm.importanceVal.value = importanceVal;
 		      	frm.method = "POST";
 		      	frm.action = "<%= ctxPath%>/mail/mailWriteEnd.bts";
-		    //  frm.submit();
+		        frm.submit();
 		      	
 		   	//	console.log(frm);		// form 태그 전체
 		   	//	console.log(frm.importanceVal.value);	// 체크 안했을 때 0
@@ -188,7 +188,7 @@
 <div class="container" style="width: 100%; margin: 50px;">
 	<div class="row bg-title" style="border-bottom: solid 1.5px #e6e6e6;">	
 		<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-			<h4 class="page-title" style="color: black;">보내기</h4>
+			<h4 class="page-title" style="color: black;">메일 쓰기</h4>
 		</div>
 	</div>
 
@@ -220,6 +220,11 @@
 				<th width="14%">받는 사람</th>
 				<td width="86%" data-toggle="tooltip" data-placement="top" title="">
 					<input type="text" id="fk_receiveuser_num" name="fk_receiveuser_num" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
+				
+					<%-- hidden 타입으로 데이터값 보내기 --%>
+					<input type="hidden" id="empname" name="empname" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
+					<input type="hidden" id="fk_senduser_num" name="fk_senduser_num"/>
+					<input type="hidden" id="email" name="email"/>					
 					<button type="button" class="btn btn-secondary btn-sm">주소록</button>
 				</td>
 			</tr>
@@ -230,7 +235,7 @@
 						<input type="checkbox" checked="checked" id="importance" name="importance" />&nbsp;&nbsp;중요!
 					</c:if>
 						<input type="checkbox" id="importance" name="importance" />&nbsp;&nbsp;중요!
-						<input type="hidden" id="importanceVal" name="importanceVal" />&nbsp;&nbsp;중요!
+						<input type="hidden" id="importanceVal" name="importanceVal" />
 				</th>
 				<td width="110%" >
 					<input type="text" id="subject" name="subject" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; display: inline-block;" />
@@ -239,7 +244,7 @@
 			<tr>
 				<th width="14%">파일첨부</th>
 				<td width="86%" style="padding-top: 9px">
-					<input type="file" name="mail_attach" id="mail_file_upload" style="width: 30%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 0px solid gray;" />
+					<input type="file" name="attach" id="attach" style="width: 30%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 0px solid gray;" />
 				</td>
 			</tr>			
 		</table>	
