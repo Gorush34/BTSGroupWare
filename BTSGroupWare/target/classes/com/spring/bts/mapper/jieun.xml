@@ -65,6 +65,12 @@
 		and calname = #{calname}
 	</select>
 	
+	<!-- 캘린더 소분류 삭제하기  -->
+	<delete id="deleteCalendar" parameterType="String">
+		delete from tbl_calendar
+		where pk_calno = #{pk_calno}
+	</delete>
+	
 	
 	<!-- 등록 폼에 서브캘린더 가져오기 -->
 	<select id="selectCalNo" parameterType="HashMap" resultType="com.spring.bts.jieun.model.CalendarVO">

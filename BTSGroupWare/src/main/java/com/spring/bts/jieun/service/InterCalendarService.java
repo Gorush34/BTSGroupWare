@@ -21,12 +21,19 @@ public interface InterCalendarService {
 
 	// === 캘린더 소분류 수정하기 === //
 	int editCalendar(Map<String, String> paraMap);
+	
+	// === 캘린더 소분류 삭제하기 === //
+	int deleteCalendar(String pk_calno);
 
 	// === 서브 캘린더 가져오기 === //
 	List<CalendarVO> selectCalNo(Map<String, String> paraMap);
 	
 	// === 일정 등록 하기 === //
 	int scheduleRegisterInsert(Map<String, String> paraMap);
+
+	
+	
+	
 
 
 	

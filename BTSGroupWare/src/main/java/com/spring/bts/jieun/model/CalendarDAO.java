@@ -101,6 +101,13 @@ public class CalendarDAO implements InterCalendarDAO {
 				return m;
 			}
 
+	// === 캘린더 소분류 삭제하기 === //
+	@Override
+	public int deleteCalendar(String pk_calno) {
+		int n = sqlsession.delete("jieun.deleteCalendar", pk_calno);
+		return n;
+	}
+
 	
 
 	

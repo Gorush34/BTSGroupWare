@@ -139,7 +139,7 @@
 			alert("수정할 사내캘린더 소분류명을 입력하세요!!");
 	  		return;
 		}
-		else if{
+		else {
 			
 			$.ajax({
 				uri:"<%= ctxPath%>/calendar/editCalendar.bts",
@@ -262,7 +262,7 @@
 			alert("수정할 사내캘린더 소분류명을 입력하세요!!");
 	  		return;
 		}
-		else if{
+		else {
 			
 			$.ajax({
 				uri:"<%= ctxPath%>/calendar/editCalendar.bts",
@@ -291,6 +291,32 @@
 		}
 		
 	}// end of function editMyCalModal()----------------------------------------------------------
+	
+	
+	// === 캘린더 소분류 삭제하기 === //
+	function delCalendar(pk_calno, calname){
+		
+		var bool = confirm(calname + " 캘린더를 삭제 하시겠습니까?");
+		
+		if(bool){
+			$.ajax({
+				uri:"<%= ctxPath%>/calendar/deleteCalendar.bts"
+				data:{"pk_calno":pk_calno},
+				dataType:"json",
+				type:"post",
+				success:function(json){
+					if(json.n==1){
+						alert(calname + " 캘린더를 삭제하였습니다.");
+						location.href="javascript:history.go(0);"; // 페이지 새로고침
+					}
+				},
+				 error: function(request, status, error){
+			            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			    }
+				
+			});
+		}
+	}// end of function delCalendar(pk_calno, calname)-------------------------------------
 	
 </script>
 

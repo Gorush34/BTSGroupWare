@@ -81,6 +81,12 @@ public class CalendarService implements InterCalendarService {
 		return n;
 	}
 
+	// === 캘린더 소분류 삭제하기 === //
+	@Override
+	public int deleteCalendar(String pk_calno) {
+		int n = dao.deleteCalendar(pk_calno);
+		return n;
+	}
 
 	// === 서브 캘린더 가져오기 === //
 	@Override
@@ -96,6 +102,8 @@ public class CalendarService implements InterCalendarService {
 		int n = dao.scheduleRegisterInsert(paraMap);
 		return n;
 	}
+
+	
 
 	
 	

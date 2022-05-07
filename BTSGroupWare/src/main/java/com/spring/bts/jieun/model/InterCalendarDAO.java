@@ -33,6 +33,9 @@ public interface InterCalendarDAO {
 			// 캘린더에 이름이 있는지 확인
 			int existsCalendar(Map<String, String> paraMap);
 
+	// === 캘린더 소분류 삭제하기 === //
+	int deleteCalendar(String pk_calno);
+
 	
 
 	
