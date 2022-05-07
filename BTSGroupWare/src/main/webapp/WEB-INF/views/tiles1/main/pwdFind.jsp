@@ -1,61 +1,88 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%-- === #24. tiles 를 사용하는 레이아웃1 페이지 만들기 === --%>
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
 
 <%
-    String ctxPath = request.getContextPath();
-    //    /MyMVC
-%>
+	String ctxPath = request.getContextPath();
+%>    
+    
+<!DOCTYPE html>
+<html>
+<head>
+<title>로그인</title>
 
-<!-- Required meta tags -->
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- Required meta tags -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> 
+  <meta name="description" content="">
+  <meta name="author" content="">
+  
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/bootstrap-4.6.0-dist/css/bootstrap.min.css" > 
+  
+  <!-- 직접 만든 CSS 1 -->
+  <link rel="stylesheet" type="text/css" href="<%=ctxPath %>/resources/css/style1.css" />
+  
+  <!-- Optional JavaScript -->
+  <script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" src="<%= ctxPath%>/resources/bootstrap-4.6.0-dist/js/bootstrap.bundle.min.js" ></script> 
 
-<!-- Bootstrap CSS -->
-<link rel="stylesheet" type="text/css" href="<%= ctxPath%>/bootstrap-4.6.0-dist/css/bootstrap.min.css" > 
+  <!-- 구글 폰트를 쓰기 위한 링크 -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo&family=Noto+Sans+KR&display=swap" rel="stylesheet">
 
-<!-- Font Awesome 5 Icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-<!-- 직접 만든 CSS -->
-<link rel="stylesheet" type="text/css" href="<%= ctxPath%>/css/style.css" />
-
-<!-- Optional JavaScript -->
-<script type="text/javascript" src="<%= ctxPath%>/js/jquery-3.6.0.min.js"></script>
-<script type="text/javascript" src="<%= ctxPath%>/bootstrap-4.6.0-dist/js/bootstrap.bundle.min.js" ></script>
+	<style type="text/css">
+	
+		body {
+			margin-top: 100px;
+		}
+	
+		div#image > img {
+			max-width: 475px;
+			min-height: 538px;
+			border-radius: 0.25rem;
+		}
+	
+	</style>
 
 <script type="text/javascript">
 	
+	
+
 	$(document).ready(function(){
 		
-		const method = "${requestScope.method}"; 
-		// console.log("method => " + method);
+		const method = "${requestScope.method}";
 		
-		if( method == "GET" ) {
+		console.log("method =>" + method);
+		
+		
+		if(method == "GET") {
 			$("div#div_findResult").hide();
 		}
-		else if(method == "POST") {
+		else if( method == "POST") {
 			$("div#div_findResult").show();
 			
-			$("input#userid").val("${requestScope.userid}");
-			$("input#email").val("${requestScope.email}");
-			
-			if(${requestScope.sendMailSuccess == true}) {
-				$("div#div_btnFind").hide();
-			}		
-		
+			$("input#pk_emp_no").val("${requestScope.pk_emp_no}");
+			$("input#uq_email").val("${requestScope.uq_email}");
 		}
 		
-		// 찾기
-		$("button#btnFind").click(function(){
-			goFind();
+		if(${requestScope.sendMailSuccess == true}) {
+			$("div#div_btnFind").hide();
+		}	 
+		
+		$("button#btnPwdFind").click(function(){
+			func_pwdFind();
 		});
 		
-		$("input#email").bind("keydown", function(event){
-			// keydown시 발생하는 함수
-			if(event.keyCode == 13) { // 암호입력란에 엔터를 했을 경우
-				goFind();
+		$("input#uq_email").keydown(function(event){
+			
+			if(event.keyCode == 13) { // 엔터를 했을 경우
+				func_pwdFind();	
 			}
 		});
 		
@@ -65,75 +92,126 @@
 			const frm = document.verifyCertificationFrm;
 			
 			frm.userCertificationCode.value = $("input#input_confirmCode").val();
-			frm.userid.value = $("input#userid").val();
+			frm.pk_emp_no.value = $("input#pk_emp_no").val();
 			
-			frm.action = "<%= ctxPath%>/verifyCertification.up";
+			frm.action = "<%= ctxPath%>/emp/verifyCertification.bts";
 			frm.method = "post";
 			frm.submit();
 			
 		});
 		
-		
-		
-	}); // $(document).ready(function(){})------------------------- 
-	
-	// Function Declaration
-	function goFind() {
-		// 아이디 및 이메일에 대한 유효성 검사(정규표현식)은 생략함(전에 배우던 거에 있음)
-		const frm = document.pwdFindFrm;
-		frm.action = "<%= ctxPath%>/pwdFind.up";
-		frm.method = "post"; 
-		frm.submit(); // "POST" 방식으로 보내준다
-	} // end of function goFind()-------------------------------
+		 
+	}); // end of $(document).ready(function(){})------------------
 
+	// Function Declaration
+	function func_pwdFind(){
+      
+		var pk_emp_no = $("input#pk_emp_no").val() == undefined ? "" : $("input#pk_emp_no").val().trim();
+		var uq_email = $("input#uq_email").val() == undefined ? "" : $("input#uq_email").val().trim();
+		
+        if(pk_emp_no.trim()=="") {
+           alert("사번을 입력하세요!!");
+          $("input#pk_emp_no").val(""); 
+          $("input#pk_emp_no").focus();
+          return; // 종료 
+        }
+      
+        if(uq_email.trim()=="") {
+          alert("이메일을 입력하세요!!");
+          $("input#uq_email").val(""); 
+          $("input#uq_email").focus();
+          return; // 종료 
+        }
+        
+        
+        const frm = document.pwdFindFrm;
+        frm.action = "<%= ctxPath%>/pwdFindEnd.bts";
+		frm.method = "post";
+		frm.submit();
+		
+	} // end of function func_idFind()-------------
+	
 </script>
 
+</head>
 
+<body class="bg-gradient-primary">
 
-<form name="pwdFindFrm">
-   
-   <ul style="list-style-type: none">
-         <li style="margin: 25px 0">
-            <label for="userid" style="display: inline-block; width: 90px">아이디</label>
-            <input type="text" name="userid" id="userid" size="25" placeholder="ID" autocomplete="off" required />
-         </li>
-         <li style="margin: 25px 0">
-            <label for="email" style="display: inline-block; width: 90px">이메일</label>
-            <input type="text" name="email" id="email" size="25" placeholder="abc@def.com" autocomplete="off" required />
-         </li>
-   </ul>
-   
-   <div class="my-3" id="div_btnFind">
-    <p class="text-center">
-       <button type="button" class="btn btn-success" id="btnFind">찾기</button>
-    </p>
-   </div>
-   
-   <div class="my-3" id="div_findResult">
-        <p class="text-center">
-        	<c:if test="${requestScope.isUserExist == false }">
-        		<span style="color: red;">사용자 정보가 없습니다.</span>
-        	</c:if>   
-        	
-        	<c:if test="${requestScope.isUserExist == true && requestScope.sendMailSuccess == true }">
-	        	 <span style="font-size: 10pt;">인증코드가 ${requestScope.email}로 발송되었습니다.</span><br>
-	             <span style="font-size: 10pt;">인증코드를 입력해주세요.</span><br>
-	             <input type="text" name="input_confirmCode" id="input_confirmCode" required />
-	             <br><br>
-	             <button type="button" class="btn btn-info" id="btnConfirmCode">인증하기</button>
-        	</c:if>
-           
-            <c:if test="${requestScope.isUserExist == true && requestScope.sendMailSuccess == false }">
-        		<span style="color: red;">메일 발송이 실패했습니다.</span>
-        	</c:if> 
-        </p>
-   </div>
-   
-</form>
+    <div class="container">
 
+        <!-- Outer Row -->
+        <div class="row justify-content-center">
 
-<form name="verifyCertificationFrm">
+            <div class="col-xl-10 col-lg-12 col-md-9">
+
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
+                        <div class="row">
+                            <div class="col-lg-6 d-none d-lg-block bg-login-image" id="image"><img src="<%= ctxPath%>/resources/images/login_main.jpg" title="" /></div>
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-900 mb-4">BTSGroupware</h1>
+                                    </div>
+                                    <form name="pwdFindFrm" class="pwdFindFrm">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control form-control-user"
+                                                name="pk_emp_no" id="pk_emp_no" value="" aria-describedby="pk_emp_no"
+                                                placeholder="사번">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control form-control-user"
+                                                name="uq_email" id="uq_email" value="" placeholder="이메일">
+                                        </div>
+                                        <button type="button" class="btn btn-primary btn-user btn-block" id="btnPwdFind">
+                                            	비밀번호 찾기
+                                        </button>
+                                        <hr>
+                                        <div class="my-3" id="div_findResult">
+									        <p class="text-center">
+									        	<c:if test="${requestScope.isUserExist == false }">
+									        		<span style="color: red;">사용자 정보가 없습니다.</span>
+									        	</c:if>   
+									        	
+									        	<c:if test="${requestScope.isUserExist == true && requestScope.sendMailSuccess == true }">
+										        	 <span style="font-size: 10pt;">인증코드가 ${requestScope.uq_email}로 발송되었습니다.</span><br>
+										             <span style="font-size: 10pt;">인증코드를 입력해주세요.</span><br>
+										             <input type="text" name="input_confirmCode" id="input_confirmCode" required />
+										             <br><br>
+										             <button type="button" class="btn btn-info" id="btnConfirmCode">인증하기</button>
+									        	</c:if>
+									           
+									            <c:if test="${requestScope.isUserExist == true && requestScope.sendMailSuccess == false }">
+									        		<span style="color: red;">메일 발송이 실패했습니다.</span>
+									        	</c:if> 
+									        </p>
+									   </div>
+                                    </form>
+                                    <hr>
+                                    <div class="text-center">
+                                    	<a href="<%= ctxPath%>/idFind.bts">ID 찾기</a><span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+                                    	<a href="<%= ctxPath%>/login.bts">로그인 화면으로</a><br>
+                                        	문의 : 인사과(정환모 / 8887)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    
+    <form name="verifyCertificationFrm">
 	<input type="hidden" name="userCertificationCode">
-	<input type="hidden" name="userid">
+	<input type="hidden" name="pk_emp_no" value="${requestScope.pk_emp_no}">
+	
 </form>
- 
+
+</body>
+
+</html>

@@ -64,6 +64,27 @@ public class EmployeeDAO implements InterEmployeeDAO {
 		String pk_emp_no = sqlsession.selectOne("hwanmo.findEmpNo", paraMap);
 		return pk_emp_no;
 	}
+
+	// 사용자가 존재하는지 
+	@Override
+	public boolean isUserExist(Map<String, String> paraMap) {
+		String emp_no = sqlsession.selectOne("hwanmo.isUserExist", paraMap);
+		boolean isUserExist = false;
+		if(emp_no.equals(paraMap.get("pk_emp_no"))) {
+			isUserExist = true;
+		}
+		// System.out.println("isUserExist : " + isUserExist);
+		
+		return isUserExist;
+	}
+
+	// 비밀번호 변경
+	@Override
+	public int pwdUpdate(Map<String, String> paraMap) {
+		int n = sqlsession.update("hwanmo.pwdUpdate", paraMap);
+		return n;
+	}
+	
 	
 	
 }

@@ -56,59 +56,46 @@
 
 	$(document).ready(function(){
 		
-		const method = "${requestScope.method}";
-		
-		console.log("method =>" + method);
-		
-		
-		if(method == "GET") {
-			$("div#div_findResult").hide();
-		}
-		else if( method == "POST") {
-			$("div#div_findResult").show();
-		}
-		
-		$("button#btnIdFind").click(function(){
-			func_idFind();
-		});
-		
-		$("input#uq_email").keydown(function(event){
+		$("button#btnUpdate").click(function(){
+					
+			const emp_pwd = $("input#emp_pwd").val();
+			const emp_pwd2 = $("input#emp_pwd2").val();
 			
-			if(event.keyCode == 13) { // 엔터를 했을 경우
-				func_idFind();	
-			}
+			// const regExp = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g;
+		   // 또는
+			  const regExp = new RegExp(/^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g);
+		   // 숫자/문자/특수문자/ 포함 형태의 8~15자리 이내의 암호 정규표현식 객체 생성
+			
+			  const bool = regExp.test(emp_pwd);   
+			  
+			  if(!bool) {
+				  // 암호가 정규표현식에 위배된 경우 
+				  alert("암호는 8글자 이상 15글자 이하의 영문자, 숫자, 특수문자를 포함해야 합니다!");
+				  $("input#emp_pwd").val("");
+				  $("input#emp_pwd2").val("");
+				  return; // 종료
+				  
+			  }
+			  else if(bool && emp_pwd != emp_pwd2){
+				  // 암호가 정규표현식에 맞지만 변경암호와 확인암호가 불일치시
+				  alert("변경하려는 암호와 확인암호가 일치하지 않습니다!");
+				  $("input#emp_pwd").val("");
+				  $("input#emp_pwd2").val("");
+				  return; // 종료
+			  }
+			  else {
+				  const frm = document.pwdUpdateEndFrm;
+				  frm.action = "<%= ctxPath%>/pwdUpdateEnd.bts";
+				  frm.method= "post";
+				  frm.submit();
+				  
+			  }
+			
 		});
 		
-		
-	}); 
+		 
+	}); // end of $(document).ready(function(){})------------------
 
-	// Function Declaration
-	function func_idFind(){
-      
-		var emp_name = $("input#emp_name").val() == undefined ? "" : $("input#emp_name").val().trim();
-		var uq_email = $("input#uq_email").val() == undefined ? "" : $("input#uq_email").val().trim();
-		
-        if(emp_name.trim()=="") {
-           alert("성함을 입력하세요!!");
-          $("input#emp_name").val(""); 
-          $("input#emp_name").focus();
-          return; // 종료 
-        }
-      
-        if(uq_email.trim()=="") {
-          alert("이메일을 입력하세요!!");
-          $("input#uq_email").val(""); 
-          $("input#uq_email").focus();
-          return; // 종료 
-        }
-        
-        
-        const frm = document.idFindFrm;
-        frm.action = "<%= ctxPath%>/idFindEnd.bts";
-		frm.method = "post";
-		frm.submit();
-		
-	} // end of function func_idFind()-------------
 	
 </script>
 
@@ -133,32 +120,40 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">BTSGroupware</h1>
                                     </div>
-                                    <form name="idFindFrm" class="idFindFrm">
+                                    <form name="pwdUpdateEndFrm" class="pwdUpdateEndFrm">
                                         <div class="form-group">
-                                            <input type="text" class="form-control form-control-user"
-                                                name="emp_name" id="emp_name" value="" aria-describedby="emp_name"
-                                                placeholder="사원명">
+                                            <input type="password" class="form-control form-control-user"
+                                                name="emp_pwd" id="emp_pwd" value="" aria-describedby="emp_pwd"
+                                                placeholder="새암호">
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" class="form-control form-control-user"
-                                                name="uq_email" id="uq_email" value="" placeholder="이메일">
+                                            <input type="password" class="form-control form-control-user"
+                                                name="emp_pwd2" id="emp_pwd2" value="" aria-describedby="emp_pwd"
+                                                placeholder="새암호확인">
                                         </div>
-                                        <button type="button" class="btn btn-primary btn-user btn-block" id="btnIdFind">
-                                            	ID 찾기
-                                        </button>
+                                        <input type="hidden" name="pk_emp_no" value="${requestScope.pk_emp_no}">
+                                        
+                                        <c:if test="${requestScope.method == 'GET'}">
+											<div id="div_btnUpdate" align="center">
+									           <button type="button" class="btn btn-primary btn-user btn-block" id="btnUpdate">
+                                            	비밀번호 변경하기
+                                        		</button>
+										    </div>
+									    </c:if>   
                                         <hr>
-                                        <div class="center" id="div_findResult" style="text-align: center;">
-	                                       	<c:if test="${not empty requestScope.pk_emp_no}">
-	                                         	사원번호 :&nbsp;<span style="color: red; font-size: 16pt; font-weight: bold;">${requestScope.pk_emp_no}</span> 
-	                                    	</c:if>
-	                                    	
-	                                    	<c:if test="${empty requestScope.pk_emp_no}">
-	                                        	 <span style="color: red; font-size: 16px; font-weight: bold;">입력하신 정보와 일치하는 사원번호가 없습니다.</span> 
-	                                    	</c:if>
-                                        </div>
+                                        <div class="my-3" id="div_findResult">
+									        <p class="text-center">
+									        	<c:if test="${requestScope.method == 'POST' && requestScope.n == 1 }">
+													<div id="div_updateResult" align="center">
+												    	사원번호 ${requestScope.pk_emp_no}님의 암호가 변경되었습니다.<br/>
+												    </div>
+											    </c:if>
+									        </p>
+									   </div>
                                     </form>
                                     <hr>
                                     <div class="text-center">
+                                    	<a href="<%= ctxPath%>/idFind.bts">ID 찾기</a><span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;</span>
                                     	<a href="<%= ctxPath%>/login.bts">로그인 화면으로</a><br>
                                         	문의 : 인사과(정환모 / 8887)
                                     </div>
@@ -173,6 +168,12 @@
         </div>
 
     </div>
+    
+    <form name="verifyCertificationFrm">
+	<input type="hidden" name="userCertificationCode">
+	<input type="hidden" name="pk_emp_no">
+	
+</form>
 
 </body>
 

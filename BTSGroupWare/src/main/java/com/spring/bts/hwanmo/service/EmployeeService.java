@@ -64,4 +64,18 @@ public class EmployeeService implements InterEmployeeService {
 		return pk_emp_no;
 	}
 
+	// 사용자가 존재하는지 확인
+	@Override
+	public boolean isUserExist(Map<String, String> paraMap) {
+		boolean isUserExist = empDAO.isUserExist(paraMap);
+		return isUserExist;
+	} // end of public boolean isUserExist(Map<String, String> paraMap) {})------------
+	
+	// 비밀번호 변경
+	@Override
+	public int pwdUpdate(Map<String, String> paraMap) {
+		int n = empDAO.pwdUpdate(paraMap);
+		return n;
+	}
+
 }
