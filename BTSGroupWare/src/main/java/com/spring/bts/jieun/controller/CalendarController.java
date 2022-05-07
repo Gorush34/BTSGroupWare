@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.spring.bts.common.AES256;
 import com.spring.bts.hwanmo.model.EmployeeVO;
 import com.spring.bts.jieun.model.CalendarVO;
+import com.spring.bts.jieun.model.ScheduleVO;
 import com.spring.bts.jieun.service.InterCalendarService;
 
 /*
@@ -348,6 +349,40 @@ public class CalendarController {
 		
 		return mav;
 	}
+	
+	// === 일정 보여주기 === //
+	@ResponseBody
+	@RequestMapping(value="/calendar/selectSchedule.bts")
+	public String selectSchedule(HttpServletRequest request) {
+		
+		String fk_emp_no = request.getParameter("fk_emp_no");
+		
+		List<ScheduleVO> scheduleList = service.selectSchedule(fk_emp_no);
+		
+		JSONArray jsonArr = new JSONArray();
+		
+		if(scheduleList != null && scheduleList.size() > 0) {
+			for(ScheduleVO svo:scheduleList) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("subject", svo.getSubject());
+				jsonObj.put("startdate", svo.getStartdate());
+				jsonObj.put("enddate", svo.getEnddate());
+				jsonObj.put("color", svo.getColor());
+				jsonObj.put("pk_schno", svo.getPk_schno());
+				jsonObj.put("fk_lgcatgono", svo.getFk_lgcatgono());
+				jsonObj.put("fk_calno", svo.getFk_calno());
+				jsonObj.put("fk_emp_no", svo.getFk_emp_no());
+				jsonObj.put("joinuser", svo.getJoinuser());
+				
+				jsonArr.put(jsonObj);
+			}// end of for----------------------------------------------
+		
+		}	
+		
+		return jsonArr.toString();
+	}
+	
+	
 	
 	// === 예약 메인 페이지 === //	
 	@RequestMapping(value="/reservation/reservationMain.bts")

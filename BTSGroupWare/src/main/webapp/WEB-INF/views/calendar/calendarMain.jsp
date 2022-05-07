@@ -73,9 +73,9 @@
 		    },
 		    // ===================== DB 와 연동 시작 ===================== //
 		    events:function(info, successCallback, failureCallback){
-		    <%--	$.ajax({
-	                 url: '<%= ctxPath%>/schedule/selectSchedule.action',
-	                 data:{"fk_userid":$('input#fk_userid').val()},
+		    	$.ajax({
+	                 url: '<%= ctxPath%>/calendar/selectSchedule.bts',
+	                 data:{"fk_emp_no":$('input#fk_emp_no').val()},
 	                 dataType: "json",
 	                 success:function(json) {
 	                	 
@@ -85,8 +85,8 @@
 				            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 				      }	
 	                                            
-	          }); // end of $.ajax()--------------------------------
-	        --%>
+	            }); // end of $.ajax()--------------------------------
+	        
 		    }, // end of events:function(info, successCallback, failureCallback) {}---------------
 		
 		    // 풀캘린더에서 날짜 클릭할 때 발생하는 이벤트(일정 등록창으로 넘어간다)
@@ -167,6 +167,7 @@
 	</div>
 	
 	<%-- 캘린더를 보여주는 곳 --%>
+	<input type="hidden" value="${sessionScope.loginuser.pk_emp_no}" id="fk_emp_no"/>
 	<div id="calendar" style="margin: 60px 30px 50px 60px;"></div>
 
 </div>

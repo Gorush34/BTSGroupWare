@@ -94,6 +94,15 @@
 	</insert>
 
 
+	<!-- 일정 보여주기 -->
+	<select id="selectSchedule" parameterType="String" resultType="com.spring.bts.jieun.model.ScheduleVO">
+		select pk_schno, fk_emp_no, fk_calno, subject, startdate, enddate, content, color, place, joinuser, fk_lgcatgono
+		from tbl_schedule
+		where fk_emp_no = #{fk_emp_no}
+		fk_lgcatgono = 2 <!--  OR
+		(fk_lgcatgono != 2 AND lower(joinuser) || #{fk_emp_no}) ) -->
+		order by pk_schno asc
+	</select>
 
 
 

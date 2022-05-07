@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.spring.bts.hwanmo.model.EmployeeVO;
 import com.spring.bts.jieun.model.CalendarVO;
 import com.spring.bts.jieun.model.InterCalendarDAO;
+import com.spring.bts.jieun.model.ScheduleVO;
 
 
 //=== #31. Service 선언 === 
@@ -107,6 +108,13 @@ public class CalendarService implements InterCalendarService {
 	public int scheduleRegisterInsert(Map<String, String> paraMap) {
 		int n = dao.scheduleRegisterInsert(paraMap);
 		return n;
+	}
+
+	// === 일정 보여주기 === //
+	@Override
+	public List<ScheduleVO> selectSchedule(String fk_emp_no) {
+		List<ScheduleVO> scheduleList = dao.selectSchedule(fk_emp_no);
+		return scheduleList;
 	}
 
 

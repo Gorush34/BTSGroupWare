@@ -47,6 +47,10 @@ public interface InterCalendarDAO {
 	// === 일정 등록 하기 === //
 	int scheduleRegisterInsert(Map<String, String> paraMap);
 	
+	
+	// === 일정 보여주기 === //
+	List<ScheduleVO> selectSchedule(String fk_emp_no);
+	
 
 
 	

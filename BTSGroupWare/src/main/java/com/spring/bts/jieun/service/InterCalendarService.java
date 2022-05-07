@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.spring.bts.hwanmo.model.EmployeeVO;
 import com.spring.bts.jieun.model.CalendarVO;
+import com.spring.bts.jieun.model.ScheduleVO;
 
 public interface InterCalendarService {
 
@@ -39,6 +40,11 @@ public interface InterCalendarService {
 	
 	// === 일정 등록 하기 === //
 	int scheduleRegisterInsert(Map<String, String> paraMap);
+
+	
+	
+	// === 일정 보여주기 === //
+	List<ScheduleVO> selectSchedule(String fk_emp_no);
 
 	
 	

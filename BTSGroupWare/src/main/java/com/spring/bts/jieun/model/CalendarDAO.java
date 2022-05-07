@@ -119,6 +119,14 @@ public class CalendarDAO implements InterCalendarDAO {
 	}
 	
 	
+	// === 일정 보여주기 === //
+	@Override
+	public List<ScheduleVO> selectSchedule(String fk_emp_no) {
+		List<ScheduleVO> scheduleList = sqlsession.selectList("jieun.selectSchedule", fk_emp_no);
+		return scheduleList;
+	}
+	
+	
 	
 	
 
