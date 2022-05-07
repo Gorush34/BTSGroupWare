@@ -162,7 +162,6 @@
 		width: 15%;
 		background-color: #e8e8e8;
 	}
-	
 </style>
 
 <%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
