@@ -3,6 +3,7 @@ package com.spring.bts.hwanmo.service;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.sql.SQLException;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,27 @@ public class EmployeeService implements InterEmployeeService {
 	@Override
 	public int registerMember(EmployeeVO empvo) throws SQLException {
 		int n = empDAO.registerMember(empvo);
+		return n;
+	}
+
+	// 아이디 찾기
+	@Override
+	public String findEmpNo(Map<String, String> paraMap) {
+		String pk_emp_no = empDAO.findEmpNo(paraMap);
+		return pk_emp_no;
+	}
+
+	// 사용자가 존재하는지 확인
+	@Override
+	public boolean isUserExist(Map<String, String> paraMap) {
+		boolean isUserExist = empDAO.isUserExist(paraMap);
+		return isUserExist;
+	} // end of public boolean isUserExist(Map<String, String> paraMap) {})------------
+	
+	// 비밀번호 변경
+	@Override
+	public int pwdUpdate(Map<String, String> paraMap) {
+		int n = empDAO.pwdUpdate(paraMap);
 		return n;
 	}
 

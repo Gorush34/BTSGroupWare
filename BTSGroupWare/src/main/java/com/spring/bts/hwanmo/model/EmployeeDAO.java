@@ -1,6 +1,7 @@
 package com.spring.bts.hwanmo.model;
 
 import java.sql.SQLException;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,11 +51,40 @@ public class EmployeeDAO implements InterEmployeeDAO {
 		return isExist;
 	}
 
+	// 사원 등록하기
 	@Override
 	public int registerMember(EmployeeVO empvo) throws SQLException {
 		int n = sqlsession.insert("hwanmo.registerMember", empvo);
 		return n;
 	}
+
+	// 아이디 찾기
+	@Override
+	public String findEmpNo(Map<String, String> paraMap) {
+		String pk_emp_no = sqlsession.selectOne("hwanmo.findEmpNo", paraMap);
+		return pk_emp_no;
+	}
+
+	// 사용자가 존재하는지 
+	@Override
+	public boolean isUserExist(Map<String, String> paraMap) {
+		String emp_no = sqlsession.selectOne("hwanmo.isUserExist", paraMap);
+		boolean isUserExist = false;
+		if(emp_no.equals(paraMap.get("pk_emp_no"))) {
+			isUserExist = true;
+		}
+		// System.out.println("isUserExist : " + isUserExist);
+		
+		return isUserExist;
+	}
+
+	// 비밀번호 변경
+	@Override
+	public int pwdUpdate(Map<String, String> paraMap) {
+		int n = sqlsession.update("hwanmo.pwdUpdate", paraMap);
+		return n;
+	}
+	
 	
 	
 }
