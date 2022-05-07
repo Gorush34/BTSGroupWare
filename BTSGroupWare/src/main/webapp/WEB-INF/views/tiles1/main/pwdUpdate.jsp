@@ -56,80 +56,46 @@
 
 	$(document).ready(function(){
 		
-		const method = "${requestScope.method}";
-		
-		console.log("method =>" + method);
-		
-		
-		if(method == "GET") {
-			$("div#div_findResult").hide();
-		}
-		else if( method == "POST") {
-			$("div#div_findResult").show();
+		$("button#btnUpdate").click(function(){
+					
+			const emp_pwd = $("input#emp_pwd").val();
+			const emp_pwd2 = $("input#emp_pwd2").val();
 			
-			$("input#pk_emp_no").val("${requestScope.pk_emp_no}");
-			$("input#uq_email").val("${requestScope.uq_email}");
-		}
-		
-		if(${requestScope.sendMailSuccess == true}) {
-			$("div#div_btnFind").hide();
-		}	 
-		
-		$("button#btnPwdFind").click(function(){
-			func_pwdFind();
-		});
-		
-		$("input#uq_email").keydown(function(event){
+			// const regExp = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g;
+		   // 또는
+			  const regExp = new RegExp(/^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g);
+		   // 숫자/문자/특수문자/ 포함 형태의 8~15자리 이내의 암호 정규표현식 객체 생성
 			
-			if(event.keyCode == 13) { // 엔터를 했을 경우
-				func_pwdFind();	
-			}
-		});
-		
-		// 인증하기
-		$("button#btnConfirmCode").click(function(){
-			
-			const frm = document.verifyCertificationFrm;
-			
-			frm.userCertificationCode.value = $("input#input_confirmCode").val();
-			frm.pk_emp_no.value = $("input#pk_emp_no").val();
-			
-			frm.action = "<%= ctxPath%>/emp/verifyCertification.bts";
-			frm.method = "post";
-			frm.submit();
+			  const bool = regExp.test(emp_pwd);   
+			  
+			  if(!bool) {
+				  // 암호가 정규표현식에 위배된 경우 
+				  alert("암호는 8글자 이상 15글자 이하의 영문자, 숫자, 특수문자를 포함해야 합니다!");
+				  $("input#emp_pwd").val("");
+				  $("input#emp_pwd2").val("");
+				  return; // 종료
+				  
+			  }
+			  else if(bool && emp_pwd != emp_pwd2){
+				  // 암호가 정규표현식에 맞지만 변경암호와 확인암호가 불일치시
+				  alert("변경하려는 암호와 확인암호가 일치하지 않습니다!");
+				  $("input#emp_pwd").val("");
+				  $("input#emp_pwd2").val("");
+				  return; // 종료
+			  }
+			  else {
+				  const frm = document.pwdUpdateEndFrm;
+				  frm.action = "<%= ctxPath%>/pwdUpdateEnd.bts";
+				  frm.method= "post";
+				  frm.submit();
+				  
+			  }
 			
 		});
 		
 		 
 	}); // end of $(document).ready(function(){})------------------
 
-	// Function Declaration
-	function func_pwdFind(){
-      
-		var pk_emp_no = $("input#pk_emp_no").val() == undefined ? "" : $("input#pk_emp_no").val().trim();
-		var uq_email = $("input#uq_email").val() == undefined ? "" : $("input#uq_email").val().trim();
-		
-        if(pk_emp_no.trim()=="") {
-           alert("사번을 입력하세요!!");
-          $("input#pk_emp_no").val(""); 
-          $("input#pk_emp_no").focus();
-          return; // 종료 
-        }
-      
-        if(uq_email.trim()=="") {
-          alert("이메일을 입력하세요!!");
-          $("input#uq_email").val(""); 
-          $("input#uq_email").focus();
-          return; // 종료 
-        }
-        
-        
-        const frm = document.pwdFindFrm;
-        frm.action = "<%= ctxPath%>/pwdFindEnd.bts";
-		frm.method = "post";
-		frm.submit();
-		
-	} // end of function func_idFind()-------------
 	
 </script>
 
@@ -154,37 +120,34 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">BTSGroupware</h1>
                                     </div>
-                                    <form name="pwdFindFrm" class="pwdFindFrm">
+                                    <form name="pwdUpdateEndFrm" class="pwdUpdateEndFrm">
                                         <div class="form-group">
-                                            <input type="text" class="form-control form-control-user"
-                                                name="pk_emp_no" id="pk_emp_no" value="" aria-describedby="pk_emp_no"
-                                                placeholder="사번">
+                                            <input type="password" class="form-control form-control-user"
+                                                name="emp_pwd" id="emp_pwd" value="" aria-describedby="emp_pwd"
+                                                placeholder="새암호">
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" class="form-control form-control-user"
-                                                name="uq_email" id="uq_email" value="" placeholder="이메일">
+                                            <input type="password" class="form-control form-control-user"
+                                                name="emp_pwd2" id="emp_pwd2" value="" aria-describedby="emp_pwd"
+                                                placeholder="새암호확인">
                                         </div>
-                                        <button type="button" class="btn btn-primary btn-user btn-block" id="btnPwdFind">
-                                            	비밀번호 찾기
-                                        </button>
+                                        <input type="hidden" name="pk_emp_no" value="${requestScope.pk_emp_no}">
+                                        
+                                        <c:if test="${requestScope.method == 'GET'}">
+											<div id="div_btnUpdate" align="center">
+									           <button type="button" class="btn btn-primary btn-user btn-block" id="btnUpdate">
+                                            	비밀번호 변경하기
+                                        		</button>
+										    </div>
+									    </c:if>   
                                         <hr>
                                         <div class="my-3" id="div_findResult">
 									        <p class="text-center">
-									        	<c:if test="${requestScope.isUserExist == false }">
-									        		<span style="color: red;">사용자 정보가 없습니다.</span>
-									        	</c:if>   
-									        	
-									        	<c:if test="${requestScope.isUserExist == true && requestScope.sendMailSuccess == true }">
-										        	 <span style="font-size: 10pt;">인증코드가 ${requestScope.uq_email}로 발송되었습니다.</span><br>
-										             <span style="font-size: 10pt;">인증코드를 입력해주세요.</span><br>
-										             <input type="text" name="input_confirmCode" id="input_confirmCode" required />
-										             <br><br>
-										             <button type="button" class="btn btn-info" id="btnConfirmCode">인증하기</button>
-									        	</c:if>
-									           
-									            <c:if test="${requestScope.isUserExist == true && requestScope.sendMailSuccess == false }">
-									        		<span style="color: red;">메일 발송이 실패했습니다.</span>
-									        	</c:if> 
+									        	<c:if test="${requestScope.method == 'POST' && requestScope.n == 1 }">
+													<div id="div_updateResult" align="center">
+												    	사원번호 ${requestScope.pk_emp_no}님의 암호가 변경되었습니다.<br/>
+												    </div>
+											    </c:if>
 									        </p>
 									   </div>
                                     </form>
@@ -208,7 +171,7 @@
     
     <form name="verifyCertificationFrm">
 	<input type="hidden" name="userCertificationCode">
-	<input type="hidden" name="pk_emp_no" value="${requestScope.pk_emp_no}">
+	<input type="hidden" name="pk_emp_no">
 	
 </form>
 

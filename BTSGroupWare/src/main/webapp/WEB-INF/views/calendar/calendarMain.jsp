@@ -73,9 +73,9 @@
 		    },
 		    // ===================== DB 와 연동 시작 ===================== //
 		    events:function(info, successCallback, failureCallback){
-		    <%--	$.ajax({
-	                 url: '<%= ctxPath%>/schedule/selectSchedule.action',
-	                 data:{"fk_userid":$('input#fk_userid').val()},
+		    	$.ajax({
+	                 url: '<%= ctxPath%>/calendar/selectSchedule.bts',
+	                 data:{"fk_emp_no":$('input#fk_emp_no').val()},
 	                 dataType: "json",
 	                 success:function(json) {
 	                	 
@@ -85,8 +85,8 @@
 				            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 				      }	
 	                                            
-	          }); // end of $.ajax()--------------------------------
-	        --%>
+	            }); // end of $.ajax()--------------------------------
+	        
 		    }, // end of events:function(info, successCallback, failureCallback) {}---------------
 		
 		    // 풀캘린더에서 날짜 클릭할 때 발생하는 이벤트(일정 등록창으로 넘어간다)
@@ -153,7 +153,7 @@
 				
 </script>
 
-<div>
+<div id="calendarMain">
 	<h4 style="margin: 0 80px">일정관리</h4>
 	<%-- 검색바를 보여주는 곳 --%>
 	<div id="search">
@@ -167,9 +167,161 @@
 	</div>
 	
 	<%-- 캘린더를 보여주는 곳 --%>
+	<input type="hidden" value="${sessionScope.loginuser.pk_emp_no}" id="fk_emp_no"/>
 	<div id="calendar" style="margin: 60px 30px 50px 60px;"></div>
 
 </div>
+
+
+
+<%-- === 사내 캘린더 추가 Modal === --%>
+<div class="modal fade" id="addComCalModal" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    
+      <!-- Modal header -->
+      <div class="modal-header">
+        <h4 class="modal-title">관심 캘린더 추가</h4>
+        <button type="button" class="close modal_close" data-dismiss="modal">&times;</button>
+      </div>
+      
+      <!-- Modal body -->
+      <div class="modal-body">
+       	<form name="modal_frm">
+       	<table style="width: 100%;" class="table table-bordered">
+     			<tr>
+     				<td style="text-align: left; ">소분류명</td>
+     				<td><input type="text" class="addCom_calname"/></td>
+     			</tr>
+     			<tr>
+     				<td style="text-align: left;">만든이</td>
+     				<td style="text-align: left; padding-left: 5px;">${sessionScope.loginuser.emp_name}</td>
+     			</tr>
+     		</table>
+       	</form>	
+      </div>
+      
+      <!-- Modal footer -->
+      <div class="modal-footer">
+      	<button type="button" id="addCom" class="btn btn-primary btn-sm" onclick="goAddComCal()">추가</button>
+        <button type="button" class="btn btn-outline-primary btn-sm modal_close" data-dismiss="modal">취소</button>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<%-- === 사내 캘린더 수정 Modal === --%>
+<div class="modal fade" id="editComCalModal" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    
+      <!-- Modal header -->
+      <div class="modal-header">
+        <h4 class="modal-title">사내 캘린더 수정</h4>
+        <button type="button" class="close modal_close" data-dismiss="modal">&times;</button>
+      </div>
+      
+      <!-- Modal body -->
+      <div class="modal-body">
+       	<form name="modal_frm">
+       	<table style="width: 100%;" class="table table-bordered">
+     			<tr>
+     				<td style="text-align: left; ">소분류명</td>
+     				<td><input type="text" class="editCom_calname"/><input type="hidden" value="" class="editCom_pk_calno"></td>
+     			</tr>
+     			<tr>
+     				<td style="text-align: left;">만든이</td>
+     				<td style="text-align: left; padding-left: 5px;">${sessionScope.loginuser.emp_name}</td>
+     			</tr>
+     		</table>
+       	</form>	
+      </div>
+      
+      <!-- Modal footer -->
+      <div class="modal-footer">
+      	<button type="button" id="addCom" class="btn btn-primary btn-sm" onclick="goEditComCal()">수정</button>
+          <button type="button" class="btn btn-outline-primary btn-sm modal_close" data-dismiss="modal">취소</button>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<%-- === 내 캘린더 추가 Modal === --%>
+<div class="modal fade" id="addMyCalModal" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      
+      <!-- Modal header -->
+      <div class="modal-header">
+        <h4 class="modal-title">내 캘린더 추가</h4>
+        <button type="button" class="close modal_close" data-dismiss="modal">&times;</button>
+      </div>
+      
+      <!-- Modal body -->
+      <div class="modal-body">
+          <form name="modal_frm">
+       	<table style="width: 100%;" class="table table-bordered">
+     			<tr>
+     				<td style="text-align: left; ">소분류명</td>
+     				<td><input type="text" class="addMy_calname" /></td>
+     			</tr>
+     			<tr>
+     				<td style="text-align: left;">만든이</td>
+     				<td style="text-align: left; padding-left: 5px;">${sessionScope.loginuser.emp_name}</td> 
+     			</tr>
+     		</table>
+     		</form>
+      </div>
+      
+      <!-- Modal footer -->
+      <div class="modal-footer">
+      	<button type="button" id="addMy" class="btn btn-primary btn-sm" onclick="goAddMyCal()">추가</button>
+          <button type="button" class="btn btn-outline-primary btn-sm modal_close" data-dismiss="modal">취소</button>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<%-- === 내 캘린더 수정 Modal === --%>
+<div class="modal fade" id="editMyCalModal" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    
+      <!-- Modal header -->
+      <div class="modal-header">
+        <h4 class="modal-title">내 캘린더 수정</h4>
+        <button type="button" class="close modal_close" data-dismiss="modal">&times;</button>
+      </div>
+      
+      <!-- Modal body -->
+      <div class="modal-body">
+      	<form name="modal_frm">
+       	<table style="width: 100%;" class="table table-bordered">
+     			<tr>
+     				<td style="text-align: left; ">소분류명</td>
+     				<td><input type="text" class="editMy_calname"/><input type="hidden" value="" class="editMy_pk_calno"></td>
+     			</tr>
+     			<tr>
+     				<td style="text-align: left;">만든이</td>
+     				<td style="text-align: left; padding-left: 5px;">${sessionScope.loginuser.emp_name}</td>
+     			</tr>
+     		</table>
+       	</form>
+      </div>
+      
+      <!-- Modal footer -->
+      <div class="modal-footer">
+      	<button type="button" id="addCom" class="btn btn-primary btn-sm" onclick="goEditMyCal()">수정</button>
+          <button type="button" class="btn btn-outline-primary btn-sm modal_close" data-dismiss="modal">취소</button>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
 
 	<%-- === 마우스로 클릭한 날짜의 일정 등록을 위한 폼 === --%>     
 <form name="dateFrm">
