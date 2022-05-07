@@ -104,6 +104,13 @@
 	          	조직도
 	        </a>
 	      </li>
+	      
+	      
+	      <c:if test="${empty sessionScope.loginuser}">
+	      	<li class="nav-item right">	
+	      		<a class="nav-link" id="navbar" role="button" aria-expanded="false" href="<%=ctxPath%>/login.bts">로그인(임시)</a>
+	      	</li>
+	      </c:if>
 	      <%-- 주소록 / 조직도 끝 --%>
 	    </ul>
 	  </div>
@@ -117,6 +124,7 @@
               </a>  
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item" href="#">나의정보</a>
+                  <a class="dropdown-item" href="<%=ctxPath%>/emp/registerEmp.bts">사원등록</a>
                   <a class="dropdown-item" href="<%=ctxPath%>/logout.bts">로그아웃</a>
               </div>
             </li>
@@ -124,7 +132,6 @@
            <span style="color: navy; font-weight: bold;">${sessionScope.loginuser.emp_name}</span> 님 로그인중.. 
          </div>
       </c:if>
-         
    </nav>
    <!-- 상단 네비게이션 끝 -->
 

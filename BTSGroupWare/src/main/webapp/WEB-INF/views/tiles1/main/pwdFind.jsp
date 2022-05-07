@@ -3,6 +3,7 @@
 
 <%-- === #24. tiles 를 사용하는 레이아웃1 페이지 만들기 === --%>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
 
 <%
 	String ctxPath = request.getContextPath();
@@ -50,65 +51,85 @@
 	</style>
 
 <script type="text/javascript">
+	
+	
 
 	$(document).ready(function(){
 		
-		/* var 변수명 = '1234';
-		    선택자.attr()*/
-		if(localStorage.getItem("keep") != null){
-			var gab = localStorage.getItem("keep");
-			$('#pk_emp_no').attr('value', gab);
-			$('#keep').attr('checked', "checked");
+		const method = "${requestScope.method}";
+		
+		console.log("method =>" + method);
+		
+		
+		if(method == "GET") {
+			$("div#div_findResult").hide();
+		}
+		else if( method == "POST") {
+			$("div#div_findResult").show();
+			
+			$("input#pk_emp_no").val("${requestScope.pk_emp_no}");
+			$("input#uq_email").val("${requestScope.uq_email}");
 		}
 		
-		$("button#btnLOGIN").click(function(){
-			func_Login();
+		if(${requestScope.sendMailSuccess == true}) {
+			$("div#div_btnFind").hide();
+		}	 
+		
+		$("button#btnPwdFind").click(function(){
+			func_pwdFind();
 		});
 		
-		$("input#emp_pwd").keydown(function(event){
+		$("input#uq_email").keydown(function(event){
 			
 			if(event.keyCode == 13) { // 엔터를 했을 경우
-				func_Login();	
+				func_pwdFind();	
 			}
 		});
 		
+		// 인증하기
+		$("button#btnConfirmCode").click(function(){
+			
+			const frm = document.verifyCertificationFrm;
+			
+			frm.userCertificationCode.value = $("input#input_confirmCode").val();
+			frm.pk_emp_no.value = $("input#pk_emp_no").val();
+			
+			frm.action = "<%= ctxPath%>/emp/verifyCertification.bts";
+			frm.method = "post";
+			frm.submit();
+			
+		});
 		
-	}); // end of $(document).ready(function(){})-----------
+		 
+	}); // end of $(document).ready(function(){})------------------
 
 	// Function Declaration
-	function func_Login(){
-		
-		const pk_emp_no = $("input#pk_emp_no").val().trim(); 
-        const emp_pwd = $("input#emp_pwd").val().trim(); 
+	function func_pwdFind(){
       
+		var pk_emp_no = $("input#pk_emp_no").val() == undefined ? "" : $("input#pk_emp_no").val().trim();
+		var uq_email = $("input#uq_email").val() == undefined ? "" : $("input#uq_email").val().trim();
+		
         if(pk_emp_no.trim()=="") {
-           alert("아이디를 입력하세요!!");
+           alert("사번을 입력하세요!!");
           $("input#pk_emp_no").val(""); 
           $("input#pk_emp_no").focus();
           return; // 종료 
         }
       
-        if(emp_pwd.trim()=="") {
-          alert("비밀번호를 입력하세요!!");
-          $("input#emp_pwd").val(""); 
-          $("input#emp_pwd").focus();
+        if(uq_email.trim()=="") {
+          alert("이메일을 입력하세요!!");
+          $("input#uq_email").val(""); 
+          $("input#uq_email").focus();
           return; // 종료 
         }
         
         
-        if( $("input:checkbox[id='keep']").prop("checked") ) {
-        	localStorage.setItem('keep',$("input#pk_emp_no").val());
-        }
-        else {
-        	localStorage.removeItem('keep');
-        }
-        
-        const frm = document.loginFrm;
-        frm.action = "<%= ctxPath%>/loginEnd.bts";
+        const frm = document.pwdFindFrm;
+        frm.action = "<%= ctxPath%>/pwdFindEnd.bts";
 		frm.method = "post";
 		frm.submit();
 		
-	} // end of function func_Login()-------------
+	} // end of function func_idFind()-------------
 	
 </script>
 
@@ -133,44 +154,44 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">BTSGroupware</h1>
                                     </div>
-                                    <form name="loginFrm" class="loginFrm">
+                                    <form name="pwdFindFrm" class="pwdFindFrm">
                                         <div class="form-group">
                                             <input type="text" class="form-control form-control-user"
-                                                name="pk_emp_no" id="pk_emp_no" value="" aria-describedby="emailHelp"
-                                                placeholder="아이디">
+                                                name="pk_emp_no" id="pk_emp_no" value="" aria-describedby="pk_emp_no"
+                                                placeholder="사번">
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" class="form-control form-control-user"
-                                                name="emp_pwd" id="emp_pwd" value="" placeholder="비밀번호">
+                                            <input type="text" class="form-control form-control-user"
+                                                name="uq_email" id="uq_email" value="" placeholder="이메일">
                                         </div>
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox small">
-                                                <input type="checkbox" id="keep" class="custom-control-input input_keep" value="off" id="customCheck">
-                                                <label class="custom-control-label" for="keep">아이디 기억하기</label>
-                                            </div>
-                                        </div>
-                                        <button type="button" class="btn btn-primary btn-user btn-block" id="btnLOGIN">
-                                            	로그인
+                                        <button type="button" class="btn btn-primary btn-user btn-block" id="btnPwdFind">
+                                            	비밀번호 찾기
                                         </button>
                                         <hr>
-                                        <div id="center" style="text-align: center;">
-                                        <span>오늘도 좋은 하루 되세요!</span>
-                                        </div>
-                                        <!-- 
-                                        <a href="index.html" class="btn btn-google btn-user btn-block">
-                                            <i class="fab fa-google fa-fw"></i> Login with Google
-                                        </a>
-                                        <a href="index.html" class="btn btn-facebook btn-user btn-block">
-                                             <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
-                                        </a>
-                                        -->
+                                        <div class="my-3" id="div_findResult">
+									        <p class="text-center">
+									        	<c:if test="${requestScope.isUserExist == false }">
+									        		<span style="color: red;">사용자 정보가 없습니다.</span>
+									        	</c:if>   
+									        	
+									        	<c:if test="${requestScope.isUserExist == true && requestScope.sendMailSuccess == true }">
+										        	 <span style="font-size: 10pt;">인증코드가 ${requestScope.uq_email}로 발송되었습니다.</span><br>
+										             <span style="font-size: 10pt;">인증코드를 입력해주세요.</span><br>
+										             <input type="text" name="input_confirmCode" id="input_confirmCode" required />
+										             <br><br>
+										             <button type="button" class="btn btn-info" id="btnConfirmCode">인증하기</button>
+									        	</c:if>
+									           
+									            <c:if test="${requestScope.isUserExist == true && requestScope.sendMailSuccess == false }">
+									        		<span style="color: red;">메일 발송이 실패했습니다.</span>
+									        	</c:if> 
+									        </p>
+									   </div>
                                     </form>
                                     <hr>
                                     <div class="text-center">
                                     	<a href="<%= ctxPath%>/idFind.bts">ID 찾기</a><span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-                                        <a href="<%= ctxPath%>/pwdFind.bts">비밀번호 찾기</a>
-                                    </div>
-                                    <div class="text-center">
+                                    	<a href="<%= ctxPath%>/login.bts">로그인 화면으로</a><br>
                                         	문의 : 인사과(정환모 / 8887)
                                     </div>
                                 </div>
@@ -184,6 +205,12 @@
         </div>
 
     </div>
+    
+    <form name="verifyCertificationFrm">
+	<input type="hidden" name="userCertificationCode">
+	<input type="hidden" name="pk_emp_no" value="${requestScope.pk_emp_no}">
+	
+</form>
 
 </body>
 
