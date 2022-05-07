@@ -7,9 +7,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-
-
-
+ 
 
 @Repository
 public class BoardDAO implements InterBoardDAO {
@@ -88,6 +86,84 @@ public class BoardDAO implements InterBoardDAO {
 	public int add(BoardVO boardvo) {
 		int n = sqlsession.insert("moongil.add", boardvo);
 		return n;
+	}
+
+	@Override
+	public int del(Map<String, String> paraMap) {
+		int n = sqlsession.delete("moongil.del", paraMap);
+		return n;
+	}
+
+	@Override
+	public int edit(BoardVO boardvo) {
+		int n = sqlsession.update("moongil.edit", boardvo);
+		return n;
+	}
+
+	@Override
+	public int save_withFile(BoardVO boardvo) {
+		int n = sqlsession.insert("moongil.save_withFile", boardvo);
+		return n;
+	}
+
+	@Override
+	public int save(BoardVO boardvo) {
+		int n = sqlsession.insert("moongil.save", boardvo);
+		return n;
+	}
+
+	@Override
+	public int exist(BoardVO boardvo) {
+		int n = sqlsession.selectOne("moongil.exist", boardvo);
+		return n;
+	}
+
+	@Override
+	public int addComment(CommentVO commentvo) {
+		int n = sqlsession.insert("moongil.addComment", commentvo);
+		return n;
+	}
+
+	@Override
+	public int updateCommentCount(String fk_seq) {
+		int n = sqlsession.update("moongil.updateCommentCount", fk_seq);
+		return n;
+	}
+
+	@Override
+	public List<CommentVO> getCommentList(String fk_seq) {
+		List<CommentVO> commentList = sqlsession.selectList("moongil.getCommentList", fk_seq);
+		return commentList;
+	}
+
+	@Override
+	public List<BoardVO> temp_list(Map<String, String> paraMap) {
+		List<BoardVO> temp_list = sqlsession.selectList("moongil.temp_list", paraMap);
+		return temp_list;
+	}
+
+	@Override
+	public int tmp_write(BoardVO boardvo) {
+		int n = sqlsession.update("moongil.tmp_write", boardvo);
+		return n;
+	}
+
+	@Override
+	public BoardVO getView2(Map<String, String> paraMap) {
+		BoardVO boardvo = sqlsession.selectOne("moongil.getView2", paraMap);
+		return boardvo;
+	}
+
+	@Override
+	public int getCommentTotalPage(Map<String, String> paraMap) {
+		int totalPage = sqlsession.selectOne("moongil.getCommentTotalPage", paraMap);
+		return totalPage;
+	}
+
+	@Override
+	public List<CommentVO> getCommentListPaging(Map<String, String> paraMap) {
+		List<CommentVO> commentList = sqlsession.selectList("moongil.getCommentListPaging", paraMap);
+		return commentList;
 	}
 
 

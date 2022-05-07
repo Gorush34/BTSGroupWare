@@ -193,6 +193,8 @@ margin: 10px;
 		}// end of function goView(seq){}----------------------------------------------
 		
 		
+
+		
 		function goSearch() {
 			
 			const frm = document.searchFrm;
@@ -205,7 +207,7 @@ margin: 10px;
 </script>
 
 <div style="padding: 0 15px !important; margin-right: auto !important; margin-left: auto !important;">
-	
+
 	<div class="d-flex align-items-center p-3 my-3 text-white bg-purple rounded shadow-sm" style="background-color: #6F42C1; ">
     <div class="lh-1" style="text-align: center; width: 100%;">
       <h1 class="h6 mb-0 text-white lh-1" style="font-size:22px; font-weight: bold; ">자유게시판</h1>
@@ -218,15 +220,23 @@ margin: 10px;
 		<a id="brd_category" href="<%= request.getContextPath()%>/board/list.bts" style="font-weight: bold; text-decoration: underline;">자유게시판</a> 
 		<br></br>
 	</div>
-		<span id = "write" onclick="javascript:location.href='<%= request.getContextPath()%>/board/write.bts'">게시물작성
+	
+	<form action="<%= ctxPath%>/board/write.bts" method="post">
+			<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
+			<input style="border:none; background-color: white;" type="submit" value="게시물작성" />
+		</form>
+	
+	<%-- 	<span id = "write" onclick="javascript:location.href='<%= request.getContextPath()%>/board/write.bts'">게시물작성
 			<i class= "fa  fa-edit" aria-hidden="true"></i>
-		</span>
+		</span> --%>
+			
+
 		
 		<table class="table table-hover">
 		<thead>
 			<tr>
-				<th scope="col" class="text-center" style="width: 50px;">글번호</th>		
-				<th scope="col" class="text-center" style="width: 340px;">제목</th>
+				<th scope="col" class="text-center" style="width: 90px;">글번호</th>		
+				<th scope="col" class="text-center" style="width: 250px;">제목</th>
 				<th scope="col" class="text-center" style="width: 70px;">글쓴이</th>
 				<th scope="col" class="text-center" style="width: 150px;">작성일</th>
 				<th scope="col" class="text-center" style="width: 50px;">조회수</th>
@@ -239,11 +249,69 @@ margin: 10px;
 			          ${boardvo.pk_seq}
 			      </td>
 		
-					<td>
-				      	 <c:if test="${boardvo.comment_count ne 10}">
-				      	 	<span class="subject" onclick="goView('${boardvo.pk_seq}')">${boardvo.subject} <span style="vertical-align: super;"></span></span>  
+					<td align="center">
+			      	 <%-- === 댓글쓰기 및 답변형 및 파일 첨부가 있는 게시판 시작 === --%>
+			      	 <%-- 첨부파일이 없는 경우 시작 --%>
+			      	 <c:if test="${empty boardvo.filename}">
+			        <%-- 답변글이 아닌 원글인 경우 시작  --%>
+			        <c:if test="${boardvo.depthno == 0}">
+				      	 <c:if test="${boardvo.comment_count > 0}">
+				      	 	<span class="subject" onclick="goView('${boardvo.pk_seq}')">${boardvo.subject} <span style="vertical-align: super;">[<span style="color: red; font-size: 9pt; font-style: italic; font-weight: bold;">${boardvo.comment_count}</span>]</span></span>  
 				      	 </c:if>
-				     </td> 	 
+				      	 
+				      	 <c:if test="${boardvo.comment_count == 0}">
+				      	 	<span class="subject" onclick="goView('${boardvo.pk_seq}')">${boardvo.subject}</span>
+				      	 </c:if> 
+				     </c:if> 	 
+			      	 <%-- 답변글이 아닌 원글인 경우 끝  --%>
+			      	 
+			      	 <%-- 답변글인 경우 시작  --%>
+			      	 <c:if test="${boardvo.depthno > 0}">
+				      	 <c:if test="${boardvo.comment_count > 0}">
+				      	 	<span class="subject" onclick="goView('${boardvo.pk_seq}')"><span style="color: red; font-style: italic; padding-left: ${boardvo.depthno * 20}px;">┗Re&nbsp;</span>${boardvo.subject} <span style="vertical-align: super;">[<span style="color: red; font-size: 9pt; font-style: italic; font-weight: bold;">${boardvo.comment_count}</span>]</span></span>  
+				      	 </c:if>
+				      	 
+				      	 <c:if test="${boardvo.comment_count == 0}">
+				      	 	<span class="subject" onclick="goView('${boardvo.pk_seq}')"><span style="color: red; font-style: italic; padding-left: ${boardvo.depthno * 20}px;">┗Re&nbsp;</span>${boardvo.subject}</span>
+				      	 </c:if> 
+				     </c:if> 	 
+			      	 <%-- 답변글인 경우 끝  --%>
+			      	 </c:if>
+			      	 <%-- 첨부파일이 없는 경우 끝 --%>
+			      	 
+			      	<%-- 첨부파일이 있는 경우 시작 --%>
+			      	<c:if test="${not empty boardvo.filename}">
+			        <%-- 답변글이 아닌 원글인 경우 시작  --%>
+			        <c:if test="${boardvo.depthno == 0}">
+				      	 <c:if test="${boardvo.comment_count > 0}">
+				      	 	<span class="subject" onclick="goView('${boardvo.pk_seq}')">${boardvo.subject} <span style="vertical-align: super;">[<span style="color: red; font-size: 9pt; font-style: italic; font-weight: bold;">${boardvo.comment_count}</span>]</span></span>&nbsp;<img src="<%= ctxPath%>/resources/images/disk.gif" />
+				      	 </c:if>
+				      	 
+				      	 <c:if test="${boardvo.comment_count == 0}">
+				      	 	<span class="subject" onclick="goView('${boardvo.pk_seq}')">${boardvo.subject}</span>&nbsp;<img src="<%= ctxPath%>/resources/images/disk.gif" />
+				      	 </c:if> 
+				     </c:if> 	 
+			      	 <%-- 답변글이 아닌 원글인 경우 끝  --%>
+			      	 
+			      	 <%-- 답변글인 경우 시작  --%>
+			      	 <c:if test="${boardvo.depthno > 0}">
+				      	 <c:if test="${boardvo.comment_count > 0}">
+				      	 	<span class="subject" onclick="goView('${boardvo.pk_seq}')"><span style="color: red; font-style: italic; padding-left: ${boardvo.depthno * 20}px;">┗Re&nbsp;</span>${boardvo.subject} <span style="vertical-align: super;">[<span style="color: red; font-size: 9pt; font-style: italic; font-weight: bold;">${boardvo.comment_count}</span>]</span></span>&nbsp;<img src="<%= ctxPath%>/resources/images/disk.gif" />  
+				      	 </c:if>
+				      	 
+				      	 <c:if test="${boardvo.comment_count == 0}">
+				      	 	<span class="subject" onclick="goView('${boardvo.pk_seq}')"><span style="color: red; font-style: italic; padding-left: ${boardvo.depthno * 20}px;">┗Re&nbsp;</span>${boardvo.subject}</span>&nbsp;<img src="<%= ctxPath%>/resources/images/disk.gif" />
+				      	 </c:if> 
+				     </c:if> 	 
+			      	 <%-- 답변글인 경우 끝  --%>
+			      	 </c:if>
+			      	 <%-- 첨부파일이 있는 경우 끝 --%>
+			      	 
+			      	 <%-- === 댓글쓰기 및 답변형 및 파일 첨부가 있는 게시판  끝 === --%>
+			      	 
+			      	 
+			      	 
+			      </td> 	 
 
 
 				  <td align="center">${boardvo.user_name}</td>

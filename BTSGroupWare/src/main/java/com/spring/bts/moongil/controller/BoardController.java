@@ -22,11 +22,15 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+
 import com.spring.bts.common.FileManager;
 import com.spring.bts.common.MyUtil;
 import com.spring.bts.moongil.model.BoardVO;
+import com.spring.bts.moongil.model.CommentVO;
 import com.spring.bts.hwanmo.model.EmployeeVO;
 import com.spring.bts.moongil.service.InterBoardService;
+
+
 
 //=== #30. 컨트롤러 선언 === // 
 @Component
@@ -40,8 +44,6 @@ public class BoardController {
 
 	@Autowired
 	private InterBoardService service;
-	
-	// === #155. 파일업로드 및 다운로드를 해주는 FileManager 클래스 의존객체 주입하기(DI : Dependency Injection) ===  
 		@Autowired     // Type에 따라 알아서 Bean 을 주입해준다.
 		private FileManager fileManager;
 	
@@ -57,24 +59,22 @@ public class BoardController {
 	
 	// --- 게시판 시작 ---  -----------------
 	@RequestMapping(value = "/board/list.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
-	public ModelAndView list(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView list(ModelAndView mav, HttpServletRequest request, BoardVO boardvo) {
 		
 		///////////////////////////////////
+		
+		HttpSession session = request.getSession();
 		
 		getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출 
 		
 		List<BoardVO> boardList = null;
-		
-		//////////////////////////////////////////////////////
-		// === #69. 글조회수(readCount)증가 (DML문 update)는
-		//          반드시 목록보기에 와서 해당 글제목을 클릭했을 경우에만 증가되고,
-		//          웹브라우저에서 새로고침(F5)을 했을 경우에는 증가가 되지 않도록 해야 한다.
-		//          이것을 하기 위해서는 session 을 사용하여 처리하면 된다.
-		HttpSession session = request.getSession();
+	
+		 
 		session.setAttribute("readCountPermission", "yes");
 
 		String searchType = request.getParameter("searchType");
 		String searchWord = request.getParameter("searchWord");
+			
 		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
 		
 		if(searchType == null || (!"subject".equals(searchType) && !"name".equals(searchType)) ) {
@@ -89,8 +89,6 @@ public class BoardController {
 		paraMap.put("searchType", searchType);
 		paraMap.put("searchWord", searchWord);
 		
-		// 먼저 총 게시물 건수(totalCount)를 구해와야 한다.
-		// 총 게시물 건수(totalCount)는 검색조건이 있을 때와 없을때로 나뉘어진다. 
 		int totalCount = 0;        // 총 게시물 건수
 		int sizePerPage = 10;       // 한 페이지당 보여줄 게시물 건수 
 		int currentShowPageNo = 0; // 현재 보여주는 페이지번호로서, 초기치로는 1페이지로 설정함.
@@ -101,18 +99,11 @@ public class BoardController {
 		 
 		// 총 게시물 건수(totalCount)
 		totalCount = service.getTotalCount(paraMap);
-	//	System.out.println("~~~~~ 확인용 totalCount : " + totalCount);
+	
+		totalPage = (int) Math.ceil((double)totalCount/sizePerPage);
 
 		
-		// 만약에 총 게시물 건수(totalCount)가 127개 이라면
-		// 총 페이지수(totalPage)는 13개가 되어야 한다.
-		
-		totalPage = (int) Math.ceil((double)totalCount/sizePerPage);
-		// (double)127/10 ==> 12.7 ==> Math.ceil(12.7) ==> 13.0 ==> (int)13.0 ==> 13
-		// (double)120/10 ==> 12.0 ==> Math.ceil(12.0) ==> 12.0 ==> (int)12.0 ==> 12
-		
 		if(str_currentShowPageNo == null) {
-			// 게시판에 보여지는 초기화면
 			currentShowPageNo = 1;
 		}
 		else {
@@ -126,16 +117,6 @@ public class BoardController {
 			}
 		}
 		
-		// **** 가져올 게시글의 범위를 구한다.(공식임!!!) **** 
-		/*
-		     currentShowPageNo      startRno     endRno
-		    --------------------------------------------
-		         1 page        ===>    1           10
-		         2 page        ===>    11          20
-		         3 page        ===>    21          30
-		         4 page        ===>    31          40
-		         ......                ...         ...
-		 */
 		
 		startRno = ((currentShowPageNo - 1) * sizePerPage) + 1;
 		endRno = startRno + sizePerPage - 1;
@@ -153,60 +134,12 @@ public class BoardController {
 		}
 		
 		
-		// === #121. 페이지바 만들기 === //
+		// === 페이지바 만들기 === //
 		int blockSize = 10;
-		// blockSize 는 1개 블럭(토막)당 보여지는 페이지번호의 개수이다.
-		/*
-			        1  2  3  4  5  6  7  8  9 10 [다음][마지막]  -- 1개블럭
-			[맨처음][이전]  11 12 13 14 15 16 17 18 19 20 [다음][마지막]  -- 1개블럭
-			[맨처음][이전]  21 22 23
-		*/
 		
 		int loop = 1;
-		/*
-	    	loop는 1부터 증가하여 1개 블럭을 이루는 페이지번호의 개수[ 지금은 10개(== blockSize) ] 까지만 증가하는 용도이다.
-	    */
 		
 		int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
-		// *** !! 공식이다. !! *** //
-		
-	/*
-	    1  2  3  4  5  6  7  8  9  10  -- 첫번째 블럭의 페이지번호 시작값(pageNo)은 1 이다.
-	    11 12 13 14 15 16 17 18 19 20  -- 두번째 블럭의 페이지번호 시작값(pageNo)은 11 이다.
-	    21 22 23 24 25 26 27 28 29 30  -- 세번째 블럭의 페이지번호 시작값(pageNo)은 21 이다.
-	    
-	    currentShowPageNo         pageNo
-	   ----------------------------------
-	         1                      1 = ((1 - 1)/10) * 10 + 1
-	         2                      1 = ((2 - 1)/10) * 10 + 1
-	         3                      1 = ((3 - 1)/10) * 10 + 1
-	         4                      1
-	         5                      1
-	         6                      1
-	         7                      1 
-	         8                      1
-	         9                      1
-	         10                     1 = ((10 - 1)/10) * 10 + 1
-	        
-	         11                    11 = ((11 - 1)/10) * 10 + 1
-	         12                    11 = ((12 - 1)/10) * 10 + 1
-	         13                    11 = ((13 - 1)/10) * 10 + 1
-	         14                    11
-	         15                    11
-	         16                    11
-	         17                    11
-	         18                    11 
-	         19                    11 
-	         20                    11 = ((20 - 1)/10) * 10 + 1
-	         
-	         21                    21 = ((21 - 1)/10) * 10 + 1
-	         22                    21 = ((22 - 1)/10) * 10 + 1
-	         23                    21 = ((23 - 1)/10) * 10 + 1
-	         ..                    ..
-	         29                    21
-	         30                    21 = ((30 - 1)/10) * 10 + 1
-	*/
-		
 		
 		String pageBar = "<ul style='list-style: none;'>";
 		String url = "list.bts";
@@ -242,23 +175,11 @@ public class BoardController {
 		
 		mav.addObject("pageBar", pageBar);
 		
-		
-		// === #123. 페이징 처리되어진 후 특정 글제목을 클릭하여 상세내용을 본 이후
-		//           사용자가 목록보기 버튼을 클릭했을때 돌아갈 페이지를 알려주기 위해
-		//           현재 페이지 주소를 뷰단으로 넘겨준다.
 		String gobackURL = MyUtil.getCurrentURL(request);
-	//	System.out.println("~~~~~ 확인용 gobackURL : " + gobackURL);
-		/*
-		 	~~~~~ 확인용 gobackURL : /list.action?searchType=&searchWord=&currentShowPageNo=2
-			~~~~~ 확인용 gobackURL : /list.action?searchType=&searchWord=&currentShowPageNo=3
-			~~~~~ 확인용 gobackURL : /list.action?searchType=subject&searchWord=j
-			~~~~~ 확인용 gobackURL : /list.action?searchType=subject&searchWord=j&currentShowPageNo=2 
-		 */
+
 		mav.addObject("gobackURL", gobackURL.replaceAll("&", " "));
 		
-		// ==== 페이징 처리를 한 검색어가 있는 전체 글목록 보여주기 끝 ====
-		///////////////////////////////////////////////////////////////
-		
+
 		
 		mav.addObject("boardList", boardList);
 		
@@ -278,7 +199,7 @@ public class BoardController {
 		getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출 
 		
 		// 조회하고자 하는 글번호 받아오기 
-	 	String seq = request.getParameter("seq");
+	 	String pk_seq = request.getParameter("pk_seq");
 	 	
 	 	String searchType = request.getParameter("searchType");
 	 	String searchWord = request.getParameter("searchWord");
@@ -295,37 +216,78 @@ public class BoardController {
 		try {
 	         searchWord = URLEncoder.encode(searchWord, "UTF-8"); // 한글이 웹브라우저 주소창에서 사용되어질때 한글이 ? 처럼 안깨지게 하려고 하는 것임.  
 	         gobackURL = URLEncoder.encode(gobackURL, "UTF-8");   // 한글이 웹브라우저 주소창에서 사용되어질때 한글이 ? 처럼 안깨지게 하려고 하는 것임.
-	        /* 
-	         System.out.println("~~~~ view2 의 URLEncoder.encode(searchWord, \"UTF-8\") : " + searchWord);
-	         System.out.println("~~~~ view2 의 URLEncoder.encode(gobackURL, \"UTF-8\") : " + gobackURL);
-	         
-	         System.out.println(URLDecoder.decode(searchWord, "UTF-8")); // URL인코딩 되어진 한글을 원래 한글모양으로 되돌려 주는 것임. 
-	         System.out.println(URLDecoder.decode(gobackURL, "UTF-8"));  // URL인코딩 되어진 한글을 원래 한글모양으로 되돌려 주는 것임. 
-	         */
+
 	      } catch (UnsupportedEncodingException e) {
 	         e.printStackTrace();
 	      } 
 		
-	 	mav.setViewName("redirect:/board/view.bts?seq="+seq+"&searchType="+searchType+"&searchWord="+searchWord+"&gobackURL="+gobackURL);
+	 	mav.setViewName("redirect:/board/view.bts?pk_seq="+pk_seq+"&searchType="+searchType+"&searchWord="+searchWord+"&gobackURL="+gobackURL);
 	 	
 		return mav;
 	}	
+	
+	
+	
+	@RequestMapping(value = "/board/temp_list.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
+	public ModelAndView temp_list(ModelAndView mav, HttpServletRequest request, BoardVO boardvo) {
+		
+		request.getSession();
+		
+		// 조회하고자 하는 글번호 받아오기 
+		String pk_seq = request.getParameter("pk_seq");		 			 	
+
+		String fk_emp_no = request.getParameter("fk_emp_no");
+		
+	//	System.out.println(fk_emp_no);
+		
+		List<BoardVO> boardList = null;
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("pk_seq", pk_seq);
+		paraMap.put("fk_emp_no", fk_emp_no);
+		boardList = service.temp_list(paraMap);
+		// 페이징 처리한 글목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함 한 것)
+
+		mav.addObject("boardList", boardList);
+		
+		
+		mav.setViewName("board/temp_list.board");
+		//  /WEB-INF/views/tiles1/board/list.jsp 파일을 생성한다.
+		
+		return mav;
+	
+	}
+	
+	
 	
 	// === 게시판 글쓰기 ====
 	// === #51. 게시판 글쓰기 폼페이지 요청 === //
 		@RequestMapping(value="/board/write.bts")
 		public ModelAndView requiredLogin_add(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
-		//	getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출 
+			getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출 
 			
 			// === #142. 답변글쓰기가 추가된 경우 시작 === //
 			String fk_seq = request.getParameter("fk_seq");
 			String groupno = request.getParameter("groupno");
 			String depthno = request.getParameter("depthno");
-			String subject = "[답변] "+request.getParameter("subject");
-			
+			String subject = "[답글] "+request.getParameter("subject");
+
 			if(fk_seq == null) {
 				fk_seq = "";
+				
+				List<BoardVO> boardList = null;
+				
+				String pk_seq = request.getParameter("pk_seq");		 			 	
+				String fk_emp_no = request.getParameter("fk_emp_no");
+				
+				Map<String, String> paraMap = new HashMap<>();
+				paraMap.put("pk_seq", pk_seq);
+				paraMap.put("fk_emp_no", fk_emp_no);
+				boardList = service.temp_list(paraMap);
+				
+				mav.addObject("boardList", boardList);
+				
 			}
 			
 			mav.addObject("fk_seq", fk_seq);
@@ -333,96 +295,124 @@ public class BoardController {
 			mav.addObject("depthno", depthno);
 			mav.addObject("subject", subject);
 			// === 답변글쓰기가 추가된 경우 끝               === //
-			
+
 			mav.setViewName("board/write.board");
 			//  /WEB-INF/views/tiles1/board/add.jsp 파일을 생성한다.
 		
 		    return mav;
 		}
 		
+		// === #54. 게시판 임시저장 요청 === //
+			@RequestMapping(value="/board/write_save.bts", method= {RequestMethod.POST})
+			public ModelAndView write_save(Map<String,String> paraMap, ModelAndView mav, BoardVO boardvo, MultipartHttpServletRequest mrequest) { // <== After Advice 를 사용하기 및 파일 첨부하기 	
+				
+				// === #153. !!! 첨부파일이 있는 경우 작업 시작 !!! ===
+				MultipartFile attach = boardvo.getAttach();
+				
+				if( !attach.isEmpty() ) {
+					HttpSession session = mrequest.getSession();
+					String root = session.getServletContext().getRealPath("/");
+
+					String path = root+"resources"+File.separator+"files";
+					
+					String newFileName = "";
+					// WAS(톰캣)의 디스크에 저장될 파일명 
+					
+					byte[] bytes = null;
+					// 첨부파일의 내용물을 담는 것 
+					
+					long file_size = 0;
+					// 첨부파일의 크기 
+					
+					try {
+						bytes = attach.getBytes();
+						
+						String originalFilename = attach.getOriginalFilename();
+
+						newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
+
+						boardvo.setFilename(newFileName);
+						
+						boardvo.setOrg_filename(originalFilename);
+
+						
+						file_size = attach.getSize(); // 첨부파일의 크기(단위는 byte임)
+						boardvo.setFile_size(String.valueOf(file_size));
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
+				}
+			
+				
+				int n = 0;
+				
+				if( attach.isEmpty() ) {
+					// 파일첨부가 없는 경우라면 
+					n = service.save(boardvo);
+				}
+				else {
+					// 파일첨부가 있는 경우라면 
+					n = service.save_withFile(boardvo);
+				}
+				
+				if(n==1) {
+					mav.setViewName("redirect:/board/list.bts");
+					//  /list.action 페이지로 redirect(페이지이동)해라는 말이다.
+				}
+				else {
+					mav.setViewName("board/error/add_error.tiles1");
+					//  /WEB-INF/views/tiles1/board/error/add_error.jsp 파일을 생성한다.
+				}
+				
+				
+			
+				return mav;
+			}
 		
 		// === #54. 게시판 글쓰기 완료 요청 === //
-		@RequestMapping(value="/write_end.bts", method= {RequestMethod.POST})
-//		public ModelAndView addEnd(ModelAndView mav, BoardVO boardvo) {    <== After Advice 를 사용하기 전  
+		@RequestMapping(value="/board/write_end.bts", method= {RequestMethod.POST})
 		public ModelAndView write_end(Map<String,String> paraMap, ModelAndView mav, BoardVO boardvo, MultipartHttpServletRequest mrequest) { // <== After Advice 를 사용하기 및 파일 첨부하기 	
-		/*
-		    form 태그의 name 명과  BoardVO 의 필드명이 같다라면 
-		    request.getParameter("form 태그의 name명"); 을 사용하지 않더라도
-		        자동적으로 BoardVO boardvo 에 set 되어진다.
-		*/
-			
-			// === #153. !!! 첨부파일이 있는 경우 작업 시작 !!! ===
 			MultipartFile attach = boardvo.getAttach();
 			
 			if( !attach.isEmpty() ) {
-				// attach(첨부파일)가 비어 있지 않으면(즉, 첨부파일이 있는 경우라면)
-				
-				/*
-				   1. 사용자가 보낸 첨부파일을 WAS(톰캣)의 특정 폴더에 저장해주어야 한다. 
-				   >>> 파일이 업로드 되어질 특정 경로(폴더)지정해주기
-				              우리는 WAS의 webapp/resources/files 라는 폴더로 지정해준다.
-				              조심할 것은  Package Explorer 에서  files 라는 폴더를 만드는 것이 아니다.       
-				*/
-				// WAS 의 webapp 의 절대경로를 알아와야 한다.
 				HttpSession session = mrequest.getSession();
 				String root = session.getServletContext().getRealPath("/");
 
-				String path = root+"resources"+File.separator+"files";
+	//			String path = root+"resources"+File.separator+"files";
 				
 				String newFileName = "";
-				// WAS(톰캣)의 디스크에 저장될 파일명 
+
 				
-				byte[] bytes = null;
-				// 첨부파일의 내용물을 담는 것 
+	//			byte[] bytes = null;
+
 				
-				long file_size = 0;
-				// 첨부파일의 크기 
+	//			long file_size = 0;
 				
 				try {
-					bytes = attach.getBytes();
-					// 첨부파일의 내용물을 읽어오는 것
+		//			bytes = attach.getBytes();
+
 					
 					String originalFilename = attach.getOriginalFilename();
-				 // attach.getOriginalFilename() 이 첨부파일명의 파일명(예: 강아지.png) 이다.
-				//	System.out.println("~~~~ 확인용 originalFilename => " + originalFilename);
-					// ~~~~ 확인용 originalFilename => LG_싸이킹청소기_사용설명서.pdf
-					
-					newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
-					// 첨부되어진 파일을 업로드 하도록 하는 것이다. 
-					
-				//	System.out.println(">>> 확인용 newFileName => " + newFileName);
-					// >>> 확인용 newFileName => 20220429123036877439302653900.pdf
-				
-			/*
-			   3. BoardVO boardvo 에 fileName 값과 orgFilename 값과 filesize 값을 넣어주기 
-			*/
+
 					boardvo.setFilename(newFileName);
-					// WAS(톰캣)에 저장될 파일명(2022042912181535243254235235234.png)
-					
+				
 					boardvo.setOrg_filename(originalFilename);
-					// 게시판 페이지에서 첨부된 파일(강아지.png)을 보여줄 때 사용.
-					// 또한 사용자가 파일을 다운로드 할때 사용되어지는 파일명으로 사용.
+
 					
-					file_size = attach.getSize(); // 첨부파일의 크기(단위는 byte임)
-					boardvo.setFile_size(String.valueOf(file_size));
+	//				file_size = attach.getSize(); // 첨부파일의 크기(단위는 byte임)
+	//				boardvo.setFile_size(String.valueOf(file_size));
 					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				
 			}
-			// === !!! 첨부파일이 있는 경우 작업 끝 !!! ===
-			
-		
-		//	int n = service.add(boardvo);  // <== 파일첨부가 없는 글쓰기 
-			
-		//  === #156. 파일첨부가 있는 글쓰기 또는 파일첨부가 없는 글쓰기로 나뉘어서 service 호출하기 === // 
-		//  먼저 위의  int n = service.add(boardvo); 부분을 주석처리 하고서 아래와 같이 한다.	
-			
+
 			int n = 0;
 			
 			if( attach.isEmpty() ) {
-				// 파일첨부가 없는 경우라면 
 				n = service.add(boardvo);
 			}
 			else {
@@ -446,6 +436,9 @@ public class BoardController {
 	
 	// == 게시판 글쓰기 끝 ==
 	
+		
+		
+		
 	// == 게시판 글 보기 == //
 	// === #62. 글1개를 보여주는 페이지 요청 === //
 	@RequestMapping(value="/board/view.bts")
@@ -469,35 +462,15 @@ public class BoardController {
 	 	}
 	 	
 	 	
-	    // === #125. 페이징 처리되어진 후 특정 글제목을 클릭하여 상세내용을 본 이후
-	 	//           사용자가 목록보기 버튼을 클릭했을때 돌아갈 페이지를 알려주기 위해
-	 	//           현재 페이지 주소를 뷰단으로 넘겨준다.
 	 	String gobackURL = request.getParameter("gobackURL");  
-	// 	System.out.println("~~~ 확인용 gobackURL : " + gobackURL);
-	 	// ~~~ 확인용 gobackURL : /list.action
-	 	// ~~~ 확인용 gobackURL : /list.action?searchType= searchWord= currentShowPageNo=2 
-	 	// ~~~ 확인용 gobackURL : /list.action?searchType=subject searchWord=j
-	 	// ~~~ 확인용 gobackURL : /list.action?searchType=subject searchWord=j currentShowPageNo=2 
-	 	
+
 	 	if( gobackURL != null && gobackURL.contains(" ") ) {
 	 		gobackURL = gobackURL.replaceAll(" ", "&");
 	 	}
-     //	System.out.println("~~~ 확인용 gobackURL : " + gobackURL);
-		// ~~~ 확인용 gobackURL : /list.action
-		// ~~~ 확인용 gobackURL : /list.action?searchType=&searchWord=&currentShowPageNo=2 
-		// ~~~ 확인용 gobackURL : /list.action?searchType=subject&searchWord=j
-		// ~~~ 확인용 gobackURL : /list.action?searchType=subject&searchWord=j&currentShowPageNo=2 
-	 /*	
-	 	System.out.println("~~~~ view 의 searchType : " + searchType);
-	    System.out.println("~~~~ view 의 searchWord : " + searchWord);
-	    System.out.println("~~~~ view 의 gobackURL : " + gobackURL);
-	 */	
+
 	 	mav.addObject("gobackURL", gobackURL);
 	 	
-	 	// === 125 작업의 끝 === //
-	 	///////////////////////////////////////////////////////////////////////
-	 	
-	 	
+
 	 	try {
 		 	Integer.parseInt(pk_seq);
 		 	
@@ -511,27 +484,20 @@ public class BoardController {
 			
 		 	HttpSession session = request.getSession();
 		 	EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+
+		 	
 		 	
 		 	int login_userid1 = 0;
 		 	if(loginuser != null) {
 		 	   login_userid1 = loginuser.getPk_emp_no();
-		 	   // login_userid 는 로그인 되어진 사용자의 userid 이다.
+
+		 	   
 		 	}
 
 		 	String login_userid = Integer.toString(login_userid1);
 		 	
 		 	paraMap.put("login_userid", login_userid);
-		 	
-		    // === #68. !!! 중요 !!! 
-	        //     글1개를 보여주는 페이지 요청은 select 와 함께 
-			//     DML문(지금은 글조회수 증가인 update문)이 포함되어져 있다.
-			//     이럴경우 웹브라우저에서 페이지 새로고침(F5)을 했을때 DML문이 실행되어
-			//     매번 글조회수 증가가 발생한다.
-			//     그래서 우리는 웹브라우저에서 페이지 새로고침(F5)을 했을때는
-			//     단순히 select만 해주고 DML문(지금은 글조회수 증가인 update문)은 
-			//     실행하지 않도록 해주어야 한다. !!! === //
-		 	
-		    // 위의 글목록보기 #69. 에서 session.setAttribute("readCountPermission", "yes"); 해두었다. 
+
 		 	BoardVO boardvo = null;
 		 	if( "yes".equals(session.getAttribute("readCountPermission")) ) {
 		 		// 글목록보기를 클릭한 다음에 특정글을 조회해온 경우이다.
@@ -540,7 +506,6 @@ public class BoardController {
 			 	// 글조회수 증가와 함께 글1개를 조회를 해주는 것 
 		 		
 		 		session.removeAttribute("readCountPermission");
-		 		// 중요함!! session 에 저장된 readCountPermission 을 삭제한다.
 		 	}
 		 	else {
 		 		// 웹브라우저에서 새로고침(F5)을 클릭한 경우이다. 
@@ -548,6 +513,8 @@ public class BoardController {
 		 		boardvo = service.getViewWithNoAddCount(paraMap);
 			 	// 글조회수 증가는 없고 단순히 글1개 조회만을 해주는 것이다.  
 		 	}
+		 
+		 	
 		 	
 		 	mav.addObject("boardvo", boardvo);
 	 	} catch(NumberFormatException e) {
@@ -559,6 +526,121 @@ public class BoardController {
 		return mav; 
 	}
 	
+	
+	// ===  댓글쓰기(Ajax 로 처리) === //
+		@ResponseBody
+		@RequestMapping(value="/board/addComment.bts", method= {RequestMethod.POST}, produces="text/plain;charset=UTF-8")
+		public String addComment(CommentVO commentvo) {
+			// 댓글쓰기에 첨부파일이 없는 경우 
+			
+			int n = 0;
+			
+			try {
+				n = service.addComment(commentvo);
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("n", n);
+			jsonObj.put("user_name", commentvo.getUser_name());
+			
+			return jsonObj.toString();  
+		}
+		
+		
+		// === 원게시물에 딸린 댓글들을 조회해오기(Ajax 로 처리) === //
+		@ResponseBody
+		@RequestMapping(value="/board/readComment.bts", method= {RequestMethod.GET}, produces="text/plain;charset=UTF-8")
+		public String readComment(HttpServletRequest request) {
+		
+			String fk_seq = request.getParameter("fk_seq");
+			
+			List<CommentVO> commentList = service.getCommentList(fk_seq);
+			
+			JSONArray jsonArr = new JSONArray();  // []
+			
+			if( commentList != null ) {
+				for(CommentVO cmtvo : commentList) {
+					JSONObject jsonObj = new JSONObject();
+					jsonObj.put("user_name", cmtvo.getUser_name());
+					jsonObj.put("content", cmtvo.getContent());
+					jsonObj.put("write_day", cmtvo.getWrite_day());
+					
+					jsonArr.put(jsonObj);
+				}// end of for---------------------
+			}
+			
+			return jsonArr.toString();
+		}
+	
+		
+		// === 원게시물에 딸린 댓글들을 페이징 처리해서 조회해오기(Ajax 로 처리) === //
+		@ResponseBody
+		@RequestMapping(value="board/commentList.bts", method= {RequestMethod.GET}, produces="text/plain;charset=UTF-8")
+		public String commentList(HttpServletRequest request) {
+			
+			String fk_seq = request.getParameter("fk_seq");
+			String currentShowPageNo = request.getParameter("currentShowPageNo");
+			
+			if(currentShowPageNo == null) {
+				currentShowPageNo = "1";
+			}
+			
+			int sizePerPage = 5;  // 한 페이지당 5개의 댓글을 보여줄 것임.
+
+			
+			int startRno = (( Integer.parseInt(currentShowPageNo) - 1) * sizePerPage) + 1;
+			int endRno = startRno + sizePerPage - 1;
+			
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("fk_seq", fk_seq);
+			paraMap.put("startRno", String.valueOf(startRno));
+			paraMap.put("endRno", String.valueOf(endRno));
+			
+			List<CommentVO> commentList = service.getCommentListPaging(paraMap);
+			
+			JSONArray jsonArr = new JSONArray(); // []
+			
+			if(commentList != null) {
+				for(CommentVO cmtvo : commentList) {
+					JSONObject jsonObj = new JSONObject();
+					jsonObj.put("content", cmtvo.getContent());
+					jsonObj.put("name", cmtvo.getUser_name());
+					jsonObj.put("regDate", cmtvo.getWrite_day());
+					jsonArr.put(jsonObj);
+				}// end of for------------------
+			}
+			
+			return jsonArr.toString();
+		}
+		
+		
+		
+		// === 원게시물에 딸린 댓글 totalPage 알아오기(Ajax 로 처리) === //
+		@ResponseBody
+		@RequestMapping(value="/board/getCommentTotalPage.bts", method= {RequestMethod.GET})
+		public String getCommentTotalPage(HttpServletRequest request) {
+			
+			String fk_seq = request.getParameter("fk_seq");
+			String sizePerPage = request.getParameter("sizePerPage");
+			
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("fk_seq", fk_seq);
+			paraMap.put("sizePerPage", sizePerPage);
+			
+			// 원글 글번호(parentSeq)에 해당하는 댓글의 totalPage 수 알아오기 
+			int totalPage = service.getCommentTotalPage(paraMap);
+			
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("totalPage", totalPage);   // {"totalPage":5}
+			
+			return jsonObj.toString();
+		}
+		
+		
+		
+
+		
 	// === #108. 검색어 입력시 자동글 완성하기 3 === //
 	@ResponseBody
 	@RequestMapping(value="/wordSearchShow.bts", method= {RequestMethod.GET}, produces="text/plain;charset=UTF-8")
@@ -590,6 +672,274 @@ public class BoardController {
 	// == 게시판 글보기 끝  == //
 	
 	
+	
+	// === #76. 글삭제 페이지 요청 === //
+	@RequestMapping(value="/board/del.bts")
+	public ModelAndView requiredLogin_del(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
+		
+				// 삭제해야 할 글번호 가져오기
+				String pk_seq = request.getParameter("pk_seq");
+				
+				Map<String, String> paraMap = new HashMap<>();
+				paraMap.put("pk_seq", pk_seq);
+				
+				///////////////////////////////
+				paraMap.put("searchType", "");
+				paraMap.put("searchWord", "");
+				///////////////////////////////
+				
+				BoardVO boardvo = service.getViewWithNoAddCount(paraMap);
+				// 글조회수(readCount) 증가 없이 단순히 글1개만 조회해주는 것이다.
+				
+				HttpSession session = request.getSession();
+				EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+
+			 	int login_userid1 = 0;
+			 	if(loginuser != null) {
+			 	   login_userid1 = loginuser.getPk_emp_no();
+			 	   // login_userid 는 로그인 되어진 사용자의 userid 이다.
+			 	}
+
+			 	String login_userid = Integer.toString(login_userid1);
+
+			 	
+				if( !login_userid.equals(boardvo.getFk_emp_no()) ) {
+					String message = "다른 사용자의 글은 삭제가 불가합니다.";
+					String loc = "javascript:history.back()";
+					
+					mav.addObject("message", message);
+					mav.addObject("loc", loc);
+					mav.setViewName("msg");
+				}
+				else {
+					// 자신의 글을 삭제할 경우
+					// 글작성시 입력해준 글암호와 일치하는지 여부를 알아오도록 암호를 입력받아주는 del.jsp 페이지를 띄우도록 한다. 
+					mav.addObject("pw", boardvo.getPw());
+					mav.addObject("pk_seq", pk_seq);
+					mav.setViewName("board/del.board");
+				}
+		
+		return mav;
+	}
+	
+	
+	// === #77. 글삭제 페이지 완료하기 === //
+	@RequestMapping(value="/board/delEnd.bts", method= {RequestMethod.POST})
+	public ModelAndView delEnd(ModelAndView mav, HttpServletRequest request) {
+		
+		String pk_seq = request.getParameter("pk_seq");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("pk_seq", pk_seq);
+		
+		////////////////////////////////////////////////////
+		// === #164. 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파이을 삭제해주어야 한다. === //
+		paraMap.put("searchType", "");
+		paraMap.put("searchWord", "");
+		
+		BoardVO boardvo = service.getViewWithNoAddCount(paraMap);
+		String filename = boardvo.getFilename();
+		
+		if( filename != null && !"".equals(filename)) {
+			
+			HttpSession session = request.getSession();
+			String root = session.getServletContext().getRealPath("/");
+			String path = root+"resources"+File.separator+"files";
+
+			paraMap.put("path", path); // 삭제해야 할 파일이 저장된 경로
+			paraMap.put("filename", filename);// 삭제해야할 파일명
+			
+		}
+		// === 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파이을 삭제해주어야 한다. 끝 === //
+		////////////////////////////////////////////////////////////
+		
+		int n = service.del(paraMap);
+		
+		if(n==1) {
+			mav.addObject("message", "글 삭제 성공!!");
+			mav.addObject("loc", request.getContextPath()+"/board/list.bts");
+		}
+		else {
+			mav.addObject("message", "글 삭제 실패!!");
+			mav.addObject("loc", "javascript:history.back()");
+		}
+		
+		mav.setViewName("msg");
+		
+		return mav;
+	}
+	
+	
+	
+	
+	
+	// === #71. 글 수정페이지 요청 === //
+	@RequestMapping(value="/board/edit.bts")
+	public ModelAndView requiredLogin_edit(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		
+		request.getSession();
+		
+		// 조회하고자 하는 글번호 받아오기 
+		String fk_emp_no = request.getParameter("fk_emp_no");
+		
+		// 글 수정해야 할 글번호 가져오기
+		String pk_seq = request.getParameter("pk_seq");
+		
+		// 글 수정해야할 글1개 내용 가져오기 
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("pk_seq", pk_seq);
+		paraMap.put("fk_emp_no", fk_emp_no);
+		///////////////////////////////
+		paraMap.put("searchType", "");
+		paraMap.put("searchWord", "");
+        ///////////////////////////////
+		
+		BoardVO boardvo = service.getViewWithNoAddCount(paraMap);
+		// 글조회수(readCount) 증가 없이 단순히 글1개만 조회해주는 것이다.
+		
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+		
+		int getFk_emp_no1 = Integer.parseInt(boardvo.getFk_emp_no());
+		
+		
+		if( loginuser.getPk_emp_no()!=getFk_emp_no1 ) {
+			String message = "다른 사용자의 글은 수정이 불가합니다.";
+			String loc = "javascript:history.back()";
+			
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+			mav.setViewName("msg");
+		}
+		else {
+			// 자신의 글을 수정할 경우
+			// 가져온 1개글을 글수정할 폼이 있는 view 단으로 보내준다.
+			mav.addObject("boardvo", boardvo);
+			mav.setViewName("board/edit.board");
+		}
+		
+		return mav;
+	}
+	
+	
+	// === 임시저장글 작성 === //
+		@RequestMapping(value="/board/tmp_write.bts")
+		public ModelAndView requiredLogin_edit2(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+			String gobackURL = request.getParameter("gobackURL");  
+		 	
+			request.getSession();
+			
+			// 조회하고자 하는 글번호 받아오기 
+			String fk_emp_no = request.getParameter("fk_emp_no");
+			
+			// 글 수정해야 할 글번호 가져오기
+			String pk_seq = request.getParameter("pk_seq");
+			String fk_seq = request.getParameter("fk_seq");
+			// 글 수정해야할 글1개 내용 가져오기 
+
+
+			
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("pk_seq", pk_seq);
+			paraMap.put("fk_seq", fk_seq);
+			paraMap.put("fk_emp_no", fk_emp_no);
+			///////////////////////////////
+			paraMap.put("searchType", "");
+			paraMap.put("searchWord", "");
+	        ///////////////////////////////
+			
+			BoardVO boardvo = service.getViewWithNoAddCount2(paraMap);
+			// 글조회수(readCount) 증가 없이 단순히 글1개만 조회해주는 것이다.
+			
+			
+			mav.addObject("gobackURL", gobackURL);
+			mav.addObject("boardvo", boardvo);
+			mav.setViewName("board/tmp_write.board");
+		
+			
+			return mav;
+		}
+	
+		
+		// === 임시저장글 완료하기 === //
+				@RequestMapping(value="/board/tmp_end.bts", method= {RequestMethod.POST})
+				public ModelAndView tmp_end(Map<String,String> paraMap, ModelAndView mav, BoardVO boardvo, MultipartHttpServletRequest mrequest) { // <== After Advice 를 사용하기 및 파일 첨부하기 	
+					MultipartFile attach = boardvo.getAttach();
+					
+					if( !attach.isEmpty() ) {
+						HttpSession session = mrequest.getSession();
+						String root = session.getServletContext().getRealPath("/");
+
+		//				String path = root+"resources"+File.separator+"files";
+						
+						String newFileName = "";
+						// WAS(톰캣)의 디스크에 저장될 파일명 
+						
+						byte[] bytes = null;
+						// 첨부파일의 내용물을 담는 것 
+						
+						long file_size = 0;
+						// 첨부파일의 크기 
+						
+						try {
+							bytes = attach.getBytes();
+							
+							String originalFilename = attach.getOriginalFilename();
+
+							boardvo.setFilename(newFileName);
+							
+							boardvo.setOrg_filename(originalFilename);
+							
+							file_size = attach.getSize(); // 첨부파일의 크기(단위는 byte임)
+							boardvo.setFile_size(String.valueOf(file_size));
+							
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						
+					}
+
+					int n = 0;
+					
+					if( attach.isEmpty() ) {
+						n = service.tmp_write(boardvo);
+					}
+					else {
+						n = service.add_withFile(boardvo);
+					}
+					
+					if(n==1) {
+						mav.setViewName("redirect:/board/list.bts");
+					}
+					else {
+						mav.setViewName("board/error/add_error.tiles1");
+					}
+					
+					
+				
+					return mav;
+				}
+		
+	// === #72. 글수정 페이지 완료하기 === //
+	@RequestMapping(value="/bts/editEnd.bts", method= {RequestMethod.POST})
+	public ModelAndView editEnd(ModelAndView mav, BoardVO boardvo, HttpServletRequest request) {
+		
+		int n = service.edit(boardvo);
+
+		
+		if(n==0) {
+			mav.addObject("message", "암호가 일치하지 않아 글 수정이 불가합니다.");
+			mav.addObject("loc", "javascript:history.back()");
+		}
+		else {
+			mav.addObject("message", "글 수정 성공!!");
+			mav.addObject("loc", request.getContextPath()+"/board/view.bts?pk_seq="+boardvo.getPk_seq());
+		}
+		
+		mav.setViewName("msg");
+		
+		return mav;
+	}
 	
 	
 	// --- 게시판 끝 --- -------------------

@@ -36,11 +36,8 @@
           elPlaceHolder: "content",
           sSkinURI: "<%= ctxPath%>/resources/smarteditor/SmartEditor2Skin.html",
           htParams : {
-              // 툴바 사용 여부 (true:사용/ false:사용하지 않음)
               bUseToolbar : true,            
-              // 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
               bUseVerticalResizer : true,    
-              // 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
               bUseModeChanger : true,
           }
       });
@@ -63,15 +60,8 @@
 		  
 		  
 		  <%-- === 스마트에디터 구현 시작 === --%>
-	         //스마트에디터 사용시 무의미하게 생기는 p태그 제거
 	          var contentval = $("textarea#content").val();
-	              
-	           // === 확인용 ===
-	           // alert(contentval); // content에 내용을 아무것도 입력치 않고 쓰기할 경우 알아보는것.
-	           // "<p>&nbsp;</p>" 이라고 나온다.
-	           
-	           // 스마트에디터 사용시 무의미하게 생기는 p태그 제거하기전에 먼저 유효성 검사를 하도록 한다.
-	           // 글내용 유효성 검사 
+
 	           if(contentval == "" || contentval == "<p>&nbsp;</p>") {
 	              alert("글내용을 입력하세요!!");
 	              return;
@@ -86,7 +76,6 @@
 	       
 	           $("textarea#content").val(contentval);
 	        
-	           // alert(contentval);
 	       <%-- === 스마트에디터 구현 끝 === --%>
 		  
 		  // 글암호 유효성 검사
@@ -99,7 +88,7 @@
 		  // 폼(form)을 전송(submit)
 		  const frm = document.addFrm;
 		  frm.method = "POST";
-		  frm.action = "<%= ctxPath%>/board/write_end.bts";
+		  frm.action = "<%= ctxPath%>/board/tmp_end.bts";
 		  frm.submit();
 	  });
 	  
@@ -123,6 +112,10 @@
 	         //스마트에디터 사용시 무의미하게 생기는 p태그 제거
 	          var contentval = $("textarea#content").val();
 	              
+	           if(contentval == "" || contentval == "<p>&nbsp;</p>") {
+	              alert("글내용을 입력하세요!!");
+	              return;
+	           }
 	           
 	           // 스마트에디터 사용시 무의미하게 생기는 p태그 제거하기
 	           contentval = $("textarea#content").val().replace(/<p><br><\/p>/gi, "<br>"); //<p><br></p> -> <br>로 변환
@@ -148,9 +141,6 @@
 
   
   
-
-	
-  
   
 </script>
 
@@ -159,14 +149,8 @@
 <%--
 	<h2 style="margin-bottom: 30px;">글쓰기</h2>
  --%>
- <%-- == 원글쓰기 인 경우 == --%>
-	<c:if test="${requestScope.fk_seq eq ''}">
 		<h2 style="margin-bottom: 30px;">글쓰기</h2>
-	</c:if>
-<%-- == 답글쓰기 인 경우 == --%>
-	<c:if test="${requestScope.fk_seq ne ''}">
-		<h2 style="margin-bottom: 30px;">답변글쓰기</h2>
-	</c:if>
+
 	<a data-toggle="modal" data-target="#myModal">임시저장글</a>
 
 <%-- 	
@@ -181,6 +165,7 @@
 		<tr>
 			<th style="width: 15%; background-color: #DDDDDD;">성명</th>
 			<td>
+				<input type="hidden" name="pk_seq" value="${boardvo.pk_seq}" />
 				<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
 				<input type="text" name="user_name" value="${sessionScope.loginuser.emp_name}" readonly />
 			</td>
@@ -190,14 +175,7 @@
 			<th style="width: 15%; background-color: #DDDDDD;">제목</th>
 			<td>
 			 <%-- == 원글쓰기 인 경우 == --%>
-			<c:if test="${requestScope.fk_seq eq ''}">
-				<input type="text" name="subject" id="subject" size="100" /> 
-			</c:if>
-				
-				<%-- == 답글쓰기 인 경우 == --%>
-			<c:if test="${requestScope.fk_seq ne ''}">
-				<input type="text" name="subject" id="subject" size="100" value="${requestScope.subject}" readonly/> 
-			</c:if>
+				<input type="text" name="subject" id="subject" size="100"  value="${boardvo.subject}"/> 
 				
 			</td>
 		</tr>
@@ -205,7 +183,7 @@
 		<tr>
 			<th style="width: 15%; background-color: #DDDDDD;">내용</th>
 			<td>
-				<textarea style="width: 100%; height: 612px;" name="content" id="content"></textarea>
+				<textarea style="width: 100%; height: 612px;" name="content" id="content">${boardvo.content}</textarea>
 			</td>
 		</tr>
 		
@@ -244,52 +222,4 @@
 </div>
 </div>
 
-<div class="modal fade" id="myModal" role="dialog"> 
-<div class="modal-dialog"> 
-<div class="modal-content"> 
-<div class="modal-header"> 
-
-<h2 class="modal-title">
-임시저장
-</h2> 
-
-<button type="button" class="close" data-dismiss="modal">
-×
-</button> 
-
-</div> 
-<div class="modal-body"> 
-<div style="padding: 0 15px !important; margin-right: auto !important; margin-left: auto !important;">
-
-
-		<table class="table table-hover">
-		<thead>
-			<tr>	
-				<th scope="col" class="text-center" style="width: 250px;">제목</th>
-				<th scope="col" class="text-center" style="width: 150px;">작성일</th>
-			</tr>
-		</thead>
-		<tbody>
-			<c:forEach var="boardvo" items="${requestScope.boardList}" varStatus="status">
-			   <tr>
-					<td align="center">  	
-				      	<form action="<%= request.getContextPath()%>/board/tmp_write.bts?pk_seq=${requestScope.boardvo.pk_seq}">
-							<input type="hidden" name="pk_seq" value="${boardvo.pk_seq}" />
-							<input style="color: gray; border:none; background-color: white;" type="submit" value="${boardvo.subject}" />
-						</form>			      	
-			    	</td> 	 
-
-				  <td align="center">${boardvo.write_day}</td>
-			   </tr>
-			</c:forEach>
-		</tbody>
-	</table>
-
-
- 
-	</div>
-</div> 
- </div> 
- </div> 
- </div>
 

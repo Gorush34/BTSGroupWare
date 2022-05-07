@@ -196,7 +196,7 @@ margin: 10px;
 			
 			<c:otherwise>
         		 <tr>
-			 	<td colspan="5" style="text-align: center;">게시물이 존재하지 않습니다.
+			 	<td colspan="5" style="text-align: center;">${save_count}
 			 </td>
 			 </tr>
 

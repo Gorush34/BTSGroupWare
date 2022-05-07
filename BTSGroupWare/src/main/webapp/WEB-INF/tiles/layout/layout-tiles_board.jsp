@@ -37,6 +37,29 @@
   <%-- *** ajax로 파일을 업로드할때 가장 널리 사용하는 방법 ==> ajaxForm *** --%>
   <script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery.form.min.js"></script>
 
+<style>
+	/* 헤더 스타일  시작 */
+
+li.login_dropdown  { 
+   list-style: none;
+   display: inline-block;
+}
+
+img#memberProfile {
+   max-width: 40px;
+   max-height: 40px;
+   border-radius: 100%;
+}
+
+ul#secondHeaderGroup, .secondHeaderList {
+      list-style-type: none;
+      display: inline-block;
+}
+
+/* 헤더 스타일  끝 */
+
+</style>
+
 </head>
 <body>
 	<div id="mycontainer">

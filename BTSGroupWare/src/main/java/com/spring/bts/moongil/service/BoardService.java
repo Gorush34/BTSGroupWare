@@ -1,12 +1,18 @@
 package com.spring.bts.moongil.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.spring.bts.common.FileManager;
 import com.spring.bts.moongil.model.BoardVO;
+import com.spring.bts.moongil.model.CommentVO;
 import com.spring.bts.moongil.model.InterBoardDAO;
 
 
@@ -19,6 +25,9 @@ public class BoardService implements InterBoardService {
 	@Autowired
 	private InterBoardDAO dao;
 
+	@Autowired // Type 에 따라 알아서 Bean 을 주입해준다
+	private FileManager fileManager;
+	
 	@Override
 	public int getTotalCount(Map<String, String> paraMap) {
 		int n = dao.getTotalCount(paraMap);
@@ -35,11 +44,16 @@ public class BoardService implements InterBoardService {
 	public BoardVO getView(Map<String, String> paraMap) {
 		BoardVO boardvo = dao.getView(paraMap); // 글1개 조회하기
 		
-		String login_userid = paraMap.get("login_fk_emp_no");  
+		String login_userid = paraMap.get("login_userid");  
 		// paraMap.get("login_userid") 은 로그인을 한 상태이라면 로그인한 사용자의 userid 이고,
 		// 로그인을 하지 않은 상태이라면  paraMap.get("login_userid") 은 null 이다.
+
+	//	System.out.println("login_userid =>" + login_userid);
 		
-		if(login_userid != null &&
+		int login_userid1 = Integer.parseInt(login_userid);
+
+		
+		if(login_userid1 != 0 &&
 		   boardvo != null &&
 		  !login_userid.equals(boardvo.getFk_emp_no())) {
 			// 글조회수 증가는 로그인을 한 상태에서 다른 사람의 글을 읽을때만 증가하도록 한다. 
@@ -108,7 +122,126 @@ public class BoardService implements InterBoardService {
 	}
 
 
-	
+	// === #78. 1개글 삭제하기 === // 
+	@Override
+	public int del(Map<String, String> paraMap) {
+		int n = dao.del(paraMap);
+		
+		// === #165. 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파일을 삭제해주어야 한다. === //
+		if(n==1) {
+			String path = paraMap.get("path");
+			String filename = paraMap.get("filename");
+			
+			if( filename != null && !"".equals(filename)) {
+				try {
+					fileManager.doFileDelete(filename, path);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+		}
+		
+		///////////////////////////////////////////////////////////////
+		
+		return n;
+	}
+
+	@Override
+	public int edit(BoardVO boardvo) {
+		int n = dao.edit(boardvo);
+		return n;
+	}
+
+	@Override
+	public int save_withFile(BoardVO boardvo) {
+		if("".contentEquals(boardvo.getFk_seq())) {
+
+			int groupno = dao.getGroupnoMax() + 1;
+			boardvo.setGroupno(String.valueOf(groupno));
+		}
+		
+		int n = dao.save_withFile(boardvo); // 첨부파일이 있는 경우
+		
+		return n;
+	}
+
+	@Override
+	public int save(BoardVO boardvo) {
+		if("".contentEquals(boardvo.getFk_seq())) {
+			// 원글쓰기인 경우
+			// groupno 컬럼의 값은 groupno 컬럼의 최대값(max)+1 로 해야한다.
+			int groupno = dao.getGroupnoMax() + 1;
+			boardvo.setGroupno(String.valueOf(groupno));
+		}
+	  // == 원글쓰기인지, 답변글쓰기 인지 구분하기 끝 == //	
+		
+		
+		int n = dao.save(boardvo);
+		return n;
+	}
+
+	@Override
+	public int exist(BoardVO boardvo) {
+		int n = dao.exist(boardvo);
+		return n;
+	}
+
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor= {Throwable.class})
+	public int addComment(CommentVO commentvo) throws Throwable {
+		
+		int n=0, m=0;
+		
+		n = dao.addComment(commentvo); // 댓글쓰기(tbl_comment 테이블에 insert)
+		
+		if(n==1) {
+		   m = dao.updateCommentCount(commentvo.getFk_seq()); // tbl_board 테이블에 commentCount 컬럼이 1증가(update)
+		}
+		
+		if(m==1) {
+		   Map<String, String> paraMap = new HashMap<>();	
+		   paraMap.put("userid", commentvo.getFk_emp_no());
+		}
+		
+		return m;
+	}
+
+	@Override
+	public List<CommentVO> getCommentList(String fk_seq) {
+		List<CommentVO> commentList = dao.getCommentList(fk_seq);
+		return commentList;
+	}
+
+	@Override
+	public List<BoardVO> temp_list(Map<String, String> paraMap) {
+		List<BoardVO> temp_list = dao.temp_list(paraMap);
+		return temp_list;
+	}
+
+	@Override
+	public int tmp_write(BoardVO boardvo) {
+		int n = dao.tmp_write(boardvo);
+		return n;
+	}
+
+	@Override
+	public BoardVO getViewWithNoAddCount2(Map<String, String> paraMap) {
+		BoardVO boardvo = dao.getView2(paraMap); // 글1개 조회하기
+		return boardvo;
+	}
+
+	@Override
+	public int getCommentTotalPage(Map<String, String> paraMap) {
+		int totalPage = dao.getCommentTotalPage(paraMap);
+		return totalPage;
+	}
+
+	@Override
+	public List<CommentVO> getCommentListPaging(Map<String, String> paraMap) {
+		List<CommentVO> commentList = dao.getCommentListPaging(paraMap);
+		return commentList;
+	}
 	
 
 

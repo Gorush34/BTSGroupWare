@@ -25,5 +25,35 @@ public interface InterBoardDAO {
 	int add_withFile(BoardVO boardvo);
 
 	int add(BoardVO boardvo);
+
+	int del(Map<String, String> paraMap);
+
+	int edit(BoardVO boardvo);
+
+	// 임시저장 파일 있을 경우
+	int save_withFile(BoardVO boardvo);
+
+	// 임시저장
+	int save(BoardVO boardvo);
+
+	int exist(BoardVO boardvo);
+
+	List<BoardVO> temp_list(Map<String, String> paraMap);
+	
+	int addComment(CommentVO commentvo);
+
+	int updateCommentCount(String fk_seq);
+
+	List<CommentVO> getCommentList(String fk_seq);
+
+	int tmp_write(BoardVO boardvo);
+
+	BoardVO getView2(Map<String, String> paraMap);
+
+	int getCommentTotalPage(Map<String, String> paraMap);
+
+	List<CommentVO> getCommentListPaging(Map<String, String> paraMap);
+
+	
 	
 }

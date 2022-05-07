@@ -57,6 +57,7 @@
 		        ) V
 	     )T
 		 where rno between #{startRno} and #{endRno}
+		 
 	</select>
 
 	<select id="boardListNoSearch" resultType="com.spring.bts.moongil.model.BoardVO">
@@ -76,7 +77,7 @@
 		     , pk_seq, fk_emp_no, user_name, subject, content, read_count, write_day, pw 
 		     , nextseq, nextsubject 
 		     , groupno, fk_seq, depthno
-		     , filename, org_Filename, file_size
+		     , filename, org_Filename, file_size, comment_count
 		from 
 		(
 		    select lag(pk_seq,1) over(order by pk_seq desc) AS previousseq 
@@ -91,7 +92,7 @@
 		         
 		         , groupno, fk_seq, depthno
 		         
-		         , filename, org_Filename, file_size
+		         , filename, org_Filename, file_size, comment_count
 		    from tbl_board
 		    where status = 1
 		    <if test='searchType != "" and searchWord != "" '>
@@ -141,13 +142,161 @@
 		from tbl_board
 	</select>    
     
-    <!--  ==== #147. 원글쓰기 또는 답변글쓰기(파일첨부가 없는 글쓰기) ==== 
-	                     먼저  #57 을 주석처리한 후 아래처럼 해야 한다. -->
+    <!--  ==== #147. 원글쓰기 또는 답변글쓰기(파일첨부가 없는 글쓰기) ==== -->
 	<insert id="add" parameterType="com.spring.bts.moongil.model.BoardVO">
+		<if test='fk_seq.equals("")'>
 		     insert into tbl_board(pk_seq, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno)
 		     values(boardseq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, default, default)   
+		</if>
+		<!-- 답글 -->
+		 <if test='!fk_seq.equals("")'>
+		     insert into tbl_board(pk_seq, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno)
+		     values(boardSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, #{fk_seq}, #{depthno}+1)   
+		</if>     
 	</insert>
     
     
+    <!-- === #158. 글쓰기(첨부파일이 있는 경우) ===  -->
+	<insert id="add_withFile" parameterType="com.spring.bts.moongil.model.BoardVO" >
+		<if test='fk_seq.equals("")'>
+		     insert into tbl_board(pk_seq, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno, filename, org_filename, file_size)
+		     values(boardSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, default, default, #{filename}, #{org_filename}, #{file_size})   
+	     </if>
+	     <!-- 답글 -->
+	     <if test='!fk_seq.equals("")'>
+		     insert into tbl_board(pk_seq, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno, filename, org_filename, file_size)
+		     values(boardSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, #{fk_seq}, #{depthno}+1, #{filename}, #{org_filename}, #{file_size})    
+	     </if>
+	</insert>
     
+    
+    <update id="del" parameterType="HashMap">
+    	update tbl_board set status = 0
+    	where pk_seq = #{pk_seq}
+    </update>
+    
+    <!-- 조회수 증가 -->
+    <update id="setAddReadCount" parameterType="String">
+    	update tbl_board set read_count = read_count + 1
+    	where pk_seq = #{pk_seq}
+    </update>
+    
+    <!-- ==== #75. 1개글 수정하기 ==== -->
+    <update id="edit" parameterType="com.spring.bts.moongil.model.BoardVO">
+	    update tbl_board set subject = #{subject}
+		                   , content = #{content}
+		where pk_seq = #{pk_seq} and pw = #{pw}
+    </update>
+    
+    <!-- ==== 임시저장 (파일없는) ==== -->
+	<insert id="save" parameterType="com.spring.bts.moongil.model.BoardVO">
+		<if test='fk_seq.equals("")'>
+		     insert into tbl_board(pk_seq, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno)
+		     values(boardseq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, 2, #{groupno}, default, default)   
+		</if>
+		<!-- 답글 -->
+		 <if test='!fk_seq.equals("")'>
+		     insert into tbl_board(pk_seq, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno)
+		     values(boardSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, 2, #{groupno}, #{fk_seq}, #{depthno}+1)   
+		</if>     
+	</insert>
+
+	<!-- 임시 저장(첨부파일이 있는 경우) ===  -->
+	<insert id="save_withFile" parameterType="com.spring.bts.moongil.model.BoardVO" >
+		<if test='fk_seq.equals("")'>
+		     insert into tbl_board(pk_seq, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno, filename, org_filename, file_size)
+		     values(boardSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, 2, #{groupno}, default, default, #{filename}, #{org_filename}, #{file_size})   
+	     </if>
+	     <!-- 답글 -->
+	     <if test='!fk_seq.equals("")'>
+		     insert into tbl_board(pk_seq, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno, filename, org_filename, file_size)
+		     values(boardSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, 2, #{groupno}, #{fk_seq}, #{depthno}+1, #{filename}, #{org_filename}, #{file_size})    
+	     </if>
+	</insert>
+
+	<!-- ==== 임시저장글 작성완료  ==== -->
+    <update id="tmp_write" parameterType="com.spring.bts.moongil.model.BoardVO">
+	    update tbl_board set subject = #{subject}
+		                   , content = #{content}
+		                   , write_day = default
+		                   , pw = #{pw}
+		                   , status = 1
+		                   , pk_seq = boardSeq.nextval
+		where pk_seq = #{pk_seq}
+    </update>
+	
+
+	<select id="exist" parameterType="HashMap" resultType="int">
+	    select count (*)
+		from tbl_board
+		where status = 2 and fk_emp_no = #{fk_emp_no}
+    </select>
+    
+    <!-- 임시 작성글 조회 -->
+    <select id="temp_list" resultType="com.spring.bts.moongil.model.BoardVO">
+    
+	  select subject, to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') as write_day, pk_seq
+		from tbl_board
+		where status = 2 and fk_emp_no = #{fk_emp_no}
+		order by write_day desc
+    
+    </select>
+    
+    
+    <select id="getView2" parameterType="HashMap" resultType="com.spring.bts.moongil.model.BoardVO">
+		select pk_seq, fk_emp_no, user_name, subject, content, read_count, write_day, pw 
+		     , groupno, fk_seq, depthno, filename, org_Filename, file_size, comment_count
+		from 
+		(
+		    select pk_seq, fk_emp_no, user_name, subject, content, read_count
+		         , to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') as write_day
+		         , pw, groupno, fk_seq, depthno, filename, org_Filename, file_size, comment_count
+		    from tbl_board
+		    where status = 2
+		) V
+		where V.pk_seq = #{pk_seq}
+    </select>
+    
+        <!-- #88. 댓글쓰기(tbl_comment 테이블에 insert) === -->
+    <insert id="addComment" parameterType="com.spring.bts.moongil.model.CommentVO">
+	        insert into tbl_comment(pk_seq, fk_emp_no, user_name, content, write_day, fk_seq, status) 
+	        values(commentSeq.nextval, #{fk_emp_no}, #{user_name}, #{content}, default, #{fk_seq}, default)
+    </insert>
+    
+    <!--  === #89.-1  tbl_board 테이블에 commentCount 컬럼의 값을 1증가(update) === -->  
+	<update id="updateCommentCount" parameterType="String">
+    	update tbl_board set comment_count = comment_count + 1 
+    	where pk_seq = #{fk_seq}
+    </update>
+    
+    <!-- === #93. 원게시물에 딸린 댓글들을 조회해오기 === -->  
+    <select id="getCommentList" parameterType="String" resultType="com.spring.bts.moongil.model.CommentVO"> 
+	    select user_name, content, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS write_day 
+		from tbl_comment
+		where status = 1 and fk_seq = #{fk_seq}
+		order by pk_seq desc
+    </select>
+    
+   
+    
+    <!-- === #135. 원글 글번호(parentSeq) 여기에 해당하는 댓글 totalPage 수 알아오기 === -->
+	<select id="getCommentTotalPage" parameterType="HashMap" resultType="int">
+		select ceil(count(*)/#{sizePerPage})
+		from tbl_comment
+		where status = 1 and fk_seq = #{fk_seq}
+	</select>
+    
+    
+    <select id="getCommentListPaging" parameterType="HashMap" resultType="com.spring.bts.moongil.model.CommentVO">
+
+		select user_name, content, write_day
+		from 
+		(
+		select row_number() over(order by pk_seq desc) AS rno, user_name, content, to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') AS write_day
+		from tbl_comment
+		where status = 1 and fk_seq = #{fk_seq}
+		) V
+		where rno between #{startRno} and #{endRno}
+	</select>	
+	
 </mapper>
