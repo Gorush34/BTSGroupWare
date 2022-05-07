@@ -70,34 +70,34 @@ public class MailController {
 	       request.getParameter("form 태그의 name명"); 을 사용하지 않더라도
 	              자동적으로 BoardVO boardvo 에 set 되어진다. (xml(Mapper)파일에서 일일이 set 을 해주지 않아도 된다.)
 	    */			
-		
-		
-		// 받는사원 ID
-		String fk_receiveuser_num = mrequest.getParameter("fk_receiveuser_num");
-	//	System.out.println("확인용 fk_receiveuser_num(사원번호) :" + fk_receiveuser_num);
-		
-		// 받는사원 사원명
-		String empname = mrequest.getParameter("empname");
-	//	System.out.println("확인용 empname(사원명) :" + empname);
-		
-		// 제목
-		String subject = mrequest.getParameter("subject");
-	//	System.out.println("확인용 subject(제목) :" + subject);
-
-		// 메일쓰기 시 체크박스 체크여부 (체크 :1, 체크X :0)
-		String importanceVal = mrequest.getParameter("importanceVal");
-	//	System.out.println("확인용 importanceVal(중요체크박스 체크여부) :" + importanceVal);
-		
-		// 첨부 파일
-		String mail_attach = mrequest.getParameter("mail_attach");
-	//	System.out.println("확인용 mail_attach(첨부파일) :" + mail_attach);
-		
-		
-		// 메일 내용
-		String content = mrequest.getParameter("content");
-	//	System.out.println("확인용 content(메일 내용) :" + content);
-		
-		
+		/*
+		 * // 받는사원 ID String fk_receiveuser_num =
+		 * mrequest.getParameter("fk_receiveuser_num"); // //
+		 * System.out.println("확인용 fk_receiveuser_num(사원번호) :" + fk_receiveuser_num);
+		 * 
+		 * // 받는사원 사원명 String empname = mrequest.getParameter("empname"); // //
+		 * System.out.println("확인용 empname(사원명) :" + empname);
+		 * 
+		 * // 제목 String subject = mrequest.getParameter("subject"); // //
+		 * System.out.println("확인용 subject(제목) :" + subject);
+		 * 
+		 * // 메일쓰기 시 체크박스 체크여부 (체크 :1, 체크X :0) String importanceVal
+		 * =mrequest.getParameter("importanceVal"); // //
+		 * System.out.println("확인용 importanceVal(중요체크박스 체크여부) :" + importanceVal);
+		 * 
+		 * // 첨부 파일 String mail_attach = mrequest.getParameter("mail_attach"); // //
+		 * System.out.println("확인용 mail_attach(첨부파일) :" + mail_attach);
+		 * 
+		 * 
+		 * // 메일 내용 String content = mrequest.getParameter("content"); // //
+		 * System.out.println("확인용 content(메일 내용) :" + content);
+		 */		  
+	/*
+	 * mav.addObject("fk_receiveuser_num", fk_receiveuser_num);
+	 * mav.addObject("empname", empname); mav.addObject("subject", subject);
+	 * mav.addObject("importanceVal", importanceVal); mav.addObject("mail_attach",
+	 * mail_attach); mav.addObject("content", content);
+	 */
 		/*
 		 	확인용 fk_receiveuser_num(사원번호) :admin@bts.com
 			확인용 empname(사원명) :
@@ -174,15 +174,12 @@ public class MailController {
 		// 성공 시 보낸 쪽지함으로 이동 or 메일 발송 성공 페이지로 이동
 		// insert 가 성공적으로 됐을 때 / 실패했을 때
 		if(n==1) {
-			mav.setViewName("redirect:/mailSendList.bts");
+			mav.setViewName("redirect:/mail/mailSendList.bts");
 		}
 		else {// 실패 시 메일쓰기로 이동 (back)		
-	//		mav.setViewName("오류 발생");
+	//		mav.setViewName("redirect:/mailReceiveList.bts");
 		}
 
-		
-		
-		
 		return mav;
 	}	
 	
@@ -193,10 +190,21 @@ public class MailController {
 	@RequestMapping(value = "/mail/mailReceiveList.bts")	
 	// URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
 	// http://localhost:9090/bts/tiles1/mailList.bts
-	public ModelAndView mailList(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView requiredLogin_mailList(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 
-		List<MailVO> receiveMailList = null;
 	
+		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
+
+		
+	//	System.out.println("받은쪽지함 페이지에서 로그인한 사용자 id (사원번호) 받아오기 " + loginuser.getPk_emp_no());
+		
+		String fk_receiveuser_num = String.valueOf(loginuser.getPk_emp_no());
+		String empname = String.valueOf(loginuser.getEmp_name());
+				
+		List<MailVO> receiveMailList = null;
+		
 		// 검색 목록
 		String searchType = request.getParameter("searchType");		// 사용자가 선택한 검색 타입
 		String searchWord = request.getParameter("searchWord");		// 사용자가 입력한 검색어
@@ -217,6 +225,7 @@ public class MailController {
 		paraMap.put("searchType", searchType);
 		paraMap.put("searchWord", searchWord);
 
+		paraMap.put("fk_receiveuser_num",fk_receiveuser_num);	// 로그인한 사용자의 사원번호 map 에 담아서 보내주기
 		
 		// 먼저 총 받은 메일 수(totalCount)를 구해와야 한다.
 		// 총 게시물 건수는 검색조건이 있을 때와 없을 때로 나뉜다.
@@ -286,28 +295,29 @@ public class MailController {
 		
 		// [맨처음][이전] 만들기
 		if(pageNo != 1) {
-			pageBar += "<li><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1'></a>[맨처음]</li>";
-			pageBar += "<li><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1"+(pageNo-1)+"'></a>[이전]</li>";
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1'>[맨처음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
 		}
 		
 		while ( !(loop > blockSize || pageNo > totalPage) ) {
 			
 			if(pageNo == currentShowPageNo) {
-				pageBar += "<li>"+pageNo+"</li>";				
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; color:black; padding: 2px 4px;'>"+pageNo+"</li>";				
 			}
 			else {
-				pageBar += "<li><a href='"+url+"?searchType='"+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";				
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";				
 			}
 			
 			loop++;
 			pageNo++;
-		}
+			
+		}// end of while------------------------------------------
 		
 		
 		// [다음][마지막] 만들기
 		if(pageNo <= totalPage) {
-			pageBar += "<li><a href='"+url+"?searchType='"+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
-			pageBar += "<li><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>";	
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>";	
 		}
 		
 		pageBar += "</ul>";
@@ -335,6 +345,9 @@ public class MailController {
 		// 	receiveMailList = service.getReceiveMailList();
 				
 		mav.addObject("receiveMailList", receiveMailList);		
+		mav.addObject("fk_receiveuser_num", fk_receiveuser_num);
+		mav.addObject("empname", empname);
+		
 		mav.setViewName("mailReceiveList.mail");
 		
 		return mav;
@@ -345,7 +358,7 @@ public class MailController {
 	@RequestMapping(value = "/mail/mailReceiveDetail.bts")	
 	// URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
 	// http://localhost:9090/bts/tiles1/mailList.bts
-	public ModelAndView mailReceiveDetail(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView requiredLogin_mailReceiveDetail(ModelAndView mav, HttpServletRequest request) {
 
 		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
 		
@@ -396,103 +409,243 @@ public class MailController {
 		return mav;
 	}		
 	
-
 	
 	
-	
-	// 보낸메일함
+	// 보낸메일함 목록 보기 페이지 요청 (페이징 처리 및 검색기능 포함)
 	@RequestMapping(value = "/mail/mailSendList.bts")	
-	public String mailSend(HttpServletRequest request) {
+	public ModelAndView mailSend(HttpServletRequest request, ModelAndView mav) {
+
+
+		List<MailVO> SendMailList = null;
+	
+		// 검색 목록
+		String searchType = request.getParameter("searchType");		// 사용자가 선택한 검색 타입
+		String searchWord = request.getParameter("searchWord");		// 사용자가 입력한 검색어
+		String str_currentShowPageNo = request.getParameter("currentShowPageNo");	// 현재 페이지 번호
 		
-		return "mailSendList.mail";
-		//	value="/WEB-INF/views/mail/{1}.jsp 페이지를 만들어야 한다.
+		// searchType 에는 제목 및 사원명이 있는데, 이 외의 것들이 들어오게 되면 기본값으로 보여준다
+		if(searchType == null || (!"subject".equals(searchType)) && (!"empname".equals(searchType)) ) {
+			searchType = "";
+		}
+		
+		// 검색 입력창에 아무것도 입력하지 않았을 때 or 공백일 때 기본값을 보여주도록 한다.
+		if(searchWord == null || "".equals(searchWord) && searchWord.trim().isEmpty()) {
+			searchWord = "";
+		}
+		
+		// DB 로 보내기 위해 요청된 정보를 Map에 담는다.
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("searchType", searchType);
+		paraMap.put("searchWord", searchWord);
+
+		
+		// 먼저 총 받은 메일 수(totalCount)를 구해와야 한다.
+		// 총 게시물 건수는 검색조건이 있을 때와 없을 때로 나뉜다.
+		int totalCount = 0;
+		int sizePerPage = 10;
+		int currentShowPageNo = 0;
+		int totalPage = 0;
+		
+		int startRno = 0;
+		int endRno = 0;
+		
+		// 총 받은 메일 건수 구해오기 (service 단으로 보내기) 
+		totalCount =service.getTotalCount(paraMap); // 검색기능 포함시 paraMap 에 담아서 파라미터에 넣을 것
+		 		
+		totalPage = (int) Math.ceil((double)totalCount/sizePerPage);	// 총 페이지 수 (전체게시물 / 페이지당 보여줄 갯수)
+
+		if(str_currentShowPageNo == null) {
+			// 페이지바를 거치지 않은 맨 처음 화면
+			currentShowPageNo = 1;
+		}
+		else {	
+			try {	// 사용자가 페이지 넘버에 정수만 입력할 수 있도록 설정		
+				currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+				if(currentShowPageNo < 1 || currentShowPageNo > totalPage) {
+					// 1 미만의 페이지 또는 총 페이지 수를 넘어서는 페이지수 입력 시 기본페이지로
+					currentShowPageNo = 1;
+				}				
+			} catch (NumberFormatException e) {
+				currentShowPageNo = 1;
+			}
+		}
+		
+		startRno = ( (currentShowPageNo - 1) * sizePerPage ) + 1;
+		endRno = startRno + sizePerPage - 1;
+		
+		paraMap.put("startRno", String.valueOf(startRno));
+		paraMap.put("endRno", String.valueOf(endRno));
+		
+		 // 페이징처리 한 보낸 메일목록 (검색 있든, 없든 모두 다 포함) 
+		SendMailList = service.recMailListSearchWithPaging(paraMap);
+		
+		// 검색대상 컬럼(searchType) 및 검색어(searchWord) 유지시키기 위함
+		if(!"".equals(searchType) && !"".equals(searchWord)) {
+			mav.addObject("paraMap", paraMap);
+		}
+		
+		
+		// === 페이지바 만들기 시작
+		int blockSize = 3;
+		// blockSize 는 1개 블럭(토막) 당 보여지는 페이지번호의 개수이다.
+		/*
+	        		1  2  3  4  5  6  7  8  9 10 [다음][마지막]  -- 1개블럭
+			[맨처음][이전]  11 12 13 14 15 16 17 18 19 20 [다음][마지막]  -- 1개블럭
+			[맨처음][이전]  21 22 23
+		*/		
+		
+		int loop = 1;
+		/*
+    		loop는 1부터 증가하여 1개 블럭을 이루는 페이지번호의 개수[ 지금은 10개(== blockSize) ] 까지만 증가하는 용도이다.
+		*/		
+		
+		int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+		
+		String pageBar = "<ul style='list-style:none;'>";
+		String url = "mailSendList.bts";	// 상대경로 mailReceiveList.bts	(앞에 /mail 붙이지 말고 맨 끝에 부분만 붙이도록 한다.)
+		
+		
+		// [맨처음][이전] 만들기
+		if(pageNo != 1) {
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1'>[맨처음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+		}
+		
+		while ( !(loop > blockSize || pageNo > totalPage) ) {
+			
+			if(pageNo == currentShowPageNo) {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; color:black; padding: 2px 4px;'>"+pageNo+"</li>";				
+			}
+			else {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";				
+			}
+			
+			loop++;
+			pageNo++;
+			
+		}// end of while------------------------------------------
+		
+		
+		// [다음][마지막] 만들기
+		if(pageNo <= totalPage) {
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>";	
+		}
+		
+		pageBar += "</ul>";
+		
+		mav.addObject("pageBar", pageBar);
+
+
+		// === 페이징 처리되어진 후 특정 글제목을 클릭하여 상세내용을 본 이후
+		//     사용자가 목록보기 버튼을 클릭했을때 돌아갈 페이지를 알려주기 위해
+		//     현재 페이지 주소를 뷰단으로 넘겨준다.
+	//	String goBackURL = MyUtil.getCurrnetURL(request);
+	//	System.out.println("*** 확인용 goBackURL : "+goBackURL);
+		/*
+			*** 확인용 goBackURL : /list.action
+			*** 확인용 goBackURL : /list.action?searchType= searchWord=%20 currentShowPageNo=2
+			*** 확인용 goBackURL : /list.action?searchType=subject searchWord=j
+			*** 확인용 goBackURL : /list.action?searchType=subject searchWord=j%20 currentShowPageNo=2
+		*/
+	//	mav.addObject("goBackURL", goBackURL.replaceAll("&", " "));		// view 단에 넘겨주자. & 을 " " 로 바꿔준 결과값들.
+		// === 페이징 처리를 한 검색어가 있는 전체 글목록 보여주기 끝 === //	
+		///////////////////////////////////////////////////////////////////////////////////////////
+
+		
+		// 	받은 메일함 글목록 보여주기 
+		// 	receiveMailList = service.getReceiveMailList();
+				
+		mav.addObject("SendMailList", SendMailList);				
+		mav.setViewName("mailSendList.mail");
+		return mav;
 	}	
 
 	
-	// 보낸메일함 내용 읽기
+	// 보낸메일함 내용 읽기 (1개 메일함 상세내용 보여주는 페이지 요청)
 	@RequestMapping(value = "/mail/mailSendDetail.bts")	
-	public String mailSendDetail(HttpServletRequest request) {
+	public ModelAndView mailSendDetail(HttpServletRequest request, ModelAndView mav) {
 		
-		return "mailSendDetail.mail";
-		//	value="/WEB-INF/views/mail/{1}.jsp 페이지를 만들어야 한다.
+		mav.setViewName("mailSendDetail.mail");
+		return mav;
 	}		
 		
 	
 	// 중요메일함
 	@RequestMapping(value = "/mail/mailImportant.bts")	
-	public String mailImportant(HttpServletRequest request) {
+	public ModelAndView mailImportant(HttpServletRequest request, ModelAndView mav) {
 		
-		return "mailImportant.mail";
-		//	value="/WEB-INF/views/mail/{1}.jsp 페이지를 만들어야 한다.
+		mav.setViewName("mailImportant.mail");
+		return mav;
 	}	
 	
 	// 중요메일함 내용 읽기
 	@RequestMapping(value = "/mail/mailImportantDetail.bts")	
-	public String mailImportantDetail(HttpServletRequest request) {
+	public ModelAndView mailImportantDetail(HttpServletRequest request, ModelAndView mav) {
 		
-		return "mailImportantDetail.mail";
-		//	value="/WEB-INF/views/mail/{1}.jsp 페이지를 만들어야 한다.
+		mav.setViewName("mailImportantDetail.mail");
+		return mav;
 	}		
 	
 	
 	// 임시보관함
 	@RequestMapping(value = "/mail/mailTemporary.bts")	
-	public String mailTemporary(HttpServletRequest request) {
+	public ModelAndView mailTemporary(HttpServletRequest request, ModelAndView mav) {
 		
-		return "mailTemporary.mail";
-		//	value="/WEB-INF/views/mail/{1}.jsp 페이지를 만들어야 한다.
+		mav.setViewName("mailTemporary.mail");
+		return mav;
 	}	
 	
 	
 	// 임시보관함 내용 읽기
 	@RequestMapping(value = "/mail/mailTemporaryDetail.bts")	
-	public String mailTemporaryDetail(HttpServletRequest request) {
+	public ModelAndView mailTemporaryDetail(HttpServletRequest request, ModelAndView mav) {
 		
-		return "mailTemporaryDetail.mail";
-		//	value="/WEB-INF/views/mail/{1}.jsp 페이지를 만들어야 한다.
+		mav.setViewName("mailTemporaryDetail.mail");
+		return mav;
 	}		
 	
 	
 	
 	// 예약메일함
 	@RequestMapping(value = "/mail/mailReservation.bts")	
-	public String mailReservation(HttpServletRequest request) {
+	public ModelAndView mailReservation(HttpServletRequest request, ModelAndView mav) {
 		
-		return "mailReservation.mail";
-		//	value="/WEB-INF/views/mail/{1}.jsp 페이지를 만들어야 한다.
+		mav.setViewName("mailReservation.mail");
+		return mav;
 	}	
 	
 	// 예약메일함 내용 읽기
 	@RequestMapping(value = "/mail/mailReservationDetail.bts")	
-	public String mailReservationDetail(HttpServletRequest request) {
+	public ModelAndView mailReservationDetail(HttpServletRequest request, ModelAndView mav) {
 		
-		return "mailReservationDetail.mail";
-		//	value="/WEB-INF/views/mail/{1}.jsp 페이지를 만들어야 한다.
+		mav.setViewName("mailReservationDetail.mail");
+		return mav;
 	}		
 			
 	
 	// 휴지통 목록 보여주기
 	@RequestMapping(value = "/mail/mailRecyclebin.bts")	
-	public String mailRecyclebin(HttpServletRequest request) {
+	public ModelAndView mailRecyclebin(HttpServletRequest request, ModelAndView mav) {
 		
-		return "mailRecyclebin.mail";
-		//	value="/WEB-INF/views/mail/{1}.jsp 페이지를 만들어야 한다.
+		mav.setViewName("mailRecyclebin.mail");
+		return mav;
 	}	
 
 	// 휴지통 내용 읽기
 	@RequestMapping(value = "/mail/mailRecyclebinDetail.bts")	
-	public String mailRecyclebinDetail(HttpServletRequest request) {
+	public ModelAndView mailRecyclebinDetail(HttpServletRequest request, ModelAndView mav) {
 		
-		return "mailRecyclebinDetail.mail";
-		//	value="/WEB-INF/views/mail/{1}.jsp 페이지를 만들어야 한다.
+		mav.setViewName("mailRecyclebinDetail.mail");
+		return mav;
 	}		
 	
 	// 휴지통 목록 삭제하기
 	@RequestMapping(value = "/mail/mailRecyclebinClear.bts")	
-	public String mailRecyclebinClear(HttpServletRequest request) {
+	public ModelAndView mailRecyclebinClear(HttpServletRequest request, ModelAndView mav) {
 		
-		return "mailRecyclebinClear.mail";
-		//	value="/WEB-INF/views/mail/{1}.jsp 페이지를 만들어야 한다.
+		mav.setViewName("mailRecyclebinClear.mail");
+		return mav;
 	}		
 	
 }

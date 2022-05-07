@@ -48,7 +48,9 @@ public class MailService implements InterMailService {
 	@Override
 	public int add(MailVO mailvo) {
 		int n = dao.add(mailvo);
+
 		return n;
+		
 	}
 
 	// 메일쓰기 (파일첨부가 있는 메일쓰기)

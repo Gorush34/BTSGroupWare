@@ -35,7 +35,7 @@
 					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailReceiveList.bts">받은메일함</a></div>
 				</li>
 				<li style="margin-bottom: 15px;">
-					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailWrite.bts">보낸메일함</a></div>
+					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailSendList.bts">보낸메일함</a></div>
 				</li>
 				<li style="margin-bottom: 15px;">
 					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailWrite.bts">중요메일함</a></div>

@@ -8,8 +8,8 @@ public class MailVO {
 	private String pk_mail_num;             // NOT NULL NUMBER(14) 메일번호    
 	private String fk_senduser_num;         // NUMBER(8)     		보낸사람 사원번호
 	private String fk_receiveuser_num;     	// NUMBER(8)     		받는사람 사원번호
-	private String empname;        			// VARCHAR2(10)  		받는사람 이름
 	private String email;					// VARCHAR2(100)		이메일
+	private String empname;        			// VARCHAR2(10)  		받는사람 이름
 	private String subject;                 // VARCHAR2(100) 		메일 제목
 	private String content;                 // VARCHAR2(256) 		메일 내용
 	private String filename;                // VARCHAR2(100) 		파일 저장되는 이름(disk)

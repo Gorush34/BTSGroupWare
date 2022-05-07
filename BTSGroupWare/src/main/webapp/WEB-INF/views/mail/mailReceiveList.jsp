@@ -12,6 +12,8 @@
 
 	span.subject
 	{cursor: pointer;}
+	
+	a { text-decoration: none !important}
 
 </style>
 
@@ -34,6 +36,22 @@
 		
 		location.href = "<%= ctxPath%>/mail/mailReceiveDetail.bts?pk_mail_num="+pk_mail_num+"&searchType="+searchType+"&searchWord="+searchWord;
 <%-- 	<a href="<%= ctxPath%>/mail/mailReceiveDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${mailvo.subject}</a> --%>
+	}
+	
+	// 삭제버튼 클릭 시 휴지통으로 이동하기
+	function goMailDelRecyclebin() {
+		
+		// 체크된 갯수 세기
+		var chkCnt = $("input[name='chkBox']:checked").length;
+		
+		// 배열에 체크된 행의 pk_mail_num 넣기
+		var arrChk = new Array();
+		
+		$("input[name='chkBox']:checked").each(function(){
+			
+			var  $(this).attr('id');
+			
+		});
 	}
 	
 </script>
@@ -69,7 +87,7 @@
 				<div id="secondHeader">
 					<ul id="secondHeaderGroup" style="padding: 0px; margin-left: -10px;">
 						<li class="secondHeaderList">
-							<button type="button" id="delTrash" onclick="goMailDelTrash()">
+							<button type="button" id="delTrash" onclick="goMailDelRecyclebin()">
 							<i class="fa fa-trash-o fa-fw"></i>
 								삭제
 							</button>
@@ -96,17 +114,17 @@
 								<th style="width: 2%;">
 									<span class="fa fa-paperclip"></span>
 								</th>
-								<th style="width: 10%;" class="text-center">사원명</th>
+								<th style="width: 10%;" class="text-center">보낸이</th>
 								<th style="width: 70%;">제목</th>
 								<th style="width: 20%;" class="text-left">날짜</th>
 							</tr>
 						</thead>
 						
 						<tbody>
-						<c:forEach items="${requestScope.receiveMailList}" var="mailvo">
+						<c:forEach items="${requestScope.receiveMailList}" var="receiveMailList">
 							<tr>
 								<td style="width: 40px;">
-									<input type="checkbox" id="checkAll" class="text-center"/>
+									<input type="checkbox" id="checkAll" id="chkBox" class="text-center"/>
 								</td>
 								<td style="width: 40px;">
 									<span class="fa fa-star-o" class="text-center"></span>
@@ -114,14 +132,14 @@
 								<td style="width: 40px;">
 									<span class="fa fa-paperclip" class="text-center"></span>
 								</td>							
-								<td class="text-center">${mailvo.empname}</td>
+								<td class="text-center">${requestScope.empname}</td>
 								<td>
 								<%--
-								<a href="<%= ctxPath%>/mail/mailReceiveDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${mailvo.subject}</a>
+								<a href="<%= ctxPath%>/mail/mailReceiveDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${receiveMailList.subject}</a>
 								--%>
-								<span class="subject" onclick="goRecMailView('${mailvo.pk_mail_num}')">${mailvo.subject}</span>
+								<span class="subject" onclick="goRecMailView('${receiveMailList.pk_mail_num}')">${receiveMailList.subject}</span>
 								</td>
-								<td class="text-left">${mailvo.reg_date}</td>
+								<td class="text-left">${receiveMailList.reg_date}</td>
 							</tr>	
 						</c:forEach>																				
 						</tbody>
@@ -129,7 +147,7 @@
 				</div>	
 				
 				<%-- 페이징 처리하기 --%>
-				<div align="center" style="border: solid 1px gray; width: 70%; margin: 20px auto;" >
+				<div align="center" style="border: solid 0px gray; width: 70%; margin: 20px auto;" >
 					${requestScope.pageBar}
 				</div>							
 			</div>

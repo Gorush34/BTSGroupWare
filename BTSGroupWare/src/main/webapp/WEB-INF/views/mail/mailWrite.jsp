@@ -84,8 +84,8 @@
 		    // 	  alert("클릭 확인");
 		      	 
 		      	 // 받는사람 유효성 검사
-		      	 var fk_receiveuser_num = $("input#fk_receiveuser_num").val().trim();
-		      	 if(fk_receiveuser_num == "") {
+		      	 var email = $("input#email").val().trim();
+		      	 if(email == "") {
 		      		 alert("받는 사람을 입력해주세요.");
 		      		 return false;
 		      	 }
@@ -219,9 +219,10 @@
 			<tr>
 				<th width="14%">받는 사람</th>
 				<td width="86%" data-toggle="tooltip" data-placement="top" title="">
-					<input type="text" id="fk_receiveuser_num" name="fk_receiveuser_num" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
+					<input type="text" id="email" name="email" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
 				
 					<%-- hidden 타입으로 데이터값 보내기 --%>
+			     	<input type="hidden" id="fk_receiveuser_num" name="fk_receiveuser_num" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " /> 
 					<input type="hidden" id="empname" name="empname" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
 					<input type="hidden" id="fk_senduser_num" name="fk_senduser_num"/>
 					<input type="hidden" id="email" name="email"/>					

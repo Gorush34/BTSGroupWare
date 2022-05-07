@@ -14,16 +14,13 @@
 body {font-family: 'Noto Sans KR', sans-serif; }
 
 
-
- */
-
-/* mailReceiveList 서식 시작 */
+/* mailReceiveList, mailSendList 서식 시작 */
 
 	#secondHeader {
 		display: inline-block;
 	}
 	
-	#delTrash, #readReceive {
+	#delTrash, #readReceive, #readSend {
 		border: 0;
 		background-color: white;
 	}
@@ -33,17 +30,29 @@ body {font-family: 'Noto Sans KR', sans-serif; }
 		display: inline-block;
 	}
 	
+/* 헤더 스타일  시작 */
+
+li.login_dropdown  { 
+   list-style: none;
+   display: inline-block;
+}
+
+img#memberProfile {
+   max-width: 40px;
+   max-height: 40px;
+   border-radius: 100%;
+}
+
+ul#secondHeaderGroup, .secondHeaderList {
+      list-style-type: none;
+      display: inline-block;
+}
+
+/* 헤더 스타일  끝 */	
+	
   #mail_searchType, #searchWord, 
   #mail_serachWord, #mail_search,
   #btnSearch {
   	 display: inline-block;
   }	
-
-
-
-
-
-/* mailWrite 서식 시작 */
-
-
 

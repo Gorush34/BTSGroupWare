@@ -17,6 +17,7 @@
 	</select>
 
 
+
 	<!--  총 받은메일 개수 구해오기 -->
 	<select id="getTotalCount" parameterType="HashMap" resultType="int">
 		select count(*)
@@ -26,7 +27,7 @@
 		</if>
 	</select>
 
-
+	
 
 	<!--  페이징처리 한 받은 메일목록 (검색 있든, 없든 모두 다 포함)  -->
  	<select id="recMailListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
@@ -44,8 +45,8 @@
 		where rno between #{startRno} and #{endRno}
 	</select> 
 
-	<!-- 페이징처리 / 검색기능 포함 된 받은메일함 목록에서 상세내용 조회하기 (이전글, 다음글 추가예정) -->
 
+	<!-- 페이징처리 / 검색기능 포함 된 받은메일함 목록에서 상세내용 조회하기 (이전글, 다음글 추가예정) -->
 	<select id="getRecMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">	
 		select pk_mail_num, fk_senduser_num, fk_receiveuser_num, empname, email, subject, content, reg_date
 			 , filename, orgfilename, filesize
@@ -56,7 +57,7 @@
 				         , fileName, orgFilename, fileSize
 				    from tbl_mail
 					<if test='searchType != "" and searchWord != "" '>
-					where and lower(${searchType}) like '%'|| lower(#{searchWord}) || '%'
+					where lower(${searchType}) like '%'|| lower(#{searchWord}) || '%'
 					</if>	    
 				) V
 		where V.pk_mail_num = #{pk_mail_num}
@@ -64,7 +65,7 @@
 
 
 	<!-- 페이징처리 / 검색기능 포함 된 받은메일함 목록에서 상세내용 조회하기 (이전글, 다음글 포함) -->
-<!--
+	<!--
 	<select id="getRecMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">	
 		select prev_seq, prev_subject
 			  , pk_mail_num, fk_senduser_num, fk_receiveuser_num, empname, email, subject, content, reg_date
@@ -85,15 +86,13 @@
 					</if>	    
 				) V
 		where V.pk_mail_num = #{pk_mail_num}
-	</select>
--->	
+	 </select>
+	-->	
 	
 	<!-- 메일쓰기 (파일첨부가 없는 메일쓰기) -->
 	<insert id="add" parameterType="com.spring.bts.minjeong.model.MailVO">
-		insert into tbl_mail(pk_mail_num, fk_senduser_num, fk_receiveuser_num, empname, email, subject, content, reg_date
-		                   , importance, reservation_status, read_status) 
-		values(SEQ_MAIL.nextval, #{fk_senduser_num}, #{fk_receiveuser_num}, #{empname}, #{email}, #{subject}, #{content}, default
-		      , default, default, default)
+		insert into tbl_mail(pk_mail_num, fk_senduser_num, fk_receiveuser_num, empname, email, subject, content, reg_date, importance, reservation_status, read_status) 
+		values(SEQ_MAIL.nextval, to_number(#{fk_senduser_num}), to_number(#{fk_receiveuser_num}), #{empname}, #{email}, #{subject}, #{content}, default, default, default, default)
     </insert>
 
 	
