@@ -1,5 +1,6 @@
 package com.spring.bts.hwanmo.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,27 @@ public class AttendanceService implements InterAttendanceService {
 	@Override
 	public int insertTodayCommute(Map<String, String> paraMap) {
 		int n = attDAO.insertTodayCommute(paraMap);
+		return n;
+	}
+
+	// 출퇴근시간 알아오기
+	@Override
+	public Map<String, String> getTodayworkInOutTime(Map<String, String> paraMap) {
+		Map<String, String> workInOut = attDAO.getTodayworkInOutTime(paraMap);
+		return workInOut;
+	}
+
+	// 퇴근시간 및 하루 근무시간 update하기
+	@Override
+	public int updateTodayOutTime(Map<String, String> paraMap) {
+		int n = attDAO.updateTodayOutTime(paraMap);
+		return n;
+	}
+
+	// 00시가 되면 출퇴근 초기화하기
+	@Override
+	public int checkTomorrow(Map<String, String> paraMap) {
+		int n = attDAO.checkTomorrow(paraMap);
 		return n;
 	}
 

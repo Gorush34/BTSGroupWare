@@ -1,5 +1,6 @@
 package com.spring.bts.hwanmo.model;
 
+import java.util.List;
 import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -47,6 +48,27 @@ public class AttendanceDAO implements InterAttendanceDAO {
 	@Override
 	public int insertTodayCommute(Map<String, String> paraMap) {
 		int n = sqlsession.insert("hwanmo.insertTodayCommute", paraMap);
+		return n;
+	}
+
+	// 출퇴근시간 알아오기
+	@Override
+	public Map<String, String> getTodayworkInOutTime(Map<String, String> paraMap) {
+		Map<String, String> workInOut = sqlsession.selectOne("hwanmo.getTodayworkInOutTime", paraMap);
+		return workInOut;
+	}
+
+	// 퇴근시간 및 하루 근무시간 update하기
+	@Override
+	public int updateTodayOutTime(Map<String, String> paraMap) {
+		int n = sqlsession.update("hwanmo.updateTodayOutTime", paraMap);
+		return n;
+	}
+
+	// 00시가 되면 출퇴근 초기화하기
+	@Override
+	public int checkTomorrow(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("hwanmo.checkTomorrow", paraMap);
 		return n;
 	}
 	

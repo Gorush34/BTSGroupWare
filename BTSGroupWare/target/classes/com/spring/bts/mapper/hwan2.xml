@@ -65,4 +65,27 @@
 		values(seqCommute.nextval, #{regdate}, #{in_time}, #{fk_emp_no})
 	</insert>
 	
+	
+	<resultMap type="Map" id="workInOutMap">
+		<result property="in_time" 			column="in_time" 		javaType="String" />
+		<result property="out_time" 		column="out_time" 		javaType="String" />
+	</resultMap>
+	
+	<select id="getTodayworkInOutTime" parameterType="HashMap" resultMap="workInOutMap">
+		select nvl(in_time, '미등록') AS in_time, nvl(out_time, '미등록') AS out_time
+		from tbl_commute
+		where fk_emp_no = #{fk_emp_no} and regdate = #{regdate}
+	</select>
+	
+	<update id="updateTodayOutTime" parameterType="HashMap">
+		update tbl_commute set out_time = #{out_time}, total_workTime = #{total_workTime}
+		where fk_emp_no = #{fk_emp_no} and regdate = #{regdate}
+	</update>
+	
+	<select id="checkTomorrow" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_commute
+		where fk_emp_no = #{fk_emp_no} and regdate = #{regdate}
+	</select>
+	
 </mapper>

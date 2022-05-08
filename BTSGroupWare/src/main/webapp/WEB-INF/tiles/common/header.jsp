@@ -86,7 +86,7 @@
 	      
 	      <%-- 근태관리 시작 --%>
 	      <li class="nav-item">
-	        <a class="nav-link" href="<%= ctxPath %>/att/attMain.bts" id="navbar" role="button" aria-expanded="false">
+	        <a class="nav-link" href="<%= ctxPath %>/att/myAtt.bts" id="navbar" role="button" aria-expanded="false">
 	          	근태관리
 	        </a>
 	      </li>

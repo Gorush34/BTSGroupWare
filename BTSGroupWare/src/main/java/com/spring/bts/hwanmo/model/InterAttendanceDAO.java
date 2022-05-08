@@ -1,5 +1,6 @@
 package com.spring.bts.hwanmo.model;
 
+import java.util.List;
 import java.util.Map;
 
 public interface InterAttendanceDAO {
@@ -12,5 +13,14 @@ public interface InterAttendanceDAO {
 
 	// 날짜, 출근시간 입력한 테이블 insert
 	int insertTodayCommute(Map<String, String> paraMap);
+
+	// 출퇴근시간 알아오기
+	Map<String, String> getTodayworkInOutTime(Map<String, String> paraMap);
+
+	// 퇴근시간 및 하루 근무시간 update하기
+	int updateTodayOutTime(Map<String, String> paraMap);
+
+	// 00시가 되면 출퇴근 초기화하기
+	int checkTomorrow(Map<String, String> paraMap);
 
 }
