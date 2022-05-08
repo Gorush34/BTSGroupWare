@@ -7,52 +7,81 @@
 <!-- ==== 대부분은 namespace에 파일이름 사용(유일하니까) ==== -->
 <mapper namespace="minjeong">
 
-<!-- 받은메일함 목록 보여주기 (검색 X, 페이징 X) -->
- 
+	<!-- 받은메일함 목록 보여주기 (검색 X, 페이징 X) -->
 	<select id="getReceiveMailList" resultType="com.spring.bts.minjeong.model.MailVO">
-		select pk_mail_num, fk_senduser_num, empname, subject
+		select pk_mail_num, fk_senduser_num, sendempname, subject
 			 , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
 		from tbl_mail
 		order by pk_mail_num desc		
 	</select>
 
 
-
 	<!--  총 받은메일 개수 구해오기 -->
 	<select id="getTotalCount" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_mail
+		where fk_receiveuser_num = #{fk_receiveuser_num} and del_status = 0
 		<if test="searchType != ''">
-		where lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
-		</if>
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>		
 	</select>
 
 	
-
 	<!--  페이징처리 한 받은 메일목록 (검색 있든, 없든 모두 다 포함)  -->
  	<select id="recMailListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
-		select pk_mail_num, fk_senduser_num, empname, subject, reg_date
+		select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date
 		from 
 		(
 		select row_number() over(order by pk_mail_num desc) AS rno,
-		       pk_mail_num, fk_senduser_num, empname, subject
+		       pk_mail_num, fk_senduser_num, sendempname, subject
 		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
 		from tbl_mail
-		<if test='searchType != "" and searchWord !=""'>
-		where lower(${searchType}) like '%'|| lower(#{searchWord}) || '%'
-		</if>
+		where fk_receiveuser_num = #{fk_receiveuser_num} and del_status = 0
+		<if test="searchType != ''">
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>	
 		) V
 		where rno between #{startRno} and #{endRno}
 	</select> 
 
 
+	<!--  총 보낸메일 개수 구해오기 -->
+	<select id="getTotalCount_send" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_mail
+		where fk_senduser_num = #{fk_senduser_num} and del_status = 0
+		<if test="searchType != ''">
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>		
+	</select>
+
+	
+	<!-- 페이징처리 한 보낸 메일목록 (검색 있든, 없든 모두 다 포함) -->
+ 	<select id="sendMailListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
+		select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date
+		from 
+		(
+		select row_number() over(order by pk_mail_num desc) AS rno,
+		       pk_mail_num, fk_receiveuser_num, recempname, subject
+		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+		from tbl_mail
+		where fk_senduser_num = #{fk_senduser_num} and del_status = 0
+		<if test="searchType != ''">
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>	
+		) V
+		where rno between #{startRno} and #{endRno}
+	</select> 	
+	
+	
+
 	<!-- 페이징처리 / 검색기능 포함 된 받은메일함 목록에서 상세내용 조회하기 (이전글, 다음글 추가예정) -->
 	<select id="getRecMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">	
-		select pk_mail_num, fk_senduser_num, fk_receiveuser_num, empname, email, subject, content, reg_date
+		select pk_mail_num, fk_senduser_num, fk_receiveuser_num, sendempname, email, subject, content, reg_date
 			 , filename, orgfilename, filesize
 				from
 				(
-				    select pk_mail_num, fk_senduser_num, fk_receiveuser_num, empname, email, subject, content
+				    select pk_mail_num, fk_senduser_num, fk_receiveuser_num, sendempname, email, subject, content
 				         , to_char(reg_date, 'yyyy-mm-dd hh24:mi:ss') as reg_date         
 				         , fileName, orgFilename, fileSize
 				    from tbl_mail
@@ -62,6 +91,7 @@
 				) V
 		where V.pk_mail_num = #{pk_mail_num}
 	</select>
+
 
 
 	<!-- 페이징처리 / 검색기능 포함 된 받은메일함 목록에서 상세내용 조회하기 (이전글, 다음글 포함) -->
@@ -88,17 +118,51 @@
 		where V.pk_mail_num = #{pk_mail_num}
 	 </select>
 	-->	
+
+
+	<!-- 메일주소로 사원이름 및 사원번호 알아오기 -->
+	<resultMap type="Map" id="EmpnameAndNum">
+        <result property="emp_name"          column="emp_name"         	javaType="String" />
+        <result property="pk_emp_no"         column="pk_emp_no"         javaType="String" />
+    </resultMap>
+
+	<!-- 메일주소로 사원이름 및 사원번호 알아오기 -->
+	<select id="getEmpnameAndNum" parameterType="String" resultMap="EmpnameAndNum">
+		select emp_name, pk_emp_no
+		from tbl_employees
+		where uq_email = #{uq_email}
+	</select>
+	
 	
 	<!-- 메일쓰기 (파일첨부가 없는 메일쓰기) -->
 	<insert id="add" parameterType="com.spring.bts.minjeong.model.MailVO">
-		insert into tbl_mail(pk_mail_num, fk_senduser_num, fk_receiveuser_num, empname, email, subject, content, reg_date, importance, reservation_status, read_status) 
-		values(SEQ_MAIL.nextval, to_number(#{fk_senduser_num}), to_number(#{fk_receiveuser_num}), #{empname}, #{email}, #{subject}, #{content}, default, default, default, default)
+		insert into tbl_mail(pk_mail_num, fk_senduser_num, fk_receiveuser_num, recempname, sendempname, recemail, sendemail, subject, content, reg_date, importance, reservation_status, read_status) 
+		values(SEQ_MAIL.nextval, to_number(#{fk_senduser_num}), to_number(#{fk_receiveuser_num}), #{recempname}, #{sendempname}, #{recemail}, #{sendemail}, #{subject}, #{content}, default, default, default, default)
     </insert>
 
 	
 	<!-- 메일쓰기 (파일첨부가 있는 메일쓰기) -->
 	<insert id="add_withFile" parameterType="com.spring.bts.minjeong.model.MailVO">
-	
+		insert into tbl_mail_recyclebin
 	</insert>
 	
+	
+	<!-- 받은 메일함목록에서 선택 후 삭제버튼 클릭 시 휴지통테이블로 insert 하기 (첨부파일 있을 때) -->
+	<insert id="moveToRecyclebin" parameterType="HashMap">
+		insert into tbl_mail_recyclebin()
+	</insert>
+
+	<!-- 받은 메일함목록에서 선택 후 삭제버튼 클릭 시 휴지통테이블로 insert 하기 (첨부파일 없을 때) -->
+	<insert id="moveToRecyclebinNoFile" parameterType="HashMap">
+		insert into tbl_mail_recyclebin(pk_mail_num, fk_senduser_num, fk_receiveuser_num, empname, email
+									  , subject, content, reg_date, importance, reservation_status, read_status, rcvuser_del_status, filename, orgfilename, filesize)
+		values(SEQ_MAIL.nextval, to_number(#{fk_senduser_num}), to_number(#{fk_receiveuser_num}), #{empname}, #{email}, #{subject}, #{content}, default, default, default, default, default, #{filename}, #{orgfilename}, #{filesize})							  
+	</insert>
+
+
+	<!-- 휴지통 테이블로 insert 후 메일 테이블에서 해당 메일의 삭제 상태를 1로 변경해주기 -->
+	<update id="updateFromTblMailRecDelStatus" parameterType="HashMap">
+		
+	</update>
+
 </mapper>

@@ -19,8 +19,38 @@
 
 <script type="text/javascript">
 
-// function declaration 
+	$(document).ready(function() {
+		
+		// 검색타입 및 검색어 유지시키기
+		if(${searchWord != null}) {
+			// 넘어온 paraMap 이 null 이 아닐 때 (값이 존재할 때)
+			$("select#searchType").val("${searchType}");
+			$("input#searchWord").val("${searchWord}");
+		}
+		
+		if(${searchWord != null}) {
+			$("select#searchType").val("subject");
+			$("input#searchWord").val("");
+		}
+		
+		// 체크박스 전체선택 및 해제
+		$("input#checkAll").click(function() {
+			if($(this).prop("checked")) {
+				$("input[name='chkBox']").prop("checked",true);
+			}
+			else {
+				$("input[name='chkBox']").prop("checked",false);
+			}
+			
+		});
+		
+		
+	}); // end of $(document).ready(function(){})----------------------------------
+	
 
+
+	
+	// function declaration 
 	// 검색 버튼 클릭시 동작하는 함수
 	function gomailSearch() {
 		const frm = document.goReceiveListSelectFrm;
@@ -38,7 +68,7 @@
 <%-- 	<a href="<%= ctxPath%>/mail/mailReceiveDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${mailvo.subject}</a> --%>
 	}
 	
-	// 삭제버튼 클릭 시 휴지통으로 이동하기
+	// 삭제버튼 클릭 시 휴지통으로 이동하기 (ajax)
 	function goMailDelRecyclebin() {
 		
 		// 체크된 갯수 세기
@@ -49,9 +79,48 @@
 		
 		$("input[name='chkBox']:checked").each(function(){
 			
-			var  $(this).attr('id');
+			var pk_mail_num = $(this).attr('id');
+			arrChk.push(pk_mail_num);
+		//	console.log("arrChk 확인용 : " + arrChk);
 			
 		});
+		
+		if(chkCnt == 0) {
+			alert("선택된 메일이 없습니다.");
+		}
+		else {
+			
+			$.ajax({				
+		 	    url:"<%= ctxPath%>/mail/RecmailMoveToRecyclebin.bts", 
+				type:"GET",
+				data: {"pk_mail_num":JSON.stringify(arrChk),
+							   "cnt":chkCnt,
+							   "fk_receiveuser_num":${fk_receiveuser_num} },
+				dataType:"JSON",
+				success:function(json){
+					
+					var result = json.result;
+					
+					if(result != 1) {
+						alert("메일함에서 삭제에 실패했습니다.");
+						window.location.reload();
+					}
+					else {
+						alert("메일함에서 삭제에 성공했습니다.");
+						window.location.reload();
+					}
+					
+				},
+				
+				error: function(request, status, error) {
+					alert("code:"+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+					
+				}
+				
+			});
+			
+		}
+		
 	}
 	
 </script>
@@ -67,7 +136,7 @@
 			<div id="mail_searchType">
 				<select class="form-control" id="searchType" name="searchType" style="">
 					<option value="subject" selected="selected">제목</option>
-					<option value="empname">사원명</option>
+					<option value="sendempname">보낸이</option>
 				</select>
 			</div>
 			
@@ -124,7 +193,7 @@
 						<c:forEach items="${requestScope.receiveMailList}" var="receiveMailList">
 							<tr>
 								<td style="width: 40px;">
-									<input type="checkbox" id="checkAll" id="chkBox" class="text-center"/>
+									<input type="checkbox" id="chkBox" name="chkBox" class="text-center"/>
 								</td>
 								<td style="width: 40px;">
 									<span class="fa fa-star-o" class="text-center"></span>
@@ -132,7 +201,7 @@
 								<td style="width: 40px;">
 									<span class="fa fa-paperclip" class="text-center"></span>
 								</td>							
-								<td class="text-center">${requestScope.empname}</td>
+								<td class="text-center">${receiveMailList.sendempname}</td>
 								<td>
 								<%--
 								<a href="<%= ctxPath%>/mail/mailReceiveDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${receiveMailList.subject}</a>

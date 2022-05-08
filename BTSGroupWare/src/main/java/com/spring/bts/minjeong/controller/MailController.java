@@ -1,6 +1,8 @@
 package com.spring.bts.minjeong.controller;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,18 +11,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.bts.common.AES256;
 import com.spring.bts.common.FileManager;
 import com.spring.bts.hwanmo.model.EmployeeVO;
+import com.spring.bts.minjeong.model.MailTempVO;
 import com.spring.bts.minjeong.model.MailVO;
 import com.spring.bts.minjeong.service.InterMailService;
 
@@ -42,11 +48,13 @@ public class MailController {
 	// === #155. 파일업로드 및 다운로드를 해주는 FileManager 클래스 의존객체 주입하기(DI : DependencyInjection) ===	  
 	@Autowired // Type에 따라 알아서 Bean 을 주입해준다. 
 	private FileManager fileManager; // type (FileManager) 만 맞으면 다 주입해준다.
-	
+
+	@Autowired
+    private AES256 aes;
 	
 	// 메일 쓰기 폼페이지 요청 (추후 로그인 AOP 추가 requiredLogin_) 
 	@RequestMapping(value = "/mail/mailWrite.bts", produces = "text/plain; charset=UTF-8")	
-	public ModelAndView mailWrite(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView requiredLogin_mailWrite(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		/*
 		 * // 로그인 세션 요청하기 HttpSession session = request.getSession(); 
 		 * EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
@@ -91,13 +99,15 @@ public class MailController {
 		 * 
 		 * // 메일 내용 String content = mrequest.getParameter("content"); // //
 		 * System.out.println("확인용 content(메일 내용) :" + content);
-		 */		  
-	/*
-	 * mav.addObject("fk_receiveuser_num", fk_receiveuser_num);
-	 * mav.addObject("empname", empname); mav.addObject("subject", subject);
-	 * mav.addObject("importanceVal", importanceVal); mav.addObject("mail_attach",
-	 * mail_attach); mav.addObject("content", content);
-	 */
+		 */		 
+		
+		/*
+		 * mav.addObject("fk_receiveuser_num", fk_receiveuser_num);
+		 * mav.addObject("empname", empname); mav.addObject("subject", subject);
+		 * mav.addObject("importanceVal", importanceVal); mav.addObject("mail_attach",
+		 * mail_attach); mav.addObject("content", content);
+		 */
+		
 		/*
 		 	확인용 fk_receiveuser_num(사원번호) :admin@bts.com
 			확인용 empname(사원명) :
@@ -107,6 +117,40 @@ public class MailController {
 			확인용 content(메일 내용) :메일쓰기 테스트 입니다.&nbsp;
 		 */
 		
+		
+		// 받는사람 - 
+		// 받는사람 사원번호가 없음 fk_receiveuser_num
+		// 받는사람 사원명은 가져왔음 (이메일을 통해서
+		String uq_email = "";	   /* 이메일 */
+        try {
+			uq_email = aes.encrypt(mrequest.getParameter("recemail"));
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+        
+        // 값을 1개만 보낼때에는 String 으로 보내고, 
+        // return 타입으로 받아올 때에는 List 또는 Map 으로 받아온다.
+        
+        Map<String, String> recEmpnameAndNum = new HashMap<>();
+        
+        recEmpnameAndNum = service.getEmpnameAndNum(uq_email);
+        
+        String emp_name = recEmpnameAndNum.get("emp_name");
+        String pk_emp_no = recEmpnameAndNum.get("pk_emp_no");
+        
+        mailvo.setRecempname(emp_name);
+        mailvo.setFk_receiveuser_num(pk_emp_no);
+        
+        System.out.println("확인용 emp_name :" + emp_name);
+        System.out.println("확인용 pk_emp_no :" + pk_emp_no);
+        System.out.println("확인용 uq_email : " + uq_email);
+               
+        /*
+        service.getRecEmpname(uq_email);
+   
+        mailvo.setRecempname(recempname);
+         */
+        
 		// 사용자가 쓴 메일에 파일이 첨부되어 있는지 아닌지를 구분지어준다.
 		
 		/////////////////// 첨부파일 있는 경우 시작 (스마트에디터 X) ///////////////////////
@@ -211,7 +255,7 @@ public class MailController {
 		String str_currentShowPageNo = request.getParameter("currentShowPageNo");	// 현재 페이지 번호
 		
 		// searchType 에는 제목 및 사원명이 있는데, 이 외의 것들이 들어오게 되면 기본값으로 보여준다
-		if(searchType == null || (!"subject".equals(searchType)) && (!"empname".equals(searchType)) ) {
+		if(searchType == null || (!"subject".equals(searchType)) && (!"sendempname".equals(searchType)) ) {
 			searchType = "";
 		}
 		
@@ -358,7 +402,7 @@ public class MailController {
 	@RequestMapping(value = "/mail/mailReceiveDetail.bts")	
 	// URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
 	// http://localhost:9090/bts/tiles1/mailList.bts
-	public ModelAndView requiredLogin_mailReceiveDetail(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView requiredLogin_mailReceiveDetail(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 
 		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
 		
@@ -415,7 +459,17 @@ public class MailController {
 	@RequestMapping(value = "/mail/mailSendList.bts")	
 	public ModelAndView mailSend(HttpServletRequest request, ModelAndView mav) {
 
+		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
 
+		
+	//	System.out.println("보낸메일함 페이지에서 로그인한 사용자 id (사원번호) 받아오기 " + loginuser.getPk_emp_no());
+		
+		String fk_senduser_num = String.valueOf(loginuser.getPk_emp_no());
+		String empname = String.valueOf(loginuser.getEmp_name());
+				
+		
 		List<MailVO> SendMailList = null;
 	
 		// 검색 목록
@@ -424,7 +478,7 @@ public class MailController {
 		String str_currentShowPageNo = request.getParameter("currentShowPageNo");	// 현재 페이지 번호
 		
 		// searchType 에는 제목 및 사원명이 있는데, 이 외의 것들이 들어오게 되면 기본값으로 보여준다
-		if(searchType == null || (!"subject".equals(searchType)) && (!"empname".equals(searchType)) ) {
+		if(searchType == null || (!"subject".equals(searchType)) && (!"recempname".equals(searchType)) ) {
 			searchType = "";
 		}
 		
@@ -438,6 +492,7 @@ public class MailController {
 		paraMap.put("searchType", searchType);
 		paraMap.put("searchWord", searchWord);
 
+		paraMap.put("fk_senduser_num",fk_senduser_num);	// 로그인한 사용자의 사원번호 map 에 담아서 보내주기
 		
 		// 먼저 총 받은 메일 수(totalCount)를 구해와야 한다.
 		// 총 게시물 건수는 검색조건이 있을 때와 없을 때로 나뉜다.
@@ -450,7 +505,7 @@ public class MailController {
 		int endRno = 0;
 		
 		// 총 받은 메일 건수 구해오기 (service 단으로 보내기) 
-		totalCount =service.getTotalCount(paraMap); // 검색기능 포함시 paraMap 에 담아서 파라미터에 넣을 것
+		totalCount =service.getTotalCount_send(paraMap); // 검색기능 포함시 paraMap 에 담아서 파라미터에 넣을 것
 		 		
 		totalPage = (int) Math.ceil((double)totalCount/sizePerPage);	// 총 페이지 수 (전체게시물 / 페이지당 보여줄 갯수)
 
@@ -477,7 +532,7 @@ public class MailController {
 		paraMap.put("endRno", String.valueOf(endRno));
 		
 		 // 페이징처리 한 보낸 메일목록 (검색 있든, 없든 모두 다 포함) 
-		SendMailList = service.recMailListSearchWithPaging(paraMap);
+		SendMailList = service.sendMailListSearchWithPaging(paraMap);
 		
 		// 검색대상 컬럼(searchType) 및 검색어(searchWord) 유지시키기 위함
 		if(!"".equals(searchType) && !"".equals(searchWord)) {
@@ -556,7 +611,9 @@ public class MailController {
 		// 	받은 메일함 글목록 보여주기 
 		// 	receiveMailList = service.getReceiveMailList();
 				
+		mav.addObject("fk_senduser_num", fk_senduser_num);
 		mav.addObject("SendMailList", SendMailList);				
+		mav.addObject("empname", empname);
 		mav.setViewName("mailSendList.mail");
 		return mav;
 	}	
@@ -588,6 +645,44 @@ public class MailController {
 	}		
 	
 	
+	// 임시보관함 완료 페이지 요청 (MailTempVO 따로 사용)
+	@RequestMapping(value = "/mail/mailTemporaryEnd.bts")	
+	public ModelAndView mailTemporaryEnd(MultipartHttpServletRequest mrequest, ModelAndView mav, MailTempVO mailtempvo) {
+		
+		
+		  // 받는사원 ID 
+		  String fk_receiveuser_num = mrequest.getParameter("fk_receiveuser_num"); 
+		  System.out.println("확인용 fk_receiveuser_num(사원번호) :" + fk_receiveuser_num);
+		  
+		  // 받는사원 사원명 
+		  String empname = mrequest.getParameter("empname"); 
+		  System.out.println("확인용 empname(사원명) :" + empname);
+
+		  // 받는사원 이메일 
+		  String email = mrequest.getParameter("email"); 
+		  System.out.println("확인용 email(이메일) :" + email);
+		  
+		  // 제목 
+		  String subject = mrequest.getParameter("subject"); 
+		  System.out.println("확인용 subject(제목) :" + subject);
+		  
+		  // 메일쓰기 시 체크박스 체크여부 (체크 :1, 체크X :0) 
+		  String importanceVal = mrequest.getParameter("importanceVal"); 
+		  System.out.println("확인용 importanceVal(중요체크박스 체크여부) :" + importanceVal);
+		  
+		  // 첨부 파일 
+		  String mail_attach = mrequest.getParameter("mail_attach"); 
+		  System.out.println("확인용 mail_attach(첨부파일) :" + mail_attach);
+		  
+		  
+		  // 메일 내용 
+		  String content = mrequest.getParameter("content"); 
+		  System.out.println("확인용 content(메일 내용) :" + content);
+		 			
+	//	mav.setViewName("mailTemporary.mail");
+		return mav;
+	}		
+	
 	// 임시보관함
 	@RequestMapping(value = "/mail/mailTemporary.bts")	
 	public ModelAndView mailTemporary(HttpServletRequest request, ModelAndView mav) {
@@ -595,7 +690,7 @@ public class MailController {
 		mav.setViewName("mailTemporary.mail");
 		return mav;
 	}	
-	
+
 	
 	// 임시보관함 내용 읽기
 	@RequestMapping(value = "/mail/mailTemporaryDetail.bts")	
@@ -623,6 +718,109 @@ public class MailController {
 		return mav;
 	}		
 			
+
+	// 받은메일함에서 메일 선택 시 휴지통으로 이동하기 (aJax, @ResponseBody)
+	// 받은메일함에서 삭제할 메일 선택 후 삭제버튼 클릭 시 휴지통목록으로 해당 쪽지 이동
+	@ResponseBody
+	@RequestMapping(value = "/mail/RecmailMoveToRecyclebin.bts", produces = "text/plain; charset=UTF-8")	
+	public String RecmailMoveToRecyclebin(HttpServletRequest request, MailVO mailvo) {
+	
+		// 삭제할 메일번호(문자열) , aJax로 보낸 데이터를 잘 받아오나 확인하자
+		String pk_mail_num = request.getParameter("pk_mail_num");
+		System.out.println("확인용 pk_mail_num : "+ pk_mail_num);
+		
+		// 삭제할 메일 개수
+		String cnt = request.getParameter("cnt");
+		System.out.println("확인용 cnt : "+ cnt);
+		
+		// 삭제 버튼을 누른 사원 id
+		String fk_receiveuser_num = request.getParameter("fk_receiveuser_num");
+		System.out.println("확인용 fk_receiveuser_num : "+ fk_receiveuser_num);
+
+		/*
+			확인용 pk_mail_num : ["chkBox","chkBox"]
+			확인용 cnt : 2
+			확인용 fk_receiveuser_num : 80000010
+		*/
+		
+		// 배열의 [,] 를 제거한다.
+		pk_mail_num = pk_mail_num.replaceAll("\\[", "");
+		pk_mail_num = pk_mail_num.replaceAll("\\]", "");
+		pk_mail_num = pk_mail_num.replaceAll("\"", "");
+		pk_mail_num = pk_mail_num.trim();	// 공백 제거
+		
+		String[] arr_pk_mail_num = pk_mail_num.split(",");
+		
+		int n = 0;
+		int m = 0;
+		int result = 0;
+		
+		for (int i=0; i<arr_pk_mail_num.length; i++) {
+			Map<String, String> paraMap = new HashMap<>();
+			
+			paraMap.put("pk_mail_num",arr_pk_mail_num[i]);
+			/*
+			 * // 메일 클릭 시 1개의 상세내용을 불러오도록 하자. (VO 에 담는다.) mailvo =
+			 * service.getRecMailView(paraMap);
+			 * 
+			 * paraMap.put("pk_mail_num", mailvo.getPk_mail_num());
+			 * paraMap.put("fk_senduser_num", mailvo.getFk_senduser_num());
+			 * paraMap.put("fk_receiveuser_num", mailvo.getFk_receiveuser_num());
+			 * paraMap.put("email", mailvo.getEmail()); paraMap.put("empname",
+			 * mailvo.getEmpname()); paraMap.put("subject", mailvo.getSubject());
+			 * paraMap.put("content", mailvo.getContent()); paraMap.put("filename",
+			 * mailvo.getFilename()); paraMap.put("orgfilename", mailvo.getOrgfilename());
+			 * paraMap.put("filesize", mailvo.getFilesize()); // paraMap.put("importance",
+			 * mailvo.getImportance()); // paraMap.put("reservation_status",
+			 * mailvo.getReservation_status()); // paraMap.put("read_status",
+			 * mailvo.getRead_status()); paraMap.put("reg_date", mailvo.getReg_date()); //
+			 * paraMap.put("reservation_date", mailvo.getReservation_date()); //
+			 * paraMap.put("senduser_del_status", mailvo.getSenduser_del_status()); //
+			 * paraMap.put("rcvuser_del_status", mailvo.getRcvuser_del_status());
+			 * 
+			 * // 삭제버튼 누른 사원의 id 를 paraMap 에 넣는다.
+			 * paraMap.put("fk_receiveuser_num",fk_receiveuser_num);
+			 */
+
+			// 휴지통 테이블에 insert 하기 (첨부파일 유무에 따라 두가지 경우의수로 나누기)
+			if(mailvo.getFilename() != null) {
+				// 휴지통 테이블에 insert 한다. (첨부파일 있을 때)
+				n = service.moveToRecyclebin(paraMap);
+			}
+			else {
+			// 휴지통 테이블에 insert 한다. (첨부파일 없을 때)
+				n = service.moveToRecyclebinNoFile(paraMap);
+			}
+			/*
+			 * // 휴지통 테이블에 insert 성공 시 메일 테이블에서 해당 pk_mail_num 삭제하기 // 삭제가 아니라 받은 사원 삭제 여부를
+			 * 1로 변경하기 if(n==1) { m = service.updateFromTblMailRecDelStatus(paraMap); }
+			 */
+		}
+		
+		JSONObject jsonObj = new JSONObject();
+		
+		// 휴지통 테이블에 insert (n==1) && 메일 테이블에서 해당 메일번호 삭제여부 1로 변경
+		if(n==1 && m==1) {
+			result = 1;
+			jsonObj.put("result",result);
+		}
+		
+		return jsonObj.toString();
+	}		
+	
+	
+	// 보낸메일함에서 메일 선택 시 휴지통으로 이동하기 (aJax, @ResponseBody)
+	// 보낸메일함에서 삭제할 메일 선택 후 삭제버튼 클릭 시 휴지통목록으로 해당 쪽지 이동
+	@ResponseBody
+	@RequestMapping(value = "/mail/SendmailMoveToRecyclebin.bts", produces = "text/plain; charset=UTF-8")	
+	public String SendmailMoveToRecyclebin(HttpServletRequest request) {
+	
+		
+		
+		return "";
+	}		
+	
+	
 	
 	// 휴지통 목록 보여주기
 	@RequestMapping(value = "/mail/mailRecyclebin.bts")	

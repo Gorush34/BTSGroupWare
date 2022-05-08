@@ -76,11 +76,11 @@ $(document).ready(function (){
 				</li>
 				<li id="sender" class="detailList">
 					<span>보낸 사람 : </span>
-					<span>임유리 < ${requestScope.mailvo.email} > </span>
+					<span>임유리 < ${requestScope.mailvo.sendemail} > </span>
 				</li>
 				<li id="receiver" class="detailList">
 					<span>받는 사람 : </span>
-					<span>김민정 < ${requestScope.mailvo.email} > </span>
+					<span>김민정 < ${requestScope.mailvo.recemail} > </span>
 				</li>
 				<li id="sendDate" class="detailList">
 					<span>보낸 날짜 :</span>

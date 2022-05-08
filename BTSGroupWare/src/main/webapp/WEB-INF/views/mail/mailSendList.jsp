@@ -53,7 +53,7 @@
 			<div id="mail_searchType">
 				<select class="form-control" id="searchType" name="searchType" style="">
 					<option value="subject" selected="selected">제목</option>
-					<option value="empname">사원명</option>
+					<option value="recempname">받는이</option>
 				</select>
 			</div>
 			
@@ -107,7 +107,7 @@
 						</thead>
 						
 						<tbody>
-						<c:forEach items="${requestScope.sendMailList}" var="sendMailList">
+						<c:forEach items="${requestScope.SendMailList}" var="SendMailList">
 							<tr>
 								<td style="width: 40px;">
 									<input type="checkbox" id="checkAll" class="text-center"/>
@@ -118,14 +118,14 @@
 								<td style="width: 40px;">
 									<span class="fa fa-paperclip" class="text-center"></span>
 								</td>							
-								<td class="text-center">${requestScope.empname}</td>
+								<td class="text-center">${SendMailList.recempname}</td>
 								<td>
 								<%--
 								<a href="<%= ctxPath%>/mail/mailSendDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${sendMailList.subject}</a>
 								--%>
-								<span class="subject" onclick="goSendMailView('${sendMailList.pk_mail_num}')">${sendMailList.subject}</span>
+								<span class="subject" onclick="goSendMailView('${SendMailList.pk_mail_num}')">${SendMailList.subject}</span>
 								</td>
-								<td class="text-left">${sendMailList.reg_date}</td>
+								<td class="text-left">${SendMailList.reg_date}</td>
 							</tr>	
 						</c:forEach>																				
 						</tbody>

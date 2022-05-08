@@ -53,7 +53,14 @@
 
 	$(document).ready(function(){
 		// 문서가 준비되면 매개변수로 넣은 콜백함수 실행하기
-		
+				
+				// 새로고침 버튼 이벤트 (새로고침 버튼 클릭 시 reset)
+				$("#reset").click(function() {
+					
+					 location.reload();
+					
+				})// end of $("#reset").click(function(){})----------------------
+				
 		  <%-- === 스마트 에디터 구현 시작 === --%>
 	       //전역변수
 	       var obj = [];
@@ -84,8 +91,8 @@
 		    // 	  alert("클릭 확인");
 		      	 
 		      	 // 받는사람 유효성 검사
-		      	 var email = $("input#email").val().trim();
-		      	 if(email == "") {
+		      	 var recemail = $("input#recemail").val().trim();
+		      	 if(recemail == "") {
 		      		 alert("받는 사람을 입력해주세요.");
 		      		 return false;
 		      	 }
@@ -148,10 +155,96 @@
 		   	//	console.log(frm);		// form 태그 전체
 		   	//	console.log(frm.importanceVal.value);	// 체크 안했을 때 0
 		   	//	console.log(frm.method); 	// post
-		  		
 		   
-			});
-	       
+			});// end of $("button#btnMailSend").click(function() {})-------------------------
+
+		
+			// 임시저장 버튼 클릭 시 임시보관 테이블로 insert 하기
+			$("button#tempSave").click(function() {
+
+	  		 <%-- === 스마트 에디터 구현 시작 === --%>
+		       	//id가 content인 textarea에 에디터에서 대입
+		        	obj.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
+		      	 <%-- === 스마트 에디터 구현 끝 === --%>		      	 
+		      	
+		    // 	  alert("클릭 확인");
+		      	 
+		      	 // 받는사람 유효성 검사
+		      	 var recemail = $("input#recemail").val().trim();
+		      	 if(recemail == "") {
+		      		 alert("받는 사람을 입력해주세요.");
+		      		 return false;
+		      	 }
+		      	 
+		      	 // 메일제목 유효성 검사
+		      	 var subject = $("input#subject").val().trim();
+		      	 if(subject == "") {
+		      		 alert("제목을 입력해주세요.");
+		      		 return false;
+		      	 }
+		      	 
+		      	 // 메일내용 유효성 검사 (스마트 에디터)
+		 		<%-- === 스마트에디터 구현 시작 === --%>
+		        //스마트에디터 사용시 무의미하게 생기는 p태그 제거
+		         var contentval = $("textarea#content").val();
+		             
+		          // === 확인용 ===
+		          // alert(contentval); // content에 내용을 아무것도 입력치 않고 쓰기할 경우 알아보는것.
+		          // "<p>&nbsp;</p>" 이라고 나온다.
+		          
+		          // 스마트에디터 사용시 무의미하게 생기는 p태그 제거하기전에 먼저 유효성 검사를 하도록 한다.
+		          // 글내용 유효성 검사 
+		          if(contentval == "" || contentval == "<p>&nbsp;</p>") {
+		             alert("글내용을 입력하세요!!");
+		             return;
+		          }
+		          
+		          // 스마트에디터 사용시 무의미하게 생기는 p태그 제거하기
+		          contentval = $("textarea#content").val().replace(/<p><br><\/p>/gi, "<br>"); //<p><br></p> -> <br>로 변환
+		      	/*    
+		                  대상문자열.replace(/찾을 문자열/gi, "변경할 문자열");
+		          ==> 여기서 꼭 알아야 될 점은 나누기(/)표시안에 넣는 찾을 문자열의 따옴표는 없어야 한다는 점입니다. 
+		                            그리고 뒤의 gi는 다음을 의미합니다.
+	
+		             g : 전체 모든 문자열을 변경 global
+		             i : 영문 대소문자를 무시, 모두 일치하는 패턴 검색 ignore
+		      	*/    
+		          contentval = contentval.replace(/<\/p><p>/gi, "<br>"); //</p><p> -> <br>로 변환  
+		          contentval = contentval.replace(/(<\/p><br>|<p><br>)/gi, "<br><br>"); //</p><br>, <p><br> -> <br><br>로 변환
+		          contentval = contentval.replace(/(<p>|<\/p>)/gi, ""); //<p> 또는 </p> 모두 제거시
+		      
+		          $("textarea#content").val(contentval);
+		       
+		          // alert(contentval);
+		      	<%-- === 스마트에디터 구현 끝 === --%>	      	 
+		      	 
+		      	// 중요 체크박스에 체크되어있는지 확인
+		      	var importanceVal = 0;
+		      	if($("input[name=importance]").prop("checked")) {
+		      		// 중요 체크박스에 체크되어 있을 때 중요메일함에 들어가도록 하기
+		      		importanceVal = 1;
+		      	}
+		      	
+				<%--	
+				  중요! 체크박스에 선택되어있는지 여부 확인하기
+				 var importanceVal = 0;
+				
+				 if($("input[name=importance]").prop("checked")) {
+					importanceVal = 1;
+				 } 
+				--%>	 
+			
+				const frm = document.mailWriteFrm;
+			//	frm.importanceVal.value = importanceVal;
+				frm.method = "POST";
+				frm.action = "<%= ctxPath%>/mail/mailTemporaryEnd.bts"
+				frm.submit();
+			//	console.log("확인용 frm : " + frm);
+			//	console.log("확인용 method : " + frm.method);
+			//	console.log("확인용 action : " + frm.action);
+				
+			});// end of $("button#tempSave").click(function(){})---------------
+			
 	   
 	 <%--    
 		// 직원 주소록 자동 검색 (aJax)
@@ -200,13 +293,13 @@
 			</button>
 		</li>	
 		<li class="buttonList">
-			<button type="button" id="send" class="btn btn-secondary btn-sm">
+			<button type="button" id="tempSave" class="btn btn-secondary btn-sm">
 			<i class="fa fa-pencil-square-o fa-fw" aria-hidden="true"></i>
 			임시저장
 			</button>
 		</li>	
 		<li class="buttonList">
-			<button type="button" id="send" class="btn btn-secondary btn-sm">
+			<button type="button" id="reset" class="btn btn-secondary btn-sm">
 			<i class="fa fa-refresh fa-fw" aria-hidden="true"></i>
 			새로고침
 			</button>
@@ -219,13 +312,12 @@
 			<tr>
 				<th width="14%">받는 사람</th>
 				<td width="86%" data-toggle="tooltip" data-placement="top" title="">
-					<input type="text" id="email" name="email" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
-				
+					<input type="text" id="recemail" name="recemail" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
+					
 					<%-- hidden 타입으로 데이터값 보내기 --%>
-			     	<input type="hidden" id="fk_receiveuser_num" name="fk_receiveuser_num" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " /> 
-					<input type="hidden" id="empname" name="empname" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
-					<input type="hidden" id="fk_senduser_num" name="fk_senduser_num"/>
-					<input type="hidden" id="email" name="email"/>					
+			     	<input type="hidden" id="sendemail" name="sendemail" value="${sessionScope.loginuser.uq_email}" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " /> 
+					<input type="hidden" id="fk_senduser_num" name="fk_senduser_num" value="${sessionScope.loginuser.pk_emp_no}"  style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
+					<input type="hidden" id="sendempname" name="sendempname" value="${sessionScope.loginuser.emp_name}" />
 					<button type="button" class="btn btn-secondary btn-sm">주소록</button>
 				</td>
 			</tr>

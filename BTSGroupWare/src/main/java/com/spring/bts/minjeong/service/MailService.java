@@ -27,13 +27,13 @@ public class MailService implements InterMailService {
 		return receiveMailList;
 	}
 
-	// 총 게시물 건수 구해오기 (service 단으로 보내기)
+	// 총 게시물 건수 구해오기 - 받은메일함 (service 단으로 보내기)
 	@Override
 	public int getTotalCount(Map<String, String> paraMap) {
 		int n = dao.getTotalCount(paraMap);
 		return n;
 	}
-
+	
 	// 페이징처리 한 받은 메일목록 (검색 있든, 없든 모두 다 포함)	
 	@Override
 	public List<MailVO> recMailListSearchWithPaging(Map<String, String> paraMap) {
@@ -42,6 +42,21 @@ public class MailService implements InterMailService {
 
 		return receiveMailList;
 		
+	}
+
+	// 총 게시물 건수 구해오기 - 보낸메일함 (service 단으로 보내기)
+	@Override
+	public int getTotalCount_send(Map<String, String> paraMap) {
+		int n = dao.getTotalCount_send(paraMap);
+		return n;
+	}
+
+	// 페이징처리 한 보낸 메일목록 (검색 있든, 없든 모두 다 포함)	
+	@Override
+	public List<MailVO> sendMailListSearchWithPaging(Map<String, String> paraMap) {
+
+		List<MailVO> sendMailList = dao.sendMailListSearchWithPaging(paraMap);
+		return sendMailList;
 	}
 
 	// 메일쓰기 (파일첨부가 없는 메일쓰기)
@@ -66,5 +81,36 @@ public class MailService implements InterMailService {
 		MailVO mailvo = dao.getRecMailView(paraMap);		
 		return mailvo;
 	}
+
+	// *** 아래 3개의 메소드는 1 set 이다. (첨부파일 유/무 --> 메일 삭제상태 1로 변경)
+	// 받은 메일함목록에서 선택 후 삭제버튼 클릭 시 휴지통테이블로 insert 하기 (첨부파일 있을 때)
+	@Override
+	public int moveToRecyclebin(Map<String, String> paraMap) {
+		int n = dao.moveToRecyclebin(paraMap);
+		return n;
+	}
+
+	// 받은 메일함목록에서 선택 후 삭제버튼 클릭 시 휴지통테이블로 insert 하기 (첨부파일 없을 때)
+	@Override
+	public int moveToRecyclebinNoFile(Map<String, String> paraMap) {
+		int n = dao.moveToRecyclebinNoFile(paraMap);
+		return n;
+	}
+
+	// 휴지통 테이블로 insert 후 메일 테이블에서 해당 메일의 삭제 상태를 1로 변경해주기
+	@Override
+	public int updateFromTblMailRecDelStatus(Map<String, String> paraMap) {
+		int n = dao.updateFromTblMailRecDelStatus(paraMap);
+		return n;
+	}
+
+	// 메일주소로 사원이름, 사원번호 알아오기
+	@Override
+	public Map<String, String> getEmpnameAndNum(String uq_email) {
+		Map<String, String> empnameAndNum = dao.getEmpnameAndNum(uq_email);
+		return empnameAndNum;
+	}
+
+
 	
 }
