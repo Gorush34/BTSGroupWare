@@ -1,5 +1,7 @@
 package com.spring.bts.hwanmo.service;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,20 @@ public class AttendanceService implements InterAttendanceService {
 	public int registerLeave(int pk_emp_no) {
 		int m = attDAO.registerLeave(pk_emp_no);
 		return m;
+	}
+
+	// 오늘 출퇴근기록 조회
+	@Override
+	public int getTodayCommute(Map<String, String> paraMap) {
+		int isExist = attDAO.getTodayCommute(paraMap);
+		return isExist;
+	}
+
+	// 날짜, 출근시간 입력한 테이블 insert
+	@Override
+	public int insertTodayCommute(Map<String, String> paraMap) {
+		int n = attDAO.insertTodayCommute(paraMap);
+		return n;
 	}
 
 

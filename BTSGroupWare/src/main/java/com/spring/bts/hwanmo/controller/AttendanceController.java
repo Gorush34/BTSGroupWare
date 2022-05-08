@@ -1,12 +1,19 @@
 package com.spring.bts.hwanmo.controller;
 
+import java.util.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.spring.bts.hwanmo.service.InterAttendanceService;
 
 //=== #30. 컨트롤러 선언 === // 
 @Component
@@ -18,6 +25,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class AttendanceController {
 
+	@Autowired
+	private InterAttendanceService attService;
 	
 	// === 근태관리 시작 페이지 ===
 	@RequestMapping(value="/att/attMain.bts")
@@ -46,5 +55,55 @@ public class AttendanceController {
 		return mav;
 	}
 	
+	@ResponseBody
+	@RequestMapping(value="/att/workIn.bts")
+	public String workIn(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
+	
+		// 오늘 출근기록이 없다면 테이블 생성, 있으면 비활성화
+		String yymmdd = request.getParameter("yymmdd");
+		String clock = request.getParameter("clock");
+		String fk_emp_no = request.getParameter("fk_emp_no");
+		
+		// System.out.println(" 확인용 yymmdd : " + yymmdd);
+		// System.out.println(" 확인용 clock : " + clock);
+		// System.out.println(" 확인용 fk_emp_no : " + fk_emp_no);
+		
+		yymmdd = yymmdd.replaceAll("-", "");
+		yymmdd = yymmdd.substring(2, 8);
+		// System.out.println("바꾼 yymmdd : " + yymmdd );
+		
+		clock = clock.replaceAll(":", "");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("regdate", yymmdd);
+		paraMap.put("fk_emp_no", fk_emp_no);
+		paraMap.put("in_time", clock);
+		
+		int isExist = attService.getTodayCommute(paraMap);
+		// System.out.println("나와라 isExist : " + isExist);
+		int n = 0;
+		
+		JSONObject jsonObj = new JSONObject();
+		
+		
+		if(isExist == 0) { // 없다면
+			// 날짜, 출근시간 입력한 테이블 insert
+			n = attService.insertTodayCommute(paraMap);
+			// System.out.println("잘 들어갔니? n : " + n);
+			if(n==1) {
+				System.out.println("컨트롤러에서 insert 성공!");
+				jsonObj.put("n", n);
+			}
+			else {
+				System.out.println("뭔가 이상한 실패..");
+			}
+		}
+		else if(isExist == 1) {
+			System.out.println("이미 출근했어 이양반아");
+			jsonObj.put("n", n);
+		}
+		
+		return jsonObj.toString();
+	} // public String workIn(HttpServletRequest request, HttpServletResponse response, ModelAndView mav)
 	
 }

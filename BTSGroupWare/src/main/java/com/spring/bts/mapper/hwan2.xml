@@ -50,8 +50,19 @@
 	<!-- 왜이러는거야~~ -->
 	
 	<insert id="registerLeave" parameterType="int">
-		insert into tbl_leave (pk_vacation_no, total_vacation_days, use_vacation_days, rest_vacation_days, fk_emp_no)
-						values(leaveSeq.nextval, '12', '0', '12', #{pk_emp_no})
+		insert into tbl_leave (pk_vacation_no, total_vacation_days, use_vacation_days, rest_vacation_days, fk_emp_no, regdate)
+						values(leaveSeq.nextval, '15', '0', '15', #{pk_emp_no}, to_char(sysdate, 'yyyy'))
+	</insert>
+	
+	<select id="getTodayCommute" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_commute
+		where fk_emp_no = #{fk_emp_no} and regdate = #{regdate}
+	</select>
+	
+	<insert id="insertTodayCommute" parameterType="HashMap">
+		insert into tbl_commute (PK_WORKTIME_NO, REGDATE, IN_TIME, FK_EMP_NO)
+		values(seqCommute.nextval, #{regdate}, #{in_time}, #{fk_emp_no})
 	</insert>
 	
 </mapper>
