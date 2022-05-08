@@ -19,12 +19,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.bts.common.AES256;
 import com.spring.bts.common.MyUtil;
 import com.spring.bts.common.Sha256;
 import com.spring.bts.hwanmo.model.EmployeeVO;
+import com.spring.bts.hwanmo.service.InterAttendanceService;
 import com.spring.bts.hwanmo.service.InterEmployeeService;
 
 //=== #30. 컨트롤러 선언 === // 
@@ -42,6 +45,9 @@ public class EmployeeController {
 	
 	@Autowired
 	private InterEmployeeService empService;
+	
+	@Autowired
+	private InterAttendanceService attService;
 	
 	// 사원등록 페이지 요청
 	@RequestMapping(value="/emp/registerEmp.bts")
@@ -110,6 +116,11 @@ public class EmployeeController {
 	@RequestMapping(value="/emp/registerEmpSubmit.bts", method = {RequestMethod.POST}, produces="text/plain;charset=UTF-8")
 	public ModelAndView registerEmpSubmit(ModelAndView mav, HttpServletRequest request) {
 	
+		/*
+        form 태그의 name 명과  BoardVO 의 필드명이 같다면 
+        request.getParameter("form 태그의 name명"); 을 사용하지 않더라도
+               자동적으로 BoardVO boardvo 에 set 되어진다. (xml(Mapper)파일에서 일일이 set 을 해주지 않아도 된다.)
+	    */
 		
 		int pk_emp_no = Integer.parseInt(request.getParameter("pk_emp_no")); 					/* 사원번호 */
 		int fk_department_id = Integer.parseInt(request.getParameter("fk_department_id")); 		/* 부서명구분번호 */
@@ -154,6 +165,8 @@ public class EmployeeController {
 			int n = empService.registerMember(empvo);
 			
 			if(n==1) {
+				int m = attService.registerLeave(pk_emp_no);
+				System.out.println(" 가입과 동시에 연차테이블 삽입 : " + m);
 				message = "회원가입 성공!";
 				loc =  request.getContextPath()+"/emp/registerEmp.bts"; 
 			}
@@ -419,8 +432,15 @@ public class EmployeeController {
 		
 		return mav;
 	}
-	
-	
+	/*
+	@ResponseBody
+	@RequestMapping(value="/uploadImage.bts", method = {RequestMethod.POST})
+	public ModelAndView uploadImage(ModelAndView mav, Map<String, String> paraMap, EmployeeVO empvo, MultipartHttpServletRequest mtf) {
+		
+		
+		return mav;
+	}
+	*/
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	
 	// === 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 생성 === //

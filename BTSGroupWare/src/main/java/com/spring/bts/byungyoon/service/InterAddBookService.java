@@ -20,6 +20,5 @@ public interface InterAddBookService {
 	int addBook_telAdd_insert(AddBookVO avo);
 
 	// 상세부서정보 페이지 사원목록 불러오기
-	List<EmployeeVO> addBook_depInfo_select_sales(); // 영업팀
-	List<EmployeeVO> addBook_depInfo_select_marketing(); // 마케팅팀
+	List<EmployeeVO> addBook_depInfo_select(); 
 }
