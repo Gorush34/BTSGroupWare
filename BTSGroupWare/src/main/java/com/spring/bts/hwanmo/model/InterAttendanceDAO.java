@@ -23,4 +23,7 @@ public interface InterAttendanceDAO {
 	// 00시가 되면 출퇴근 초기화하기
 	int checkTomorrow(Map<String, String> paraMap);
 
+	// 한 사원에 대한 출퇴근기록 가져오기
+	List<CommuteVO> getMyCommute(int pk_emp_no);
+
 }

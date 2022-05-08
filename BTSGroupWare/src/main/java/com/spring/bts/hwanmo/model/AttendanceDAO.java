@@ -71,5 +71,12 @@ public class AttendanceDAO implements InterAttendanceDAO {
 		int n = sqlsession.selectOne("hwanmo.checkTomorrow", paraMap);
 		return n;
 	}
+
+	// 한 사원에 대한 출퇴근기록 가져오기
+	@Override
+	public List<CommuteVO> getMyCommute(int pk_emp_no) {
+		List<CommuteVO> cmtlist = sqlsession.selectList("hwanmo.getMyCommute", pk_emp_no);
+		return cmtlist;
+	}
 	
 }

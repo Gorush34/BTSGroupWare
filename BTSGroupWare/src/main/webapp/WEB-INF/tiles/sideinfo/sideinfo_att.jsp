@@ -282,7 +282,7 @@
 						<table style="margin: 0 20px;">
 							<tbody>
 								<tr id="">
-				   					<td><span style="margin-left: 5px;">내 근태 현황</span></label></td>
+				   					<td><span style="margin-left: 5px;"><a href="<%= ctxPath %>/att/myCommute.bts">나의 출퇴근기록</span></label></td>
 				   				</tr>
 				   				<tr>
 				   					<td><span style="margin-left: 5px;"><a href="<%= ctxPath %>/att/myAtt.bts">내 연차 내역</a></span></label></td>

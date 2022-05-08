@@ -4,6 +4,7 @@ import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.bts.hwanmo.model.CommuteVO;
+import com.spring.bts.hwanmo.model.EmployeeVO;
 import com.spring.bts.hwanmo.service.InterAttendanceService;
 import com.spring.bts.jieun.model.CalendarVO;
 
@@ -231,5 +234,26 @@ public class AttendanceController {
 		return jsonObj.toString();
 		
 	} // end of public String workOut(HttpServletRequest request, HttpServletResponse response, ModelAndView mav)-------
+	
+	
+	// === 내 출퇴근기록 페이지 요청
+	@RequestMapping(value="/att/myCommute.bts")
+	public ModelAndView myCommute(HttpServletRequest request, CommuteVO cmtvo, ModelAndView mav) { 
+		
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+		int pk_emp_no = loginuser.getPk_emp_no();
+		System.out.println(" 들어갔니? pk_emp_no : " + pk_emp_no);
+		// 한 사원에 대한 출퇴근기록 가져오기
+		List<CommuteVO> cmtList = attService.getMyCommute(pk_emp_no);
+		
+		mav.addObject("cmtList", cmtList);
+		mav.setViewName("myCommute.att");
+
+		return mav;
+	}
+	
+	
+	
 	
 }
