@@ -1,9 +1,9 @@
 package com.spring.bts.jieun.model;
 
 public class ScheduleVO {
-	private int pk_schno;  
-	private int fk_emp_no;  
-	private int fk_calno;      
+	private String pk_schno;  
+	private String fk_emp_no;  
+	private String fk_calno;      
 	private String subject;   
 	private String startdate;           
 	private String enddate;           
@@ -11,24 +11,24 @@ public class ScheduleVO {
 	private String color;   
 	private String place;   
 	private String joinuser;   
-	private int fk_lgcatgono;
+	private String fk_lgcatgono;
 	
-	public int getPk_schno() {
+	public String getPk_schno() {
 		return pk_schno;
 	}
-	public void setPk_schno(int pk_schno) {
+	public void setPk_schno(String pk_schno) {
 		this.pk_schno = pk_schno;
 	}
-	public int getFk_emp_no() {
+	public String getFk_emp_no() {
 		return fk_emp_no;
 	}
-	public void setFk_emp_no(int fk_emp_no) {
+	public void setFk_emp_no(String fk_emp_no) {
 		this.fk_emp_no = fk_emp_no;
 	}
-	public int getFk_calno() {
+	public String getFk_calno() {
 		return fk_calno;
 	}
-	public void setFk_calno(int fk_calno) {
+	public void setFk_calno(String fk_calno) {
 		this.fk_calno = fk_calno;
 	}
 	public String getSubject() {
@@ -73,10 +73,10 @@ public class ScheduleVO {
 	public void setJoinuser(String joinuser) {
 		this.joinuser = joinuser;
 	}
-	public int getFk_lgcatgono() {
+	public String getFk_lgcatgono() {
 		return fk_lgcatgono;
 	}
-	public void setFk_lgcatgono(int fk_lgcatgono) {
+	public void setFk_lgcatgono(String fk_lgcatgono) {
 		this.fk_lgcatgono = fk_lgcatgono;
 	}
 	

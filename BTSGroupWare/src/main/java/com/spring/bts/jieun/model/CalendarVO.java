@@ -6,6 +6,7 @@ public class CalendarVO {
 	private String calname;
 	private int fk_emp_no;
 	private int fk_lgcatgono;
+	
 	public int getPk_calno() {
 		return pk_calno;
 	}

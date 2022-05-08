@@ -57,14 +57,13 @@
 			initialView: 'dayGridMonth',
 			locale: 'ko',
 			selectable: true,
-			editable: true,
+			editable: false,
 			themeSystem: 'bootstrap',
 			headerToolbar:{
 				left: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
 			    center: 'title',
 			    right: 'today prevYear,prev,next,nextYear'
 			},
-			events: 'https://fullcalendar.io/api/demo-feeds/events.json?overload-day',
 			dayMaxEventRows: true, // for all non-TimeGrid views
 		    views: {
 		      timeGrid: {
@@ -79,6 +78,61 @@
 	                 dataType: "json",
 	                 success:function(json) {
 	                	 
+	                	 var events = [];
+	                	 if(json.length > 0){
+	                		 
+	                		 $.each(json, function(index, item){
+	                			var startdate = moment(item.startdate).format('YYYY-MM-DD HH:mm:ss');
+	                			var enddate = moment(item.enddate).format('YYYY-MM-DD HH:mm:ss');
+                                var subject = item.subject;
+
+                                console.log("캘린더 소분류 번호 : " + $("input:checkbox[name=my_calno]:checked").length);
+                                // 달력에 사내 캘린더 일정 보여주기
+                                  /* if( $("input:checkbox[name=com_calno]:checked").length <= $("input:checkbox[name=com_calno]").length ){
+                                	
+	                                   for(var i=0; i<$("input:checkbox[name=com_calno]:checked").length; i++){
+                                		
+                                		   if($("input:checkbox[name=com_calno]:checked").eq(i).val() == item.fk_calno){
+                                		    console.log("캘린더 소분류 번호 : " + $("input:checkbox[name=com_calno]:checked").eq(i).val());*/
+                                			events.push({
+                                				id: item.pk_schno,
+                                				title: item.subject,
+                                				start: startdate,
+                                				end: enddate,
+                                				url : "<%= ctxPath%>/calendar/detailSchedule.bts?schno="+item.pk_schno,
+                                				color: item.color,
+                                				cid: item.fk_calno // 사내캘린더 내의 서브캘린더 체크박스의 value값과 일치하도록 만들어야 한다. 그래야만 서브캘린더의 체크박스와 cid 값이 연결되어 체크시 풀캘린더에서 일정이 보여지고 체크해제시 풀캘린더에서 일정이 숨겨져 안보이게 된다.
+                                			});// end of events.push({})---------
+                                	/*	}
+                                	}// end of for----------------------------------------
+                                }// end of if---------------------------------------------*/
+	                		
+                                // 달력에 내 캘린더 일정 보여주기
+                                if($("input:checkbox[name=my_calno]:checked").length <= $("input:checkbox[name=my_calno]").length){
+                                	
+                                	for(var i = 0; i<$("input:checkbox[name=my_calno]:checked").length; i++){
+                                		
+                                		if($("input:checkbox[name=my_calno]:checked").eq(i).val() == item.fk_calno && item.fk_emp_no == "${sessionScope.loginuser.pk_emp_no}" ){
+                                			events.push({
+                                				id: item.pk_schno,
+                                				title: item.subject,
+                                				start: startdate,
+                                				end: enddate,
+                                				url : "<%= ctxPath%>/calendar/detailSchedule.bts?schno="+item.pk_schno,
+                                				color: item.color,
+                                				cid: item.fk_calno
+                                			}); // end of events.push({})---------
+                                		}
+                                	}// end of for------------------------------------------
+                                }// end of if-----------------------------------------------
+                                
+                                // 공유 받은 캘린더
+	                		 
+	                		 });// end of $.each(json, function(index, item) {})-----------------------
+	                	 }
+	                	 
+	                	 console.log(events);    
+	                	 successCallback(events);         
 	                	 
 	                 },
 					  error: function(request, status, error){
@@ -88,8 +142,10 @@
 	            }); // end of $.ajax()--------------------------------
 	        
 		    }, // end of events:function(info, successCallback, failureCallback) {}---------------
-		
-		    // 풀캘린더에서 날짜 클릭할 때 발생하는 이벤트(일정 등록창으로 넘어간다)
+		 // ===================== DB 와 연동 끝 ===================== //
+		    
+		 
+		 // 풀캘린더에서 날짜 클릭할 때 발생하는 이벤트(일정 등록창으로 넘어간다)
 	       dateClick: function(info) {
 	      	//  alert('클릭한 Date: ' + info.dateStr); 
 	      	    $(".fc-day").css('background','none'); // 현재 날짜 배경색 없애기
@@ -102,16 +158,53 @@
 	      	    frm.submit();
 	      	  }, 
 	      	// === 사내캘린더, 내캘린더, 공유받은캘린더의 체크박스에 체크유무에 따라 일정을 보여주거나 일정을 숨기게 하는 것이다. ===
-		    eventDidMount: function(arg){
-		    	
-		    }
-			
-			
-			
-			
+		    eventDidMount: function (arg) {
+	            var arr_calendar_checkbox = document.querySelectorAll("input.calendar_checkbox"); 
+	            // 사내캘린더, 내캘린더, 공유받은캘린더 에서의 모든 체크박스임
+	            
+	            arr_calendar_checkbox.forEach(function(item) { // item 이 사내캘린더, 내캘린더, 공유받은캘린더 에서의 모든 체크박스 중 하나인 체크박스임
+		              if (item.checked) { 
+		            	// 사내캘린더, 내캘린더, 공유받은캘린더 에서의 체크박스중 체크박스에 체크를 한 경우 라면
+		                
+		            	if (arg.event.extendedProps.cid === item.value) { // item.value 가 체크박스의 value 값이다.
+		                	// console.log("일정을 보여주는 cid : "  + arg.event.extendedProps.cid);
+		                	// console.log("일정을 보여주는 체크박스의 value값(item.value) : " + item.value);
+		                    
+		                	arg.el.style.display = "block"; // 풀캘린더에서 일정을 보여준다.
+		                }
+		              } 
+		              
+		              else { 
+		            	// 사내캘린더, 내캘린더, 공유받은캘린더 에서의 체크박스중 체크박스에 체크를 해제한 경우 라면
+		                
+		            	if (arg.event.extendedProps.cid === item.value) {
+		            		// console.log("일정을 숨기는 cid : "  + arg.event.extendedProps.cid);
+		                	// console.log("일정을 숨기는 체크박스의 value값(item.value) : " + item.value);
+		                	
+		            		arg.el.style.display = "none"; // 풀캘린더에서 일정을  숨긴다.
+		                }
+		              }
+	            });// end of arr_calendar_checkbox.forEach(function(item) {})------------
+	      }
+				
 		}); // end of var calendar = = new FullCalendar.Calendar(calendarEl, {}--------------------------------------
 		
 		calendar.render(); // 캘린더 보여주기
+		
+		var arr_calendar_checkbox = document.querySelectorAll("input.calendar_checkbox"); 
+		  // 사내캘린더, 내캘린더, 공유받은캘린더 에서의 체크박스임
+		  
+		  arr_calendar_checkbox.forEach(function(item) {
+			  item.addEventListener("change", function () {
+		      // console.log(item);
+				 calendar.refetchEvents(); // 모든 소스의 이벤트를 다시 가져와 화면에 다시 표시합니다.
+		    });
+		  });
+		  //==== 풀캘린더와 관련된 소스코드 끝(화면이 로드되면 캘린더 전체 화면 보이게 해줌) ==== //
+
+		
+		
+		
 		
 		// 검색 할 때 엔터를 친 경우
 		  $("input#searchWord").keyup(function(event){

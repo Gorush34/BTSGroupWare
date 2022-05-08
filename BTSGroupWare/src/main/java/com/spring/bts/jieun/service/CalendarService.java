@@ -117,6 +117,21 @@ public class CalendarService implements InterCalendarService {
 		return scheduleList;
 	}
 
+	// === 일정 상세 페이지 === //
+	@Override
+	public Map<String, String> detailSchedule(String pk_schno) {
+		 Map<String, String> map = dao.detailSchedule(pk_schno);
+		return map;
+	}
+
+	// === 일정 삭제 하기 === //
+	@Override
+	public int deleteSchedule(String pk_schno) {
+		int n = dao.deleteSchedule(pk_schno);
+		return n;
+	}
+
+	
 
 	
 
