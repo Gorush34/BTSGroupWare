@@ -38,7 +38,10 @@ public class AddBookService implements InterAddBookService  {
 	@Override
 	public int addBook_telAdd_insert(AddBookVO avo) {
 		
+		System.out.println("service 단" + avo.getAddb_name());
+		
 		int n = dao.addBook_telAdd_insert(avo);
+		
 		
 		return n;
 	}
@@ -46,15 +49,10 @@ public class AddBookService implements InterAddBookService  {
 	
 	// 상세부서정보 페이지 사원목록 불러오기 (영업팀)
 	@Override
-	public List<EmployeeVO> addBook_depInfo_select_sales() {
-		List<EmployeeVO> empList_sales = dao.addBook_depInfo_select_sales();
-		return empList_sales;
+	public List<EmployeeVO> addBook_depInfo_select() {
+		List<EmployeeVO> empList = dao.addBook_depInfo_select();
+		return empList;
 	}
-	// 상세부서정보 페이지 사원목록 불러오기 (마케팅팀)
-	@Override
-	public List<EmployeeVO> addBook_depInfo_select_marketing() {
-		List<EmployeeVO> empList_marketing = dao.addBook_depInfo_select_marketing();
-		return empList_marketing;
-	}
+
 	
 }

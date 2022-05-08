@@ -50,6 +50,28 @@
 		order by pk_calno asc
 	</select>
 	
+	<!-- 캘린더 소분류 수정하기 -->
+	<update id="editCalendar" parameterType="HashMap">
+		update tbl_calendar set calname = #{calname}
+		where pk_calno = #{pk_calno}
+	</update>
+	
+	<!-- 캘린더에 이름이 있는지 확인 -->
+	<select id="existsCalendar" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_calendar
+		where fk_lgcatgono = #{caltype} 
+		and fk_emp_no = #{fk_emp_no} 
+		and calname = #{calname}
+	</select>
+	
+	<!-- 캘린더 소분류 삭제하기  -->
+	<delete id="deleteCalendar" parameterType="String">
+		delete from tbl_calendar
+		where pk_calno = #{pk_calno}
+	</delete>
+	
+	
 	<!-- 등록 폼에 서브캘린더 가져오기 -->
 	<select id="selectCalNo" parameterType="HashMap" resultType="com.spring.bts.jieun.model.CalendarVO">
 		select pk_calno, fk_lgcatgono, calname
@@ -58,6 +80,12 @@
 		order by pk_calno asc
 	</select>
 	
+	<!-- 참석자 추가하기 : 사원 명단 불러오기 -->
+	<select id="searchJoinUser" parameterType="String" resultType="com.spring.bts.hwanmo.model.EmployeeVO">
+		select uq_email, emp_name
+		from tbl_employees
+		where lower(emp_name) like '%'|| lower(#{joinUserName}) ||'%'
+	</select>
 	
 	<!-- 일정등록 하기  -->
 	<insert id="scheduleRegisterInsert" parameterType="HashMap">
@@ -66,6 +94,15 @@
 	</insert>
 
 
+	<!-- 일정 보여주기 -->
+	<select id="selectSchedule" parameterType="String" resultType="com.spring.bts.jieun.model.ScheduleVO">
+		select pk_schno, fk_emp_no, fk_calno, subject, startdate, enddate, content, color, place, joinuser, fk_lgcatgono
+		from tbl_schedule
+		where fk_emp_no = #{fk_emp_no}
+		fk_lgcatgono = 2 <!--  OR
+		(fk_lgcatgono != 2 AND lower(joinuser) || #{fk_emp_no}) ) -->
+		order by pk_schno asc
+	</select>
 
 
 

@@ -22,7 +22,8 @@ public interface InterAddBookDAO {
 
 	
 	// 상세부서정보 페이지 사원목록 불러오기
-	public List<EmployeeVO> addBook_depInfo_select_sales(); // 영업팀
-	public List<EmployeeVO> addBook_depInfo_select_marketing(); // 마케팅팀
+	public List<EmployeeVO> addBook_depInfo_select(); // 영업팀
+
+
 	
 }

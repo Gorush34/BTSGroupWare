@@ -48,19 +48,19 @@
 		</tr>
 		<tr>
 			<td><strong>이름</strong></td>
-			<td><input type="text" class="form-control" id="name" name="name" placeholder="이름"></td>
+			<td><input type="text" class="form-control" id="addb_name" name="addb_name" placeholder="이름"></td>
 		</tr>
 		<tr>
 			<td><strong>부서</strong></td>
 			<td>
 				<select id="department" name="department" class="form-control">
 				  <option selected >--</option>
-				  <option value="1">영업</option>
-				  <option value="2">마케팅</option>
-				  <option value="4">기획</option>
-				  <option value="5">총무</option>
-				  <option value="6">인사</option>
-				  <option value="7">회계</option>
+				  <option value="100">영업</option>
+				  <option value="200">마케팅</option>
+				  <option value="300">기획</option>
+				  <option value="400">총무</option>
+				  <option value="500">인사</option>
+				  <option value="600">회계</option>
 				</select>
 			</td>
 		</tr>
@@ -69,13 +69,14 @@
 			<td>
 				<select id="rank" name="rank" class="form-control">
 				  <option selected >--</option>
-				  <option value="1">사원</option>
-				  <option value="2">주임</option>
-				  <option value="4">과장</option>
-				  <option value="5">차장</option>
-				  <option value="6">부장</option>
-				  <option value="7">전무</option>
-				  <option value="8">사장</option>
+				  <option value="10">사원</option>
+				  <option value="20">주임</option>
+				  <option value="30">대리</option>
+				  <option value="40">과장</option>
+				  <option value="50">차장</option>
+				  <option value="60">부장</option>
+				  <option value="70">전무</option>
+				  <option value="80">사장</option>
 				</select>
 			</td>
 		</tr>
@@ -92,10 +93,12 @@
 			<td><input type="text" class="form-control" id="company" name="company" placeholder="회사"></td>
 		</tr>
 		<tr>
-			
+			<td><strong>회사전화번호</strong></td>
+			<td><input type="text" class="form-control" id="com_tel" name="com_tel" placeholder="회사전화번호"></td>
+		</tr>
+		<tr>
 			<td><strong>회사주소</strong></td>
 			<td><input type="text" class="form-control" id="company_address" name="company_address" placeholder="회사주소" style="width: 120%;"></td>
-			
 		</tr>
 		<tr>
 			<td><strong>메모사항</strong></td>
