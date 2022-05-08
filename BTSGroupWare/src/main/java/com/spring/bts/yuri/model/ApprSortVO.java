@@ -8,7 +8,7 @@ public class ApprSortVO {
 	private String pk_appr_sortno;		/* 결재문서 구분번호 */
 	private String appr_name;			/* 결재문서 구분이름 */
 	
-	// 기본생성자
+	// 기본생성자 <= 이게 없으면 Bean이 생성되지 않는다!
 	public ApprSortVO() {}
 	
 	

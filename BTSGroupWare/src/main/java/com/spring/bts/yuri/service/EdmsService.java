@@ -42,11 +42,13 @@ public class EdmsService implements InterEdmsService {
 	}
 	
 	// === 전자결재 양식선택(업무기안서, 휴가신청서 등..)을 위한 것 === //
+/*
 	@Override
 	public List<String> getApprsortList() {
 		List<String> apprsortList = dao.getApprsortList();
 		return apprsortList;
 	}
+*/
 	
 
 

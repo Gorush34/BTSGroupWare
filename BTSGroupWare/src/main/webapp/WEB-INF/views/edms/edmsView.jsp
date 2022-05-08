@@ -10,7 +10,6 @@
 
 <!-- datepicker를 사용하기 위한 링크 / 나중에 헤더에 추가되면 지우기 -->
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
-<link rel="stylesheet" href="/resources/demos/style.css">
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
 
@@ -113,25 +112,21 @@
 				<td style="width: 75%;">
 					<!-- if문 -->
 					<span style="color: red; font-weight: bold;">[긴급]</span>&nbsp;
-					<span>제목어쩌고</span>
+					<span>신규 프로모션을 위한 제안서</span>
 				</td>
 			</tr>
 			
-			<tr>
+<!-- 			<tr>
 				<th class="edmsView_th">시행일자</th>
 				<td colspan="2">
-					시행일자 어쩌고
+					2022년 05월 07일
 				</td>
-			</tr>
+			</tr> -->
 			
 			<tr>
 				<th class="edmsView_th">내용</th>
 				<td colspan="2">
-					내용어쩌고<br/>
-					내용어쩌고<br/>
-					내용어쩌고<br/>
-					내용어쩌고<br/>
-					내용어쩌고<br/>
+					신규 프로모션을 위한 제안서입니다.<br/>
 				</td>
 			</tr>	
 

@@ -62,12 +62,13 @@ public class EdmsDAO implements InterEdmsDAO {
 	}
 
 	// 전자결재 양식선택(업무기안서, 휴가신청서 등..)을 위한 것
+/*
 	@Override
 	public List<String> getApprsortList() {
 		sqlsession.selectList("yuri.getApprsortList");
 		return null;
 	}
-
+*/
 
 
 

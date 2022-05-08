@@ -20,14 +20,16 @@
 	
 	<div class="edmsHomeTitle">
 		<span class="edms_maintitle">전자결재 홈</span>
-		<button id="btnEdmsAdd" type="button" class="btn btn-light" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsAdd.bts'" >문서작성</button>
-		<button id="btnEdmsAdd" type="button" class="btn btn-light" onclick="" >차트보기</button>
 		<p style="margin-bottom: 10px;"></p>
 	</div>
 	
 	<!-- 나의 현황(최근문서) 시작 -->
 	<div id="edms_current">
-		<span class="edms_title">김다우 님의 현황</span>
+		<span class="edms_title"> 
+			<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
+			<input type="hidden" class="form-control-plaintext" type="text" name="name" value="${sessionScope.loginuser.emp_name}" readonly />${sessionScope.loginuser.emp_name}님의 현황</span>
+		<!-- </span>
+		<span class="edms_title"> -->
 		<!-- <button id="btnEdmsAdd" type="button" class="btn btn-light">문서작성</button> -->
 		
 		<%-- 결재 대기 중인 문서가 있을 때 시작 --%>
@@ -43,8 +45,8 @@
 				<div class="col-2">
 					<div class="card">
 						<div class="card-body">
-							<%-- <p style="display: none;"><c:out value="${i}" /></p> --%>
-							<span style="border: none; background-color: #A6C76C; width: 32px; color: #fff;">대기중</span>&nbsp;<span><c:out value="${i}" />&nbsp;(hidden)</span>
+							<p style="display: none;"><c:out value="${i}" /></p>
+							<span style="border: none; background-color: #A6C76C; width: 32px; color: #fff;">대기중</span>&nbsp;<span><c:out value="${i}" />&nbsp;(나중에 hidden 처리하기)</span>
 							<h5 class="card-title">기안서 제목 </h5>
 							<h6 class="card-subtitle mb-2 text-muted">
 								기안자 : 김부장
@@ -71,7 +73,7 @@
 		<!-- 나의현황 카드 종료 -->
 
 		<%-- 결재 대기 중인 문서가 없을 때 시작 --%>
-		<div class="divClear"></div>
+ 		<div class="divClear"></div>
 		<table class="table table-sm table-light">
 			<tr>
 				<td style="border-top: solid 1px #D3D3D3;">&nbsp;</td>
@@ -146,7 +148,7 @@
 				<td style="border-top: solid 1px #D3D3D3;">&nbsp;</td>
 			</tr>
 			<tr>
-				<td style="text-align: center; font-size: 12pt;">결재완료 문서가 없습니다.</td>
+				<td style="text-align: center; font-size: 12pt;">결재승인 문서가 없습니다.</td>
 			</tr>
 			<tr>
 				<td style="border-bottom: solid 1px #D3D3D3;">&nbsp;</td>
@@ -207,7 +209,7 @@
 		<%-- 결재반려 목록이 있을 때 종료 --%>
 		
 		<%-- 결재반려 목록이 없을 때 시작 --%>
-		<div class="divClear"></div>
+ 		<div class="divClear"></div>
 		<table class="table table-sm table-light">
 			<tr>
 				<td style="border-top: solid 1px #D3D3D3;">&nbsp;</td>

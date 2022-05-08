@@ -14,7 +14,7 @@ public interface InterEdmsDAO {
 	int edmsAdd(ApprVO apprvo);
 
 	// 전자결재 양식선택(업무기안서, 휴가신청서 등..)을 위한 것
-	List<String> getApprsortList();
+//	List<String> getApprsortList();
 
 	// 파일첨부가 있는 전자결재 문서작성
 	

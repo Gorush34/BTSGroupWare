@@ -43,6 +43,49 @@
 		
 		
 		
+		
+<%-- 	
+		// 결재선 지정하기
+		$("input#apprMidEmpDep").bind("keyup", function() {
+			var apprMidEmpDep = $(this).val();
+			console.log("확인용 apprMidEmpDep : " + apprMidEmpDep);
+			$.ajax({
+				url:"<%= ctxPath%>/edms/insertSchedule/searchJoinUserList.action",
+				data:{"joinUserName":joinUserName},
+				dataType:"json",
+				success : function(json){
+					var joinUserArr = [];
+			
+			//		console.log("이:"+json.length);
+					if(json.length > 0){
+						
+						$.each(json, function(index,item){
+							var name = item.name;
+							if(name.includes(joinUserName)){ // name 이라는 문자열에 joinUserName 라는 문자열이 포함된 경우라면 true , 
+								                             // name 이라는 문자열에 joinUserName 라는 문자열이 포함되지 않은 경우라면 false 
+							   joinUserArr.push(name+"("+item.userid+")");
+							}
+						});
+						
+						$("input#joinUserName").autocomplete({  // 참조 https://jqueryui.com/autocomplete/#default
+							source:joinUserArr,
+							select: function(event, ui) {       // 자동완성 되어 나온 공유자이름을 마우스로 클릭할 경우 
+								add_joinUser(ui.item.value);    // 아래에서 만들어 두었던 add_joinUser(value) 함수 호출하기 
+								                                // ui.item.value 이  선택한이름 이다.
+								return false;
+					        },
+					        focus: function(event, ui) {
+					            return false;
+					        }
+						}); 
+						
+					}// end of if------------------------------------
+				}// end of success-----------------------------------
+			});
+			
+		});
+--%>
+		
 		// 글쓰기 버튼
 		$("button#btnWrite").click(function() {
 		
@@ -139,7 +182,7 @@
 			// 폼(form)을 전송(submit)
 			const frm = document.addFrm;
 			frm.method = "POST";
-			frm.action = "<%= ctxPath%>/edmsAddEnd.bts";
+			frm.action = "<%= ctxPath%>/edms/edmsAddEnd.bts";
 			frm.submit();
 			
 		}); // end of $("button#btnWrite").click(function(){}) --------------------
@@ -210,8 +253,8 @@
           		<!-- EmployeeVO 가 아닌 ApprVO 에서 가져오는 것이다! 근데 왜 굳이 EmployeeVO를 놔두고? 모르겠음 -->
           		<%-- 이 view단은 어차피 로그인해야지만 볼 수 있는 곳이기 때문에 sessionScope을 사용한다 / 컨트롤러에서 loginuser에 userid라고 저장해줬으니까 이렇게?--%>
           		<%-- EmployeeVO에서 가져와야 하므로  userid가 아니라 get 뒤의 ~를 가져와야 함 --%>
-				<input type="text" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
-				<input type="text" name="name" value="${sessionScope.loginuser.emp_name}" readonly />
+				<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
+				<input type="text" class="form-control-plaintext" name="name" value="${sessionScope.loginuser.emp_name}" readonly />
 				
 			</td>
 		</tr>
@@ -229,25 +272,43 @@
 			<th class="edmsView_th" rowspan="2">
 				<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnApprSelect" onclick="getAppr()">결재선 지정</button>
 			</th>
-			<td colspan="2" style="width: 30%;">부서1</td>
-			<td style="width: 30%;">직급1 : </td>
-			<td style="width: 30%;">이름1 : </td>
+			<!-- <td colspan="2" style="width: 30%;">중간결재자</td> -->
+ 		
+			<td style="width: 30%;">부서1 : 
+				<input type="text" name="apprMidEmpDep" class="form-control" placeholder="중간결재자 부서를 입력하세요" />
+			</td>
+			<td style="width: 30%;">이름1 :
+				<input type="text" name="apprMidEmpName" class="form-control" placeholder="중간결재자 이름을 입력하세요" />
+			</td>
+			<td style="width: 30%;">직급1 : 
+				<input type="text" name="apprMidEmpRank" class="form-control" placeholder="중간결재자 직급을 입력하세요" />
+			</td>
+			
 		</tr>
 		
 		<tr>
-			<td colspan="2">부서1</td>
-			<td>직급1</td>
-			<td>이름1</td>
+			<!-- <td colspan="2">최종결재자</td> -->
+
+			<td style="width: 30%;">부서2 : 
+				<input type="text" name="apprFinEmpDep" class="form-control" placeholder="최종결재자 부서를 입력하세요"/>
+			</td>
+			<td style="width: 30%;">이름2 :
+				<input type="text" name="apprFinEmpName" class="form-control" placeholder="최종결재자 이름을 입력하세요"/>
+			</td>
+			<td style="width: 30%;">직급2 : 
+				<input type="text" name="apprFinEmpRank" class="form-control" placeholder="최종결재자 직급을 입력하세요"/>
+			</td>
 		</tr>
-		
-		<!--		
+	
+
+<!--		
 		<tr>
 			<th class="edmsView_th">시행일자</th>
 			<td colspan="4">
 				<input type="text" id="datepicker" name="">
 			</td>
 		</tr>
-		-->
+-->
 		
 		<tr>
 			<th class="edmsView_th">제목</th>
@@ -262,12 +323,14 @@
 			</td>
 		</tr>
 		
-		<!-- <tr>
+
+		<tr>
 			<th class="edmsView_th">파일첨부</th>
 			<td colspan="4">
 				<input type="file" name="attach" id="attach" size="100" style="width: 100%;" />
 			</td>
-		</tr> -->
+		</tr>
+
 	</table>
 	</div>
 
