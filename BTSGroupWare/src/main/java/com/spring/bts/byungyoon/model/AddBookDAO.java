@@ -39,24 +39,21 @@ public class AddBookDAO implements InterAddBookDAO {
 	@Override
 	public int addBook_telAdd_insert(AddBookVO avo) {
 		
+		System.out.println("dao 단" + avo.getAddb_name());
+		
 		int n = sqlsession.insert("byungyoon.addBook_telAdd_insert", avo);
 		
 		return n;
 	}
 
 	
-	// 상세부서정보 페이지 사원목록 불러오기(영업팀)
+	// 상세부서정보 페이지 사원목록 불러오기
 	@Override
-	public List<EmployeeVO> addBook_depInfo_select_sales() {
-		List<EmployeeVO> empList_sales = sqlsession.selectList("byungyoon.addBook_depInfo_select_sales");
-		return empList_sales;
+	public List<EmployeeVO> addBook_depInfo_select() {
+		List<EmployeeVO> empList = sqlsession.selectList("byungyoon.addBook_depInfo_select");
+		return empList;
 	}
-	// 상세부서정보 페이지 사원목록 불러오기(마케팅팀)
-	@Override
-	public List<EmployeeVO> addBook_depInfo_select_marketing() {
-		List<EmployeeVO> empList_marketing = sqlsession.selectList("byungyoon.addBook_depInfo_select_marketing");
-		return empList_marketing;
-	}
+
 	
 	
 	

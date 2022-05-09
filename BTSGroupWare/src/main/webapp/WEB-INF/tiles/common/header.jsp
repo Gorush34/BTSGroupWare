@@ -86,7 +86,7 @@
 	      
 	      <%-- 근태관리 시작 --%>
 	      <li class="nav-item">
-	        <a class="nav-link" href="<%= ctxPath %>/att/attMain.bts" id="navbar" role="button" aria-expanded="false">
+	        <a class="nav-link" href="<%= ctxPath %>/att/myAtt.bts" id="navbar" role="button" aria-expanded="false">
 	          	근태관리
 	        </a>
 	      </li>
@@ -100,7 +100,7 @@
 	      </li>
 	      
 	      <li class="nav-item">
-	        <a class="nav-link" href="<%= ctxPath %>/addBook/addBook_orgChart.bts" id="navbar" role="button" aria-expanded="false">
+	        <a class="nav-link" href="<%= ctxPath %>/addBook/addBook_depInfo.bts" id="navbar" role="button" aria-expanded="false">
 	          	조직도
 	        </a>
 	      </li>
@@ -124,7 +124,7 @@
               </a>  
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item" href="#">나의정보</a>
-                  <a class="dropdown-item" href="<%=ctxPath%>/emp/registerEmp.bts">관리자 페이지</a>
+                  <a class="dropdown-item" href="<%=ctxPath%>/emp/registerEmp.bts">사원등록</a>
                   <a class="dropdown-item" href="<%=ctxPath%>/logout.bts">로그아웃</a>
               </div>
             </li>

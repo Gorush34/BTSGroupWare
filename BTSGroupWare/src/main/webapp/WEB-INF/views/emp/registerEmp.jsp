@@ -105,7 +105,7 @@
 		}); // end of $("input#pwdcheck").blur(() => {})--------------------------------------
 		
 		// 아이디가 name 제약 조건 
-		$("input#emp_name").blur(() => {
+		$("input#emp_name").blur(() => { 
 			const $target = $(event.target);
 			
 			const name = $target.val().trim();
@@ -437,16 +437,28 @@
 	
 </script>
 
-	<div id="tbl_regEmp">
+<div id="tbl_regEmp">
+	<!-- 
+	<div class="settingItem">
+		<div id="settingItemTitle">배경화면</div>	
+		<form id="fileForm" name="fileForm" method="post"  enctype="multipart/form-data" onsubmit="return false;">
+			<label class="fileBtn" for="file">이미지 업로드</label>
+			<input type="file" name="file" id="file">
+			<span class="fileBtn" onclick="resetImage();">초기화</span>
+		</form>
+	</div>
+	 -->
 	<form name="registerFrm" >
 	<table id="tblEmpRegister">
 		<tr>
 			<td><h2>사원 등록<br><br></h2></td>
 		</tr>
+		
 		<tr>
 			<td><strong>사진</strong></td>
 			<td style="align:center;"><img id="empProfile" src="<%=ctxPath %>/resources/images/ques.png" alt="..." ><button class="btn btn-default" id="telAdd_mini_btn">삭제</button></td>
 		</tr>
+		
 		<tr>
 			<td><strong>이름&nbsp;</strong><span id="star">*</span></td>
 			<td><input required type="text" class="requiredInfo" id="emp_name" name="emp_name" size="5" placeholder="이름" style="width: 100px;" /></td>
@@ -588,24 +600,6 @@
 	</div>
 	
 	 	
-	</div>
-	
+</div>
 
-
-	<!-- 모달 -->
-	<div class="modal fade" id="myModal" role="dialog"> 
-		<div class="modal-dialog"> 
-			<div class="modal-content"> 
-				<div class="modal-header"> 
-					<h4 class="modal-title">모달 제목</h4> 
-					</div> 
-					<div class="modal-body"> 
-					<p>팝업 내용</p> 
-					</div> 
-					<div class="modal-footer"> 
-					<button type="button" class="close" data-dismiss="modal">×</button>  
-				</div> 
-			</div> 
-		</div> 
-	</div>
 
