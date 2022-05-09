@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.bts.common.FileManager;
+import com.spring.bts.common.MyUtil;
 import com.spring.bts.yuri.model.ApprVO;
 import com.spring.bts.yuri.service.InterEdmsService;
 
@@ -268,8 +269,41 @@ public class EdmsController {
 	}
 	
 	
-	// === 글목록 보기 페이지 요청 === //
-	
+	// === 대기문서 목록 보기 페이지 요청 === //
+	@RequestMapping(value="/edms/edmsList_wait.bts")
+	public ModelAndView edmsList_wait(ModelAndView mav, HttpServletRequest request) {
+		
+		getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출
+		
+		List<ApprVO> waitList = null;
+		
+		//////////////////////////////////////////////////////
+		// === 글조회수(readCount)증가 (DML문 update)는
+		//     반드시 목록보기에 와서 해당 글제목을 클릭했을 경우에만 증가되고,
+		//     웹브라우저에서 새로고침(F5)을 했을 경우에는 증가가 되지 않도록 해야 한다.
+		//     이것을 하기 위해서는 session 을 사용하여 처리하면 된다.		
+//		HttpSession session = request.getSession();
+//		session.setAttribute("readCountPermission", "yes");
+		/*
+			session 에  "readCountPermission" 키값으로 저장된 value값은 "yes" 이다.
+			session 에  "readCountPermission" 키값에 해당하는 value값 "yes"를 얻으려면 
+			반드시 웹브라우저에서 주소창에 "/edmsList_wait.bts" 이라고 입력해야만 얻어올 수 있다. 
+		*/
+		//////////////////////////////////////////////////////
+			
+		
+		// == 페이징 처리를 안한 검색어가 없는 전체 글목록 보여주기 == //
+		waitList = service.waitListNoSearch();
+		
+		
+		mav.addObject("waitList", waitList);
+		mav.setViewName("bts/edms/edmsList_wait.tiles1");
+		// /bts/views/edms/edmsList_wait.jsp
+		
+		
+		return mav;
+		
+	}
 	
 	
 	
@@ -281,6 +315,8 @@ public class EdmsController {
 		
 	//	getCurrentURL(request); // 로그아웃을 했을 때  현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
 		// 위의 문장을 주석처리하고 게시판 - 글쓰기 - 로그인 - 로그아웃 을 하면  goBackURL이 없으므로 시작페이지로 간다!
+		
+		mav.addObject("apprvo", apprvo);
 		
 		mav.setViewName("edmsView.edms");
 		// /WEB-INF/views/edms/{1}.jsp
@@ -363,7 +399,6 @@ public class EdmsController {
 		return mav;
 	}
 	
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	
 
@@ -371,6 +406,15 @@ public class EdmsController {
 	
 	
 	
+	/////////////////////////////////////////////////////////////////////////////////////////////
+	
+	// === 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 생성 === //
+	public void getCurrentURL(HttpServletRequest request) {
+	HttpSession session = request.getSession();
+	session.setAttribute("goBackURL", MyUtil.getCurrentURL(request));
+	}
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////
 	
 	
 	

@@ -1,5 +1,6 @@
 package com.spring.bts.yuri.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.spring.bts.hwanmo.model.EmployeeVO;
@@ -18,6 +19,9 @@ public interface InterEdmsService {
 
 	// 파일첨부가 없는 전자결재 문서작성
 	int edmsAdd_withFile(ApprVO apprvo);
+
+	// 페이징 처리를 안한 검색어가 없는 전체 대기문서 목록 보여주기
+	List<ApprVO> waitListNoSearch();
 	
 	// 파일첨부가 있는 전자결재 문서작성
 //	int edmsAdd_withFile(ApprVO apprvo);

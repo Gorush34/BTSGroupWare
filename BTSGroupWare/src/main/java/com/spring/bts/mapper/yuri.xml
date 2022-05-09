@@ -57,7 +57,13 @@
 	</insert>
 
 
-
+	<!-- 페이징 처리를 안한 검색어가 없는 전체 대기문서 목록 보여주기 -->
+	<select id="waitListNoSearch" resultType="com.spring.bts.yuri.model.ApprVO">
+		select A.writeday, S.appr_name, A.emergency, A.title, A.filename, A.pk_appr_no, a.status
+		from tbl_appr A left join tbl_appr_sort S
+		on A.fk_appr_sortno = S.pk_appr_sortno
+		order by pk_appr_no desc
+	</select>
 
 
 

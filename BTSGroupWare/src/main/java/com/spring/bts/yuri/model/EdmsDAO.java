@@ -68,6 +68,13 @@ public class EdmsDAO implements InterEdmsDAO {
 		return n;
 	}
 
+	// 페이징 처리를 안한 검색어가 없는 전체 대기문서 목록 보여주기
+	@Override
+	public List<ApprVO> waitListNoSearch() {
+		List<ApprVO> waitList = sqlsession.selectList("yuri.waitListNoSearch");
+		return waitList;
+	}
+
 	// 전자결재 양식선택(업무기안서, 휴가신청서 등..)을 위한 것
 /*
 	@Override

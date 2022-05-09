@@ -43,7 +43,12 @@
 		<p style="margin-bottom: 10px;"></p>
 	</div>
 
+	<c:if test="${empty requestScope.apprvo}">
+		<div style="font-size: 16pt;">글이 존재하지 않습니다.</div>
+	</c:if>
 	
+	
+	<c:if test="${not empty requestScope.apprvo}">
 	<div id="edms_view">
 	
 	<!-- ------------------------------------------------------------------------ -->
@@ -95,9 +100,7 @@
 	</table>
 
 	</div>
-	
-	<!-- 문서작성 종료 -->
-	
+
 	
 	<span class="edms_title">상세정보</span>
 	<form name="addFrm">
@@ -145,5 +148,7 @@
 		<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnApprCancel">문서수정</button>
 		<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnApprCancel">문서삭제</button>
 	</div>
+	</c:if>
+	
 	
 	</form>

@@ -88,24 +88,24 @@
 				
 				<div id="slideTogglebox2" class="slideTogglebox2">
 					<table style="margin: 0 20px;">
-						<tr>
+						<%-- <tr>
 							<td>
 								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/mydocViewAll.bts'">전체문서함</span></label>
 							</td>
-						</tr>
+						</tr> --%>
 						<tr>
 							<td>
-								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/edmsAdd.bts'">대기문서함</span></label>
+								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/edmsMydoc_wait.bts'">대기문서함</span></label>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/edmsAdd.bts'">승인문서함</span></label>
+								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='#'">승인문서함</span></label>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/edmslist.bts'">반려문서함</span></label>
+								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='#'">반려문서함</span></label>
 							</td>
 						</tr>
 						<tr>
@@ -122,27 +122,31 @@
 				
 				<div id="slideTogglebox3" class="slideTogglebox3">
 					<table style="margin: 0 20px;">
-						
-							<tr>
-								<td>
-									<label for="mySche"><span style="margin-left: 5px;">대기문서함</span></label>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<label for="mySche"><span style="margin-left: 5px;">승인문서함</span></label>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<label for="mySche"><span style="margin-left: 5px;">반려문서함</span></label>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<label for="mySche"><span style="margin-left: 5px;">임시문서함</span></label>
-								</td>
-							</tr>
+						<tr>
+							<td><label for="mySche"><span style="margin-left: 5px;">결재하기?</span></label></td>
+						</tr>
+						<!--
+						<tr>
+							<td>
+								<label for="mySche"><span style="margin-left: 5px;">대기문서함</span></label>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="mySche"><span style="margin-left: 5px;">승인문서함</span></label>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="mySche"><span style="margin-left: 5px;">반려문서함</span></label>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="mySche"><span style="margin-left: 5px;">임시문서함</span></label>
+							</td>
+						</tr>
+						-->
 					</table>
 				</div>
 				<!-- 부서 문서함 종료 -->

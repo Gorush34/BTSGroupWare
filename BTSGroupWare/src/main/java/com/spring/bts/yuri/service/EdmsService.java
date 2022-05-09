@@ -1,5 +1,6 @@
 package com.spring.bts.yuri.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,14 @@ public class EdmsService implements InterEdmsService {
 	public int edmsAdd_withFile(ApprVO apprvo) {
 		int n = dao.edmsAdd_withFile(apprvo);
 		return n;
+	}
+	
+	
+	// === 페이징 처리를 안한 검색어가 없는 전체 대기문서 목록 보여주기 === //
+	@Override
+	public List<ApprVO> waitListNoSearch() {
+		List<ApprVO> waitList = dao.waitListNoSearch();
+		return waitList;
 	}
 	
 	// === 전자결재 양식선택(업무기안서, 휴가신청서 등..)을 위한 것 === //
