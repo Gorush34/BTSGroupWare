@@ -85,46 +85,56 @@
 	                			var startdate = moment(item.startdate).format('YYYY-MM-DD HH:mm:ss');
 	                			var enddate = moment(item.enddate).format('YYYY-MM-DD HH:mm:ss');
                                 var subject = item.subject;
-
-                                console.log("캘린더 소분류 번호 : " + $("input:checkbox[name=my_calno]:checked").length);
+                 				
+                                let str_checkbox_com_calno = sessionStorage.getItem('arr_checkbox_com_calno'); // 체크박스 값 가져오기 
+                                let arr_checkbox_com_calno = str_checkbox_com_calno.split(",");
+                                
+                                let str_checkbox_my_calno = sessionStorage.getItem('arr_checkbox_my_calno'); // 체크박스 값 가져오기 
+                                let arr_checkbox_my_calno = str_checkbox_my_calno.split(",");
+                                //  console.log("캘린더 소분류 번호 1:"+arr_checkbox_com_calno);
+                                //console.log("~~~~~~캘린더 소분류 번호 : " + $("input:checkbox[name=com_calno]:checked").length);
                                 // 달력에 사내 캘린더 일정 보여주기
-                                  /* if( $("input:checkbox[name=com_calno]:checked").length <= $("input:checkbox[name=com_calno]").length ){
+                                 //  if( $("input:checkbox[name=com_calno]:checked").length <= $("input:checkbox[name=com_calno]").length ){
                                 	
-	                                   for(var i=0; i<$("input:checkbox[name=com_calno]:checked").length; i++){
+	                                   for(var i=0; i<arr_checkbox_com_calno.length; i++){
                                 		
-                                		   if($("input:checkbox[name=com_calno]:checked").eq(i).val() == item.fk_calno){
-                                		    console.log("캘린더 소분류 번호 : " + $("input:checkbox[name=com_calno]:checked").eq(i).val());*/
+                                		   if(arr_checkbox_com_calno[i] == item.fk_calno){
+                                		   // console.log("캘린더 소분류 번호 : " + arr_checkbox_com_calno[i]);
                                 			events.push({
                                 				id: item.pk_schno,
                                 				title: item.subject,
                                 				start: startdate,
                                 				end: enddate,
-                                				url : "<%= ctxPath%>/calendar/detailSchedule.bts?schno="+item.pk_schno,
+                                				url : "<%= ctxPath%>/calendar/detailSchedule.bts?pk_schno="+item.pk_schno,
                                 				color: item.color,
                                 				cid: item.fk_calno // 사내캘린더 내의 서브캘린더 체크박스의 value값과 일치하도록 만들어야 한다. 그래야만 서브캘린더의 체크박스와 cid 값이 연결되어 체크시 풀캘린더에서 일정이 보여지고 체크해제시 풀캘린더에서 일정이 숨겨져 안보이게 된다.
                                 			});// end of events.push({})---------
-                                	/*	}
+                                			
+                                			//console.log("~~~~확인용 item.pk_schno : "+item.pk_schno)
+                                			//console.log("~~~~확인용 event id : "+id)
+                                		}
                                 	}// end of for----------------------------------------
-                                }// end of if---------------------------------------------*/
+                            //    }// end of if---------------------------------------------
 	                		
                                 // 달력에 내 캘린더 일정 보여주기
-                                if($("input:checkbox[name=my_calno]:checked").length <= $("input:checkbox[name=my_calno]").length){
+                            //    console.log("~~~~~~캘린더 소분류 번호 : " + $("input:checkbox[name=my_calno]:checked").length);
+                            //    if($("input:checkbox[name=my_calno]:checked").length <= $("input:checkbox[name=my_calno]").length){
                                 	
-                                	for(var i = 0; i<$("input:checkbox[name=my_calno]:checked").length; i++){
+                                	for(var i = 0; i<arr_checkbox_my_calno.length; i++){
                                 		
-                                		if($("input:checkbox[name=my_calno]:checked").eq(i).val() == item.fk_calno && item.fk_emp_no == "${sessionScope.loginuser.pk_emp_no}" ){
+                                		if(arr_checkbox_my_calno[i] == item.fk_calno && item.fk_emp_no == "${sessionScope.loginuser.pk_emp_no}" ){
                                 			events.push({
                                 				id: item.pk_schno,
                                 				title: item.subject,
                                 				start: startdate,
                                 				end: enddate,
-                                				url : "<%= ctxPath%>/calendar/detailSchedule.bts?schno="+item.pk_schno,
+                                				url : "<%= ctxPath%>/calendar/detailSchedule.bts?pk_schno="+item.pk_schno,
                                 				color: item.color,
                                 				cid: item.fk_calno
                                 			}); // end of events.push({})---------
                                 		}
                                 	}// end of for------------------------------------------
-                                }// end of if-----------------------------------------------
+                             //   }// end of if-----------------------------------------------
                                 
                                 // 공유 받은 캘린더
 	                		 

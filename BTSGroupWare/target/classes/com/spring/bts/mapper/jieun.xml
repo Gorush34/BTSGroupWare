@@ -145,9 +145,21 @@
 		
 		
 	<!-- 일정 삭제 하기  -->
-	<delete id="deleteSchedule" parameterType="pk_schno">
+	<delete id="deleteSchedule" parameterType="String">
 		delete from tbl_schedule
 		where pk_schno = #{pk_schno}
 	</delete>
+
+
+
+
+
+
+
+<!-- ======================================================================== -->
+
+
+	
+
 
 </mapper>
