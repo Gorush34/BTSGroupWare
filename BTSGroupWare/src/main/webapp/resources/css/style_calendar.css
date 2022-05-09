@@ -255,3 +255,19 @@ ul#secondHeaderGroup, .secondHeaderList {
 }
 
 /* 헤더 스타일  끝 */
+
+
+/* 캘린더 상세(일정 상세) 파트 */
+table#detailScheduleContent > tbody > tr > th  {
+	padding: 5px;
+	height: 30px;
+	width: 140px;
+}
+
+table#detailScheduleContent > tbody  div.panel-heading{
+	margin-bottom: 15px;
+}
+
+table#detailScheduleContent > tbody  table#reservationTable{
+	padding: 30px;
+}

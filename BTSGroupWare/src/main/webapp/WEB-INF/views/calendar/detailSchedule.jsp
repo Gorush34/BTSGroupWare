@@ -93,8 +93,8 @@
 <div id="detailSchedule">
 <h4 style="margin: 0 80px">일정상세</h4>
 	<div style="margin:50px 100px;">
-			<div>
-				<input type="text" id="subject" name="subject" size="50" value="${requestScope.map.SUBJECT}" readonly/>&nbsp;&nbsp;
+			<div style="margin-bottom: 30px;">
+				<span id="subject" style="font-weight: bold; font-size: 15pt; color: #007acc;">${requestScope.map.SUBJECT}</span>&nbsp;&nbsp;
 			</div>
 			<table id="detailScheduleContent">
 				<tr>
@@ -133,109 +133,8 @@
 					<th>작성자</th>
 					<td>${requestScope.map.EMP_NAME}</td>
 				</tr>
-				<tr>
-					<th>알람</th>
-					<td><i class="bi bi-alarm"></i>&nbsp;&nbsp;알람 추가</td>
-					<%--
-					<td><input type="text"/></td>
-					<td><select></select></td>
-					<td><select></select></td>
-					<td><i class="bi bi-x-circle"></i></td>
-					 --%>
-				</tr>
-				<tr>
-					<th rowspan="4" style="vertical-align: text-top;">예약하기</th>	
-					
-				<td>
-					<!-- 그룹 태그로 role과 aria-multiselectable를 설정한다. -->
-					<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-						<!-- 하나의 item입니다. data-parent 설청과 href 설정만 제대로 하면 문제없이 작동합니다. -->
-						<div class="panel panel-default">
-							<div class="panel-heading" role="tab">
-								<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="false" style="color:black; text-decoration:none ;">
-								본사 6층 회의실
-								</a>
-							</div>
-							<div id="collapse1" class="panel-collapse collapse" role="tabpanel">
-								<div class="panel-body">
-									<table class="table table-striped" id="reservationTable" style="margin-left: 10px;">
-									<thead class="table-primary" style="color:white;">
-										<tr>
-											<th style="width:500px;">항목</th>
-											<th style="width:300px;">예약</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>빔프로젝터</td>
-											<td><button type="button" class="btn btn-outline-primary btn-sm">예약</button></td>
-										</tr>
-										<tr>
-											<td>의자 10개</td>
-											<td><button type="button" class="btn btn-outline-primary btn-sm">예약</button></td>
-										</tr>
-										<tr>
-											<td>칠판</td>
-											<td><button type="button" class="btn btn-outline-primary btn-sm">예약</button></td>
-										</tr>
-									</tbody>
-								</table>
-								</div>
-							</div>
-						</div>
-						<!-- -->
-						<div class="panel panel-default">
-							<div class="panel-heading" role="tab">
-								<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="false" style="color:black; text-decoration:none ;">
-								본사 6층 회의실
-								</a>
-							</div>
-							<div id="collapse2" class="panel-collapse collapse" role="tabpanel">
-								<div class="panel-body">
-									<table class="table table-striped" id="reservationTable" style="margin-left: 10px;">
-									<thead class="table-primary" style="color:white; ">
-										<tr>
-											<th style="width:500px;">항목</th>
-											<th style="width:300px;">예약</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td colspan="2" style="heigth: 100px; text-align: center;">이용가능한 자산이 없습니다.</td>
-										</tr>
-									</tbody>
-								</table>
-								</div>
-							</div>
-						</div>
-						<div class="panel panel-default">
-							<div class="panel-heading" role="tab">
-								<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse3" aria-expanded="false" style="color:black; text-decoration:none ;">
-								본사 7층 회의실
-								</a>
-							</div>
-							<div id="collapse3" class="panel-collapse collapse" role="tabpanel">
-								<div class="panel-body">
-									<table class="table table-striped" id="reservationTable" style="margin-left: 10px;">
-									<thead class="table-primary" style="color:white; ">
-										<tr>
-											<th style="width:500px;">항목</th>
-											<th style="width:300px;">예약</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>빔프로젝터</td>
-											<td>22-05-01 09:00</td>
-										</tr>
-									</tbody>
-								</table>
-								</div>
-							</div>
-						</div>	
-					</div>
-				 </td>
-			 </tr>
+				
+			
 			 
 				
 			</table>
@@ -246,34 +145,34 @@
 	<c:set var="v_fk_emp_no" value="${requestScope.map.FK_EMP_NO}" />
 	<c:set var="v_fk_lgcatgono" value="${requestScope.map.FK_LGCATGONO}"/>
 	<c:set var="v_loginuser_emp_no" value="${sessionScope.loginuser.pk_emp_no}"/>
-<%--
-	<div style="float: right;">
+
+	<div style="margin: 40px; text-align: center;">
 		<c:if test="${not empty requestScope.listgobackURL_schedule}">
 			<c:if test="${v_fk_lgcatgono eq '2' && sessionScope.loginuser.gradelevel == 1 }">
-				<button type="button" id="edit" class="btn_normal" onclick="editSchedule('${requestScope.map.PK_SCHNO}')">수정</button>
-				<button type="button" class="btn_normal" onclick="delSchedule('${requestScope.map.PK_SCHNO}')">삭제</button>
+				<button type="button" id="edit" class="btn btn-outline-primary" style="margin-right: 8px;" onclick="editSchedule('${requestScope.map.PK_SCHNO}')">수정</button>
+				<button type="button" class="btn_normal" style="margin-right: 8px;"  onclick="delSchedule('${requestScope.map.PK_SCHNO}')">삭제</button>
 			</c:if>
 			<c:if test="${v_fk_lgcatgono eq '1' && v_fk_emp_no eq v_loginuser_emp_no}">
-				<button type="button" id="edit" class="btn_normal" onclick="editSchedule('${requestScope.map.PK_SCHNO}')">수정</button>
-				<button type="button" class="btn_normal" onclick="delSchedule('${requestScope.map.PK_SCHNO}')">삭제</button>
+				<button type="button" id="edit" class="btn btn-outline-primary" style="margin-right: 8px;"  onclick="editSchedule('${requestScope.map.PK_SCHNO}')">수정</button>
+				<button type="button" class="btn_normal" style="margin-right: 8px;"  onclick="delSchedule('${requestScope.map.PK_SCHNO}')">삭제</button>
 			</c:if>
-				<button type="button" id="cancel" class="btn_normal" style="margin-right: 0px;" onclick="javascript:location.href='<%= ctxPath%>/${requestScope.listgobackURL_schedule}'">취소</button> 
+				<button type="button" id="cancel" class="btn btn-primary"  style="margin-right: 8px;"  onclick="javascript:location.href='<%= ctxPath%>/${requestScope.listgobackURL_schedule}'">취소</button> 
 		</c:if>
 	
 		<c:if test="${empty requestScope.listgobackURL_schedule}">
 	        <c:if test="${v_fk_lgcatgono eq '2' && sessionScope.loginuser.gradelevel == 1 }">
-				<button type="button" id="edit" class="btn_normal" onclick="editSchedule('${requestScope.map.PK_SCHNO}')">수정</button>
-				<button type="button" class="btn_normal" onclick="delSchedule('${requestScope.map.PK_SCHNO}')">삭제</button>
+				<button type="button" id="edit" class="btn btn-outline-primary"  style="margin-right: 8px;" onclick="editSchedule('${requestScope.map.PK_SCHNO}')">수정</button>
+				<button type="button" class="btn btn-outline-primary"  style="margin-right: 8px;" onclick="delSchedule('${requestScope.map.PK_SCHNO}')">삭제</button>
 			</c:if>
 			<c:if test="${v_fk_lgcatgono eq '1' && v_fk_emp_no eq v_loginuser_emp_no}">
-				<button type="button" id="edit" class="btn_normal" onclick="editSchedule('${requestScope.map.PK_SCHNO}')">수정</button>
-				<button type="button" class="btn_normal" onclick="delSchedule('${requestScope.map.PK_SCHNO}')">삭제</button>
+				<button type="button" id="edit" class="btn btn-outline-primary"  style="margin-right: 8px;" onclick="editSchedule('${requestScope.map.PK_SCHNO}')">수정</button>
+				<button type="button" class="btn btn-outline-primary"  style="margin-right: 8px;" onclick="delSchedule('${requestScope.map.PK_SCHNO}')">삭제</button>
 			</c:if>
-				<button type="button" id="cancel" class="btn_normal" style="margin-right: 0px; background-color: #990000;" onclick="javascript:location.href='<%= ctxPath%>/calendar/detailSchedule.bts'">취소</button> 
+				<button type="button" id="cancel" class="btn btn-primary" style="margin-right: 8px;" onclick="javascript:location.href='<%= ctxPath%>/calendar/detailSchedule.bts'">캘린더로 돌아가기</button> 
 		</c:if>
 		
 	</div>
- --%>
+
 </div>
 	<div id="commentView">
 	
