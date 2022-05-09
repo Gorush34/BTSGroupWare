@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.bts.common.AES256;
+import com.spring.bts.hwanmo.model.CommuteVO;
 import com.spring.bts.hwanmo.model.InterAttendanceDAO;
 
 //=== #31. Service 선언 === 
@@ -65,6 +66,13 @@ public class AttendanceService implements InterAttendanceService {
 	public int checkTomorrow(Map<String, String> paraMap) {
 		int n = attDAO.checkTomorrow(paraMap);
 		return n;
+	}
+
+	// 한 사원에 대한 출퇴근기록 가져오기
+	@Override
+	public List<CommuteVO> getMyCommute(int pk_emp_no) {
+		List<CommuteVO> cmtList = attDAO.getMyCommute(pk_emp_no);
+		return cmtList;
 	}
 
 

@@ -3,6 +3,8 @@ package com.spring.bts.hwanmo.service;
 import java.util.List;
 import java.util.Map;
 
+import com.spring.bts.hwanmo.model.CommuteVO;
+
 public interface InterAttendanceService {
 
 	// 가입과 동시에 연차테이블 등록하기
@@ -22,5 +24,8 @@ public interface InterAttendanceService {
 
 	// 00시가 되면 출퇴근 초기화하기
 	int checkTomorrow(Map<String, String> paraMap);
+
+	// 한 사원에 대한 출퇴근기록 가져오기
+	List<CommuteVO> getMyCommute(int pk_emp_no);
 
 }
