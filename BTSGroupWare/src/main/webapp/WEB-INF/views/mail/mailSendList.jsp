@@ -19,6 +19,35 @@
 
 <script type="text/javascript">
 
+	$(document).ready(function() {
+		
+		// 검색타입 및 검색어 유지시키기
+		if(${searchWord != null}) {
+			// 넘어온 paraMap 이 null 이 아닐 때 (값이 존재할 때)
+			$("select#searchType").val("${searchType}");
+			$("input#searchWord").val("${searchWord}");
+		}
+		
+		if(${searchWord != null}) {
+			$("select#searchType").val("subject");
+			$("input#searchWord").val("");
+		}
+		
+		// 체크박스 전체선택 및 해제
+		$("input#checkAll").click(function() {
+			if($(this).prop("checked")) {
+				$("input[name='chkBox']").prop("checked",true);
+			}
+			else {
+				$("input[name='chkBox']").prop("checked",false);
+			}
+			
+		});
+		
+		
+	}); // end of $(document).ready(function(){})----------------------------------
+
+	
 // function declaration 
 
 	// 검색 버튼 클릭시 동작하는 함수
@@ -38,8 +67,62 @@
 <%-- 	<a href="<%= ctxPath%>/mail/mailSendDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${mailvo.subject}</a> --%>
 	}
 	
-	
-	
+
+	// 삭제버튼 클릭 시 휴지통으로 이동하기 (ajax)
+	function goMailDelRecyclebin() {
+		
+		// 체크된 갯수 세기
+		var chkCnt = $("input[name='chkBox']:checked").length;
+		
+		// 배열에 체크된 행의 pk_mail_num 넣기
+		var arrChk = new Array();
+		
+		$("input[name='chkBox']:checked").each(function(){
+			
+			var pk_mail_num = $(this).attr('id');
+			arrChk.push(pk_mail_num);
+		//	console.log("arrChk 확인용 : " + arrChk);
+			
+		});
+		
+		if(chkCnt == 0) {
+			alert("선택된 메일이 없습니다.");
+		}
+		else {
+			
+			$.ajax({				
+		 	    url:"<%= ctxPath%>/mail/MailMoveToRecyclebin.bts", 
+				type:"GET",
+				data: {"pk_mail_num":JSON.stringify(arrChk),
+							   "cnt":chkCnt,
+							   "fk_senduser_num":${fk_senduser_num} },
+				dataType:"JSON",
+				success:function(json){
+					
+					var result = json.result;
+					
+					if(result != 1) {
+						alert("메일함에서 삭제에 실패했습니다.");
+						window.location.reload();
+					}
+					else {
+						alert("메일을 휴지통으로 이동했습니다.");
+						window.location.reload();
+					}
+					
+				},
+				
+				error: function(request, status, error) {
+					alert("code:"+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+					
+				}
+				
+			});
+			
+		}
+		
+	}
+		
 </script>
 
 <%-- 보낸 메일함 목록 보여주기 --%>	
@@ -110,7 +193,7 @@
 						<c:forEach items="${requestScope.SendMailList}" var="SendMailList" varStatus="status">
 							<tr>
 								<td style="width: 40px;">
-									<input type="checkbox" id="checkAll" class="text-center"/>
+									<input type="checkbox" id="${SendMailList.pk_mail_num}" name="chkBox" class="text-center"/>
 								</td>
 								<td style="width: 40px;">
 									<span class="fa fa-star-o" class="text-center"></span>

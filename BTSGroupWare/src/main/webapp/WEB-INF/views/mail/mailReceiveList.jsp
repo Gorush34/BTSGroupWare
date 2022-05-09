@@ -48,9 +48,8 @@
 	}); // end of $(document).ready(function(){})----------------------------------
 	
 
+// function declaration 
 
-	
-	// function declaration 
 	// 검색 버튼 클릭시 동작하는 함수
 	function gomailSearch() {
 		const frm = document.goReceiveListSelectFrm;
@@ -59,6 +58,7 @@
 		frm.submit();	
 	}// end of function goMailSearch(){}-------------------------
 
+	
 	// 글제목 클릭 시 글내용 보여주기 (고유한 글번호인 pk_mail_num 를 넘겨준다.)
 	function goRecMailView(pk_mail_num) {
 		const searchType = $("select#searchType").val();
@@ -68,6 +68,7 @@
 <%-- 	<a href="<%= ctxPath%>/mail/mailReceiveDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${mailvo.subject}</a> --%>
 	}
 	
+
 	// 삭제버튼 클릭 시 휴지통으로 이동하기 (ajax)
 	function goMailDelRecyclebin() {
 		
@@ -91,7 +92,7 @@
 		else {
 			
 			$.ajax({				
-		 	    url:"<%= ctxPath%>/mail/RecmailMoveToRecyclebin.bts", 
+		 	    url:"<%= ctxPath%>/mail/MailMoveToRecyclebin.bts", 
 				type:"GET",
 				data: {"pk_mail_num":JSON.stringify(arrChk),
 							   "cnt":chkCnt,
@@ -106,7 +107,7 @@
 						window.location.reload();
 					}
 					else {
-						alert("메일함에서 삭제에 성공했습니다.");
+						alert("메일을 휴지통으로 이동했습니다.");
 						window.location.reload();
 					}
 					
@@ -193,7 +194,7 @@
 						<c:forEach items="${requestScope.receiveMailList}" var="receiveMailList">
 							<tr>
 								<td style="width: 40px;">
-									<input type="checkbox" id="chkBox" name="chkBox" class="text-center"/>
+									<input type="checkbox" id="${receiveMailList.pk_mail_num}" name="chkBox" class="text-center"/>
 								</td>
 								<td style="width: 40px;">
 									<span class="fa fa-star-o" class="text-center"></span>

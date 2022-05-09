@@ -111,27 +111,41 @@ public class MailDAO implements InterMailDAO {
 		return mailvo;
 	}
 
-	// *** 아래 3개의 메소드는 1 set 이다. (첨부파일 유/무 --> 메일 삭제상태 1로 변경)
-	// 받은 메일함목록에서 선택 후 삭제버튼 클릭 시 휴지통테이블로 insert 하기 (첨부파일 있을 때)
+	// 받은메일함에서 선택한 글번호에 해당하는 메일을 삭제 시, 메일 테이블에서 해당 메일번호의 삭제 상태를 1로 변경해주기
 	@Override
-	public int moveToRecyclebin(Map<String, String> paraMap) {
-		int n = sqlsession.insert("minjeong.moveToRecyclebin", paraMap);
+	public int updateFromTblMailDelStatus(Map<String, String> paraMap) {
+		int n = sqlsession.update("minjeong.updateFromTblMailDelStatus", paraMap);
 		return n;
 	}
 
-	// 받은 메일함목록에서 선택 후 삭제버튼 클릭 시 휴지통테이블로 insert 하기 (첨부파일 없을 때)
+	// 총 게시물 건수 구해오기 - 휴지통 (service 단으로 보내기)
 	@Override
-	public int moveToRecyclebinNoFile(Map<String, String> paraMap) {
-		int n = sqlsession.insert("minjeong.moveToRecyclebinNoFile", paraMap);
+	public int getTotalCount_recyclebin(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("minjeong.getTotalCount_recyclebin", paraMap);
+		return n;
+	}
+	
+	 // 페이징처리 한 휴지통 목록 (검색 있든, 없든 모두 다 포함) 
+	@Override
+	public List<MailVO> RecyclebinMailListSearchWithPaging(Map<String, String> paraMap) {
+		List<MailVO> recyclebinMailList = sqlsession.selectList("minjeong.RecyclebinMailListSearchWithPaging", paraMap);
+		return recyclebinMailList;
+	}
+
+	// 휴지통 메일함 1개 상세내용을 읽어오기
+	@Override
+	public MailVO getRecyclebinMailView(Map<String, String> paraMap) {
+		MailVO mailvo = sqlsession.selectOne("minjeong.getRecyclebinMailView", paraMap);
+		return mailvo;
+	}
+
+	// 휴지통에서 선택한 글들을 mail 테이블에서 삭제하기
+	@Override
+	public int deleteFromTblMail(Map<String, String> paraMap) {
+		int n = sqlsession.delete("minjeong.deleteFromTblMail", paraMap);
 		return n;
 	}
 
-	// 휴지통 테이블로 insert 후 메일 테이블에서 해당 메일의 삭제 상태를 1로 변경해주기
-	@Override
-	public int updateFromTblMailRecDelStatus(Map<String, String> paraMap) {
-		int n = sqlsession.update("minjeong.updateFromTblMailRecDelStatus", paraMap);
-		return n;
-	}
 
 
 }

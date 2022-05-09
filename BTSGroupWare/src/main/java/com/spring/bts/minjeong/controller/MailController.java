@@ -208,7 +208,7 @@ public class MailController {
 			n = service.add_withFile(mailvo);
 		}
 		
-		// 성공 시 보낸 쪽지함으로 이동 or 메일 발송 성공 페이지로 이동
+		// 성공 시 보낸 메일함으로 이동 or 메일 발송 성공 페이지로 이동
 		// insert 가 성공적으로 됐을 때 / 실패했을 때
 		if(n==1) {
 			mav.setViewName("redirect:/mail/mailSendList.bts");
@@ -228,14 +228,13 @@ public class MailController {
 	// URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
 	// http://localhost:9090/bts/tiles1/mailList.bts
 	public ModelAndView requiredLogin_mailList(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
-
 	
 		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
 		HttpSession session = request.getSession();
 		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
-
 		
-	//	System.out.println("받은쪽지함 페이지에서 로그인한 사용자 id (사원번호) 받아오기 " + loginuser.getPk_emp_no());
+		
+	//	System.out.println("받은메일함 페이지에서 로그인한 사용자 id (사원번호) 받아오기 " + loginuser.getPk_emp_no());
 		
 		String fk_receiveuser_num = String.valueOf(loginuser.getPk_emp_no());
 		String empname = String.valueOf(loginuser.getEmp_name());
@@ -383,7 +382,6 @@ public class MailController {
 				
 		mav.addObject("receiveMailList", receiveMailList);		
 		mav.addObject("fk_receiveuser_num", fk_receiveuser_num);
-		mav.addObject("empname", empname);
 		
 		mav.setViewName("mailReceiveList.mail");
 		
@@ -434,7 +432,6 @@ public class MailController {
 			mailvo = service.getRecMailView(paraMap);
 			mav.addObject("mailvo", mailvo);
 			
-			// 첨부파일 다운로드 받기				
 			// 이전글 및 다음글 보여주기
 			
 			
@@ -606,7 +603,6 @@ public class MailController {
 				
 		mav.addObject("fk_senduser_num", fk_senduser_num);
 		mav.addObject("SendMailList", SendMailList);				
-		mav.addObject("empname", empname);
 		mav.setViewName("mailSendList.mail");
 		return mav;
 	}	
@@ -653,7 +649,6 @@ public class MailController {
 			mailvo = service.getSendMailView(paraMap);
 			mav.addObject("mailvo", mailvo);
 			
-			// 첨부파일 다운로드 받기				
 			// 이전글 및 다음글 보여주기
 			
 			
@@ -671,7 +666,7 @@ public class MailController {
 	@RequestMapping(value = "/mail/mailImportantList.bts")	
 	public ModelAndView mailImportant(HttpServletRequest request, ModelAndView mav) {
 		
-		mav.setViewName("mailImportant.mail");
+		mav.setViewName("mailImportantList.mail");
 		return mav;
 	}	
 	
@@ -726,7 +721,7 @@ public class MailController {
 	@RequestMapping(value = "/mail/mailTemporaryList.bts")	
 	public ModelAndView mailTemporary(HttpServletRequest request, ModelAndView mav) {
 		
-		mav.setViewName("mailTemporary.mail");
+		mav.setViewName("mailTemporaryList.mail");
 		return mav;
 	}	
 
@@ -745,7 +740,7 @@ public class MailController {
 	@RequestMapping(value = "/mail/mailReservationList.bts")	
 	public ModelAndView mailReservation(HttpServletRequest request, ModelAndView mav) {
 		
-		mav.setViewName("mailReservation.mail");
+		mav.setViewName("mailReservationList.mail");
 		return mav;
 	}	
 	
@@ -758,26 +753,30 @@ public class MailController {
 	}		
 			
 
-	// 받은메일함에서 메일 선택 시 휴지통으로 이동하기 (aJax, @ResponseBody)
-	// 받은메일함에서 삭제할 메일 선택 후 삭제버튼 클릭 시 휴지통목록으로 해당 쪽지 이동
+	
+	// ======== 휴지통 ======== //
+	// 휴지통에서 삭제 클릭시 아예 메일 테이블에서 해당 글 삭제하기
+	
+	// 받은메일함 및 보낸메일함 목록에서 메일 선택 시 휴지통으로 이동하기 (aJax, @ResponseBody)
+	// 받은메일함에서 삭제할 메일 선택 후 삭제버튼 클릭 시 휴지통목록으로 해당 메일 이동
 	@ResponseBody
-	@RequestMapping(value = "/mail/RecmailMoveToRecyclebin.bts", produces = "text/plain; charset=UTF-8")	
-	public String RecmailMoveToRecyclebin(HttpServletRequest request, MailVO mailvo) {
+	@RequestMapping(value = "/mail/MailMoveToRecyclebin.bts", produces = "text/plain; charset=UTF-8")	
+	public String MailMoveToRecyclebin(HttpServletRequest request, MailVO mailvo) {
 	
 		// 삭제할 메일번호(문자열) , aJax로 보낸 데이터를 잘 받아오나 확인하자
 		String pk_mail_num = request.getParameter("pk_mail_num");
-		System.out.println("확인용 pk_mail_num : "+ pk_mail_num);
+	//	System.out.println("확인용 pk_mail_num : "+ pk_mail_num);
 		
 		// 삭제할 메일 개수
 		String cnt = request.getParameter("cnt");
-		System.out.println("확인용 cnt : "+ cnt);
+	//	System.out.println("확인용 cnt : "+ cnt);
 		
-		// 삭제 버튼을 누른 사원 id
+		// 삭제 버튼을 누른 사원 번호
 		String fk_receiveuser_num = request.getParameter("fk_receiveuser_num");
-		System.out.println("확인용 fk_receiveuser_num : "+ fk_receiveuser_num);
+	//	System.out.println("확인용 fk_receiveuser_num : "+ fk_receiveuser_num);
 
 		/*
-			확인용 pk_mail_num : ["chkBox","chkBox"]
+			확인용 pk_mail_num : ["33","32"]
 			확인용 cnt : 2
 			확인용 fk_receiveuser_num : 80000010
 		*/
@@ -791,55 +790,23 @@ public class MailController {
 		String[] arr_pk_mail_num = pk_mail_num.split(",");
 		
 		int n = 0;
-		int m = 0;
 		int result = 0;
-		
-		for (int i=0; i<arr_pk_mail_num.length; i++) {
+
+		// mail 테이블에서 del_status 를 1로 만들기 (1은 휴지통에서 보여줄 데이터들)
+		// del_status = 0 인 것들은 받은메일함 or 보낸메일함에서 보여주도록 한다.
+		// del_status = 1 인 것들은 휴지통에서 보여주도록 한다.		
+		for(int i=0; i<arr_pk_mail_num.length; i++) {
 			Map<String, String> paraMap = new HashMap<>();
 			
 			paraMap.put("pk_mail_num",arr_pk_mail_num[i]);
-			/*
-			 * // 메일 클릭 시 1개의 상세내용을 불러오도록 하자. (VO 에 담는다.) mailvo =
-			 * service.getRecMailView(paraMap);
-			 * 
-			 * paraMap.put("pk_mail_num", mailvo.getPk_mail_num());
-			 * paraMap.put("fk_senduser_num", mailvo.getFk_senduser_num());
-			 * paraMap.put("fk_receiveuser_num", mailvo.getFk_receiveuser_num());
-			 * paraMap.put("email", mailvo.getEmail()); paraMap.put("empname",
-			 * mailvo.getEmpname()); paraMap.put("subject", mailvo.getSubject());
-			 * paraMap.put("content", mailvo.getContent()); paraMap.put("filename",
-			 * mailvo.getFilename()); paraMap.put("orgfilename", mailvo.getOrgfilename());
-			 * paraMap.put("filesize", mailvo.getFilesize()); // paraMap.put("importance",
-			 * mailvo.getImportance()); // paraMap.put("reservation_status",
-			 * mailvo.getReservation_status()); // paraMap.put("read_status",
-			 * mailvo.getRead_status()); paraMap.put("reg_date", mailvo.getReg_date()); //
-			 * paraMap.put("reservation_date", mailvo.getReservation_date()); //
-			 * paraMap.put("senduser_del_status", mailvo.getSenduser_del_status()); //
-			 * paraMap.put("rcvuser_del_status", mailvo.getRcvuser_del_status());
-			 * 
-			 * // 삭제버튼 누른 사원의 id 를 paraMap 에 넣는다.
-			 * paraMap.put("fk_receiveuser_num",fk_receiveuser_num);
-			 */
-
-			// 휴지통 테이블에 insert 하기 (첨부파일 유무에 따라 두가지 경우의수로 나누기)
-			if(mailvo.getFilename() != null) {
-				// 휴지통 테이블에 insert 한다. (첨부파일 있을 때)
-				n = service.moveToRecyclebin(paraMap);
-			}
-			else {
-			// 휴지통 테이블에 insert 한다. (첨부파일 없을 때)
-				n = service.moveToRecyclebinNoFile(paraMap);
-			}
-			/*
-			 * // 휴지통 테이블에 insert 성공 시 메일 테이블에서 해당 pk_mail_num 삭제하기 // 삭제가 아니라 받은 사원 삭제 여부를
-			 * 1로 변경하기 if(n==1) { m = service.updateFromTblMailRecDelStatus(paraMap); }
-			 */
+			
+			n = service.updateFromTblMailDelStatus(paraMap);
 		}
 		
 		JSONObject jsonObj = new JSONObject();
 		
-		// 휴지통 테이블에 insert (n==1) && 메일 테이블에서 해당 메일번호 삭제여부 1로 변경
-		if(n==1 && m==1) {
+		// 메일 테이블에서 해당 메일번호 삭제여부 1로 변경
+		if(n==1) {
 			result = 1;
 			jsonObj.put("result",result);
 		}
@@ -849,7 +816,7 @@ public class MailController {
 	
 	
 	// 보낸메일함에서 메일 선택 시 휴지통으로 이동하기 (aJax, @ResponseBody)
-	// 보낸메일함에서 삭제할 메일 선택 후 삭제버튼 클릭 시 휴지통목록으로 해당 쪽지 이동
+	// 보낸메일함에서 삭제할 메일 선택 후 삭제버튼 클릭 시 휴지통목록으로 해당 메일 이동
 	@ResponseBody
 	@RequestMapping(value = "/mail/SendmailMoveToRecyclebin.bts", produces = "text/plain; charset=UTF-8")	
 	public String SendmailMoveToRecyclebin(HttpServletRequest request) {
@@ -861,30 +828,274 @@ public class MailController {
 	
 	
 	
-	// 휴지통 목록 보여주기
+	// 휴지통 목록 보여주기 (del_status 가 1인 글들만 보여주기, 받은메일 및 보낸메일 모두 상관 X)
 	@RequestMapping(value = "/mail/mailRecyclebinList.bts")	
-	public ModelAndView mailRecyclebin(HttpServletRequest request, ModelAndView mav) {
+	public ModelAndView mailRecyclebinList(HttpServletRequest request, ModelAndView mav) {
 		
-		mav.setViewName("mailRecyclebin.mail");
+		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
+
+		
+	//	System.out.println("받은메일함 페이지에서 로그인한 사용자 id (사원번호) 받아오기 " + loginuser.getPk_emp_no());
+		
+		String fk_receiveuser_num = String.valueOf(loginuser.getPk_emp_no());
+		String empname = String.valueOf(loginuser.getEmp_name());
+				
+		List<MailVO> RecyclebinMailList = null;
+		
+		// 검색 목록
+		String searchType = request.getParameter("searchType");		// 사용자가 선택한 검색 타입
+		String searchWord = request.getParameter("searchWord");		// 사용자가 입력한 검색어
+		String str_currentShowPageNo = request.getParameter("currentShowPageNo");	// 현재 페이지 번호
+		
+		// searchType 에는 제목 및 사원명이 있는데, 이 외의 것들이 들어오게 되면 기본값으로 보여준다
+		if(searchType == null || (!"subject".equals(searchType)) && (!"sendempname".equals(searchType)) ) {
+			searchType = "";
+		}
+		
+		// 검색 입력창에 아무것도 입력하지 않았을 때 or 공백일 때 기본값을 보여주도록 한다.
+		if(searchWord == null || "".equals(searchWord) && searchWord.trim().isEmpty()) {
+			searchWord = "";
+		}
+		
+		// DB 로 보내기 위해 요청된 정보를 Map에 담는다.
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("searchType", searchType);
+		paraMap.put("searchWord", searchWord);
+
+		paraMap.put("fk_receiveuser_num",fk_receiveuser_num);	// 로그인한 사용자의 사원번호 map 에 담아서 보내주기
+		
+		// 먼저 총 받은 메일 수(totalCount)를 구해와야 한다.
+		// 총 게시물 건수는 검색조건이 있을 때와 없을 때로 나뉜다.
+		int totalCount = 0;
+		int sizePerPage = 10;
+		int currentShowPageNo = 0;
+		int totalPage = 0;
+		
+		int startRno = 0;
+		int endRno = 0;
+		
+		// 총 받은 메일 건수 구해오기 (service 단으로 보내기) 
+		totalCount = service.getTotalCount_recyclebin(paraMap); // 검색기능 포함시 paraMap 에 담아서 파라미터에 넣을 것
+		 		
+		totalPage = (int) Math.ceil((double)totalCount/sizePerPage);	// 총 페이지 수 (전체게시물 / 페이지당 보여줄 갯수)
+
+		if(str_currentShowPageNo == null) {
+			// 페이지바를 거치지 않은 맨 처음 화면
+			currentShowPageNo = 1;
+		}
+		else {	
+			try {	// 사용자가 페이지 넘버에 정수만 입력할 수 있도록 설정		
+				currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+				if(currentShowPageNo < 1 || currentShowPageNo > totalPage) {
+					// 1 미만의 페이지 또는 총 페이지 수를 넘어서는 페이지수 입력 시 기본페이지로
+					currentShowPageNo = 1;
+				}				
+			} catch (NumberFormatException e) {
+				currentShowPageNo = 1;
+			}
+		}
+		
+		startRno = ( (currentShowPageNo - 1) * sizePerPage ) + 1;
+		endRno = startRno + sizePerPage - 1;
+		
+		paraMap.put("startRno", String.valueOf(startRno));
+		paraMap.put("endRno", String.valueOf(endRno));
+		
+		 // 페이징처리 한 휴지통 목록 (검색 있든, 없든 모두 다 포함) 
+		RecyclebinMailList = service.RecyclebinMailListSearchWithPaging(paraMap);
+		
+		// 검색대상 컬럼(searchType) 및 검색어(searchWord) 유지시키기 위함
+		if(!"".equals(searchType) && !"".equals(searchWord)) {
+			mav.addObject("paraMap", paraMap);
+		}
+		
+		
+		// === 페이지바 만들기 시작
+		int blockSize = 3;
+		// blockSize 는 1개 블럭(토막) 당 보여지는 페이지번호의 개수이다.
+		/*
+	        		1  2  3  4  5  6  7  8  9 10 [다음][마지막]  -- 1개블럭
+			[맨처음][이전]  11 12 13 14 15 16 17 18 19 20 [다음][마지막]  -- 1개블럭
+			[맨처음][이전]  21 22 23
+		*/		
+		
+		int loop = 1;
+		/*
+    		loop는 1부터 증가하여 1개 블럭을 이루는 페이지번호의 개수[ 지금은 10개(== blockSize) ] 까지만 증가하는 용도이다.
+		*/		
+		
+		int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+		
+		String pageBar = "<ul style='list-style:none;'>";
+		String url = "mailRecyclebinList.bts";	// 상대경로 mailRecyclebinList.bts	(앞에 /mail 붙이지 말고 맨 끝에 부분만 붙이도록 한다.)
+		
+		
+		// [맨처음][이전] 만들기
+		if(pageNo != 1) {
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1'>[맨처음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+		}
+		
+		while ( !(loop > blockSize || pageNo > totalPage) ) {
+			
+			if(pageNo == currentShowPageNo) {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; color:black; padding: 2px 4px;'>"+pageNo+"</li>";				
+			}
+			else {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";				
+			}
+			
+			loop++;
+			pageNo++;
+			
+		}// end of while------------------------------------------
+		
+		
+		// [다음][마지막] 만들기
+		if(pageNo <= totalPage) {
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>";	
+		}
+		
+		pageBar += "</ul>";
+		
+		mav.addObject("pageBar", pageBar);
+
+
+		// === 페이징 처리되어진 후 특정 글제목을 클릭하여 상세내용을 본 이후
+		//     사용자가 목록보기 버튼을 클릭했을때 돌아갈 페이지를 알려주기 위해
+		//     현재 페이지 주소를 뷰단으로 넘겨준다.
+	//	String goBackURL = MyUtil.getCurrnetURL(request);
+	//	System.out.println("*** 확인용 goBackURL : "+goBackURL);
+		/*
+			*** 확인용 goBackURL : /list.action
+			*** 확인용 goBackURL : /list.action?searchType= searchWord=%20 currentShowPageNo=2
+			*** 확인용 goBackURL : /list.action?searchType=subject searchWord=j
+			*** 확인용 goBackURL : /list.action?searchType=subject searchWord=j%20 currentShowPageNo=2
+		*/
+	//	mav.addObject("goBackURL", goBackURL.replaceAll("&", " "));		// view 단에 넘겨주자. & 을 " " 로 바꿔준 결과값들.
+		// === 페이징 처리를 한 검색어가 있는 전체 글목록 보여주기 끝 === //	
+		///////////////////////////////////////////////////////////////////////////////////////////
+
+		
+		// 	받은 메일함 글목록 보여주기 
+		// 	receiveMailList = service.getReceiveMailList();
+				
+		mav.addObject("RecyclebinMailList", RecyclebinMailList);		
+		mav.addObject("fk_receiveuser_num", fk_receiveuser_num);		
+		
+		mav.setViewName("mailRecyclebinList.mail");
 		return mav;
 	}	
 
-	// 휴지통 내용 읽기
+	// 휴지통 내용 읽기 (del_status 가 1인 글들만 보여주기, 받은메일 및 보낸메일 모두 상관 X)
 	@RequestMapping(value = "/mail/mailRecyclebinDetail.bts")	
 	public ModelAndView mailRecyclebinDetail(HttpServletRequest request, ModelAndView mav) {
+
+		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+		
+		// view 단에서 요청한 검색타입 및 검색어, 글번호 받아오기
+		String pk_mail_num = request.getParameter("pk_mail_num");	// 글번호
+		String searchType = request.getParameter("searchType");		// 검색타입
+		String searchWord = request.getParameter("searchWord");		// 검색어
+		
+		// 사용자가 검색타입 및 검색어를 입력하지 않았을 경우
+		if(searchType == null) {
+			searchType = "";
+		}
+		
+		if(searchWord == null) {
+			searchWord = "";
+		}
+		
+		// 사용자가 메일번호(pk_mail_num=?) 뒤에 정수외의 것을 입력하지 않도록 exception 처리를 한다.
+		try {
+			Integer.parseInt(pk_mail_num);			
+
+		
+			// 글 내용 한개 뿐만 아니라 검색도 해야하므로 Map 에 담는다.
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("pk_mail_num", pk_mail_num);
+			
+			// mapper 로 사용자가 입력한 검색타입과 검색어를 map 에 담아서 보낸다.
+			paraMap.put("searchType", searchType);
+			paraMap.put("searchWord", searchWord);
+			
+			// map 에 담은 검색타입과 검색어를 view 단으로 보낸다.
+			mav.addObject("paraMap", paraMap);
+			
+			// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
+			MailVO mailvo = null;
+			mailvo = service.getRecyclebinMailView(paraMap);
+			mav.addObject("mailvo", mailvo);
+			
+			// 이전글 및 다음글 보여주기
+			
+			
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+		
 		
 		mav.setViewName("mailRecyclebinDetail.mail");
 		return mav;
 	}		
 	
-	// 휴지통 목록 삭제하기
-	@RequestMapping(value = "/mail/mailRecyclebinClear.bts")	
-	public ModelAndView mailRecyclebinClear(HttpServletRequest request, ModelAndView mav) {
+	// 휴지통 목록 삭제하기 ( 휴지통에서 삭제 클릭시 아예 메일 테이블에서 해당 글 삭제하기 )		
+	@ResponseBody
+	@RequestMapping(value = "/mail/mailRecyclebinClear.bts", produces = "text/plain; charset=UTF-8")	
+	public String mailRecyclebinClear(HttpServletRequest request, MailVO mailvo) {
+			
+		// 삭제할 메일번호(문자열) , aJax로 보낸 데이터를 잘 받아오나 확인하자
+		String pk_mail_num = request.getParameter("pk_mail_num");
+	//	System.out.println("휴지통 확인용 pk_mail_num : "+ pk_mail_num);
 		
-		mav.setViewName("mailRecyclebinClear.mail");
-		return mav;
-	}		
-	
+		// 삭제할 메일 개수
+		String cnt = request.getParameter("cnt");
+	//	System.out.println("휴지통 확인용 cnt : "+ cnt);
+		
+		// 삭제 버튼을 누른 사원 번호
+		String fk_receiveuser_num = request.getParameter("fk_receiveuser_num");
+	//	System.out.println("휴지통 확인용 fk_receiveuser_num : "+ fk_receiveuser_num);
+
+		/*
+			휴지통 확인용 pk_mail_num : ["40","39","38"]
+			휴지통 확인용 cnt : 3
+			휴지통 확인용 fk_receiveuser_num : 80000010
+		*/
+		
+		// 배열의 [,] 를 제거한다.
+		pk_mail_num = pk_mail_num.replaceAll("\\[", "");
+		pk_mail_num = pk_mail_num.replaceAll("\\]", "");
+		pk_mail_num = pk_mail_num.replaceAll("\"", "");
+		pk_mail_num = pk_mail_num.trim();	// 공백 제거
+		
+		String[] arr_pk_mail_num = pk_mail_num.split(",");
+		
+		int n = 0;
+		int result = 0;
+
+		// mail 테이블에서 선택한 글번호에 해당하는 글을 delete 하기	
+		for(int i=0; i<arr_pk_mail_num.length; i++) {
+			Map<String, String> paraMap = new HashMap<>();
+			
+			paraMap.put("pk_mail_num",arr_pk_mail_num[i]);
+			
+			n = service.deleteFromTblMail(paraMap);
+		}
+		
+		JSONObject jsonObj = new JSONObject();
+		
+		// 휴지통 글목록에서 선택한 글들이 삭제됐을 때 result 값이 1을 반환하면 성공!
+		if(n==1) {
+			result = 1;
+			jsonObj.put("result",result);
+		}
+		
+		return jsonObj.toString();
+	}				
 
 	
 	

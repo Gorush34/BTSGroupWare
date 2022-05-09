@@ -26,7 +26,7 @@
 
 	<div>
 	   <div id="sidebar" style="font-size: 11pt;">
-		 <h4>받은 메일함</h4>
+		 <h4>사내 메일함</h4>
 		 	<ul style="list-style-type: none; padding: 10px;">
 				<li style="margin-bottom: 15px;">
 					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailWrite.bts">메일쓰기</a></div>
@@ -47,7 +47,7 @@
 					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailWrite.bts">예약메일함</a></div>
 				</li>												
 				<li style="margin-bottom: 15px;">
-					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailWrite.bts">휴지통</a></div>
+					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailRecyclebinList.bts">휴지통</a></div>
 				</li>															
 			</ul>
 			
