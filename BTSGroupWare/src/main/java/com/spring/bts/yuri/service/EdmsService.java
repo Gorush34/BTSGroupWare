@@ -40,6 +40,13 @@ public class EdmsService implements InterEdmsService {
 		return n;
 	}
 	
+	// === 파일첨부가 없는 전자결재 문서작성 === //
+	@Override
+	public int edmsAdd_withFile(ApprVO apprvo) {
+		int n = dao.edmsAdd_withFile(apprvo);
+		return n;
+	}
+	
 	// === 전자결재 양식선택(업무기안서, 휴가신청서 등..)을 위한 것 === //
 /*
 	@Override

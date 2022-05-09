@@ -1,6 +1,5 @@
 package com.spring.bts.yuri.service;
 
-import java.util.List;
 import java.util.Map;
 
 import com.spring.bts.hwanmo.model.EmployeeVO;
@@ -16,6 +15,9 @@ public interface InterEdmsService {
 	
 	// 파일첨부가 없는 전자결재 문서작성
 	int edmsAdd(ApprVO apprvo);
+
+	// 파일첨부가 없는 전자결재 문서작성
+	int edmsAdd_withFile(ApprVO apprvo);
 	
 	// 파일첨부가 있는 전자결재 문서작성
 //	int edmsAdd_withFile(ApprVO apprvo);

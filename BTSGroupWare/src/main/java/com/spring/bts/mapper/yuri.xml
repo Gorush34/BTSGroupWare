@@ -31,11 +31,39 @@
 		            status, mid_accept, fin_accept,
 		            mid_opinion, fin_opinion, 
 		            writeday, viewcnt)
-		VALUES(     seq_apprno.nextval, #{fk_appr_sortno}, #{fk_emp_no}, #{fk_mid_empno}, #{fk_fin_empno}, #{emergency}, 
+		VALUES(     seq_apprno.nextval, #{fk_appr_sortno}, #{fk_emp_no}, #{fk_mid_empno}, #{fk_fin_empno}, #{emergency},
 		            #{title}, #{contents},
 		            default, default, default,
 		            null, null,
 		            default, default)
 	</insert>
+
+
+	<!-- 파일첨부가 있는 전자결재 문서작성 --> 
+	<insert id="edmsAdd_withFile" parameterType="com.spring.bts.yuri.model.ApprVO">
+		INSERT INTO
+		tbl_appr(   pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno, fk_fin_empno, emergency,
+		            title, contents,
+		            filename, orgfilename, fileSize,
+		            status, mid_accept, fin_accept,
+		            mid_opinion, fin_opinion, 
+		            writeday, viewcnt)
+		VALUES(     seq_apprno.nextval, #{fk_appr_sortno}, #{fk_emp_no}, #{fk_mid_empno}, #{fk_fin_empno}, #{emergency}, 
+		            #{title}, #{contents},
+		            #{filename}, #{orgfilename}, #{fileSize},
+		            default, default, default,
+		            null, null,
+		            default, default)
+	</insert>
+
+
+
+
+
+
+
+
+
+
 
 </mapper>

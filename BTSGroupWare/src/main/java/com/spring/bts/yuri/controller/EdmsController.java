@@ -256,8 +256,8 @@ public class EdmsController {
 			}
 			
 			if(n==1) {
-				mav.setViewName("redirect:/edmsHome.bts");
-				//  /edmsHome.bts 페이지로 redirect(페이지이동)해라는 말이다.
+				mav.setViewName("redirect:/edms/edmsHome.bts");
+				//  /bts/edmsHome.bts 페이지로 redirect(페이지이동)해라는 말이다.
 			}
 			else {
 				mav.setViewName("bts/error/add_error.tiles1");
@@ -266,6 +266,13 @@ public class EdmsController {
 			
 			return mav;
 	}
+	
+	
+	// === 글목록 보기 페이지 요청 === //
+	
+	
+	
+	
 	
 	
 	// === 전자결재 문서 상세보기 페이지 === //
