@@ -2,16 +2,14 @@ package com.spring.bts.minjeong.model;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class MailVO {
-
-	// 메일 VO
-	private String pk_mail_num;             // NOT NULL NUMBER(14)  메일번호    
+public class MailRecyclebinVO {
+	
+	// 메일 휴지통 VO
+	private String pk_mail_num;             // NOT NULL NUMBER(14) 메일번호    
 	private String fk_senduser_num;         // NUMBER(8)     		보낸사람 사원번호
 	private String fk_receiveuser_num;     	// NUMBER(8)     		받는사람 사원번호
-	private String recemail;				// VARCHAR2(100)		이메일
-	private String sendemail;				// VARCHAR2(100)		이메일
-	private String recempname;        		// VARCHAR2(10)  		받는사람 이름
-	private String sendempname;        		// VARCHAR2(10)  		받는사람 이름
+	private String empname;        			// VARCHAR2(10)  		받는사람 이름
+	private String email;					// VARCHAR2(100)		이메일
 	private String subject;                 // VARCHAR2(100) 		메일 제목
 	private String content;                 // VARCHAR2(256) 		메일 내용
 	private String filename;                // VARCHAR2(100) 		파일 저장되는 이름(disk)
@@ -22,8 +20,9 @@ public class MailVO {
 	private String read_status;             // NUMBER(2)     		받는사람 읽음 여부 (1:읽음O, 0 :안읽음X)
 	private String reg_date;                // DATE          		메일쓰기 일자
 	private String reservation_date;        // DATE          		발송예약 날짜
-	private String del_status;
-
+	private String senduser_del_status;     // NUMBER(2)     		보낸사람 삭제 여부 (1:삭제O, 0:삭제X)
+	private String rcvuser_del_status;      // NUMBER(2)			받는사람 삭제 여부 (1:삭제O, 0:삭제x)
+	
 	// 메일 상세내용 보기
 	private String prev_seq;		// 이전글번호
 	private String prev_subject;	// 이전글제목
@@ -35,88 +34,34 @@ public class MailVO {
 	// form 태그에서 type="file" 인 파일을 받아서 저장되는 필드이다. 
     // 진짜파일 ==> WAS(톰캣) 디스크에 저장됨.
 	
-	public MailVO() {}
+	public MailRecyclebinVO() {}
 	
 	
 	// 생성자
-	public MailVO(String pk_mail_num, String fk_senduser_num, String fk_receiveuser_num, String recemail,
-			String sendemail, String recempname, String sendempname, String subject, String content, String filename,
-			String orgfilename, String filesize, String importance, String reservation_status, String read_status,
-			String reg_date, String reservation_date, String del_status,
-			String prev_seq, String prev_subject, String next_seq, String next_subject, MultipartFile attach) {
+	public MailRecyclebinVO(String pk_mail_num, String fk_senduser_num, String fk_receiveuser_num, String empname,
+			String subject, String content, String importance, String reservation_status, String read_status,
+			String reg_date, String reservation_date, String senduser_del_status, String rcvuser_del_status) {
 		super();
 		this.pk_mail_num = pk_mail_num;
 		this.fk_senduser_num = fk_senduser_num;
 		this.fk_receiveuser_num = fk_receiveuser_num;
-		this.recemail = recemail;
-		this.sendemail = sendemail;
-		this.recempname = recempname;
-		this.sendempname = sendempname;
+		this.empname = empname;
 		this.subject = subject;
 		this.content = content;
-		this.filename = filename;
-		this.orgfilename = orgfilename;
-		this.filesize = filesize;
 		this.importance = importance;
 		this.reservation_status = reservation_status;
 		this.read_status = read_status;
 		this.reg_date = reg_date;
 		this.reservation_date = reservation_date;
-		this.setDel_status(del_status);
-		this.prev_seq = prev_seq;
-		this.prev_subject = prev_subject;
-		this.next_seq = next_seq;
-		this.next_subject = next_subject;
-		this.attach = attach;
+		this.senduser_del_status = senduser_del_status;
+		this.rcvuser_del_status = rcvuser_del_status;
 	}
+
 	
-	
-	// getter 및 setter	
-	public String getRecemail() {
-		return recemail;
-	}
-
-
-	public void setRecemail(String recemail) {
-		this.recemail = recemail;
-	}
-
-
-	public String getSendemail() {
-		return sendemail;
-	}
-
-
-	public void setSendemail(String sendemail) {
-		this.sendemail = sendemail;
-	}
-
-
-	public String getRecempname() {
-		return recempname;
-	}
-
-
-	public void setRecempname(String recempname) {
-		this.recempname = recempname;
-	}
-
-
-	public String getSendempname() {
-		return sendempname;
-	}
-
-
-	public void setSendempname(String sendempname) {
-		this.sendempname = sendempname;
-	}
-
-
+	// getter 및 setter
 	public String getPk_mail_num() {
 		return pk_mail_num;
 	}
-
-
 
 	public void setPk_mail_num(String pk_mail_num) {
 		this.pk_mail_num = pk_mail_num;
@@ -136,6 +81,14 @@ public class MailVO {
 
 	public void setFk_receiveuser_num(String fk_receiveuser_num) {
 		this.fk_receiveuser_num = fk_receiveuser_num;
+	}
+
+	public String getEmpname() {
+		return empname;
+	}
+
+	public void setEmpname(String empname) {
+		this.empname = empname;
 	}
 
 	public String getSubject() {
@@ -218,6 +171,21 @@ public class MailVO {
 		this.reservation_date = reservation_date;
 	}
 
+	public String getSenduser_del_status() {
+		return senduser_del_status;
+	}
+
+	public void setSenduser_del_status(String senduser_del_status) {
+		this.senduser_del_status = senduser_del_status;
+	}
+
+	public String getRcvuser_del_status() {
+		return rcvuser_del_status;
+	}
+
+	public void setRcvuser_del_status(String rcvuser_del_status) {
+		this.rcvuser_del_status = rcvuser_del_status;
+	}
 
 	public String getPrev_seq() {
 		return prev_seq;
@@ -257,19 +225,15 @@ public class MailVO {
 
 	public void setAttach(MultipartFile attach) {
 		this.attach = attach;
+	}	
+
+	public String getEmail() {
+		return email;
 	}
 
-
-	public String getDel_status() {
-		return del_status;
-	}
-
-
-	public void setDel_status(String del_status) {
-		this.del_status = del_status;
-	}
-
-		
-	
+	public void setEmail(String email) {
+		this.email = email;
+	}	
+			
 	
 }
