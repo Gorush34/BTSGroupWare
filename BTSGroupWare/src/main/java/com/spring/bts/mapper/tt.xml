@@ -99,10 +99,33 @@
 		where fk_emp_no = #{fk_emp_no} and regdate = #{regdate}
 	</select>
 	
-	<select id="getMyCommute" parameterType="int" resultType="com.spring.bts.hwanmo.model.CommuteVO">
+	<!-- 한 사원에 대한 출퇴근기록 건수 조회 -->
+	<select id="getTotalCommuteCount" parameterType="HashMap" resultType="int">
+	    select count(*)
+		from tbl_commute
+		where fk_emp_no = #{fk_emp_no}
+		<if test='year != "" and month =="" '>
+		and regdate like #{year} ||'%'
+		</if>
+		<if test='year != "" and month !="" '>
+		and regdate like #{year} || #{month} ||'%'
+		</if>
+		
+    </select> 
+	
+	<!-- 한 사원에 대한 출퇴근기록 목록 가져오기 -->
+	<select id="getMyCommute" parameterType="HashMap" resultType="com.spring.bts.hwanmo.model.CommuteVO">
 		select regdate, in_time, out_time, total_workTime, fk_emp_no
 		from tbl_commute
-		where fk_emp_no = #{pk_emp_no}
+		where fk_emp_no = #{fk_emp_no}
+		<if test='year != "" and month =="" '>
+		and regdate like #{year} ||'%'
+		</if>
+		<if test='year != "" and month !="" '>
+		and regdate like #{year} || #{month} ||'%'
+		</if>
 	</select>
+	
+	
 	
 </mapper>

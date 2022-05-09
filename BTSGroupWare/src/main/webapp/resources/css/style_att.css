@@ -53,7 +53,7 @@ select {
   vertical-align: middle;    
 }
 
-button#btn_vacCnt {
+button#btn_vacCnt, button#btn_myCommute {
 	margin-bottom:4px;
 }
 

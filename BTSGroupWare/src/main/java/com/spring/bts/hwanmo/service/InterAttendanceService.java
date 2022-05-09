@@ -25,7 +25,9 @@ public interface InterAttendanceService {
 	// 00시가 되면 출퇴근 초기화하기
 	int checkTomorrow(Map<String, String> paraMap);
 
-	// 한 사원에 대한 출퇴근기록 가져오기
-	List<CommuteVO> getMyCommute(int pk_emp_no);
+	// 총 출퇴근 건수 알아오기
+	int getTotalCommuteCount(Map<String, String> paraMap);
 
+	// 페이징처리가 있는 한 사원에 대한 출퇴근기록 가져오기
+	List<CommuteVO> getMyCommute(Map<String, String> paraMap);
 }

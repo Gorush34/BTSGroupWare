@@ -145,17 +145,15 @@ values
 ALTER TABLE tbl_employees RENAME COLUMN editid TO edit_id
 -- ALTER TABLE [테이블명] RENAME COLUMN [이전 컬럼명] TO [새로운 컬럼명]
 
-ALTER TABLE tbl_employees MODIFY gradelevel DEFAULT 0;
 
-
-commit;
-
-update tbl_rank_sort set ko_rankname = '대리'
-where pk_rank_no = 30
+delete from tbl_commute
+where 1=1;
 
 commit;
 
-select * 
-from tbl_rank_sort
-
-commit;
+select count(*)
+from tbl_commute
+where fk_emp_no = 80000001
+and regdate like '2022'
+|| '05'
+||'%'

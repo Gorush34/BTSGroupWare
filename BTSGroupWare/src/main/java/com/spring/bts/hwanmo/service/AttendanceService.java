@@ -68,12 +68,19 @@ public class AttendanceService implements InterAttendanceService {
 		return n;
 	}
 
-	// 한 사원에 대한 출퇴근기록 가져오기
+	// 총 출퇴근 건수 알아오기
 	@Override
-	public List<CommuteVO> getMyCommute(int pk_emp_no) {
-		List<CommuteVO> cmtList = attDAO.getMyCommute(pk_emp_no);
+	public int getTotalCommuteCount(Map<String, String> paraMap) {
+		int n = attDAO.getTotalCommuteCount(paraMap);
+		return n;
+	}
+
+	// 페이징처리가 있는 한 사원에 대한 출퇴근기록 가져오기
+	@Override
+	public List<CommuteVO> getMyCommute(Map<String, String> paraMap) {
+		List<CommuteVO> cmtList = attDAO.getMyCommute(paraMap);
 		return cmtList;
 	}
 
-
+	
 }

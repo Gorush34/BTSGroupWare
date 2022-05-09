@@ -7,10 +7,12 @@ public class CommuteVO {
 	private String out_time; 		/* 퇴근시간 */
 	private String total_worktime; 	/* 총업무시간 */
 	private int fk_emp_no; 			/* 사원번호 */
+	private String year;			/* 검색시 사용할 연도 */
+	private String month;			/* 검색시 사용할 월 */
 	
 	public CommuteVO() {}
 	public CommuteVO(int pk_worktime_no, String regdate, String in_time, String out_time, String total_worktime,
-			int fk_emp_no) {
+			int fk_emp_no, String year, String month) {
 		super();
 		this.pk_worktime_no = pk_worktime_no;
 		this.regdate = regdate;
@@ -18,8 +20,10 @@ public class CommuteVO {
 		this.out_time = out_time;
 		this.total_worktime = total_worktime;
 		this.fk_emp_no = fk_emp_no;
+		this.year = year;
+		this.month = month;
 	}
-	
+
 	public int getPk_worktime_no() {
 		return pk_worktime_no;
 	}
@@ -56,5 +60,19 @@ public class CommuteVO {
 	public void setFk_emp_no(int fk_emp_no) {
 		this.fk_emp_no = fk_emp_no;
 	}
+	public String getYear() {
+		return year;
+	}
+	public void setYear(String year) {
+		this.year = year;
+	}
+	public String getMonth() {
+		return month;
+	}
+	public void setMonth(String month) {
+		this.month = month;
+	}
+	
+	
 	
 }
