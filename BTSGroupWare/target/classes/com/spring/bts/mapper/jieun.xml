@@ -150,8 +150,19 @@
 		where pk_schno = #{pk_schno}
 	</delete>
 
-
-
+	<!-- 일정 수정하기 -->
+	<update id="editSchedule_end" parameterType="com.spring.bts.jieun.model.ScheduleVO">
+		update tbl_schedule set startdate = to_date(#{startdate}, 'yyyymmddhh24miss')
+                              , enddate = to_date(#{enddate}, 'yyyymmddhh24miss')
+                              , subject = #{subject}
+                              , fk_lgcatgono = #{fk_lgcatgono}
+                              , fk_calno = #{fk_calno}
+                              , color = #{color}
+                              , place = #{place}
+                              , joinuser = #{joinuser}
+                              , content = #{content}
+		where pk_schno = #{pk_schno}
+	</update>
 
 
 

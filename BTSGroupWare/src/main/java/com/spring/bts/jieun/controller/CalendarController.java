@@ -7,6 +7,7 @@ import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -315,7 +316,7 @@ public class CalendarController {
 		String enddate = request.getParameter("enddate");
 		String subject = request.getParameter("subject");
 		String fk_lgcatgono= request.getParameter("fk_lgcatgono");
-		String fk_calno = request.getParameter("fk_calNo");
+		String fk_calno = request.getParameter("fk_calno");
 		String joinuser = request.getParameter("joinuser");
 		String color = request.getParameter("color");
 		String place = request.getParameter("place");
@@ -389,7 +390,7 @@ public class CalendarController {
 	public ModelAndView detailSchedule(ModelAndView mav, HttpServletRequest request) {
 		
 		String pk_schno = request.getParameter("pk_schno");
-		System.out.println("확인:"+pk_schno);
+		//System.out.println("확인:"+pk_schno);
 		// 검색  취소 버튼 클릭시
 		// String gobackURL_calendar = request.getParameter("gobackURL_calendar");
 		
@@ -425,10 +426,70 @@ public class CalendarController {
 	}
 	
 	
+	// == 일정 수정 페이지로 이동 == //
+	@RequestMapping(value="/calendar/editSchedule.bts", method= {RequestMethod.POST})
+	public ModelAndView editSchedule(HttpServletRequest request, ModelAndView mav) {
+		
+		String pk_schno = request.getParameter("pk_schno");
+		
+		try {
+			Integer.parseInt(pk_schno);
+			
+			String gobackURL_ds = MyUtil.getCurrentURL(request);
+			
+			HttpSession session = request.getSession();
+			EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+			
+			Map<String,String> map = service.detailSchedule(pk_schno);
+			
+			if(loginuser.getPk_emp_no() != Integer.parseInt(map.get("FK_EMP_NO"))) {
+				String message = "다른 사용자가 작성한 일정은 수정이 불가합니다.";
+				String loc = "javascript:history.back()";
+				
+				mav.addObject("message", message);
+				mav.addObject("loc", loc);
+				mav.setViewName("msg");
+			}
+			else {
+				mav.addObject("map", map);
+				mav.addObject("gobackURL_ds", gobackURL_ds);
+				
+				mav.setViewName("editSchedule.calendar");
+			}
+			
+		} catch (NumberFormatException e) {
+			mav.setViewName("redirect:/calendar/calenderMain.bts");
+		}
+		return mav;
+	}
 	
 	
-	
-	
+	// == 일정 수정하기 == //
+	@ResponseBody
+	@RequestMapping(value="/calendar/editSchedule_end.bts", method= {RequestMethod.POST})
+	public ModelAndView editSchedule_end(ScheduleVO svo, HttpServletRequest request, ModelAndView mav) {
+		
+		try {
+			
+			int n = service.editSchedule_end(svo);
+			
+			if(n==1) {
+				mav.addObject("message", "일정을 수정하였습니다.");
+				mav.addObject("loc", request.getContextPath()+"/calendar/calenderMain.bts");
+			}
+			else {
+				mav.addObject("message", "일정 수정에 실패하였습니다.");
+				mav.addObject("loc", "javascript:history.back()");
+			}
+			
+			mav.setViewName("msg");
+		} catch (Throwable e) {	
+			e.printStackTrace();
+			mav.setViewName("redirect:/calendar/calenderMain.bts");
+		}
+		
+		return mav;
+	}
 	
 		
 		

@@ -53,6 +53,10 @@ public interface InterCalendarService {
 	int deleteSchedule(String pk_schno);
 
 	
+	// == 일정 수정하기 == //
+	int editSchedule_end(ScheduleVO svo);
+
+	
 	
 	
 	

@@ -57,6 +57,10 @@ public interface InterCalendarDAO {
 	// === 일정 삭제 하기 === //
 	int deleteSchedule(String pk_schno);
 	
+	// == 일정 수정하기 == //
+	int editSchedule_end(ScheduleVO svo);
+	
+	
 
 
 	

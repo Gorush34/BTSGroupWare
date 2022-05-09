@@ -89,7 +89,41 @@
 				
 		$("select.calNo").val("${requestScope.map.FK_CALNO}");
 
-
+		// 서브캘린더 select로 가져오기 //
+		$("select.calSelect").change(function(){
+			var fk_lgcatgono = $("select.calSelect").val();
+			var fk_emp_no = $("input[name=fk_emp_no]").val();
+			
+			if(fk_lgcatgono != "") { // 선택하세요 가 아니라면
+				$.ajax({
+						url: "<%= ctxPath%>/calendar/selectCalNo.bts",
+						data: {"fk_lgcatgono":fk_lgcatgono, 
+							   "fk_emp_no":fk_emp_no},
+						dataType: "json",
+						success:function(json){
+							var html ="";
+							if(json.length>0){
+								
+								$.each(json, function(index, item){
+									html+="<option value='"+item.pk_calno+"'>"+item.calname+"</option>"
+								});
+								$("select.calNo").html(html);
+								$("select.calNo").show();
+							}
+						},
+						error: function(request, status, error){
+				            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+						}
+				});
+			}
+			
+			else {
+				// 선택하세요 이라면
+				$("select.calNo").hide();
+			}
+			
+		});
+	
 		// **** 수정하기전 이미 저장되어있는 공유자 **** 
 		var stored_joinuser = "${requestScope.map.JOINUSER}";
 		if(stored_joinuser != "공유자가 없습니다."){
@@ -211,8 +245,8 @@
 			}
 	        
 	        // 캘린더 선택 유무 검사
-			var calType = $("select.calType").val().trim();
-			if(calType==""){
+			var calSelect = $("select.calSelect").val().trim();
+			if(calSelect==""){
 				alert("캘린더 종류를 선택하세요."); 
 				return;
 			}
@@ -253,7 +287,7 @@
 			
 			$("input[name=joinuser]").val(joinuser);
 			
-		    var frm = document.scheduleFrm;
+		    var frm = document.scheduleEditFrm;
 		  	frm.action="<%= ctxPath%>/calendar/editSchedule_end.bts";
 			frm.method="post";
 			frm.submit(); 
@@ -324,7 +358,7 @@
 					<td>
 						<select class="calSelect" name="fk_lgcatgono">
 						<c:choose>
-							 <%-- 일정등록시 사내캘린더 등록은 oginuser.gradelevel =='10' 인 사용자만 등록이 가능하도록 한다. --%> 
+							 <%-- 일정등록시 사내캘린더 등록은 oginuser.gradelevel =='1' 인 사용자만 등록이 가능하도록 한다. --%> 
 							<c:when test="${loginuser.gradelevel =='1'}"> 
 								<option value="">선택하세요</option>
 								<option value="1">내 캘린더</option>
@@ -337,7 +371,7 @@
 							</c:otherwise >
 						</c:choose>
 						</select> &nbsp;
-						<select class="calNo schedule" name="fk_calNo"></select>
+						<select class="calNo schedule" name="fk_calno"></select>
 					</td>
 				</tr>
 				<tr>
@@ -358,7 +392,7 @@
 				</tr>
 				<tr>
 					<th>내용</th>
-					<td><textarea rows="10" cols="100" style="height: 200px;" name="content" id="content"  class="form-control"></textarea></td>
+					<td><textarea rows="10" cols="100" style="height: 200px;" name="content" id="content"  class="form-control">${requestScope.map.CONTENT}</textarea></td>
 				</tr>
 				<tr>
 					<th>알람</th>

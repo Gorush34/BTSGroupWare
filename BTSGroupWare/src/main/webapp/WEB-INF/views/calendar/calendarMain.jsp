@@ -177,8 +177,8 @@
 		            	// 사내캘린더, 내캘린더, 공유받은캘린더 에서의 체크박스중 체크박스에 체크를 한 경우 라면
 		                
 		            	if (arg.event.extendedProps.cid === item.value) { // item.value 가 체크박스의 value 값이다.
-		                	// console.log("일정을 보여주는 cid : "  + arg.event.extendedProps.cid);
-		                	// console.log("일정을 보여주는 체크박스의 value값(item.value) : " + item.value);
+		                	 console.log("일정을 보여주는 cid : "  + arg.event.extendedProps.cid);
+		                	 console.log("일정을 보여주는 체크박스의 value값(item.value) : " + item.value);
 		                    
 		                	arg.el.style.display = "block"; // 풀캘린더에서 일정을 보여준다.
 		                }
@@ -188,8 +188,8 @@
 		            	// 사내캘린더, 내캘린더, 공유받은캘린더 에서의 체크박스중 체크박스에 체크를 해제한 경우 라면
 		                
 		            	if (arg.event.extendedProps.cid === item.value) {
-		            		// console.log("일정을 숨기는 cid : "  + arg.event.extendedProps.cid);
-		                	// console.log("일정을 숨기는 체크박스의 value값(item.value) : " + item.value);
+		            		 console.log("일정을 숨기는 cid : "  + arg.event.extendedProps.cid);
+		                	 console.log("일정을 숨기는 체크박스의 value값(item.value) : " + item.value);
 		                	
 		            		arg.el.style.display = "none"; // 풀캘린더에서 일정을  숨긴다.
 		                }
@@ -206,7 +206,7 @@
 		  
 		  arr_calendar_checkbox.forEach(function(item) {
 			  item.addEventListener("change", function () {
-		      // console.log(item);
+		       console.log(item);
 				 calendar.refetchEvents(); // 모든 소스의 이벤트를 다시 가져와 화면에 다시 표시합니다.
 		    });
 		  });

@@ -140,6 +140,13 @@ public class CalendarDAO implements InterCalendarDAO {
 		return n;
 	}
 	
+	// == 일정 수정하기 == //
+	@Override
+	public int editSchedule_end(ScheduleVO svo) {
+		int n = sqlsession.update("jieun.editSchedule_end", svo);
+		return n;
+	}
+	
 	
 	
 	
