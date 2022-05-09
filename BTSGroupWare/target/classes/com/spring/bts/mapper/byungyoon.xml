@@ -19,7 +19,7 @@
 
 	<!-- 주소록 메인페이지에 select 해오기 -->
 	<select id="addBook_main_select"  resultType="com.spring.bts.byungyoon.model.AddBookVO">
-		select A.addb_name , R.ko_rankname, A.phone AS phone, A.email AS email, A.companyname, A.com_tel
+		select A.pk_addbook_no , A.addb_name , R.ko_rankname, A.phone AS phone, A.email AS email, A.companyname, A.com_tel
 		from tbl_ADDBOOK A 
 		join tbl_rank_sort R
 		on R.PK_RANK_NO = A.fk_rank_no
@@ -42,6 +42,29 @@
 		join tbl_dep_sort D
 		on E.fk_department_id = D.pk_dep_no
 		order by R.pk_rank_no
+	</select>
+	
+	
+	<!-- 상세부서정보 페이지에서 사원상세정보 ajax로 select 해오기 -->
+	<select id="addBook_depInfo_select_ajax" parameterType="int" resultType="com.spring.bts.hwanmo.model.EmployeeVO">
+		select E.emp_name , (D.ko_depname) AS ko_depname , (R.ko_rankname) AS ko_rankname , E.uq_email , E.uq_phone , E.address , E.detailaddress , e.extraaddress
+		from tbl_employees E
+		join tbl_rank_sort R
+		on E.fk_rank_id = r.pk_rank_no
+		join tbl_dep_sort D
+		on E.fk_department_id = d.pk_dep_no
+		where pk_emp_no = #{pk_emp_no}
+	</select>
+	
+	<!-- 주소록 메인에서 select 해와서 연락처 update 하기 -->
+	<select id="addBook_main_telUpdate" parameterType="int" resultType="com.spring.bts.byungyoon.model.AddBookVO">
+		select A.ADDB_NAME , (D.ko_depname) AS ko_depname , (R.ko_rankname) AS ko_rankname , A.EMAIL , A.PHONE , A.COMPANYNAME , A.COM_TEL , A.COMPANY_ADDRESS , A.MEMO
+		from tbl_addbook A
+		join tbl_rank_sort R
+		on A.fk_rank_no = R.pk_rank_no
+		join tbl_dep_sort D
+		on A.fk_dept_no = D.pk_dep_no
+        WHERE pk_addbook_no = #{pk_addbook_no}
 	</select>
 
 	

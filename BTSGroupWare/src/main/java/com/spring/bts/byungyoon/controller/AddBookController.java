@@ -51,7 +51,7 @@ public class AddBookController {
    // 주소록 메인페이지
    @RequestMapping(value="/addBook/addBook_main.bts")
    public ModelAndView addBook_main(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
-      
+	   
 	   List<AddBookVO> adbList = service.addBook_main_select();
 	   
 	   mav.addObject("adbList", adbList);
@@ -126,6 +126,30 @@ public class AddBookController {
    }
    
    
+   // 주소록 메인에서 select 해와서 연락처 update 하기
+   @RequestMapping(value="/addBook/addBook_main_telUpdate.bts" , produces = "application/json; charset=utf-8")
+   public Map<String,Object> addBook_main_telUpdate(HttpServletRequest request, HttpServletResponse response) {
+      
+	   Map<String,Object> updateMap = new HashMap<>();
+	   
+	   int pk_addbook_no = Integer.parseInt(request.getParameter("pk_addbook_no"));
+	   
+	   AddBookVO avo = service.addBook_main_telUpdate(pk_addbook_no);
+	   
+	   updateMap.put("name", avo.getAddb_name());
+	   updateMap.put("department", avo.getKo_depname());
+	   updateMap.put("rank", avo.getKo_rankname());
+	   updateMap.put("email", avo.getEmail());
+	   updateMap.put("phone", avo.getPhone());
+	   updateMap.put("company_name", avo.getCompanyname());
+	   updateMap.put("company_tel", avo.getCom_tel());
+	   updateMap.put("company_address", avo.getCompany_address());
+	   updateMap.put("memo", avo.getMemo());
+	   
+      return updateMap;
+   }
+  
+   
    // 상세개인정보 페이지
    @RequestMapping(value="/addBook/addBook_perInfo.bts")
    public ModelAndView addBook_perInfo(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
@@ -140,7 +164,7 @@ public class AddBookController {
    @RequestMapping(value="/addBook/addBook_depInfo.bts")
    public ModelAndView addBook_depInfo(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 	   
-	   List<EmployeeVO> empList = service.addBook_depInfo_select(); 
+	   List<EmployeeVO> empList = service.addBook_depInfo_select();
 	   
 	   mav.addObject("empList", empList);
 	   
@@ -152,15 +176,24 @@ public class AddBookController {
    
    // 상세부서정보 페이지에서 사원상세정보 ajax로 select 해오기
 	@RequestMapping(value="/addBook/addBook_depInfo_select_ajax.bts", produces = "application/json; charset=utf-8")
-	public String addBook_depInfo_selectAjax(HttpServletRequest request, HttpServletResponse response) {
+	public Map<String,Object> addBook_depInfo_select_ajax(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		Map<String,Object> depInfoMap = new HashMap<>();
+		
+		int pk_emp_no = Integer.parseInt(request.getParameter("pk_emp_no"));
 	   
-	   String pk_emp_no = request.getParameter("pk_emp_no");
-	   
-	   List<EmployeeVO> empList = service.addBook_depInfo_select(); 
-	   
-	   
-	   
-	   return "";
+		EmployeeVO evo = service.addBook_depInfo_select_ajax(pk_emp_no);
+		
+		depInfoMap.put("name",evo.getEmp_name());
+		depInfoMap.put("department", evo.getKo_depname());
+		depInfoMap.put("rank", evo.getKo_rankname());
+		depInfoMap.put("email", evo.getUq_email());
+		depInfoMap.put("phone", evo.getUq_phone());
+		depInfoMap.put("address", evo.getAddress());
+		depInfoMap.put("detailaddress", evo.getDetailaddress());
+		depInfoMap.put("extraaddress", evo.getExtraaddress());	   
+		
+		return depInfoMap;
 	}
    
    

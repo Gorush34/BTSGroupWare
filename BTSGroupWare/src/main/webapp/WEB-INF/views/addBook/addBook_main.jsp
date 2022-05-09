@@ -21,22 +21,47 @@ $( document ).ready( function() {
 }); // end of $( document ).ready( function()
 
 
-function searchBtn() {
-	$.ajax({
-		url:"<%= ctxPath%>/addBook/test.bts",
-		data:{"search" : $("input#searchText").val()},
-		type: "post",
-		dataType: 'json',
-		success : function(json) {
-			console.log(json)
-		},
-		error: function(request){
-			
-		}
-	});
-}
+	function searchBtn() {
+		$.ajax({
+			url:"<%= ctxPath%>/addBook/test.bts",
+			data:{"search" : $("input#searchText").val()},
+			type: "post",
+			dataType: 'json',
+			success : function(json) {
+				console.log(json)
+			},
+			error: function(request){
+				
+			}
+		});
+	}
 	
-		
+	
+	function telUpdate(i)	{
+		$.ajax({
+			url:"<%= ctxPath%>/addBook/addBook_main_telUpdate.bts",
+			data:{"pk_addbook_no" : $("input#pk_addbook_no_"+i).val()},
+			type: "post",
+			dataType: 'json',
+			success : function(json) {
+				$("input#name").val(json.name)
+				$("select#department").selected(json.department)
+				$("select#rank").selected(json.rank)
+				$("input#email").val(json.email)
+				$("input#phone").val(json.phone)
+				$("input#company_name").val(json.company_name)
+				$("input#company_tel").val(json.company_tel)
+				$("input#company_address").val(json.company_address)
+				$("input#memo").val(json.memo)
+			},
+			error: function(request){
+				
+			}
+		});
+	}	
+
+
+
 			
 			
 
@@ -95,6 +120,7 @@ function searchBtn() {
 		</td>
 		</tr>
 		<tr style="border: solid darkgray 2px; margin-left:2%">
+			<td style="width:5%;"><input type="hidden" id="pk_addbook_no_${i.count}" name="pk_addbook_no${i.count}" value="${adb.pk_addbook_no}" readonly /></td>
 			<td style="width:13%;"><strong>이름</strong></td>
 			<td style="width:13%;"><strong>직급</strong></td>
 			<td style="width:22%;"><strong>휴대폰</strong></td>
@@ -103,14 +129,15 @@ function searchBtn() {
 			<td style="width:22%;"><strong>회사전화</strong></td>
 		</tr>
 		<c:if test="${not empty (requestScope.adbList)}">
-        <c:forEach var="adb" items="${requestScope.adbList}">
+        <c:forEach var="adb" items="${requestScope.adbList}" varStatus="i">
 		<tr>
-			<td>${adb.addb_name}</td>
-			<td>${adb.ko_rankname}</td>
-			<td>${adb.phone}</td>
-			<td>${adb.email}</td>
-			<td>${adb.companyname}</td>
-			<td>${adb.com_tel}</td>
+			<td><input type="hidden" id="pk_addbook_no_${i.count}" name="pk_addbook_no_${i.count}" value="${adb.pk_addbook_no}" readonly /></td>
+			<td><button class="btn btn-default" onclick="telUpdate(${i.count})" data-toggle="modal" data-target="#viewModal" onclick="modal_view('이름','부서','직급','이메일','휴대폰','회사','회사전화번호','회사주소','메모사항');">${adb.addb_name}</button></td>
+			<td><button class="btn btn-default" onclick="telUpdate(${i.count})" data-toggle="modal" data-target="#viewModal" onclick="modal_view('이름','부서','직급','이메일','휴대폰','회사','회사전화번호','회사주소','메모사항');" >${adb.ko_rankname}</button></td>
+			<td><button class="btn btn-default" onclick="telUpdate(${i.count})" data-toggle="modal" data-target="#viewModal" onclick="modal_view('이름','부서','직급','이메일','휴대폰','회사','회사전화번호','회사주소','메모사항');" >${adb.phone}</button></td>
+			<td><button class="btn btn-default" onclick="telUpdate(${i.count})" data-toggle="modal" data-target="#viewModal" onclick="modal_view('이름','부서','직급','이메일','휴대폰','회사','회사전화번호','회사주소','메모사항');" >${adb.email}</button></td>
+			<td><button class="btn btn-default" onclick="telUpdate(${i.count})" data-toggle="modal" data-target="#viewModal" onclick="modal_view('이름','부서','직급','이메일','휴대폰','회사','회사전화번호','회사주소','메모사항');" >${adb.companyname}</button></td>
+			<td><button class="btn btn-default" onclick="telUpdate(${i.count})" data-toggle="modal" data-target="#viewModal" onclick="modal_view('이름','부서','직급','이메일','휴대폰','회사','회사전화번호','회사주소','메모사항');" >${adb.com_tel}</button></td>
 		</tr>
 		</c:forEach>
 		</c:if>
@@ -132,3 +159,98 @@ function searchBtn() {
 			  <li role="presentation"><button class="btn btn-default" id="Main_mini_btn"> 맨 뒤로 </button></li>
 			</ul>
 			</div>
+			
+	
+	
+
+			
+	<!-- 모달 -->
+	
+<div class="modal fade" data-backdrop="static" id="viewModal">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+<h4 class="modal-title" id="exampleModalLabel">연락처 수정</h4>
+</div>
+
+<div class="modal-body">
+<form name="customer" method="post" >
+	<input type="hidden" class="form-control" id="seq" name="seq">
+	<div class="form-group">
+	<label for="recipient-name" class="control-label"><strong>이름</strong></label>
+	<input type="text" class="form-control" id="name" name="name">
+	</div>
+	
+	<div class="form-group">
+	<label for="recipient-name" class="control-label"><strong>부서</strong></label>
+		<select id="department" name="department" class="form-control">
+		  <option selected >--</option>
+		  <option value="100">영업</option>
+		  <option value="200">마케팅</option>
+		  <option value="300">기획</option>
+		  <option value="400">총무</option>
+		  <option value="500">인사</option>
+		  <option value="600">회계</option>
+		</select>
+	</div>
+	
+	<div class="form-group">
+	<label for="recipient-name" class="control-label"><strong>직급</strong></label>
+		<select id="rank" name="rank" class="form-control">
+		  <option selected >--</option>
+		  <option value="10">사원</option>
+		  <option value="20">주임</option>
+		  <option value="30">대리</option>
+		  <option value="40">과장</option>
+		  <option value="50">차장</option>
+		  <option value="60">부장</option>
+		  <option value="70">전무</option>
+		  <option value="80">사장</option>
+		</select>
+	</div>
+	
+	<div class="form-group">
+	<label for="recipient-name" class="control-label"><strong>이메일</strong></label>
+	<input type="text" class="form-control" id="email" name="email">
+	</div>
+	
+	<div class="form-group">
+	<label for="recipient-name" class="control-label"><strong>휴대폰</strong></label>
+	<input type="text" class="form-control" id="phone" name="phone">
+	</div>
+	
+	<div class="form-group">
+	<label for="recipient-name" class="control-label"><strong>회사</strong></label>
+	<input type="text" class="form-control" id="company_name" name="company_name">
+	</div>
+	
+	<div class="form-group">
+	<label for="recipient-name" class="control-label"><strong>회사전화번호</strong></label>
+	<input type="text" class="form-control" id="company_tel" name="company_tel">
+	</div>
+	
+	<div class="form-group">
+	<label for="recipient-name" class="control-label"><strong>회사주소</strong></label>
+	<input type="text" class="form-control" id="company_address" name="company_address">
+	</div>
+	
+	
+	<div class="form-group">
+	<label for="recipient-name" class="control-label"><strong>메모사항</strong></label>
+	<input type="text" class="form-control" id="memo" name="memo">
+	</div>
+	
+
+</form>
+</div>
+
+<div class="modal-footer">
+<button type="button" id="insert_customer_btn" class="btn btn-primary">등록</button>
+<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+</div>
+</div>
+</div>
+</div>
+
+
+

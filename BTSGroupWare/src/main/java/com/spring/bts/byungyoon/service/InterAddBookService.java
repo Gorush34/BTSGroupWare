@@ -20,5 +20,11 @@ public interface InterAddBookService {
 	int addBook_telAdd_insert(AddBookVO avo);
 
 	// 상세부서정보 페이지 사원목록 불러오기
-	List<EmployeeVO> addBook_depInfo_select(); 
+	List<EmployeeVO> addBook_depInfo_select();
+
+	// 상세부서정보 페이지에서 사원상세정보 ajax로 select 해오기
+	EmployeeVO addBook_depInfo_select_ajax(int pk_emp_no) throws Exception;
+
+	// 주소록 메인에서 select 해와서 연락처 update 하기
+	AddBookVO addBook_main_telUpdate(int pk_addbook_no); 
 }
