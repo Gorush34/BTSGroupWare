@@ -23,15 +23,15 @@
 		WHERE pk_appr_sortno = 9
 	</select> -->
 
-	<!-- 파일첨부가 없는 전자결재 문서작성 -->
+	<!-- 파일첨부가 없는 전자결재 문서작성 --> 
 	<insert id="edmsAdd" parameterType="com.spring.bts.yuri.model.ApprVO">
 		INSERT INTO
-		tbl_appr(   pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_approver_no, fk_fin_approver_no, emergency,
+		tbl_appr(   pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno, fk_fin_empno, emergency,
 		            title, contents,
 		            status, mid_accept, fin_accept,
-		            mid_opinion, fin_opinion,
+		            mid_opinion, fin_opinion, 
 		            writeday, viewcnt)
-		VALUES(     seq_apprno.nextval, #{fk_emp_no}, #{fk_emp_no}, #{fk_mid_approver_no}, #{fk_fin_approver_no}, #{emergency}, 
+		VALUES(     seq_apprno.nextval, #{fk_appr_sortno}, #{fk_emp_no}, #{fk_mid_empno}, #{fk_fin_empno}, #{emergency}, 
 		            #{title}, #{contents},
 		            default, default, default,
 		            null, null,

@@ -96,7 +96,7 @@
 			
 			
 			// 문서양식 선택여부 검사
-			const docform = $("select#docform").val();
+			const docform = $("select#fk_appr_sortno").val();
 			console.log("양식선택 확인 : " + docform);
 			
 			// 카테고리를 선택하지 않은 경우 에러 메시지 출력
@@ -106,27 +106,27 @@
 				return;
 			}
 						
-			// 카레고리 선택값 받아오기
-			$("select#docform").on("change", function() {   
+			// 카테고리 선택값 받아오기
+			/* $("select#fk_appr_sortno").on("change", function() {		// select문의 이벤트는 change라는 것을 기억하자!   
 		         const docform = $(this).val();
 				// let docform = $("select#docform > option:selected").attr("value");
 				 $("input#docformName").val(docform);
 				
-		      });//end of $("select#cateSel").on("change", function() 
+		      });//end of $("select#docform").on("change", function()  */
 			
-			// 긴급버튼 체크 시 값 전달
-			$("input:checkbox[name=emergency]").each(function(index, item) {
-				const emergency = $(item).is(":checked");
-				
-				if(emergency == true) { // 체크박스에 체크가 된 경우
-					emergency = 1;
-					return;
-				}
-			});
+			// 긴급버튼 체크 시 값 전달(긴급이면 1을, 아니면 0을 전달, default값은 0이다.)
+			let flag = $('input[name=emergency]').is(":checked");
+		    let emergency;
+		    
+			if (flag == true) {
+				emergency = $('input[name=emergency]').val(1);
+			} else {
+				emergency = $('input[name=emergency]').val(0);
+			}
 			
 			// 제목 유효성 검사
-			const subject = $("input#subject").val().trim();
-			if(subject == "") {
+			const title = $("input#title").val().trim();
+			if(title == "") {
 				alert("글제목을 입력하세요!!");
 				return;
 			}
@@ -230,7 +230,7 @@
 		<tr>
 			<th class="edmsView_th">문서양식</th>
           	<td colspan="4">
-				<select name="docform" id="docform">
+				<select name="fk_appr_sortno" id="fk_appr_sortno">
 					<option value="">양식선택</option>
 					<%-- ApprVO에서 가져오나 ApprSortVO에서 가져오나? --%>
 					<%-- 오류  <c:forEach var="map" items="${requestScope.fk_appr_sortno}" var="form"> var 가 2번 쓰여서! --%>
@@ -238,12 +238,12 @@
 					<%-- var="이름" items="${컨트롤러에 선언된 list명}" --%>
 						<%-- <option value="${apprsort.apprsortList}">어쩌고</option> --%>
 					<%-- </c:forEach> --%>
-					<option value="9">업무기안서</option>
-					<option value="10">업무협조서</option>
-					<option value="11">증명서신청</option>
-					<option value="12">휴가신청서</option>
+					<!-- <option name="fk_appr_sortno" value="9">업무기안서</option> -->
+					<option value="1">업무기안서</option>
+					<option value="2">증명서신청</option>
+					<option value="3">사유서</option>
+					<option value="4">휴가신청서</option>
 				</select>
-				<input type="hidden" id="docformName" name="docformName" value="">
 			</td>
 		</tr>
 		
@@ -262,7 +262,8 @@
 			<th class="edmsView_th">긴급</th>
 			<td colspan="4">
 				<label class="switch-button">
-					<input type="checkbox" id="emergency" name="emergency" value="1" >&nbsp;긴급
+					<input type="checkbox" name="emergency">&nbsp;긴급
+					<input type="hidden" name="emergency">
 					<%-- name 전달할 값의 이름, value 전달될 값 --%>
 				</label>
 			</td>
@@ -270,11 +271,16 @@
 		
 		<tr>
 			<th class="edmsView_th" rowspan="2">
-				<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnApprSelect" onclick="getAppr()">결재선 지정</button>
+				<!-- <button type="button" class="btn btn-secondary btn-sm mr-3" id="btnApprSelect" onclick="getAppr()">결재선 지정</button> -->
+				결재선 지정
 			</th>
-			<!-- <td colspan="2" style="width: 30%;">중간결재자</td> -->
- 		
-			<td style="width: 30%;">부서1 : 
+			<td style="width: 10%;">중간결재자</td>
+			<td colspan="2" style="width: 70%;">
+				<input type="text" name="fk_mid_empno" class="form-control" placeholder="중간결재자 사번을 입력하세요" value="80000330" />
+			</td>
+			
+<!-- 			<td style="width: 30%;">부서1 : 
+				<input type="text" name="fk_mid_empno" class="form-control" placeholder="중간결재자 사번을 입력하세요" />
 				<input type="text" name="apprMidEmpDep" class="form-control" placeholder="중간결재자 부서를 입력하세요" />
 			</td>
 			<td style="width: 30%;">이름1 :
@@ -282,14 +288,16 @@
 			</td>
 			<td style="width: 30%;">직급1 : 
 				<input type="text" name="apprMidEmpRank" class="form-control" placeholder="중간결재자 직급을 입력하세요" />
-			</td>
+			</td> -->
 			
 		</tr>
 		
 		<tr>
-			<!-- <td colspan="2">최종결재자</td> -->
-
-			<td style="width: 30%;">부서2 : 
+			<td>최종결재자</td>
+			<td colspan="2" style="width: 70%;">
+				<input type="text" name="fk_fin_empno" class="form-control" placeholder="최종결재자 사번을 입력하세요" value="80000360" />
+			</td>
+<!-- 			<td style="width: 30%;">부서2 : 
 				<input type="text" name="apprFinEmpDep" class="form-control" placeholder="최종결재자 부서를 입력하세요"/>
 			</td>
 			<td style="width: 30%;">이름2 :
@@ -297,7 +305,7 @@
 			</td>
 			<td style="width: 30%;">직급2 : 
 				<input type="text" name="apprFinEmpRank" class="form-control" placeholder="최종결재자 직급을 입력하세요"/>
-			</td>
+			</td> -->
 		</tr>
 	
 
@@ -313,13 +321,13 @@
 		<tr>
 			<th class="edmsView_th">제목</th>
 			<td colspan="4">
-				<input type="text" name="subject" id="subject" size="100" style="width: 100%;"/>
+				<input type="text" name="title" id="title" size="100" style="width: 100%;" value="제목/휴가신청서" />
 			</td>
 		</tr>
 		<tr>
 			<th class="edmsView_th">내용</th>
 			<td colspan="4">
-				<textarea style="width: 100%; height: 612px;" name="contents" id="contents"></textarea>
+				<textarea style="width: 100%; height: 612px;" name="contents" id="contents">내용/휴가신청서</textarea>
 			</td>
 		</tr>
 		
@@ -330,7 +338,14 @@
 				<input type="file" name="attach" id="attach" size="100" style="width: 100%;" />
 			</td>
 		</tr>
-
+		
+<!-- 		<tr>
+			<td>
+				<input type="hidden" name="status" value="0" />진행상태
+				<input type="hidden" name="status" value="0" />진행상태
+				<input type="hidden" name="status" value="0" />진행상태
+			</td>
+		</tr> -->
 	</table>
 	</div>
 

@@ -114,28 +114,55 @@ public class EdmsController {
 	public ModelAndView edmsAddEnd(Map<String,String> paraMap, ModelAndView mav, ApprVO apprvo, MultipartHttpServletRequest mrequest) { // <== After Advice 를 사용하기 및 파일 첨부하기
 	
 		
-	//	apprMidEmpDep
-		String apprMidEmpDep = mrequest.getParameter("apprMidEmpDep");
-		System.out.println("확인용 apprMidEmpDep => " + apprMidEmpDep);
-		
-		String contents = mrequest.getParameter("contents");
-		System.out.println("확인용 contents => " + contents);
-		
-		String docformName = mrequest.getParameter("docformName");
-		System.out.println("확인용 docformName => " + docformName);
-		
+		// ===== 들어왔는지 찍어보는 곳 시작 ===== // 
+		// " 확인용은 getParameter 가 아닌 VO의 getter를 사용한다 "
+		// 또한 form 태그의 name은 vo의 필드명, 테이블의 컬럼명과 동일해야 한다!
 	/*
-	    form 태그의 name 명과  BoardVO 의 필드명이 같다라면 
+		form 태그의 name 명과  BoardVO 의 필드명이 같다면 
 	    request.getParameter("form 태그의 name명"); 을 사용하지 않더라도
 	        자동적으로 BoardVO boardvo 에 set 되어진다.
 	*/
 		
-		// 전자결재 양식선택(업무기안서, 휴가신청서 등..)을 위한 것
+		// 잘못된 예시  
+	//	String docform  = mrequest.getParameter("docform");
+	//	System.out.println("확인용 양식  => " + docform );
+		
+		
+		// ===== 들어왔는지 찍어보는 곳 종료 ===== //
+		
+		// 파일첨부가 없는 전자결재 문서작성
+	/*
+		System.out.println("~~~~~ 결재번호 apprvo.getPk_appr_no() => " + apprvo.getPk_appr_no());
+		System.out.println("~~~~~ 결재구분번호 apprvo.getFk_appr_sortno() => " + apprvo.getFk_appr_sortno()); 
+		System.out.println("~~~~~ 사원번호 apprvo.getFk_emp_no() => " + apprvo.getFk_emp_no()); 
+		System.out.println("~~~~~ 최종승인자 apprvo.getFk_fin_empno() => " + apprvo.getFk_fin_empno());
+		System.out.println("~~~~~ 긴급여부 apprvo.getEmergency() => " + apprvo.getEmergency()); 
+		System.out.println("~~~~~ 제목 apprvo.getTitle() => " + apprvo.getTitle());
+		System.out.println("~~~~~ 내용 apprvo.getContents() => " + apprvo.getContents()); 
+		System.out.println("~~~~~ 결재진행상태 apprvo.getStatus() => " + apprvo.getStatus());
+		System.out.println("~~~~~ 최종승인여부 apprvo.getFin_accept() => " + apprvo.getFin_accept());
+		System.out.println("~~~~~ 결재작성일자 apprvo.getWriteday() => " + apprvo.getWriteday());
+		System.out.println("~~~~~ 파일읽음여부 apprvo.getViewcnt() => " + apprvo.getViewcnt());
+	*/
+		
+		
+	/*
+		파일첨부가 된 글쓰기 이므로  MultipartHttpServletRequest mrequest 를 사용하기 위해서는 
+		먼저 /Board/src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml 에서     
+		파일 업로드 및 파일 다운로드에 필요한 의존객체 설정하기 를 해두어야 한다.  
+
+		웹페이지에 요청 form이 enctype="multipart/form-data" 으로 되어있어서 Multipart 요청(파일처리 요청)이 들어올때 
+		컨트롤러에서는 HttpServletRequest 대신 MultipartHttpServletRequest 인터페이스를 사용해야 한다.
+		MultipartHttpServletRequest 인터페이스는 HttpServletRequest 인터페이스와  MultipartRequest 인터페이스를 상속받고있다.
+		즉, 웹 요청 정보를 얻기 위한 getParameter()와 같은 메소드와 Multipart(파일처리) 관련 메소드를 모두 사용가능하다.  	
+	*/	
+	
+		// 전자결재 양식선택(업무기안서 등..)을 위한 것
 //		List<String> apprsortList = service.getApprsortList();
 		
 //		mav.addObject("apprsortList", apprsortList);
 		
-		// !!! === 첨부파일이 있는 경우 종료 !!! === // 
+		// !!! === 첨부파일이 있는 경우 시작 !!! === // 
 		MultipartFile attach = apprvo.getAttach();
 		
 		// 첨부파일이 있는 경우
@@ -205,42 +232,39 @@ public class EdmsController {
 				// 게시판 페이지에서 첨부된 파일(강아지.png)을 보여줄 때 사용.
 				// 또한 사용자가 파일을 다운로드 할때 사용되어지는 파일명으로 사용.
 				
+				fileSize = attach.getSize(); // 첨부파일의 크기(단위는 byte임)
+				apprvo.setFileSize(String.valueOf(fileSize));
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			
 		}
 		// !!! === 첨부파일이 있는 경우 종료 !!! === //
-		
-		// 파일첨부가 없는 전자결재 문서작성
-		int n = service.edmsAdd(apprvo);
-		
-		
-		
-		// 파일첨부가 있거나 없는 전자결재 문서작성
-/*
-		int n = 0;
-		
-		if( attach.isEmpty() ) {
-			// 파일첨부가 없는 경우라면 
-			n = service.edmsAdd(apprvo);
-		}
-		else {
-			// 파일첨부가 있는 경우라면 
-			n = service.edmsAdd_withFile(apprvo);
-		}
-*/		
-		if(n==1) {
-			mav.setViewName("redirect:/edmsList.action");
-			//  /edmsList.action 페이지로 redirect(페이지이동)해라는 말이다.
-		}
-		else {
-			mav.setViewName("bts/error/add_error.tiles1");
-			//  /WEB-INF/views/tiles1/bts/error/add_error.jsp 파일을 생성한다.
-		}
-		
-		return mav;
-		
+		//  === #156. 파일첨부가 있는 글쓰기 또는 파일첨부가 없는 글쓰기로 나뉘어서 service 호출하기 === // 
+		//  먼저 위의  int n = service.add(boardvo); 부분을 주석처리 하고서 아래와 같이 한다.	
+			
+			int n = 0;
+			
+			if( attach.isEmpty() ) {
+				// 파일첨부가 없는 경우라면 
+				n = service.edmsAdd(apprvo);
+			}
+			else {
+				// 파일첨부가 있는 경우라면 
+				n = service.edmsAdd_withFile(apprvo);
+			}
+			
+			if(n==1) {
+				mav.setViewName("redirect:/edmsHome.bts");
+				//  /edmsHome.bts 페이지로 redirect(페이지이동)해라는 말이다.
+			}
+			else {
+				mav.setViewName("bts/error/add_error.tiles1");
+				//  /WEB-INF/views/tiles1/bts/error/add_error.jsp 파일을 생성한다.
+			}
+			
+			return mav;
 	}
 	
 	

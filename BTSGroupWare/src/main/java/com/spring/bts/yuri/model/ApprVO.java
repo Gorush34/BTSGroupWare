@@ -9,14 +9,14 @@ public class ApprVO {
 	private String pk_appr_no;			/* 결재번호 */
 	private String fk_appr_sortno;		/* 결재구분번호 */
 	private String fk_emp_no;			/* 사원번호 */
-	private String fk_mid_approver_no;	/* 중간승인자 */
-	private String fk_fin_approver_no;	/* 최종승인자 */
+	private String fk_mid_empno;	/* 중간승인자 */
+	private String fk_fin_empno;	/* 최종승인자 */
 	private String emergency;			/* 긴급여부 - DEFAULT 0 */
 	private String title;				/* 제목 */
 	private String contents;			/* 내용 */
 	private String filename;			/* 서버파일명 */
 	private String orgfilename;			/* 실제파일명 */
-	private String filepath;			/* 파일경로 */
+	private String fileSize;			/* 파일사이즈 */
 	private String status;				/* 결재진행상태 - DEFAULT 0 */
 	private String mid_accept;			/* 중간승인여부 - DEFAULT 0 */
 	private String fin_accept;			/* 최종승인여부 - DEFAULT 0*/
@@ -43,22 +43,22 @@ public class ApprVO {
 	public ApprVO() {}
 
 	// 생성자 1
-	public ApprVO(String pk_appr_no, String fk_appr_sortno, String fk_emp_no, String fk_mid_approver_no,
-			String fk_fin_approver_no, String emergency, String title, String contents, String filename,
-			String orgfilename, String filepath, String status, String mid_accept, String fin_accept,
+	public ApprVO(String pk_appr_no, String fk_appr_sortno, String fk_emp_no, String fk_mid_empno,
+			String fk_fin_empno, String emergency, String title, String contents, String filename,
+			String orgfilename, String fileSize, String status, String mid_accept, String fin_accept,
 			String mid_opinion, String fin_opinion, String writeday, String viewcnt) {
 		
 		this.pk_appr_no = pk_appr_no;
 		this.fk_appr_sortno = fk_appr_sortno;
 		this.fk_emp_no = fk_emp_no;
-		this.fk_mid_approver_no = fk_mid_approver_no;
-		this.fk_fin_approver_no = fk_fin_approver_no;
+		this.fk_mid_empno = fk_mid_empno;
+		this.fk_fin_empno = fk_fin_empno;
 		this.emergency = emergency;
 		this.title = title;
 		this.contents = contents;
 		this.filename = filename;
 		this.orgfilename = orgfilename;
-		this.filepath = filepath;
+		this.fileSize = fileSize;
 		this.status = status;
 		this.mid_accept = mid_accept;
 		this.fin_accept = fin_accept;
@@ -95,20 +95,20 @@ public class ApprVO {
 		this.fk_emp_no = fk_emp_no;
 	}
 
-	public String getFk_mid_approver_no() {
-		return fk_mid_approver_no;
+	public String getFk_mid_empno() {
+		return fk_mid_empno;
 	}
 
-	public void setFk_mid_approver_no(String fk_mid_approver_no) {
-		this.fk_mid_approver_no = fk_mid_approver_no;
+	public void setFk_mid_empno(String fk_mid_empno) {
+		this.fk_mid_empno = fk_mid_empno;
 	}
 
-	public String getFk_fin_approver_no() {
-		return fk_fin_approver_no;
+	public String getFk_fin_empno() {
+		return fk_fin_empno;
 	}
 
-	public void setFk_fin_approver_no(String fk_fin_approver_no) {
-		this.fk_fin_approver_no = fk_fin_approver_no;
+	public void setFk_fin_empno(String fk_fin_empno) {
+		this.fk_fin_empno = fk_fin_empno;
 	}
 
 	public String getEmergency() {
@@ -150,15 +150,15 @@ public class ApprVO {
 	public void setOrgfilename(String orgfilename) {
 		this.orgfilename = orgfilename;
 	}
-
-	public String getFilepath() {
-		return filepath;
+	
+	public String getFileSize() {
+		return fileSize;
 	}
 
-	public void setFilepath(String filepath) {
-		this.filepath = filepath;
+	public void setFileSize(String fileSize) {
+		this.fileSize = fileSize;
 	}
-
+	
 	public String getStatus() {
 		return status;
 	}
