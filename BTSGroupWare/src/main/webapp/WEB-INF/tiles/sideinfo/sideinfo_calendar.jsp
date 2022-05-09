@@ -15,6 +15,11 @@
 
 
 <script type="text/javascript">
+    
+    /////////////////////////////////////
+     let arr_checkbox_com_calno = [];
+     let arr_checkbox_my_calno = [];
+    /////////////////////////////////////
 
 	$(document).ready(function(){
 		
@@ -34,14 +39,101 @@
 		})
 	
 		
-	
+		//////////////////////////////////////////////////
+		$(document).on("click","input.com_calno",function(){
+			
+			let str_checkbox_com_calno =  sessionStorage.getItem('arr_checkbox_com_calno');
+			
+			if($(this).prop("checked")) {
+				
+				arr_checkbox_com_calno = str_checkbox_com_calno.split(",");
+				
+				let flag = false;
+				for(let i=0; i<arr_checkbox_com_calno.length; i++) {
+					if( arr_checkbox_com_calno[i] == $(this).val() ) {
+						flag = true;
+					}
+				}// end of for---------------------
+				
+				if(flag == false) {
+					arr_checkbox_com_calno.push($(this).val());
+					
+					let str = arr_checkbox_com_calno.join(); 
+					if(str.substring(0,1) == ",") {
+						str = str.substring(1);
+					}
+					
+					sessionStorage.setItem('arr_checkbox_com_calno', str);
+				}
+				
+			}
+			else {
+				const idx = str_checkbox_com_calno.indexOf($(this).val());
+				if(idx != -1) {
+					let str = str_checkbox_com_calno.substring(0,idx) + str_checkbox_com_calno.substring(idx+$(this).val().length+1);  
+					if(str.substring(str.length-1) == ',') {
+						str = str.substring(0, str.length-1);
+					}
+					sessionStorage.setItem('arr_checkbox_com_calno', str);
+				}
+			}
+			// alert(arr_checkbox_com_calno.join());
+			
+		});
 		
 		
+		$(document).on("click","input.my_calno",function(){
+			
+			let str_checkbox_my_calno =  sessionStorage.getItem('arr_checkbox_my_calno');
+			
+			if($(this).prop("checked")) {
+				
+				arr_checkbox_my_calno = str_checkbox_my_calno.split(",");
+				
+				let flag = false;
+				for(let i=0; i<arr_checkbox_my_calno.length; i++) {
+					if( arr_checkbox_my_calno[i] == $(this).val() ) {
+						flag = true;
+					}
+				}// end of for---------------------
+				
+				if(flag == false) {
+					arr_checkbox_my_calno.push($(this).val());
+					
+					let str = arr_checkbox_my_calno.join(); 
+					if(str.substring(0,1) == ",") {
+						str = str.substring(1);
+					}
+					
+					sessionStorage.setItem('arr_checkbox_my_calno', str);
+				}
+				
+			}
+			else {
+				const idx = str_checkbox_my_calno.indexOf($(this).val());
+				if(idx != -1) {
+					let str = str_checkbox_my_calno.substring(0,idx) + str_checkbox_my_calno.substring(idx+$(this).val().length+1);  
+					if(str.substring(str.length-1) == ',') {
+						str = str.substring(0, str.length-1);
+					}
+					sessionStorage.setItem('arr_checkbox_my_calno', str);
+				}
+			}
+			// alert(arr_checkbox_com_calno.join());
+			
+		});
+		//////////////////////////////////////////////////
 		
 	});// end of $(document).ready(function(){}-------------------
 
 			
 	//Function Declaration
+	
+	// == 값 넘겨주기
+	
+	function forgetname(){
+		
+	}
 	
 	<%-- 사내 캘린더 관련 --%>
 	
@@ -102,9 +194,9 @@
 					html += "<table style='margin: 0 20px;'>";
 					html += "<tbody>";
 					$.each(json, function(index, item){
-					
+					//	console.log("캘린더 소분류 번호 : " + $("input:checkbox[name=my_calno]:checked").length);
 						html += "<tr id='schecheck'>";
-						html += "<td style='width:110%;'><input type='checkbox' name='com_calno' class='calendar_checkbox com_calno' value='"+item.pk_calno+"' id='com_calno_'"+index+"' checked />&nbsp;&nbsp;<label for='com_calno_'"+index+"'>"+item.calname+"</label></td>";
+						html += "<td style='width:110%;'><input type='checkbox' name='com_calno' class='calendar_checkbox com_calno' value='"+item.pk_calno+"' id='com_calno_"+index+"' checked />&nbsp;&nbsp;<label for='com_calno_"+index+"'>"+item.calname+"</label></td>";
 					
 						if("${sessionScope.loginuser.gradelevel}" =='1') {
 							 html += "<td style='width:20%; vertical-align: text-top; text-align: right;'><button class='btn_edit' style='background-color: #fff; border: none; outline:none;' data-target='editCal' onclick='editComCalendar("+item.pk_calno+",\""+item.calname+"\")'><i class='fas fa-edit'></i></button></td>";  
@@ -112,6 +204,13 @@
 						 }
 						
 						html += "</tr>";
+						
+						////////////////////////////////////////////////////////////////////////////////
+						arr_checkbox_com_calno.push(item.pk_calno);
+						sessionStorage.setItem('arr_checkbox_com_calno', arr_checkbox_com_calno.join());
+						
+						
+						////////////////////////////////////////////////////////////////////////////////
 					});
 					html += "</tbody>";
 					html += "</table>";
@@ -231,10 +330,17 @@
 					$.each(json, function(index, item){
 					
 						html += "<tr id='schecheck'>";
-						html += "<td style='width:110%;'><input type='checkbox' name='com_calno' class='calendar_checkbox com_calno' value='"+item.pk_calno+"' id='com_calno_'"+index+"' checked />&nbsp;&nbsp;<label for='com_calno_'"+index+"'>"+item.calname+"</label></td>";				
+						html += "<td style='width:110%;'><input type='checkbox' name='my_calno' class='calendar_checkbox my_calno' value='"+item.pk_calno+"' id='my_calno_"+index+"' checked />&nbsp;&nbsp;<label for='my_calno_"+index+"'>"+item.calname+"</label></td>";				
 						html += "<td style='width:20%; vertical-align: text-top; text-align: right;'><button class='btn_edit' style='background-color: #fff; border: none; outline:none;' data-target='editCal' onclick='editMyCalendar("+item.pk_calno+",\""+item.calname+"\")'><i class='fas fa-edit'></i></button></td>";  
 						html += "<td style='width:20%; vertical-align: text-top; text-align: right;'><button class='btn_edit delCal' style='background-color: #fff; border: none;' onclick='delCalendar("+item.pk_calno+",\""+item.calname+"\")'><i class='fas fa-trash'></i></button></td>";
 						html += "</tr>";
+						
+						////////////////////////////////////////////////////////////////////////////////
+						arr_checkbox_my_calno.push(item.pk_calno);
+						sessionStorage.setItem('arr_checkbox_my_calno', arr_checkbox_my_calno.join());
+						
+						
+						////////////////////////////////////////////////////////////////////////////////
 					});
 					html += "</tbody>";
 					html += "</table>";
@@ -323,6 +429,7 @@
 
 	<div>
 	   <div id="sidebar" style="font-size: 11pt;">
+	   <form action=".../views/calendar/calendarMain.jsp">
 		 <h4>캘린더</h4>
 		 
 			<input type="hidden" value="${sessionScope.loginuser.pk_emp_no}" id="fk_emp_no"/>
@@ -354,6 +461,7 @@
 				</li>
 			</ul>
 		<input type="checkbox" id="sharedCal" class="calendar_checkbox" value="0" checked/>&nbsp;&nbsp;<label for="sharedCal">공유받은 캘린더</label> 
+	</form>
 	</div>
 		
 	</div>

@@ -10,9 +10,6 @@
 
 	$(document).ready(function(){
 		
-		// 캘린더 소분류 카테고리 숨기기
-		$("select.calNo").hide();
-		
 		// === *** 달력(type="date") 관련 시작 *** === //
 		// 시작시간, 종료시간		
 		var html="";
@@ -66,6 +63,32 @@
 			}
 		});
 		
+		// 저장된 일정 서브캘린더 값 가져오기 //
+		$("select.calSelect").val("${requestScope.map.FK_LGCATGONO}");
+
+				$.ajax({
+						url: "<%= ctxPath%>/calendar/selectCalNo.bts",
+						data: {"fk_lgcatgono":"${requestScope.map.FK_LGCATGONO}", 
+							   "fk_emp_no":"${requestScope.map.FK_EMP_NO}"},
+						dataType: "json",
+						async: false,  //동기방식
+						success:function(json){
+							var html ="";
+							if(json.length>0){
+								
+								$.each(json, function(index, item){
+									html+="<option value='"+item.pk_calno+"'>"+item.calname+"</option>"
+								});
+								$("select.calNo").html(html);
+							}
+						},
+						error: function(request, status, error){
+				            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+						}
+				});
+				
+		$("select.calNo").val("${requestScope.map.FK_CALNO}");
+
 		// 서브캘린더 select로 가져오기 //
 		$("select.calSelect").change(function(){
 			var fk_lgcatgono = $("select.calSelect").val();
@@ -100,8 +123,19 @@
 			}
 			
 		});
-		
-		
+	
+		// **** 수정하기전 이미 저장되어있는 공유자 **** 
+		var stored_joinuser = "${requestScope.map.JOINUSER}";
+		if(stored_joinuser != "공유자가 없습니다."){
+			var arr_stored_joinuser = stored_joinuser.split(",");
+			var str_joinuser = "";
+			for(var i=0; i<arr_stored_joinuser.length; i++){
+				var user = arr_stored_joinuser[i];
+			//	console.log(user);
+				add_joinUser(user);
+			}// end of for--------------------------
+		}// end of if--------------------------------      
+
 		
 		
 		// == 참석자 추가 하기 == //
@@ -154,131 +188,117 @@
 					$(this).parent().remove();
 				}
 		});
-				
 		
-		// ====== >>> *** 일정등록하기 시작 *** <<< ====== //
-		$("button#register").click(function(){
+		// 수정 버튼 클릭
+		$("button#edit").click(function(){
+		
+			// 일자 유효성 검사 (시작일자가 종료일자 보다 크면 안된다!!)
+			var startDate = $("input#startDate").val();	
+	    	var sArr = startDate.split("-");
+	    	startDate= "";	
+	    	for(var i=0; i<sArr.length; i++){
+	    		startDate += sArr[i];
+	    	}
+	    	
+	    	var endDate = $("input#endDate").val();	
+	    	var eArr = endDate.split("-");   
+	     	var endDate= "";
+	     	for(var i=0; i<eArr.length; i++){
+	     		endDate += eArr[i];
+	     	}
 			
-			// 일자 유효성 검사 (시작일자 > 종료일자 X)	
-			var startDate = $("input#startDate").val();
-			var startArr = startDate.split("-");
-			startDate = "";
-			for(var i = 0; i<startArr.length; i++){
-				startDate += startArr[i];
-			}
-			
-			var endDate = $("input#endDate").val();
-			var endArr = endDate.split("-");
-			endDate = "";
-			for(var i = 0; i<endArr.length; i++){
-				endDate += endArr[i];
-			}
-			
-			var startHour= $("select#startHour").val();
+	     	var startHour= $("select#startHour").val();
 	     	var endHour = $("select#endHour").val();
 	     	var startMinute= $("select#startMinute").val();
 	     	var endMinute= $("select#endMinute").val();
-	     	
-	     	// 시작일자 > 종료일자 : 경고
-	     	if(Number(endDate) - Number(startDate) <0){
-	     		alert("종료일이 시작일 보다 빠릅니다.")
-	     		return;
-	     	}
-	     	else if(Number(endDate) == Number(startDate)){
-	     		
-	     		if(Number(startHour) > Number(endHour)){
-	     			alert("종료일이 시작일 보다 빠릅니다.")
-		     		return;
-	     		}
-	     		else if(Number(startHour) == Number(endHour)){
-	     			if(Number(startMinute) > Number(endMinute)){
-		     			alert("종료일이 시작일 보다 빠릅니다.")
-			     		return;
-		     		}
-	     			else if(Number(startMinute) == Number(endMinute)){
+	        
+	     	// 조회기간 시작일자가 종료일자 보다 크면 경고
+	        if (Number(endDate) - Number(startDate) < 0) {
+	         	alert("종료일이 시작일 보다 작습니다."); 
+	         	return;
+	        }
+	        
+	     	// 시작일과 종료일 같을 때 시간과 분에 대한 유효성 검사
+	        else if(Number(endDate) == Number(startDate)) {
+	        	
+	        	if(Number(startHour) > Number(endHour)){
+	        		alert("종료일이 시작일 보다 작습니다."); 
+	        		return;
+	        	}
+	        	else if(Number(startHour) == Number(endHour)){
+	        		if(Number(startMinute) > Number(endMinute)){
+	        			alert("종료일이 시작일 보다 작습니다."); 
+	        			return;
+	        		}
+	        		else if(Number(startMinute) == Number(endMinute)){
 	        			alert("시작일과 종료일이 동일합니다."); 
 	        			return;
 	        		}
-	     		}
-	     	}// end of else if----------------------------------------
-	     	
-	     	// 제목 유효성 검사
-	     	var subject = $("input#subject").val().trim();
-	     	if(subject == ""){
-	     		alert("제목을 입력하시오.")
-	     		return;
-	     	}
-	     	
-	     	// 캘린더 선택 유무 검사
-	     	var calSelect = $("select.calSelect").val().trim();
-	     	if(calSelect == ""){
-	     		alert("캘린더를 선택하시오.")
-	     		return;
-	     	}
-	     	
-	     	// 시작일과 종료일, 오라클에 들어갈 date 형식으로  변경
-	     	var sdate = startDate+$("select#startHour").val()+$("select#startMinute").val()+"00";
-	     	var edate = endDate+$("select#endHour").val()+$("select#endMinute").val()+"00";
-	     	
-	     	$("input[name=startdate]").val(sdate);
-	     	$("input[name=enddate]").val(edate);
-	     	
-	     	// 공유자 넣어주기 
-	     	var plusUser_elm = document.querySelectorAll("div.displayUserList > span.plusUser");
+	        	}
+	        }// end of else if---------------------------------
+	    	
+			// 제목 유효성 검사
+			var subject = $("input#subject").val().trim();
+	        if(subject==""){
+				alert("제목을 입력하세요."); 
+				return;
+			}
+	        
+	        // 캘린더 선택 유무 검사
+			var calSelect = $("select.calSelect").val().trim();
+			if(calSelect==""){
+				alert("캘린더 종류를 선택하세요."); 
+				return;
+			}
+			
+			// 달력 형태로 만들어야 한다.(시작일과 종료일)
+			// 오라클에 들어갈 date 형식(년월일시분초)으로 만들기
+			var sdate = startDate+$("select#startHour").val()+$("select#startMinute").val()+"00";
+			var edate = endDate+$("select#endHour").val()+$("select#endMinute").val()+"00";
+			
+			$("input[name=startdate]").val(sdate);
+			$("input[name=enddate]").val(edate);
+		
+		//	console.log("캘린더 소분류 번호 => " + $("select[name=fk_smcatgono]").val());
+			/*
+			      캘린더 소분류 번호 => 1 OR 캘린더 소분류 번호 => 2 OR 캘린더 소분류 번호 => 3 OR 캘린더 소분류 번호 => 4 
+			*/
+			
+		//  console.log("색상 => " + $("input#color").val());
+			
+			      
+			// 공유자 넣어주기
+			var plusUser_elm = document.querySelectorAll("div.displayUserList > span.plusUser");
 			var joinUserArr = new Array();
 			
 			plusUser_elm.forEach(function(item,index,array){
+			//	console.log(item.innerText.trim());
+				/*
+					이순신(leess) 
+					아이유1(iyou1) 
+					설현(seolh) 
+				*/
 				joinUserArr.push(item.innerText.trim());
 			});
-	     	
+			
 			var joinuser = joinUserArr.join(",");
+		//	console.log("공유자 => " + joinuser);
+			// 이순신(leess),아이유1(iyou1),설현(seolh) 
+			
 			$("input[name=joinuser]").val(joinuser);
 			
-	     	var frm = document.scheduleRegisterFrm;
-	     	frm.action = "<%= ctxPath%>/calendar/scheduleRegisterInsert.bts";
-	     	frm.method="POST";
-	     	frm.submit();
-	     	
-		});//end of $("button#register").click(function(){}--------------------------------------
-		// ====== >>> *** 일정등록하기 끝 *** <<< ====== //
-		
+		    var frm = document.scheduleEditFrm;
+		  	frm.action="<%= ctxPath%>/calendar/editSchedule_end.bts";
+			frm.method="post";
+			frm.submit(); 
 
-		//button#$("input#estion').tooltip(options)
-
-	// Collapse로 화면이 펼치기 전에 호출
-/*	$('.collapse').on('show.bs.collapse', function () {
-		// icon을 + 마크로 변경한다.
-		var target = $("[href='#"+$(this).prop("id")+"']");
-		target.removeClass("bi-caret-down-fill");
-		target.addClass("fa-minus-square");
-	});
-	// Collapse로 화면이 펼친 후에 호출
-	$('.collapse').on('shown.bs.collapse', function () {
-		// icon을 + 마크로 변경한다.
-		var target = $("[href='#"+$(this).prop("id")+"']");
-		target.removeClass("bi-caret-down-fill");
-		target.addClass("fa-minus-square");
-	});
-	// Collapse로 화면에 접기 전에 호출
-	$('.collapse').on('hide.bs.collapse', function () {
-		// icon을 - 마크로 변경한다.
-		var target = $("[href='#"+$(this).prop("id")+"']");
-		target.removeClass("fa-minus-square");
-		target.addClass("bi-caret-down-fill");
-	});
-	// Collapse로 화면에 접고 난 후에 호출
-	$('.collapse').on('hidden.bs.collapse', function () {
-		// icon을 - 마크로 변경한다.
-		var target = $("[href='#"+$(this).prop("id")+"']");
-		target.removeClass("fa-minus-square");
-		target.addClass("bi-caret-down-fill");
-	});
-*/
+		});// end of $("button#edit").click(function(){})--------------------
 		
-	}); // end of $(document).ready(function(){}-----------------------------------
-
 		
-	// Function Declaration 
+	}); // end of $(document).ready(function(){}----------------------------------------------------------------------
+
+	
+	// ********** Function Declaration ************//
 	
 	// div.displayUserList 에 공유자를 넣어주는 함수
 	function add_joinUser(value){  // value 가 공유자로 선택한이름 이다.
@@ -308,12 +328,12 @@
 
 </script>
 
-<div id="scheduleRegister">
-<h4 style="margin: 0 80px">일정등록</h4>
+<div id="scheduleEdit">
+<h4 style="margin: 0 80px">일정수정</h4>
 	<div id="srFrm" style="margin:50px 100px;">
-		<form name="scheduleRegisterFrm">
+		<form name="scheduleEditFrm">
 			<div>
-				<input type="text" id="subject" name="subject" size="50"/>&nbsp;&nbsp;
+				<input type="text" id="subject" name="subject" size="50" value="${requestScope.map.SUBJECT}"/>&nbsp;&nbsp;
 				<input type="checkbox" id="secret" name="secret"/><label for="secret">비공개</label> &nbsp;&nbsp;&nbsp;
 				<span class="tooltip-right" data-tooltip="비공개 일정은 참석자만 확인가능합니다."><i class="bi bi-question-circle-fill"></i></span>
 			</div>
@@ -338,7 +358,7 @@
 					<td>
 						<select class="calSelect" name="fk_lgcatgono">
 						<c:choose>
-							 <%-- 일정등록시 사내캘린더 등록은 oginuser.gradelevel =='10' 인 사용자만 등록이 가능하도록 한다. --%> 
+							 <%-- 일정등록시 사내캘린더 등록은 oginuser.gradelevel =='1' 인 사용자만 등록이 가능하도록 한다. --%> 
 							<c:when test="${loginuser.gradelevel =='1'}"> 
 								<option value="">선택하세요</option>
 								<option value="1">내 캘린더</option>
@@ -364,15 +384,15 @@
 				</tr>
 				<tr>
 					<th>색상</th>
-					<td><input type="color" id="color" name="color" value="#0096c6"/></td>
+					<td><input type="color" id="color" name="color" value="${requestScope.map.COLOR}"/></td>
 				</tr>
 				<tr>
 					<th>장소</th>
-					<td><input type="text" name="place" class="form-control"/></td>
+					<td><input type="text" name="place" class="form-control" value="${requestScope.map.PLACE}"/></td>
 				</tr>
 				<tr>
 					<th>내용</th>
-					<td><textarea rows="10" cols="100" style="height: 200px;" name="content" id="content"  class="form-control"></textarea></td>
+					<td><textarea rows="10" cols="100" style="height: 200px;" name="content" id="content"  class="form-control">${requestScope.map.CONTENT}</textarea></td>
 				</tr>
 				<tr>
 					<th>알람</th>
@@ -480,12 +500,13 @@
 			 
 				
 			</table>
-			<input type="hidden" value="${sessionScope.loginuser.pk_emp_no}" name="fk_emp_no"/>
+			<input type="hidden" value="${requestScope.map.PK_SCHNO}" name="pk_schno"/>
 			</form>
 			
 		<div style="text-align: center;">
-		<button type="button" class="btn btn-primary btn-sm" id="register" >확인</button>
-		<button type="button" class="btn btn-outline-primary btn-sm" onclick="javascript:location.href='<%= ctxPath%>/calendar/calendarMain.bts'">취소</button>
+		<button type="button" class="btn btn-primary btn-sm" id="edit" >수정</button>
+		<button type="button" class="btn btn-outline-primary btn-sm" onclick="javascript:location.href='<%= ctxPath%>/${gobackURL_ds}'">취소</button>
 		</div>
 	 </div>	
 </div>
+				

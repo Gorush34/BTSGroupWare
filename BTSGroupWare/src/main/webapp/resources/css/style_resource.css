@@ -1,0 +1,32 @@
+@charset "UTF-8";
+
+body {font-family: font-family: 'Noto Sans KR', sans-serif; }
+
+#mycontainer   { padding:20px; }
+#myheader      { display: flex; min-height:100px; position: relative; top: 60px; }
+#mycontent      { min-height:1200px; top:60px; padding-top: 40px; padding-left:250px; background-color:#FFF;
+                  float:left; width:1400px;}
+
+#mysideinfo      { min-height:1200px; position: fixed; top:60px; padding-top: 40px; background-color:#FFF;
+                  float:left; width:250px; }
+
+#myfooter      { display: flex; min-height:120px; position: relative; top:60px; background-color:#555555; margin-bottom: 70px; 
+                 clear:both; }
+ 
+#myheader a {text-decoration:none;}
+
+
+/* 자원 등록 */
+table#resourceRegisterContent > tbody > tr > th  {
+	padding: 5px;
+	height: 50px;
+	width: 140px;
+}
+
+table#resourceRegisterContent > tbody  div.panel-heading{
+	margin-bottom: 15px;
+}
+
+table#resourceRegisterContent > tbody  table#reservationTable{
+	padding: 30px;
+}
