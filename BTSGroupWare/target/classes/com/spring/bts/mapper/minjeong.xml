@@ -8,13 +8,14 @@
 <mapper namespace="minjeong">
 
 	<!-- 받은메일함 목록 보여주기 (검색 X, 페이징 X) -->
+	<!-- 
 	<select id="getReceiveMailList" resultType="com.spring.bts.minjeong.model.MailVO">
 		select pk_mail_num, fk_senduser_num, sendempname, subject
 			 , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
 		from tbl_mail
 		order by pk_mail_num desc		
 	</select>
-
+ 	-->
 
 	<!--  총 받은메일 개수 구해오기 -->
 	<select id="getTotalCount" parameterType="HashMap" resultType="int">
@@ -29,12 +30,13 @@
 	
 	<!--  페이징처리 한 받은 메일목록 (검색 있든, 없든 모두 다 포함)  -->
  	<select id="recMailListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
-		select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date
+		select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename
 		from 
 		(
 		select row_number() over(order by pk_mail_num desc) AS rno,
 		       pk_mail_num, fk_senduser_num, sendempname, subject
 		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+		       , filename
 		from tbl_mail
 		where fk_receiveuser_num = #{fk_receiveuser_num} and del_status = 0
 		<if test="searchType != ''">
@@ -58,12 +60,13 @@
 	
 	<!-- 페이징처리 한 보낸 메일목록 (검색 있든, 없든 모두 다 포함) -->
  	<select id="sendMailListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
-		select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date
+		select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename
 		from 
 		(
 		select row_number() over(order by pk_mail_num desc) AS rno,
 		       pk_mail_num, fk_receiveuser_num, recempname, subject
 		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+		       , filename
 		from tbl_mail
 		where fk_senduser_num = #{fk_senduser_num} and del_status = 0
 		<if test="searchType != ''">
@@ -75,13 +78,13 @@
 	
 	
 
-	<!-- 페이징처리 / 검색기능 포함 된 받은메일함 목록에서 상세내용 조회하기 (이전글, 다음글 추가예정) -->
+	<!-- 페이징처리 / 검색기능 포함 된 받은메일함 목록에서 상세내용 조회하기 (이전글, 다음글 제외) -->
 	<select id="getRecMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">	
-		select pk_mail_num, fk_senduser_num, fk_receiveuser_num, sendempname, email, subject, content, reg_date
+		select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content, reg_date
 			 , filename, orgfilename, filesize
 				from
 				(
-				    select pk_mail_num, fk_senduser_num, fk_receiveuser_num, sendempname, email, subject, content
+				    select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content
 				         , to_char(reg_date, 'yyyy-mm-dd hh24:mi:ss') as reg_date         
 				         , fileName, orgFilename, fileSize
 				    from tbl_mail
@@ -118,6 +121,24 @@
 		where V.pk_mail_num = #{pk_mail_num}
 	 </select>
 	-->	
+	
+
+	<!-- 페이징처리 / 검색기능 포함 된 보낸메일함 목록에서 상세내용 조회하기 (이전글, 다음글 제외) -->
+	<select id="getSendMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">	
+		select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content, reg_date
+			 , filename, orgfilename, filesize
+				from
+				(
+				    select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content
+				         , to_char(reg_date, 'yyyy-mm-dd hh24:mi:ss') as reg_date         
+				         , fileName, orgFilename, fileSize
+				    from tbl_mail
+					<if test='searchType != "" and searchWord != "" '>
+					where lower(${searchType}) like '%'|| lower(#{searchWord}) || '%'
+					</if>	    
+				) V
+		where V.pk_mail_num = #{pk_mail_num}
+	</select>
 
 
 	<!-- 메일주소로 사원이름 및 사원번호 알아오기 -->
@@ -143,7 +164,10 @@
 	
 	<!-- 메일쓰기 (파일첨부가 있는 메일쓰기) -->
 	<insert id="add_withFile" parameterType="com.spring.bts.minjeong.model.MailVO">
-		insert into tbl_mail_recyclebin
+		insert into tbl_mail(pk_mail_num, fk_senduser_num, fk_receiveuser_num, recempname, sendempname
+						   , recemail, sendemail, subject, content, reg_date, filename, orgfilename, filesize, importance, reservation_status, read_status) 
+		values(SEQ_MAIL.nextval, to_number(#{fk_senduser_num}), to_number(#{fk_receiveuser_num}), #{recempname}
+			   , #{sendempname}, #{recemail}, #{sendemail}, #{subject}, #{content}, default, #{filename}, #{orgfilename}, #{filesize}, default, default, default)
 	</insert>
 	
 	

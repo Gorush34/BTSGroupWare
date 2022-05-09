@@ -97,9 +97,9 @@
 								<th style="width: 2%;">
 									<span class="fa fa-star-o"></span>
 								</th>
-								<th style="width: 2%;">
-									<span class="fa fa-paperclip"></span>
-								</th>
+									<th style="width: 2%;">
+										<span class="fa fa-paperclip"></span>
+									</th>
 								<th style="width: 10%;" class="text-center">받는이</th>
 								<th style="width: 70%;">제목</th>
 								<th style="width: 20%;" class="text-left">날짜</th>
@@ -107,7 +107,7 @@
 						</thead>
 						
 						<tbody>
-						<c:forEach items="${requestScope.SendMailList}" var="SendMailList">
+						<c:forEach items="${requestScope.SendMailList}" var="SendMailList" varStatus="status">
 							<tr>
 								<td style="width: 40px;">
 									<input type="checkbox" id="checkAll" class="text-center"/>
@@ -116,7 +116,9 @@
 									<span class="fa fa-star-o" class="text-center"></span>
 								</td>
 								<td style="width: 40px;">
-									<span class="fa fa-paperclip" class="text-center"></span>
+									<c:if test="${not empty SendMailList.filename}">
+										<span class="fa fa-paperclip" class="text-center"></span>
+									</c:if>
 								</td>							
 								<td class="text-center">${SendMailList.recempname}</td>
 								<td>

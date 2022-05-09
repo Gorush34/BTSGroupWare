@@ -1,6 +1,8 @@
 package com.spring.bts.minjeong.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
@@ -78,28 +80,22 @@ public class MailController {
 	       request.getParameter("form 태그의 name명"); 을 사용하지 않더라도
 	              자동적으로 BoardVO boardvo 에 set 되어진다. (xml(Mapper)파일에서 일일이 set 을 해주지 않아도 된다.)
 	    */			
+		
 		/*
-		 * // 받는사원 ID String fk_receiveuser_num =
-		 * mrequest.getParameter("fk_receiveuser_num"); // //
-		 * System.out.println("확인용 fk_receiveuser_num(사원번호) :" + fk_receiveuser_num);
-		 * 
-		 * // 받는사원 사원명 String empname = mrequest.getParameter("empname"); // //
-		 * System.out.println("확인용 empname(사원명) :" + empname);
-		 * 
-		 * // 제목 String subject = mrequest.getParameter("subject"); // //
+		 * // 제목 String subject = mrequest.getParameter("subject");
 		 * System.out.println("확인용 subject(제목) :" + subject);
 		 * 
-		 * // 메일쓰기 시 체크박스 체크여부 (체크 :1, 체크X :0) String importanceVal
-		 * =mrequest.getParameter("importanceVal"); // //
+		 * // 메일쓰기 시 체크박스 체크여부 (체크 :1, 체크X :0) String importanceVal =
+		 * mrequest.getParameter("importanceVal");
 		 * System.out.println("확인용 importanceVal(중요체크박스 체크여부) :" + importanceVal);
 		 * 
-		 * // 첨부 파일 String mail_attach = mrequest.getParameter("mail_attach"); // //
-		 * System.out.println("확인용 mail_attach(첨부파일) :" + mail_attach);
+		 * // 첨부 파일 // String attach = mrequest.getParameter("attach"); //
+		 * System.out.println("확인용 attach(첨부파일) :" + attach);
 		 * 
-		 * 
-		 * // 메일 내용 String content = mrequest.getParameter("content"); // //
+		 * // 메일 내용 String content = mrequest.getParameter("content");
 		 * System.out.println("확인용 content(메일 내용) :" + content);
-		 */		 
+		 * 
+		 */
 		
 		/*
 		 * mav.addObject("fk_receiveuser_num", fk_receiveuser_num);
@@ -118,9 +114,6 @@ public class MailController {
 		 */
 		
 		
-		// 받는사람 - 
-		// 받는사람 사원번호가 없음 fk_receiveuser_num
-		// 받는사람 사원명은 가져왔음 (이메일을 통해서
 		String uq_email = "";	   /* 이메일 */
         try {
 			uq_email = aes.encrypt(mrequest.getParameter("recemail"));
@@ -141,9 +134,9 @@ public class MailController {
         mailvo.setRecempname(emp_name);
         mailvo.setFk_receiveuser_num(pk_emp_no);
         
-        System.out.println("확인용 emp_name :" + emp_name);
-        System.out.println("확인용 pk_emp_no :" + pk_emp_no);
-        System.out.println("확인용 uq_email : " + uq_email);
+   //   System.out.println("확인용 emp_name :" + emp_name);
+   //   System.out.println("확인용 pk_emp_no :" + pk_emp_no);
+   //   System.out.println("확인용 uq_email : " + uq_email);
                
         /*
         service.getRecEmpname(uq_email);
@@ -608,7 +601,7 @@ public class MailController {
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		
-		// 	받은 메일함 글목록 보여주기 
+		// 	보낸 메일함 글목록 보여주기 
 		// 	receiveMailList = service.getReceiveMailList();
 				
 		mav.addObject("fk_senduser_num", fk_senduser_num);
@@ -623,13 +616,59 @@ public class MailController {
 	@RequestMapping(value = "/mail/mailSendDetail.bts")	
 	public ModelAndView mailSendDetail(HttpServletRequest request, ModelAndView mav) {
 		
+		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+		
+		// view 단에서 요청한 검색타입 및 검색어, 글번호 받아오기
+		String pk_mail_num = request.getParameter("pk_mail_num");	// 글번호
+		String searchType = request.getParameter("searchType");		// 검색타입
+		String searchWord = request.getParameter("searchWord");		// 검색어
+		
+		// 사용자가 검색타입 및 검색어를 입력하지 않았을 경우
+		if(searchType == null) {
+			searchType = "";
+		}
+		
+		if(searchWord == null) {
+			searchWord = "";
+		}
+		
+		// 사용자가 메일번호(pk_mail_num=?) 뒤에 정수외의 것을 입력하지 않도록 exception 처리를 한다.
+		try {
+			Integer.parseInt(pk_mail_num);			
+
+		
+			// 글 내용 한개 뿐만 아니라 검색도 해야하므로 Map 에 담는다.
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("pk_mail_num", pk_mail_num);
+			
+			// mapper 로 사용자가 입력한 검색타입과 검색어를 map 에 담아서 보낸다.
+			paraMap.put("searchType", searchType);
+			paraMap.put("searchWord", searchWord);
+			
+			// map 에 담은 검색타입과 검색어를 view 단으로 보낸다.
+			mav.addObject("paraMap", paraMap);
+			
+			// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
+			MailVO mailvo = null;
+			mailvo = service.getSendMailView(paraMap);
+			mav.addObject("mailvo", mailvo);
+			
+			// 첨부파일 다운로드 받기				
+			// 이전글 및 다음글 보여주기
+			
+			
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+				
+		
 		mav.setViewName("mailSendDetail.mail");
 		return mav;
 	}		
 		
 	
 	// 중요메일함
-	@RequestMapping(value = "/mail/mailImportant.bts")	
+	@RequestMapping(value = "/mail/mailImportantList.bts")	
 	public ModelAndView mailImportant(HttpServletRequest request, ModelAndView mav) {
 		
 		mav.setViewName("mailImportant.mail");
@@ -684,7 +723,7 @@ public class MailController {
 	}		
 	
 	// 임시보관함
-	@RequestMapping(value = "/mail/mailTemporary.bts")	
+	@RequestMapping(value = "/mail/mailTemporaryList.bts")	
 	public ModelAndView mailTemporary(HttpServletRequest request, ModelAndView mav) {
 		
 		mav.setViewName("mailTemporary.mail");
@@ -703,7 +742,7 @@ public class MailController {
 	
 	
 	// 예약메일함
-	@RequestMapping(value = "/mail/mailReservation.bts")	
+	@RequestMapping(value = "/mail/mailReservationList.bts")	
 	public ModelAndView mailReservation(HttpServletRequest request, ModelAndView mav) {
 		
 		mav.setViewName("mailReservation.mail");
@@ -823,7 +862,7 @@ public class MailController {
 	
 	
 	// 휴지통 목록 보여주기
-	@RequestMapping(value = "/mail/mailRecyclebin.bts")	
+	@RequestMapping(value = "/mail/mailRecyclebinList.bts")	
 	public ModelAndView mailRecyclebin(HttpServletRequest request, ModelAndView mav) {
 		
 		mav.setViewName("mailRecyclebin.mail");
@@ -845,5 +884,106 @@ public class MailController {
 		mav.setViewName("mailRecyclebinClear.mail");
 		return mav;
 	}		
+	
+
+	
+	
+	// 첨부파일 다운로드 하기 (메일 상세내용 보기 클릭 시 첨부된 파일 다운로드)
+	@RequestMapping(value = "/mail/download.bts")
+	public void download(HttpServletRequest request, HttpServletResponse response) {
+	// 파일 다운로드만 받기 때문에 return 타입은 없다.
+	// 원글에 대한 첨부파일 다운로드 이므로, 원글번호를 알아와야 한다.
+	// 로그인 하지 않은 사용자가 url 에 주소를 입력하고 바로 들어올 수도 있다. (파일 다운로드는 로그인 해야만 다운받을 수 있다. 로그인을 했는지 안했는지 검사한다.)
+	// 따라서 before,after 를 통해 로그인 유무를 검사해야한다.		
+		String pk_mail_num = request.getParameter("pk_mail_num");
+		
+		/*
+		 	첨부파일이 있는 글번호에서
+		 	202204291419371025088801698800.jpg 처럼
+		 	이러한 fileName 값을 DB 에서 가져와야 한다.
+		 	또한 orgFilename 값도 DB 에서 가져와야 한다.
+		 */
+
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("searchType", "");
+		paraMap.put("searchWord", "");
+		paraMap.put("pk_mail_num", pk_mail_num);
+		
+		// HttpServletResponse response 객체는 넘어온 데이터를 조작해서 결과물을 나타내고자 할 때 쓰인다. (웹에 보여주도록 하겠다.)
+		response.setContentType("text/html; charset=UTF-8");	// content 타입을 셋팅한다.
+		PrintWriter out = null;
+		// out 은 웹브라우저에 기술하는 대상체라고 생각하자.
+
+		try {
+			
+			Integer.parseInt(pk_mail_num);	// 글번호 자리에 숫자만 들어오도록 한다.
+			MailVO mailvo = service.getRecMailView(paraMap);	// return 타입은 mailVO (글 1개를 얻어옴)
+			
+			// 글은 존재하지만 파일이 존재하지 않는 경우 (파일명이 존재하지 않는것 --> 파일이 존재 X)
+			if(mailvo == null || (mailvo != null && mailvo.getFilename() == null) ) {
+				out = response.getWriter();
+				
+				out.println("<script type='text/javascript'>alert('존재하지 않는 글번호이거나 첨부파일이 없으므로 파일 다운로드가 불가합니다.'); history.back(); <script>");
+				return;	// 종료
+				
+			}
+			else {
+				// 글도 존재하고 파일도 존재하는 경우 (올바르게 다운로드 될 수 있도록 한다.)
+				String filename = mailvo.getFilename();
+				// WAS(톰캣) 디스크에 저장된 파일명이다.
+				
+				String orgfilename = mailvo.getOrgfilename();
+				// 다운로드를 받을 때에는 orgName 으로 받아야 한다. (숫자로 된 파일명을 다운받을 순 없으니..)
+				
+				// 첨부파일이 저장되어 있는 WAS(톰캣)의 디스크 경로명을 알아와야만 다운로드를 해줄수 있다. 
+	            // 이 경로는 우리가 파일첨부를 위해서 /addEnd.action 에서 설정해두었던 경로와 똑같아야 한다.
+	            // WAS 의 webapp 의 절대경로를 알아와야 한다.
+				HttpSession session = request.getSession();
+				String root = session.getServletContext().getRealPath("/");	// /webapp
+				
+				String path = root+"resources"+File.separator+"files";
+				/* File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
+				      운영체제가 Windows 이라면 File.separator 는  "\" 이고,
+				      운영체제가 UNIX, Linux 이라면  File.separator 는 "/" 이다. 
+				*/				
+				
+				// path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다. --> path 에 파일을 업로드 한다.
+				// System.out.println("**** 확인용 path 의 절대경로 "+ path);
+			
+				// **** file 다운로드 하기 **** // 경로명을 알아왔으니 파일을 다운로드 받자.
+				// fileManager 에서 파일다운로드 하기 부분을 참고하자. (의존객체 DI)	
+				boolean flag = false;
+				flag = fileManager.doFileDownload(filename, orgfilename, path, response);
+				// fileName : 저장된 파일명, orgFilename : 다운로드 받을 때 필요 , path : 저장된 경로, response : 파라미터에 존재)
+				// 파일 다운로드 성공시 flag는 true, 실패하면 flag는 false를 가진다.
+				
+				if(!flag) {
+					// 다운로드 실패 시 메시지를 띄운다.
+					out = response.getWriter();
+					
+					out.println("<script type='text/javascript'>alert('파일 다운로드에 실패했습니다.'); history.back(); <script>");
+				}
+				
+			}
+			
+			
+		} catch (NumberFormatException | IOException e) {
+			// 숫자 이외의 것이 들어왔을 때 대비해서 예외처리 / 입출력 예외처리			
+			try {
+				out = response.getWriter();
+				
+				out.println("<script type='text/javascript'>alert('파일 다운로드가 불가합니다.'); history.back(); <script>");
+			} catch (Exception e1) {
+				e.printStackTrace();	
+			}
+			
+		}
+		
+		
+		
+		
+		
+	}
+	
 	
 }

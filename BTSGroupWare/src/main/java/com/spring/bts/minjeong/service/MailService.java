@@ -59,11 +59,17 @@ public class MailService implements InterMailService {
 		return sendMailList;
 	}
 
+	// 메일주소로 사원이름, 사원번호 알아오기
+	@Override
+	public Map<String, String> getEmpnameAndNum(String uq_email) {
+		Map<String, String> empnameAndNum = dao.getEmpnameAndNum(uq_email);
+		return empnameAndNum;
+	}
+	
 	// 메일쓰기 (파일첨부가 없는 메일쓰기)
 	@Override
 	public int add(MailVO mailvo) {
 		int n = dao.add(mailvo);
-
 		return n;
 		
 	}
@@ -75,13 +81,20 @@ public class MailService implements InterMailService {
 		return n;
 	}
 
-	// 메일 1개 상세내용을 읽어오기
+	// 받은메일 1개 상세내용을 읽어오기
 	@Override
 	public MailVO getRecMailView(Map<String, String> paraMap) {
 		MailVO mailvo = dao.getRecMailView(paraMap);		
 		return mailvo;
 	}
 
+	// 받은메일 1개 상세내용을 읽어오기
+	@Override
+	public MailVO getSendMailView(Map<String, String> paraMap) {
+		MailVO mailvo = dao.getSendMailView(paraMap);		
+		return mailvo;
+	}
+	
 	// *** 아래 3개의 메소드는 1 set 이다. (첨부파일 유/무 --> 메일 삭제상태 1로 변경)
 	// 받은 메일함목록에서 선택 후 삭제버튼 클릭 시 휴지통테이블로 insert 하기 (첨부파일 있을 때)
 	@Override
@@ -102,13 +115,6 @@ public class MailService implements InterMailService {
 	public int updateFromTblMailRecDelStatus(Map<String, String> paraMap) {
 		int n = dao.updateFromTblMailRecDelStatus(paraMap);
 		return n;
-	}
-
-	// 메일주소로 사원이름, 사원번호 알아오기
-	@Override
-	public Map<String, String> getEmpnameAndNum(String uq_email) {
-		Map<String, String> empnameAndNum = dao.getEmpnameAndNum(uq_email);
-		return empnameAndNum;
 	}
 
 

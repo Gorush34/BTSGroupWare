@@ -199,8 +199,9 @@
 									<span class="fa fa-star-o" class="text-center"></span>
 								</td>
 								<td style="width: 40px;">
-									<span class="fa fa-paperclip" class="text-center"></span>
-								</td>							
+									<c:if test="${not empty receiveMailList.filename}">
+										<span class="fa fa-paperclip" class="text-center"></span>
+									</c:if>								</td>							
 								<td class="text-center">${receiveMailList.sendempname}</td>
 								<td>
 								<%--

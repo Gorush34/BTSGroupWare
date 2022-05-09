@@ -76,6 +76,13 @@ public class MailDAO implements InterMailDAO {
 		return sendMailList;
 	}
 
+	// 메일주소로 사원이름, 사원번호 알아오기 (메일쓰기 받는사람 입력)
+	@Override
+	public Map<String, String> getEmpnameAndNum(String uq_email) {
+		Map<String, String> recEmpnameAndNum = sqlsession.selectOne("minjeong.getEmpnameAndNum", uq_email);
+		return recEmpnameAndNum;
+	}
+	
 	// 메일쓰기 (파일첨부가 없는 메일쓰기)
 	@Override
 	public int add(MailVO mailvo) {
@@ -90,10 +97,17 @@ public class MailDAO implements InterMailDAO {
 		return n;
 	}
 
-	// 메일 1개 상세내용을 읽어오기
+	// 보낸 메일 1개 상세내용을 읽어오기
 	@Override
 	public MailVO getRecMailView(Map<String, String> paraMap) {
 		MailVO mailvo = sqlsession.selectOne("minjeong.getRecMailView", paraMap);
+		return mailvo;
+	}
+
+	// 받은 메일 1개 상세내용을 읽어오기
+	@Override
+	public MailVO getSendMailView(Map<String, String> paraMap) {
+		MailVO mailvo = sqlsession.selectOne("minjeong.getSendMailView", paraMap);
 		return mailvo;
 	}
 
@@ -119,11 +133,5 @@ public class MailDAO implements InterMailDAO {
 		return n;
 	}
 
-	// 메일주소로 사원이름, 사원번호 알아오기
-	@Override
-	public Map<String, String> getEmpnameAndNum(String uq_email) {
-		Map<String, String> recEmpnameAndNum = sqlsession.selectOne("minjeong.getEmpnameAndNum", uq_email);
-		return recEmpnameAndNum;
-	}
 
 }

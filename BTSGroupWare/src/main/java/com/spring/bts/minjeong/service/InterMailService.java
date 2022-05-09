@@ -28,9 +28,12 @@ public interface InterMailService {
 	// 메일쓰기 (파일첨부가 있는 메일쓰기)
 	int add_withFile(MailVO mailvo);
 
-	// 받은 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
+	// 받은 메일 1개 상세내용을 읽어오기 
 	MailVO getRecMailView(Map<String, String> paraMap);
 
+	// 보낸 메일 1개 상세내용을 읽어오기
+	MailVO getSendMailView(Map<String, String> paraMap);
+	
 	// *** 아래 3개의 메소드는 1 set 이다. (첨부파일 유/무 --> 메일 삭제상태 1로 변경)
 	// 메일함목록에서 선택 후 삭제버튼 클릭 시 휴지통테이블로 insert 하기 (첨부파일 있을 때)
 	int moveToRecyclebin(Map<String, String> paraMap);
@@ -44,6 +47,5 @@ public interface InterMailService {
 	// 메일주소로 사원이름, 사원번호 알아오기
 	Map<String, String> getEmpnameAndNum(String uq_email);
 
-	
 	
 }
