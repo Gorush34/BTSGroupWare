@@ -98,14 +98,79 @@
 	<select id="selectSchedule" parameterType="String" resultType="com.spring.bts.jieun.model.ScheduleVO">
 		select pk_schno, fk_emp_no, fk_calno, subject, startdate, enddate, content, color, place, joinuser, fk_lgcatgono
 		from tbl_schedule
-		where fk_emp_no = #{fk_emp_no}
-		fk_lgcatgono = 2 <!--  OR
-		(fk_lgcatgono != 2 AND lower(joinuser) || #{fk_emp_no}) ) -->
+		where fk_emp_no = #{fk_emp_no} 
+		OR fk_lgcatgono = 2 
+		<!--  OR (fk_lgcatgono != 2 AND lower(joinuser) || #{fk_emp_no}) ) -->
 		order by pk_schno asc
 	</select>
 
+	<!-- 일정 상세 페이지  -->
+	<resultMap type="HashMap" id="detailSchedule_Map">
+		<result property="PK_SCHNO" 	column="pk_schno" 	    javaType="String"/>
+		<result property="STARTDATE" 	column="startdate" 		javaType="String" />
+		<result property="ENDDATE" 		column="enddate" 		javaType="String" />
+		<result property="SUBJECT" 		column="subject" 		javaType="String" />
+		<result property="COLOR" 		column="color" 			javaType="String" />
+		<result property="PLACE" 		column="place" 			javaType="String" />
+		<result property="JOINUSER" 	column="joinuser" 		javaType="String" />
+		<result property="CONTENT" 		column="content" 		javaType="String" />
+		<result property="FK_CALNO"     column="fk_calno" 	    javaType="String" />
+		<result property="FK_LGCATGONO" column="fk_lgcatgono" 	javaType="String" />
+		<result property="FK_EMP_NO" 	column="fk_emp_no" 		javaType="String" />
+		<result property="EMP_NAME" 	column="emp_name" 		javaType="String" />
+		<result property="CALNAME" 	    column="calname" 	    javaType="String" />
+	</resultMap>
+	
+	<select id="detailSchedule" parameterType="String" resultMap="detailSchedule_Map">
+		select SD.pk_schno
+		     , to_char(SD.startdate,'yyyy-mm-dd hh24:mi') as startdate
+		     , to_char(SD.enddate,'yyyy-mm-dd hh24:mi') as enddate  
+		     , SD.subject
+		     , SD.color
+		     , nvl(SD.place,'-') as place
+		     , nvl(SD.joinuser,'공유자가 없습니다.') as joinuser
+		     , nvl(SD.content,'') as content
+		     , SD.fk_calno
+		     , SD.fk_lgcatgono
+		     , SD.fk_emp_no
+		     , E.emp_name
+		     , C.calname
+		from tbl_schedule SD 
+		JOIN tbl_employees E
+		ON SD.fk_emp_no = E.pk_emp_no
+		JOIN tbl_calendar C
+		ON SD.fk_calno = C.pk_calno
+		where SD.pk_schno = #{pk_schno}
+	</select>
+		
+		
+	<!-- 일정 삭제 하기  -->
+	<delete id="deleteSchedule" parameterType="String">
+		delete from tbl_schedule
+		where pk_schno = #{pk_schno}
+	</delete>
+
+	<!-- 일정 수정하기 -->
+	<update id="editSchedule_end" parameterType="com.spring.bts.jieun.model.ScheduleVO">
+		update tbl_schedule set startdate = to_date(#{startdate}, 'yyyymmddhh24miss')
+                              , enddate = to_date(#{enddate}, 'yyyymmddhh24miss')
+                              , subject = #{subject}
+                              , fk_lgcatgono = #{fk_lgcatgono}
+                              , fk_calno = #{fk_calno}
+                              , color = #{color}
+                              , place = #{place}
+                              , joinuser = #{joinuser}
+                              , content = #{content}
+		where pk_schno = #{pk_schno}
+	</update>
 
 
+
+
+<!-- ======================================================================== -->
+
+
+	
 
 
 </mapper>

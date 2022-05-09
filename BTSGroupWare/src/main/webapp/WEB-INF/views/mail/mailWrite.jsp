@@ -10,82 +10,38 @@
 
 <style type="text/css">
 
-<%-- 테이블 --%>
-   table, th, td, input, textarea {border: solid #a0a0a0 1px;}
-   
-   #table {border-collapse: collapse;
+/* 테이블 */
+  table, th, td, input, textarea {border: solid #a0a0a0 0px;}
+  
+  #table {border-collapse: collapse;
           width: 1175px;
           }
-   #table th, #table td{padding: 5px;}
-   #table th{ 
-   		background-color: #6F808A; 
-   		color: white;
-   }
+         
+  #table th, #table td{padding: 5px;}
+  #table th{ 
+  		background-color: #6F808A; 
+  		color: white;
+  }
 
-<%-- 버튼 --%>   
-   .buttonList {
-   		display: inline-block;
-   		list-style-type: none;
-   		margin-right: 15px;
-   }
-  
-   #buttonGroup {
-   		padding: 0px;
-   		margin-top: 5px;
-   }
-   
-     button {
-   		border-radius: 3px !important;
-   } 
-   
-<%-- 파일첨부 --%>
-   /*input="file" 태그 원래 형태 지우기*/
-   #mail_file_upload {
-	    width: 0.1px;
-		height: 0.1px;
-		opacity: 0;
-		overflow: hidden;
-		position: absolute;
-		z-index: -1;   
-   }
-   
-   #mail_file_upload + label {
-	    border: 1px solid gray; /*1px solid #d9e1e8;*/
-	    background-color: #fff;
-	    color: black; /*#2b90d9;*/
-	    padding: 6px 12px 0px 12px;
-	    font-weight: 400;
-	    font-size: 14px;
-	    box-shadow: 1px 2px 3px 0px #f2f2f2;
-	    outline: none;
-	    margin-left: 10px;
-	    margin-bottom: 0px;
-	    height: 30px;
-   }
+/*버튼 */   
+  .buttonList {
+  		display: inline-block;
+  		list-style-type: none; 	
+  		size: 10px;	
+  }
  
-   #mail_file_upload:focus + label,
-   #mail_file_upload + label:hover {
-    	cursor: pointer;
-   }
-   
-   /* named upload */ 
-   .upload-name { 
-   		display: inline-block; 
-   		padding: .5em .75em;
-   		font-size: inherit; 
-   		font-family: inherit; 
-   		line-height: normal; 
-   		vertical-align: middle; 
-   		background-color: #f5f5f5; 
-   		border: 1px solid #ebebeb; 
-   		border-bottom-color: #e2e2e2; 
-   		-webkit-appearance: none; /*요소 자체구성요소 숨기기*/ 
-   		-moz-appearance: none; 
-   		appearance: none; 
-   		height: 30px;
-   		margin-bottom: .30em;
-   		width: 250px;
-   	}   
+  #buttonGroup {
+  		padding: 0px;
+  		margin-top: 5px;
+  }
+  
+    button {
+  		border-radius: 3px !important;
+  } 
+  
+  /* 파일첨부 */
+  /*input="file" 태그 원래 형태 지우기*/
+
    
 </style>
 
@@ -95,23 +51,235 @@
 
 <script type="text/javascript">
 
+	$(document).ready(function(){
+		// 문서가 준비되면 매개변수로 넣은 콜백함수 실행하기
+				
+				// 새로고침 버튼 이벤트 (새로고침 버튼 클릭 시 reset)
+				$("#reset").click(function() {
+					
+					 location.reload();
+					
+				})// end of $("#reset").click(function(){})----------------------
+				
+		  <%-- === 스마트 에디터 구현 시작 === --%>
+	       //전역변수
+	       var obj = [];
+	       
+	       //스마트에디터 프레임생성
+	       nhn.husky.EZCreator.createInIFrame({
+	           oAppRef: obj,
+	           elPlaceHolder: "content",
+	           sSkinURI: "<%= ctxPath%>/resources/smarteditor/SmartEditor2Skin.html",
+	           htParams : {
+	               // 툴바 사용 여부 (true:사용/ false:사용하지 않음)
+	               bUseToolbar : true,            
+	               // 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
+	               bUseVerticalResizer : true,    
+	               // 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
+	               bUseModeChanger : true,
+	           }
+	       });
+	      <%-- === 스마트 에디터 구현 끝 === --%>
+		
+	       // 보내기 버튼 클릭 시 event 발생
+	       $("button#btnMailSend").click(function() {
+		  		 <%-- === 스마트 에디터 구현 시작 === --%>
+		       	//id가 content인 textarea에 에디터에서 대입
+		        	obj.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
+		      	 <%-- === 스마트 에디터 구현 끝 === --%>		      	 
+		      	
+		    // 	  alert("클릭 확인");
+		      	 
+		      	 // 받는사람 유효성 검사
+		      	 var recemail = $("input#recemail").val().trim();
+		      	 if(recemail == "") {
+		      		 alert("받는 사람을 입력해주세요.");
+		      		 return false;
+		      	 }
+		      	 
+		      	 // 메일제목 유효성 검사
+		      	 var subject = $("input#subject").val().trim();
+		      	 if(subject == "") {
+		      		 alert("제목을 입력해주세요.");
+		      		 return false;
+		      	 }
+		      	 
+		      	 // 메일내용 유효성 검사 (스마트 에디터)
+		 		<%-- === 스마트에디터 구현 시작 === --%>
+		        //스마트에디터 사용시 무의미하게 생기는 p태그 제거
+		         var contentval = $("textarea#content").val();
+		             
+		          // === 확인용 ===
+		          // alert(contentval); // content에 내용을 아무것도 입력치 않고 쓰기할 경우 알아보는것.
+		          // "<p>&nbsp;</p>" 이라고 나온다.
+		          
+		          // 스마트에디터 사용시 무의미하게 생기는 p태그 제거하기전에 먼저 유효성 검사를 하도록 한다.
+		          // 글내용 유효성 검사 
+		          if(contentval == "" || contentval == "<p>&nbsp;</p>") {
+		             alert("글내용을 입력하세요!!");
+		             return;
+		          }
+		          
+		          // 스마트에디터 사용시 무의미하게 생기는 p태그 제거하기
+		          contentval = $("textarea#content").val().replace(/<p><br><\/p>/gi, "<br>"); //<p><br></p> -> <br>로 변환
+		      	/*    
+		                  대상문자열.replace(/찾을 문자열/gi, "변경할 문자열");
+		          ==> 여기서 꼭 알아야 될 점은 나누기(/)표시안에 넣는 찾을 문자열의 따옴표는 없어야 한다는 점입니다. 
+		                            그리고 뒤의 gi는 다음을 의미합니다.
+	
+		             g : 전체 모든 문자열을 변경 global
+		             i : 영문 대소문자를 무시, 모두 일치하는 패턴 검색 ignore
+		      	*/    
+		          contentval = contentval.replace(/<\/p><p>/gi, "<br>"); //</p><p> -> <br>로 변환  
+		          contentval = contentval.replace(/(<\/p><br>|<p><br>)/gi, "<br><br>"); //</p><br>, <p><br> -> <br><br>로 변환
+		          contentval = contentval.replace(/(<p>|<\/p>)/gi, ""); //<p> 또는 </p> 모두 제거시
+		      
+		          $("textarea#content").val(contentval);
+		       
+		          // alert(contentval);
+		      	<%-- === 스마트에디터 구현 끝 === --%>	      	 
+		      	 
+		      	// 중요 체크박스에 체크되어있는지 확인
+		      	var importanceVal = 0;
+		      	if($("input[name=importance]").prop("checked")) {
+		      		// 중요 체크박스에 체크되어 있을 때 중요메일함에 들어가도록 하기
+		      		importanceVal = 1;
+		      	}
+		 
+		      	var frm = document.mailWriteFrm;
+		      	frm.importanceVal.value = importanceVal;
+		      	frm.method = "POST";
+		      	frm.action = "<%= ctxPath%>/mail/mailWriteEnd.bts";
+		        frm.submit();
+		      	
+		   	//	console.log(frm);		// form 태그 전체
+		   	//	console.log(frm.importanceVal.value);	// 체크 안했을 때 0
+		   	//	console.log(frm.method); 	// post
+		   
+			});// end of $("button#btnMailSend").click(function() {})-------------------------
+
+		
+			// 임시저장 버튼 클릭 시 임시보관 테이블로 insert 하기
+			$("button#tempSave").click(function() {
+
+	  		 <%-- === 스마트 에디터 구현 시작 === --%>
+		       	//id가 content인 textarea에 에디터에서 대입
+		        	obj.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
+		      	 <%-- === 스마트 에디터 구현 끝 === --%>		      	 
+		      	
+		    // 	  alert("클릭 확인");
+		      	 
+		      	 // 받는사람 유효성 검사
+		      	 var recemail = $("input#recemail").val().trim();
+		      	 if(recemail == "") {
+		      		 alert("받는 사람을 입력해주세요.");
+		      		 return false;
+		      	 }
+		      	 
+		      	 // 메일제목 유효성 검사
+		      	 var subject = $("input#subject").val().trim();
+		      	 if(subject == "") {
+		      		 alert("제목을 입력해주세요.");
+		      		 return false;
+		      	 }
+		      	 
+		      	 // 메일내용 유효성 검사 (스마트 에디터)
+		 		<%-- === 스마트에디터 구현 시작 === --%>
+		        //스마트에디터 사용시 무의미하게 생기는 p태그 제거
+		         var contentval = $("textarea#content").val();
+		             
+		          // === 확인용 ===
+		          // alert(contentval); // content에 내용을 아무것도 입력치 않고 쓰기할 경우 알아보는것.
+		          // "<p>&nbsp;</p>" 이라고 나온다.
+		          
+		          // 스마트에디터 사용시 무의미하게 생기는 p태그 제거하기전에 먼저 유효성 검사를 하도록 한다.
+		          // 글내용 유효성 검사 
+		          if(contentval == "" || contentval == "<p>&nbsp;</p>") {
+		             alert("글내용을 입력하세요!!");
+		             return;
+		          }
+		          
+		          // 스마트에디터 사용시 무의미하게 생기는 p태그 제거하기
+		          contentval = $("textarea#content").val().replace(/<p><br><\/p>/gi, "<br>"); //<p><br></p> -> <br>로 변환
+		      	/*    
+		                  대상문자열.replace(/찾을 문자열/gi, "변경할 문자열");
+		          ==> 여기서 꼭 알아야 될 점은 나누기(/)표시안에 넣는 찾을 문자열의 따옴표는 없어야 한다는 점입니다. 
+		                            그리고 뒤의 gi는 다음을 의미합니다.
+	
+		             g : 전체 모든 문자열을 변경 global
+		             i : 영문 대소문자를 무시, 모두 일치하는 패턴 검색 ignore
+		      	*/    
+		          contentval = contentval.replace(/<\/p><p>/gi, "<br>"); //</p><p> -> <br>로 변환  
+		          contentval = contentval.replace(/(<\/p><br>|<p><br>)/gi, "<br><br>"); //</p><br>, <p><br> -> <br><br>로 변환
+		          contentval = contentval.replace(/(<p>|<\/p>)/gi, ""); //<p> 또는 </p> 모두 제거시
+		      
+		          $("textarea#content").val(contentval);
+		       
+		          // alert(contentval);
+		      	<%-- === 스마트에디터 구현 끝 === --%>	      	 
+		      	 
+		      	// 중요 체크박스에 체크되어있는지 확인
+		      	var importanceVal = 0;
+		      	if($("input[name=importance]").prop("checked")) {
+		      		// 중요 체크박스에 체크되어 있을 때 중요메일함에 들어가도록 하기
+		      		importanceVal = 1;
+		      	}
+		      	
+				<%--	
+				  중요! 체크박스에 선택되어있는지 여부 확인하기
+				 var importanceVal = 0;
+				
+				 if($("input[name=importance]").prop("checked")) {
+					importanceVal = 1;
+				 } 
+				--%>	 
+			
+				const frm = document.mailWriteFrm;
+			//	frm.importanceVal.value = importanceVal;
+				frm.method = "POST";
+				frm.action = "<%= ctxPath%>/mail/mailTemporaryEnd.bts"
+				frm.submit();
+			//	console.log("확인용 frm : " + frm);
+			//	console.log("확인용 method : " + frm.method);
+			//	console.log("확인용 action : " + frm.action);
+				
+			});// end of $("button#tempSave").click(function(){})---------------
+			
+	   
+	 <%--    
+		// 직원 주소록 자동 검색 (aJax)
+			// 받는 사람 이메일 입력 시 포함된 키워드를 통해 재직중인 사원 목록 검색, 결과 없으면 유효한 이메일의 형식만 들어오도록 한다.
+			$("receiverInput").autocomplete({
+				source : function(request, response) {
+					$.ajax({
+							type:"get",
+							url : "empList.bts",
+							dataType : "json",
+							data : {
+								searchValue:request.term	// input 에 입력되는 value 값
+							},
+							success : function(data) {							
+								response(
+									$.map(data, function(item) {
+										
+									<%--	return {
+											label:item.DEPS_depName + " / " + 
+										} 
+										
+									})	
+								);
+							}
+					})
+				}
+			});
+	   --%>
+	
+	});// end of $(document).ready(function (){})--------------------
 
 </script>
 
-<%-- 사이드바 부분 시작 --%>
-<div class="sidebar">
-  <a class="active" href="#home">홈</a>
-  <a href="#writeMail">메일쓰기</a>
-  <a href="#receiveMail">받은메일함</a>
-  <a href="#importantMail">중요메일함</a>
-  <a href="#temporaryMail">임시보관함</a>
-  <a href="#reserveMail">예약메일함</a>
-  <a href="#recyclebinMail">휴지통</a>  
-</div>
-<%-- 사이드바 부분 끝 --%>
-
-<div class="content">
-	<div class="row bg-title" style="border-bottom: solid .025em gray;">	
+<div class="container" style="width: 100%; margin: 50px;">
+	<div class="row bg-title" style="border-bottom: solid 1.5px #e6e6e6;">	
 		<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
 			<h4 class="page-title" style="color: black;">메일 쓰기</h4>
 		</div>
@@ -119,19 +287,19 @@
 
 	<ul id="buttonGroup">
 		<li class="buttonList">
-			<button type="button" id="send" class="btn btn-secondary">
+			<button type="button" id="btnMailSend" class="btn btn-secondary btn-sm">
 			<i class="fa fa-send-o fa-fw" aria-hidden="true"></i>
 			보내기
 			</button>
 		</li>	
 		<li class="buttonList">
-			<button type="button" id="send" class="btn btn-secondary">
+			<button type="button" id="tempSave" class="btn btn-secondary btn-sm">
 			<i class="fa fa-pencil-square-o fa-fw" aria-hidden="true"></i>
 			임시저장
 			</button>
 		</li>	
 		<li class="buttonList">
-			<button type="button" id="send" class="btn btn-secondary">
+			<button type="button" id="reset" class="btn btn-secondary btn-sm">
 			<i class="fa fa-refresh fa-fw" aria-hidden="true"></i>
 			새로고침
 			</button>
@@ -142,28 +310,34 @@
 	<form name="mailWriteFrm" enctype="multipart/form-data" class="form-horizontal" style="margin-top: 20px;">
 		<table id="mailWriteTable">
 			<tr>
-				<th width="14%">받는사람</th>
-				<td width="86%" data-toggle="tooltip" data-placement="top" title="주소록을 이용해주세요.">
-					<input type="text" style="width: 89%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
-					<button type="button" class="btn btn-secondary" style="border: 0px;" data-toggle="modal" data-target="" >주소록</button>					
+				<th width="14%">받는 사람</th>
+				<td width="86%" data-toggle="tooltip" data-placement="top" title="">
+					<input type="text" id="recemail" name="recemail" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
+					
+					<%-- hidden 타입으로 데이터값 보내기 --%>
+			     	<input type="hidden" id="sendemail" name="sendemail" value="${sessionScope.loginuser.uq_email}" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " /> 
+					<input type="hidden" id="fk_senduser_num" name="fk_senduser_num" value="${sessionScope.loginuser.pk_emp_no}"  style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
+					<input type="hidden" id="sendempname" name="sendempname" value="${sessionScope.loginuser.emp_name}" />
+					<button type="button" class="btn btn-secondary btn-sm">주소록</button>
 				</td>
 			</tr>
 			<tr>
 				<th width="14%">
-					<span style="margin-right: 60px;">제목</span>
-					<input type="checkbox" checked="checked" />&nbsp;&nbsp;중요!
+					<span style="margin-right: 40px;">제목</span>
+					<c:if test="${not empty mailTempvo && mailTempvo.importance == 1}">
+						<input type="checkbox" checked="checked" id="importance" name="importance" />&nbsp;&nbsp;중요!
+					</c:if>
+						<input type="checkbox" id="importance" name="importance" />&nbsp;&nbsp;중요!
+						<input type="hidden" id="importanceVal" name="importanceVal" />
 				</th>
-				<td width="86%">
-					<input type="text" style="width: 89%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray;" />
+				<td width="110%" >
+					<input type="text" id="subject" name="subject" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; display: inline-block;" />
 				</td>
 			</tr>		
 			<tr>
 				<th width="14%">파일첨부</th>
 				<td width="86%" style="padding-top: 9px">
-					<input type="file" name="mail_attach" id="mail_file_upload" style="width: 89%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray;" />
-					<label for="mail_file_upload">		
-					<i class="fa fa-file-o"></i>&nbsp;파일선택</label>
-					<input class="upload-name" disabled="disabled" style="border-radius: 3px;" />
+					<input type="file" name="attach" id="attach" style="width: 30%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 0px solid gray;" />
 				</td>
 			</tr>			
 		</table>	
@@ -171,11 +345,11 @@
 		<br>
 		
 		<%-- 메일 내용 시작 (스마트 에디터 사용) --%>
-		<table style="border: 0px; width: 800px;">
+		<table style="border: 0px; width: 1110px;">
 			<tr style="border: 0px;">
 				<td width="1200px;" style="border: 0px">
-					<textarea rows="20" cols="100" style="width: 1150px; height: 400px;" name="mail_content">					
-					</textarea>					
+					<textarea rows="20" cols="100" style="width: 1090px; border: solid 1px gray; height: 400px;" name="content" id="content" >					
+					</textarea>						
 				</td>
 			</tr>
 		</table>
@@ -196,12 +370,12 @@
 			<span style="margin-left: 20px;"></span>
 		</li>	
 	</ul>	
-
-<%-- 주소록 모달 --%>
-
-
-
+</div>
 
 <%-- 발송예약 모달 --%>
 
-</div>
+
+
+
+
+

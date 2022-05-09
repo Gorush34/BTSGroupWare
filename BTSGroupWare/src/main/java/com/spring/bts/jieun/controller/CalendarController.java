@@ -7,6 +7,7 @@ import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.bts.common.AES256;
+import com.spring.bts.common.MyUtil;
 import com.spring.bts.hwanmo.model.EmployeeVO;
 import com.spring.bts.jieun.model.CalendarVO;
 import com.spring.bts.jieun.model.ScheduleVO;
@@ -235,10 +237,10 @@ public class CalendarController {
 	public String deleteCalendar(HttpServletRequest request) throws Throwable  {
 		
 		String pk_calno = request.getParameter("pk_calno");
-		System.out.println("확인용"+ pk_calno);
+	//	System.out.println("확인용"+ pk_calno);
 		
 		int n = service.deleteCalendar(pk_calno);
-		System.out.println("확인용" + n);
+	//	System.out.println("확인용" + n);
 		
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("n", n);
@@ -308,13 +310,13 @@ public class CalendarController {
 		
 		String method = request.getMethod();
 		mav.addObject("method", method);
-		System.out.println("확인용 : "+method);
+	//	System.out.println("확인용 : "+method);
 		
 		String startdate = request.getParameter("startdate");
 		String enddate = request.getParameter("enddate");
 		String subject = request.getParameter("subject");
 		String fk_lgcatgono= request.getParameter("fk_lgcatgono");
-		String fk_calno = request.getParameter("fk_calNo");
+		String fk_calno = request.getParameter("fk_calno");
 		String joinuser = request.getParameter("joinuser");
 		String color = request.getParameter("color");
 		String place = request.getParameter("place");
@@ -352,7 +354,7 @@ public class CalendarController {
 	
 	// === 일정 보여주기 === //
 	@ResponseBody
-	@RequestMapping(value="/calendar/selectSchedule.bts")
+	@RequestMapping(value="/calendar/selectSchedule.bts", produces="text/plain;charset=UTF-8")
 	public String selectSchedule(HttpServletRequest request) {
 		
 		String fk_emp_no = request.getParameter("fk_emp_no");
@@ -383,34 +385,111 @@ public class CalendarController {
 	}
 	
 	
-	
-	// === 예약 메인 페이지 === //	
-	@RequestMapping(value="/reservation/reservationMain.bts")
-	public ModelAndView reservationMain(ModelAndView mav) {
+	// === 일정 상세 페이지 === //
+	@RequestMapping(value="/calendar/detailSchedule.bts")
+	public ModelAndView detailSchedule(ModelAndView mav, HttpServletRequest request) {
 		
-		mav.setViewName("reservationMain.calendar");
+		String pk_schno = request.getParameter("pk_schno");
+		//System.out.println("확인:"+pk_schno);
+		// 검색  취소 버튼 클릭시
+		// String gobackURL_calendar = request.getParameter("gobackURL_calendar");
 		
-		return mav;
-	}
-
-	// === 예약 및 자원 관리자 페이지 === //	
-	@RequestMapping(value="/reservation/reservationAdmin.bts")
-	public ModelAndView reservationAdmin(ModelAndView mav) {
+		// 일정 상세 보기에서 일정수정하기로 넘어갔을 때 
+		String gobackURL_ds = MyUtil.getCurrentURL(request);
+		mav.addObject("gobackURL_ds", gobackURL_ds);
 		
-		mav.setViewName("reservationAdmin.calendar");
-		
-		return mav;
-	}
-	
-	// === 자원등록 페이지 === //	
-	@RequestMapping(value="/reservation/resourceRegister.bts")
-	public ModelAndView resourceRegister(ModelAndView mav) {
-		
-		mav.setViewName("resourceRegister.calendar");
+		try {
+			Integer.parseInt(pk_schno);
+			Map<String,String> map = service.detailSchedule(pk_schno);
+			mav.addObject("map", map);
+			mav.setViewName("detailSchedule.calendar");
+		} catch (NumberFormatException e) {
+			mav.setViewName("redirect:/calendar/calenderMain.bts");
+		}
 		
 		return mav;
 	}
 	
+	// === 일정 삭제 하기 === //
+	@ResponseBody
+	@RequestMapping(value="/calendar/deleteSchedule.bts", method= {RequestMethod.POST})
+	public String deleteSchedule(HttpServletRequest request) {
+		
+		String pk_schno = request.getParameter("pk_schno");
+		
+		int n = service.deleteSchedule(pk_schno);
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n);
+		
+		return jsonObj.toString();
+	}
+	
+	
+	// == 일정 수정 페이지로 이동 == //
+	@RequestMapping(value="/calendar/editSchedule.bts", method= {RequestMethod.POST})
+	public ModelAndView editSchedule(HttpServletRequest request, ModelAndView mav) {
+		
+		String pk_schno = request.getParameter("pk_schno");
+		
+		try {
+			Integer.parseInt(pk_schno);
+			
+			String gobackURL_ds = MyUtil.getCurrentURL(request);
+			
+			HttpSession session = request.getSession();
+			EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+			
+			Map<String,String> map = service.detailSchedule(pk_schno);
+			
+			if(loginuser.getPk_emp_no() != Integer.parseInt(map.get("FK_EMP_NO"))) {
+				String message = "다른 사용자가 작성한 일정은 수정이 불가합니다.";
+				String loc = "javascript:history.back()";
+				
+				mav.addObject("message", message);
+				mav.addObject("loc", loc);
+				mav.setViewName("msg");
+			}
+			else {
+				mav.addObject("map", map);
+				mav.addObject("gobackURL_ds", gobackURL_ds);
+				
+				mav.setViewName("editSchedule.calendar");
+			}
+			
+		} catch (NumberFormatException e) {
+			mav.setViewName("redirect:/calendar/calenderMain.bts");
+		}
+		return mav;
+	}
+	
+	
+	// == 일정 수정하기 == //
+	@ResponseBody
+	@RequestMapping(value="/calendar/editSchedule_end.bts", method= {RequestMethod.POST})
+	public ModelAndView editSchedule_end(ScheduleVO svo, HttpServletRequest request, ModelAndView mav) {
+		
+		try {
+			
+			int n = service.editSchedule_end(svo);
+			
+			if(n==1) {
+				mav.addObject("message", "일정을 수정하였습니다.");
+				mav.addObject("loc", request.getContextPath()+"/calendar/calenderMain.bts");
+			}
+			else {
+				mav.addObject("message", "일정 수정에 실패하였습니다.");
+				mav.addObject("loc", "javascript:history.back()");
+			}
+			
+			mav.setViewName("msg");
+		} catch (Throwable e) {	
+			e.printStackTrace();
+			mav.setViewName("redirect:/calendar/calenderMain.bts");
+		}
+		
+		return mav;
+	}
 	
 		
 		

@@ -46,6 +46,16 @@ public interface InterCalendarService {
 	// === 일정 보여주기 === //
 	List<ScheduleVO> selectSchedule(String fk_emp_no);
 
+	// === 일정 상세 페이지 === //
+	Map<String, String> detailSchedule(String pk_schno);
+
+	// === 일정 삭제 하기 === //
+	int deleteSchedule(String pk_schno);
+
+	
+	// == 일정 수정하기 == //
+	int editSchedule_end(ScheduleVO svo);
+
 	
 	
 	
