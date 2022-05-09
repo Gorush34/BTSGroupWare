@@ -55,7 +55,7 @@
 						      <td style="width:20%; text-align: center;">${cmt.regdate }</td>
 						      <td style="width:20%; text-align: center;">${cmt.in_time }</td>
 						      <td style="width:20%; text-align: center;">${cmt.out_time }</td>
-						      <td style="width:20%; text-align: center;">${cmt.total_worktime }</td>
+						      <td style="width:20%; text-align: center;">${cmt.total_worktime } 시간</td>
 						    </tr>
 					    </c:forEach>
 					  </tbody>
