@@ -358,8 +358,13 @@ public class CalendarController {
 	public String selectSchedule(HttpServletRequest request) {
 		
 		String fk_emp_no = request.getParameter("fk_emp_no");
+		String emp_name = request.getParameter("emp_name");
 		
-		List<ScheduleVO> scheduleList = service.selectSchedule(fk_emp_no);
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("fk_emp_no", fk_emp_no);
+		paraMap.put("emp_name", emp_name);
+		
+		List<ScheduleVO> scheduleList = service.selectSchedule(paraMap);
 		
 		JSONArray jsonArr = new JSONArray();
 		
@@ -492,5 +497,150 @@ public class CalendarController {
 	}
 	
 		
+	// == 일정 검색하기 == //
+	@RequestMapping(value="/calendar/calendarSearch.bts", method = {RequestMethod.GET})
+	public ModelAndView calendarSearch(ModelAndView mav, HttpServletRequest request) {
 		
+		List<Map<String, String>> calendarSearchList = null;
+		
+		String startdate = request.getParameter("startdate");
+		String enddate = request.getParameter("enddate");
+		String searchType = request.getParameter("searchType");
+		String searchWord = request.getParameter("searchWord");
+		String searchSubject = request.getParameter("searchSubject");
+		String searchJoinuser = request.getParameter("searchJoinuser");
+		String fk_emp_no = request.getParameter("fk_emp_no");  // 로그인한 사용자고유번호
+		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
+		String str_sizePerPage = request.getParameter("sizePerPage");
+			
+		if(searchType==null || !"calendar".equals(searchType) ) {  
+			searchType="";
+		}
+		
+		if(searchWord==null || "".equals(searchWord) || searchWord.trim().isEmpty()) {  
+			searchWord="";
+		}
+		
+		if(searchSubject==null || "".equals(searchSubject) || searchSubject.trim().isEmpty()) {
+			searchSubject="";
+		}
+		
+		if(searchJoinuser==null || "".equals(searchJoinuser) || searchJoinuser.trim().isEmpty()) {
+			searchJoinuser="";
+		}
+		
+		if(startdate==null || "".equals(startdate)) {
+			startdate="";
+		}
+		
+		if(enddate==null || "".equals(enddate)) {
+			enddate="";
+		}
+			
+		if(str_sizePerPage == null || "".equals(str_sizePerPage) || 
+		   !("10".equals(str_sizePerPage) || "15".equals(str_sizePerPage) || "20".equals(str_sizePerPage))) {
+				str_sizePerPage ="10";
+		}
+		
+		
+		
+		
+		Map<String, String> paraMap = new HashMap<String, String>();
+		paraMap.put("startdate", startdate);
+		paraMap.put("enddate", enddate);
+		paraMap.put("searchType", searchType);
+		paraMap.put("searchWord", searchWord);
+		paraMap.put("fk_emp_no", fk_emp_no);
+		paraMap.put("searchSubject", searchSubject);
+		paraMap.put("searchJoinuser", searchJoinuser);
+		paraMap.put("str_sizePerPage", str_sizePerPage);
+
+		
+		int totalCount=0;          // 총 게시물 건수		
+		int currentShowPageNo=0;   // 현재 보여주는 페이지 번호로서, 초기치로는 1페이지로 설정함.
+		int totalPage=0;           // 총 페이지수(웹브라우저상에서 보여줄 총 페이지 개수, 페이지바)  
+		int sizePerPage = 5;  // 한 페이지당 보여줄 행의 개수
+		int startRno=0;            // 시작 행번호
+	    int endRno=0;              // 끝 행번호 
+	    
+	    // 총 일정 검색 건수(totalCount)
+	    totalCount = service.getTotalCount(paraMap);
+	//  System.out.println("~~~ 확인용 총 일정 검색 건수 totalCount : " + totalCount);
+      
+	    totalPage = (int)Math.ceil((double)totalCount/sizePerPage); 
+
+		if(str_currentShowPageNo == null) {
+			currentShowPageNo = 1;
+		}
+		else {
+			try {
+				currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+				if(currentShowPageNo < 1 || currentShowPageNo > totalPage) {
+					currentShowPageNo = 1;
+				}
+			} catch (NumberFormatException e) {
+				currentShowPageNo=1;
+			}
+		}
+		
+		startRno = ((currentShowPageNo - 1 ) * sizePerPage) + 1;
+	    endRno = startRno + sizePerPage - 1;
+	      
+	    paraMap.put("startRno", String.valueOf(startRno));
+	    paraMap.put("endRno", String.valueOf(endRno));
+	    	   
+	    calendarSearchList = service.scheduleListSearchWithPaging(paraMap);
+	    // 페이징 처리한 캘린더 가져오기(검색어가 없다라도 날짜범위 검색은 항시 포함된 것임)
+		
+		mav.addObject("paraMap", paraMap);
+		// 검색대상 컬럼과 검색어를 유지시키기 위한 것임.
+		
+		// === 페이지바 만들기 === //
+			int blockSize= 5;
+			
+			int loop = 1;
+			
+			int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+		   
+			String pageBar = "<ul style='list-style:none;'>";
+			
+			String url = "calendarSearch.bts";
+			
+			// === [맨처음][이전] 만들기 ===
+			if(pageNo!=1) {
+				pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?startdate="+startdate+"&enddate="+enddate+"&searchType="+searchType+"&searchWord="+searchWord+"&fk_emp_no="+fk_emp_no+"&searchJoinuser="+searchJoinuser+"&searchSubject="+searchSubject+"&currentShowPageNo=1'>[맨처음]</a></li>";
+				pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?startdate="+startdate+"&enddate="+enddate+"&searchType="+searchType+"&searchWord="+searchWord+"&fk_emp_no="+fk_emp_no+"&searchJoinuser="+searchJoinuser+"&searchSubject="+searchSubject+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+			}
+			while(!(loop>blockSize || pageNo>totalPage)) {
+				
+				if(pageNo==currentShowPageNo) {
+					pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";
+				}
+				else {
+					pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?startdate="+startdate+"&enddate="+enddate+"&searchType="+searchType+"&searchWord="+searchWord+"&fk_emp_no="+fk_emp_no+"&searchJoinuser="+searchJoinuser+"&searchSubject="+searchSubject+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";
+				}
+				
+				loop++;
+				pageNo++;
+			}// end of while--------------------
+			
+			// === [다음][마지막] 만들기 === //
+			if(pageNo <= totalPage) {
+				pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?startdate="+startdate+"&enddate="+enddate+"&searchType="+searchType+"&searchWord="+searchWord+"&fk_emp_no="+fk_emp_no+"&searchJoinuser="+searchJoinuser+"&searchSubject="+searchSubject+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+				pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?startdate="+startdate+"&enddate="+enddate+"&searchType="+searchType+"&searchWord="+searchWord+"&fk_emp_no="+fk_emp_no+"&searchJoinuser="+searchJoinuser+"&searchSubject="+searchSubject+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>";
+			}
+			pageBar += "</ul>";
+			
+			mav.addObject("pageBar",pageBar);
+			
+			String listgobackURL_schedule = MyUtil.getCurrentURL(request);
+		//	System.out.println("~~~ 확인용 검색 listgobackURL_schedule : " + listgobackURL_schedule);
+			
+			mav.addObject("listgobackURL_schedule",listgobackURL_schedule);
+			mav.addObject("calendarSearchList", calendarSearchList);
+			mav.setViewName("calendarSearch.calendar");
+	
+		
+		return mav;
+	}
 }

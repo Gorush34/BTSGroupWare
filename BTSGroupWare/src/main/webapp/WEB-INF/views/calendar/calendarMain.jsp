@@ -24,7 +24,7 @@
 	$(document).ready(function(){
 		
 		// 모든 datepicker에 대한 공통 옵션 설정
-	/*    $.datepicker.setDefaults({
+	    $.datepicker.setDefaults({
 	         dateFormat: 'yy-mm-dd'  // Input Display Format 변경
 	        ,showOtherMonths: true   // 빈 공간에 현재월의 앞뒤월의 날짜를 표시
 	        ,showMonthAfterYear:true // 년도 먼저 나오고, 뒤에 월 표시
@@ -40,16 +40,8 @@
 	    $("input#fromDate").datepicker();                    
 	    $("input#toDate").datepicker();
 	    	    
-	    // From의 초기값을 한달전 날짜로 설정
-	    $('input#fromDate').datepicker('setDate', '-1M'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
 	    
-	    // To의 초기값을 오늘 날짜로 설정
-	//  $('input#toDate').datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)	
 		
-	    // To의 초기값을 한달후 날짜로 설정
-	    $('input#toDate').datepicker('setDate', '+1M'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)	
-		
-	*/	
 		// === 캘린더 보여주기 (기본 틀) === //
 		var calendarEl = document.getElementById('calendar');
 		
@@ -74,7 +66,8 @@
 		    events:function(info, successCallback, failureCallback){
 		    	$.ajax({
 	                 url: '<%= ctxPath%>/calendar/selectSchedule.bts',
-	                 data:{"fk_emp_no":$('input#fk_emp_no').val()},
+	                 data:{"fk_emp_no":$('input#fk_emp_no').val(),
+	                	  "emp_name":$('input#emp_name').val()},
 	                 dataType: "json",
 	                 success:function(json) {
 	                	 
@@ -89,12 +82,18 @@
                                 let str_checkbox_com_calno = sessionStorage.getItem('arr_checkbox_com_calno'); // 체크박스 값 가져오기 
                                 let arr_checkbox_com_calno = str_checkbox_com_calno.split(",");
                                 
+                                let str_checkbox_com_calno_a = sessionStorage.getItem('arr_checkbox_com_calno_a'); // 체크박스 값 가져오기 
+                                let arr_checkbox_com_calno_a = str_checkbox_com_calno_a.split(",");
+                                
                                 let str_checkbox_my_calno = sessionStorage.getItem('arr_checkbox_my_calno'); // 체크박스 값 가져오기 
                                 let arr_checkbox_my_calno = str_checkbox_my_calno.split(",");
+                                
+                                let str_checkbox_my_calno_a = sessionStorage.getItem('arr_checkbox_my_calno_a'); // 체크박스 값 가져오기 
+                                let arr_checkbox_my_calno_a = str_checkbox_my_calno_a.split(",");
                                 //  console.log("캘린더 소분류 번호 1:"+arr_checkbox_com_calno);
                                 //console.log("~~~~~~캘린더 소분류 번호 : " + $("input:checkbox[name=com_calno]:checked").length);
                                 // 달력에 사내 캘린더 일정 보여주기
-                                 //  if( $("input:checkbox[name=com_calno]:checked").length <= $("input:checkbox[name=com_calno]").length ){
+                                   if( arr_checkbox_com_calno.length <= arr_checkbox_com_calno_a.length ){
                                 	
 	                                   for(var i=0; i<arr_checkbox_com_calno.length; i++){
                                 		
@@ -114,12 +113,14 @@
                                 			//console.log("~~~~확인용 event id : "+id)
                                 		}
                                 	}// end of for----------------------------------------
-                            //    }// end of if---------------------------------------------
+                                }// end of if---------------------------------------------
 	                		
                                 // 달력에 내 캘린더 일정 보여주기
                             //    console.log("~~~~~~캘린더 소분류 번호 : " + $("input:checkbox[name=my_calno]:checked").length);
-                            //    if($("input:checkbox[name=my_calno]:checked").length <= $("input:checkbox[name=my_calno]").length){
+                            //    if($("input:checkbox[name=my_calno]:checked").length <= $("input:checkbox[name=my_calno]").length)
+                                  if( arr_checkbox_my_calno.length <= arr_checkbox_my_calno_a.length ){
                                 	
+                                
                                 	for(var i = 0; i<arr_checkbox_my_calno.length; i++){
                                 		
                                 		if(arr_checkbox_my_calno[i] == item.fk_calno && item.fk_emp_no == "${sessionScope.loginuser.pk_emp_no}" ){
@@ -134,14 +135,27 @@
                                 			}); // end of events.push({})---------
                                 		}
                                 	}// end of for------------------------------------------
-                             //   }// end of if-----------------------------------------------
+                                }// end of if-----------------------------------------------
                                 
                                 // 공유 받은 캘린더
-	                		 
+                                if (item.fk_lgcatgono==1 && item.fk_emp_no != "${sessionScope.loginuser.pk_emp_no}" && (item.joinuser).indexOf("${sessionScope.loginuser.emp_name}") != -1 ){  
+                                    
+                                   events.push({
+                                	   			id: "0",  // "0" 인 이유는  배열 events 에 push 할때 id는 고유해야 하는데 위의 사내캘린더 및 내캘린더에서 push 할때 id값으로 item.pk_schno 을 사용하였다. item.pk_schno 값은 DB에서 1 부터 시작하는 시퀀스로 사용된 값이므로 0 값은 위의 사내캘린더나 내캘린더에서 사용되지 않으므로 여기서 고유한 값을 사용하기 위해 0 값을 준 것이다. 
+                                                title: item.subject,
+                                                start: startdate,
+                                                end: enddate,
+                                        	    url: "<%= ctxPath%>/calendar/detailSchedule.bts?pk_schno="+item.pk_schno,
+                                                color: item.color,
+                                                cid: "0"  // "0" 인 이유는  공유받은캘린더 에서의 체크박스의 value 를 "0" 으로 주었기 때문이다.
+                                   }); // end of events.push({})--------- 
+                                   
+                           		}// end of if------------------------- 
+                             
 	                		 });// end of $.each(json, function(index, item) {})-----------------------
 	                	 }
 	                	 
-	                	 console.log(events);    
+	                	// console.log(events);    
 	                	 successCallback(events);         
 	                	 
 	                 },
@@ -169,9 +183,13 @@
 	      	  }, 
 	      	// === 사내캘린더, 내캘린더, 공유받은캘린더의 체크박스에 체크유무에 따라 일정을 보여주거나 일정을 숨기게 하는 것이다. ===
 		    eventDidMount: function (arg) {
+		    	
+		    	//let str_checkbox_calno = sessionStorage.getItem('arr_checkbox_calno'); // 체크박스 값 가져오기 
+		    	//let arr_checkbox_calno = str_checkbox_calno.split(",");
+		    	//console.log("확인용 :"+ arr_checkbox_calno);
 	            var arr_calendar_checkbox = document.querySelectorAll("input.calendar_checkbox"); 
 	            // 사내캘린더, 내캘린더, 공유받은캘린더 에서의 모든 체크박스임
-	            
+	            console.log("확인용 :"+ arr_calendar_checkbox);
 	            arr_calendar_checkbox.forEach(function(item) { // item 이 사내캘린더, 내캘린더, 공유받은캘린더 에서의 모든 체크박스 중 하나인 체크박스임
 		              if (item.checked) { 
 		            	// 사내캘린더, 내캘린더, 공유받은캘린더 에서의 체크박스중 체크박스에 체크를 한 경우 라면
@@ -231,46 +249,66 @@
 	// Function declaration
 	// === 검색 기능 === //
 	function goSearch(){
-	
-		if( $("#fromDate").val() > $("#toDate").val() ) {
-			alert("검색 시작날짜가 검색 종료날짜 보다 크므로 검색할 수 없습니다.");
-			return;
-		}
-	    
-		if( $("select#searchType").val()=="" && $("input#searchWord").val()!="" ) {
-			alert("검색대상 선택을 해주세요!!");
-			return;
-		}
-		
-		if( $("select#searchType").val()!="" && $("input#searchWord").val()=="" ) {
+
+		if( $("input#searchWord").val()=="" ) {
 			alert("검색어를 입력하세요!!");
 			return;
 		}
 		
-	   	var frm = document.searchScheduleFrm;
+	   	var frm = document.calendarSearchFrm;
 	    frm.method="get";
-	    frm.action="<%= ctxPath%>/schedule/searchSchedule.action";
+	    frm.action="<%= ctxPath%>/calendar/calendarSearch.bts";
 	    frm.submit();
 		
 	}// end of function goSearch(){}--------------------------
 				
+	function goSearch_1(){
+
+		
+			if( $("input.searchSubject").val()=="" && $("input.searchJoinuser").val()=="" && $("input.searchDate").val()=="" ) {
+				alert("검색어를 입력하세요!!");
+				return;
+			}
+			
+			if( $("#fromDate").val() > $("#toDate").val() ) {
+				alert("검색 시작날짜가 검색 종료날짜 보다 크므로 검색할 수 없습니다.");
+				return;
+			}
+		
+		
+	   	var frm = document.calendarSearchFrm_1;
+	    frm.method="get";
+	    frm.action="<%= ctxPath%>/calendar/calendarSearch.bts";
+	    frm.submit();
+		
+	}// end of function goSearch(){}--------------------------
+	
+	// == 상세 검색 모달창 띄우기 == //
+	function goSearchDetailModal(){
+		$("#searchDetailModal").modal('show');
+	}// end of function goSearchDetailModal(){
+	
+	
 </script>
 
 <div id="calendarMain">
 	<h4 style="margin: 0 80px">일정관리</h4>
 	<%-- 검색바를 보여주는 곳 --%>
-	<div id="search">
-		<select id="searchType" name="searchType">
-			<option>캘린더</option>
-			<option>통합검색</option>
-		</select>
-		<input type="text" id="searchWord" name="searchWord" style="align: right;"/>
-		<span id="detailSearch" style="font-size: 8pt; color:#99ccff;">상세 <i class="bi bi-caret-down-fill"></i></span>
-		<button type="button" id="goSearch"><i class="bi bi-search"></i></button>
+	<div id="calendarSearch">
+		<form name="calendarSearchFrm">
+			<select id="searchType" name="searchType">
+				<option value="calendar">캘린더</option>
+			</select>
+			<input type="text" id="searchWord" name="searchWord" style="align: right;"/>
+			<span id="detailSearch" style="font-size: 8pt; color:#99ccff;" onclick="goSearchDetailModal()">상세 <i class="bi bi-caret-down-fill"></i></span>
+			<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}"/>
+			<a id="goSearch" style="vertical-align: middle; margin-left: 5px; cursor: pointer;" onclick="goSearch()"><i class="bi bi-search"></i></a>
+		</form>
 	</div>
 	
 	<%-- 캘린더를 보여주는 곳 --%>
 	<input type="hidden" value="${sessionScope.loginuser.pk_emp_no}" id="fk_emp_no"/>
+	<input type="hidden" value="${sessionScope.loginuser.emp_name}" id="emp_name"/>
 	<div id="calendar" style="margin: 60px 30px 50px 60px;"></div>
 
 </div>
@@ -291,7 +329,7 @@
       <!-- Modal body -->
       <div class="modal-body">
        	<form name="modal_frm">
-       	<table style="width: 100%;" class="table table-bordered">
+       	<table style="width: 100%;" class="table  ">
      			<tr>
      				<td style="text-align: left; ">소분류명</td>
      				<td><input type="text" class="addCom_calname"/></td>
@@ -328,10 +366,10 @@
       <!-- Modal body -->
       <div class="modal-body">
        	<form name="modal_frm">
-       	<table style="width: 100%;" class="table table-bordered">
+       	<table style="width: 100%;" class="table">
      			<tr>
      				<td style="text-align: left; ">소분류명</td>
-     				<td><input type="text" class="editCom_calname"/><input type="hidden" value="" class="editCom_pk_calno"></td>
+     				<td><input type="text" class="editCom_calname" /><input type="hidden" value="" class="editCom_pk_calno"></td>
      			</tr>
      			<tr>
      				<td style="text-align: left;">만든이</td>
@@ -365,7 +403,7 @@
       <!-- Modal body -->
       <div class="modal-body">
           <form name="modal_frm">
-       	<table style="width: 100%;" class="table table-bordered">
+       	<table style="width: 100%;" class="table">
      			<tr>
      				<td style="text-align: left; ">소분류명</td>
      				<td><input type="text" class="addMy_calname" /></td>
@@ -402,7 +440,7 @@
       <!-- Modal body -->
       <div class="modal-body">
       	<form name="modal_frm">
-       	<table style="width: 100%;" class="table table-bordered">
+       	<table style="width: 100%;" class="table">
      			<tr>
      				<td style="text-align: left; ">소분류명</td>
      				<td><input type="text" class="editMy_calname"/><input type="hidden" value="" class="editMy_pk_calno"></td>
@@ -425,8 +463,53 @@
   </div>
 </div>
 
+<%-- === 상세 검색창 모달 === --%>
+<div class="modal fade" id="searchDetailModal" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    
+      <!-- Modal header -->
+      <div class="modal-header">
+        <h5 class="modal-title">상세검색</h5>
+        <button type="button" class="close modal_close" data-dismiss="modal">&times;</button>
+      </div>
+      
+      <!-- Modal body -->
+      <div class="modal-body">
+      	<form name="calendarSearchFrm_1">
+       	<table style="width: 100%;" class="table  ">
+     			<tr>
+     				<td style="text-align: left; ">일정명</td>
+     				<td><input type="text" class="searchSubject" name="searchSubject" style="margin-right: 2px;"/></td>
+     			</tr>
+     			<tr>
+     				<td style="text-align: left;">참석자</td>
+     				<td><input type="text" class="searchJoinuser" name="searchJoinuser" style="margin-right: 2px;"/></td>
+     			</tr>
+     			<tr>
+     				<td style="text-align: left;">일자</td>
+     				<td>
+     				<input type="date" class="searchDate" id="fromDate" name="startdate" style="width: 110px;" readonly="readonly">&nbsp;&nbsp; 
+	            -&nbsp;&nbsp; <input type="date" class="searchDate" id="toDate" name="enddate" style="width: 110px;" readonly="readonly">&nbsp;&nbsp;
+					</td>
+     			</tr>
+     		</table>
+     		<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}"/>
+       	</form>
+      </div>
+      
+      <!-- Modal footer -->
+      <div class="modal-footer">
+      	<button type="button" id="searchDetailbtn" class="btn btn-primary btn-sm" onclick="goSearch_1()">검색</button>
+          <button type="button" class="btn btn-outline-primary btn-sm modal_close" data-dismiss="modal">취소</button>
+      </div>
+      
+    </div>
+  </div>
+</div>
 
-	<%-- === 마우스로 클릭한 날짜의 일정 등록을 위한 폼 === --%>     
+
+<%-- === 마우스로 클릭한 날짜의 일정 등록을 위한 폼 === --%>     
 <form name="dateFrm">
 	<input type="hidden" name="chooseDate" />	
 </form>	
