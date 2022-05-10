@@ -11,6 +11,16 @@
 	$(document).ready(function() {
 		
 	});
+	
+	// Function Declaration
+	function goView(seq) {
+	<%--			
+		location.href = "<%= ctxPath%>/view.action?seq="+seq;
+	--%>
+	
+	
+	}
+	
 </script>
 
 <%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
@@ -36,6 +46,7 @@
 		</div>
 				
 		<%-- 결재대기 목록이 있을 때 시작 --%>
+		<c:if test="${not empty (requestScope.waitList)}">
 		<div class="divClear"></div>
 		
 		<table class="table table-sm table-hover table-light">
@@ -53,16 +64,38 @@
 			</thead>
 			<tbody>
 				<%-- 나중에 forEach문 사용해서 뿌려주기 시작 --%>
- 				<c:forEach var="i" begin="1" end="10">
+				<%-- <c:forEach var="i" begin="1" end="10"> --%>
+				<c:forEach var="appr" items="${requestScope.waitList}" varStatus="i">
+				
 				<tr>
-					<th scope="row"><p><c:out value="${i}" /></p></th>
-					<td>2022.02.02</td>
-					<td>업무기안</td>
-					<td>&nbsp;</td>
-					<td>(신규)휴가신청-연차관리연동</td>
-					<td><img src="<%= ctxPath%>/resources/images/disk.gif" style="height: 16px; width: 16px;"></td>
-					<td>20220428-000001</td>
-					<td>대기중</td>
+					<th scope="row">${appr.pk_appr_no}</th>
+					<%-- <td><input type="hidden" id="pk_addbook_no_${i.count}" name="pk_addbook_no_${i.count}" value="${adb.pk_addbook_no}" readonly /></td> --%>
+					<td>${appr.writeday}</td>
+					<td>결재양식</td> <%-- ${appr.fk_appr_sortno} --%>
+					
+					<td>
+					<c:if test="${appr.emergency == '1'}">
+						<button id="btn_emergency" class="btn btn-outline-danger" style="height: 100%; line-height: 9pt; font-size: 9pt;">긴급</button>
+					</c:if>
+					<c:if test="${appr.emergency == '0'}">
+						&nbsp;
+					</c:if>
+					</td>
+					
+					<td>${appr.title}</td>
+					
+					<td>
+						<%-- 첨부파일이 있는 경우 --%>
+						<c:if test="${not empty appr.filename}">
+							<img src="<%= ctxPath%>/resources/images/disk.gif" style="height: 16px; width: 16px;">
+						</c:if>
+						<%-- 첨부파일이 없는 경우 --%>
+						<c:if test="${empty appr.filename}">&nbsp;</c:if>
+					</td>
+					
+					<td>${appr.pk_appr_no}</td>
+					<td><c:if test="${appr.status == 0}">${appr.status}</c:if></td>
+					
 				</tr>
 				</c:forEach>
 				<%-- 나중에 forEach문 사용해서 뿌려주기 시작 --%>
@@ -70,9 +103,11 @@
 		</table>
 		
 		<div class="divClear"></div>
+		</c:if>
 		<%-- 결재대기 목록이 있을 때 종료 --%>
 		
 		<%-- 결재대기 목록이 없을 때 시작 --%>
+		<c:if test="${empty (requestScope.waitList)}">
 		<div class="divClear"></div>
 		<table class="table table-sm table-light">
 			<tr>
@@ -86,6 +121,8 @@
 			</tr>
 		</table>
 		<%-- 결재대기 목록이 없을 때 종료 --%>
+		</c:if>
+		
 		<div class="divClear"></div>	
 	</div>
 	<!-- 결재대기 문서목록 종료 -->

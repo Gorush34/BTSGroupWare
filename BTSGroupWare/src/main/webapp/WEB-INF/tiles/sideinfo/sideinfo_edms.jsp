@@ -95,17 +95,17 @@
 						</tr> --%>
 						<tr>
 							<td>
-								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/edmsMydoc_wait.bts'">대기문서함</span></label>
+								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/wait/list.bts'">대기문서함</span></label>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='#'">승인문서함</span></label>
+								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/accepted/list.bts'">승인문서함</span></label>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='#'">반려문서함</span></label>
+								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/rejected/list.bts'">반려문서함</span></label>
 							</td>
 						</tr>
 						<tr>

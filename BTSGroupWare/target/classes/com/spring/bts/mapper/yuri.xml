@@ -26,16 +26,16 @@
 	<!-- 파일첨부가 없는 전자결재 문서작성 --> 
 	<insert id="edmsAdd" parameterType="com.spring.bts.yuri.model.ApprVO">
 		INSERT INTO
-		tbl_appr(   pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno, fk_fin_empno, emergency,
-		            title, contents,
-		            status, mid_accept, fin_accept,
-		            mid_opinion, fin_opinion, 
-		            writeday, viewcnt)
-		VALUES(     seq_apprno.nextval, #{fk_appr_sortno}, #{fk_emp_no}, #{fk_mid_empno}, #{fk_fin_empno}, #{emergency},
-		            #{title}, #{contents},
-		            default, default, default,
-		            null, null,
-		            default, default)
+		tbl_appr(pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno, fk_fin_empno, emergency,
+		         title, contents,
+		         status, mid_accept, fin_accept,
+		         mid_opinion, fin_opinion, 
+		         writeday, viewcnt)
+		VALUES(seq_apprno.nextval, #{fk_appr_sortno}, #{fk_emp_no}, #{fk_mid_empno}, #{fk_fin_empno}, #{emergency},
+		       #{title}, #{contents},
+		       default, default, default,
+		       null, null,
+		       default, default)
 	</insert>
 
 
@@ -57,19 +57,53 @@
 	</insert>
 
 
+<!-- 
+////////////////////////////
+//***** 대기문서 시작 ***** /////////////////////////////////////////
+//////////////////////////
+-->
+
 	<!-- 페이징 처리를 안한 검색어가 없는 전체 대기문서 목록 보여주기 -->
 	<select id="waitListNoSearch" resultType="com.spring.bts.yuri.model.ApprVO">
-		select A.writeday, S.appr_name, A.emergency, A.title, A.filename, A.pk_appr_no, a.status
+		select A.fk_emp_no, A.writeday, S.appr_name, A.emergency, A.title, NVL(A.filename,'파일없음'), A.pk_appr_no, a.status
 		from tbl_appr A left join tbl_appr_sort S
 		on A.fk_appr_sortno = S.pk_appr_sortno
 		order by pk_appr_no desc
 	</select>
 
 
+	<!-- 파일첨부가 있는 대기문서 1개 조회하기 -->
+	<select id="getView" parameterType="HashMap" resultType="com.spring.bts.yuri.model.ApprVO">
+		SELECT  previousseq, previoussubject
+		      , pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno, fk_fin_empno, emergency
+		      , title, CONTENTS, filename, orgfilename, filesize, status, mid_accept, fin_accept
+		      , mid_opinion, fin_opinion, writeday, viewcnt
+		      , nextseq, nextsubject
+		from
+		(
+		    select  lag(pk_appr_no,1) over(order by pk_appr_no desc)  as previousseq
+		          , lag(title,1) over(order by pk_appr_no desc) as previoussubject
+		          , pk_appr_no, fk_appr_sortno, fk_emp_no, NVL(fk_mid_empno, -1) AS fk_mid_empno, fk_fin_empno, emergency
+		          , title, CONTENTS, filename, orgfilename, filesize, status, NVL(mid_accept, -1) AS mid_accept, fin_accept
+		          , NVL(mid_opinion, '중간결재자의견없음') AS mid_opinion, fin_opinion, to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') as writeday, viewcnt
+		          , lead(pk_appr_no,1) over(order by pk_appr_no desc) as nextseq
+		          , lead(title,1) over(order by pk_appr_no desc) as nextsubject
+		    from tbl_appr
+		    where status = 0
+		) V
+	</select>
 
 
-
-
+	<!-- 글조회수 1개 증가시키기 메소드 -->
+	<update id="setAddReadCount" parameterType="String">
+		update tbl_appr set viewcnt = viewcnt + 1
+		where pk_appr_no = #{pk_appr_no}
+	</update>
+<!-- 
+////////////////////////////
+//***** 대기문서 종료 ***** /////////////////////////////////////////
+//////////////////////////
+-->
 
 
 </mapper>

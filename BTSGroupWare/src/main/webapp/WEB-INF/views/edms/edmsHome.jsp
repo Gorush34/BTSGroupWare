@@ -53,7 +53,7 @@
 							</h6>
 							<hr>
 							<!-- <a href="/bts/edms/edmsMydoc.bts" class="stretched-link btn btn-sm text-primary" class="card-link">자세히 보기</a> -->
-							<span onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsView.bts'" class="stretched-link btn btn-sm text-primary" class="card-link">자세히 보기</span>
+							<span onclick="javascript:location.href='<%= request.getContextPath()%>/edms/wait/view.bts'" class="stretched-link btn btn-sm text-primary" class="card-link">자세히 보기</span>
 						</div>
 					</div>
 				</div>

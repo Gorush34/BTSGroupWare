@@ -115,14 +115,13 @@
 		      });//end of $("select#docform").on("change", function()  */
 			
 			// 긴급버튼 체크 시 값 전달(긴급이면 1을, 아니면 0을 전달, default값은 0이다.)
-		    // emergency 는 int 값이다!
 			let flag = $('input[name=emergency]').is(":checked");
 		    let emergency;
 		    
 			if (flag == true) {
-				emergency = $('input[name=emergency]').val("1");
+				emergency = $('input[name=emergency]').val(1);
 			} else {
-				emergency = $('input[name=emergency]').val("0");
+				emergency = $('input[name=emergency]').val(0);
 			}
 			
 			// 제목 유효성 검사
