@@ -30,4 +30,17 @@ public interface InterAttendanceService {
 
 	// 페이징처리가 있는 한 사원에 대한 출퇴근기록 가져오기
 	List<CommuteVO> getMyCommute(Map<String, String> paraMap);
+
+	// 직급번호로 직급명 알아오기
+	String getKo_rankname(String pk_emp_no);
+	
+	// 사원번호로 부서명, 부서장, 부서장 사번 알아오기
+	Map<String, String> getDeptInfo(String pk_emp_no);
+
+	// 사원번호로 연차테이블 불러오기
+	Map<String, String> getLeaveInfo(String pk_emp_no);
+
+	// 연차구분테이블 불러오기
+	List<Map<String, Object>> getAttSortInfo();
+
 }

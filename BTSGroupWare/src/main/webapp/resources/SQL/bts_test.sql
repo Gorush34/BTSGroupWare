@@ -145,15 +145,66 @@ values
 ALTER TABLE tbl_employees RENAME COLUMN editid TO edit_id
 -- ALTER TABLE [테이블명] RENAME COLUMN [이전 컬럼명] TO [새로운 컬럼명]
 
-
-delete from tbl_commute
-where 1=1;
-
-commit;
-
 select count(*)
 from tbl_commute
 where fk_emp_no = 80000001
 and regdate like '2022'
 || '05'
 ||'%'
+
+
+
+delete from tbl_leave
+where 1=1;
+
+commit;
+
+select *
+from tbl_employees
+order by pk_emp_no asc
+
+select S.ko_rankname AS ko_rankname
+from tbl_employees E join tbl_rank_sort S
+on E.fk_rank_id = S.PK_RANK_NO
+where E.pk_emp_no = 80000002 
+
+select *
+from TBL_DEP_SORT
+
+select V.ko_depname AS ko_depname, V.manager AS manager, M.emp_name AS manager_name
+from 
+(
+select D.ko_depname AS ko_depname, D.manager AS manager
+from tbl_employees E join TBL_DEP_SORT D
+on E.fk_department_id = D.pk_dep_no
+where E.pk_emp_no = 80000002 
+) V
+join tbl_employees M
+on V.manager = M.pk_emp_no
+
+select total_vac_days, use_vac_days, rest_vac_days, instead_vac_days
+from tbl_leave
+where fk_emp_no = 80000002
+
+select *
+from tbl_leave
+order by fk_emp_no asc
+
+insert into tbl_leave (pk_vac_no, total_vac_days, use_vac_days, rest_vac_days, instead_vac_days, fk_emp_no, regdate)
+						values(leaveSeq.nextval, '15', '0', '15', '0', 88888888, to_char(sysdate, 'yyyy'))
+                        
+commit;
+
+select pk_att_sort_no, att_sort_ename, att_sort_korname, minus_cnt
+from tbl_att_sort
+order by pk_att_sort_no
+
+delete from tbl_att_sort
+where 1=1;
+
+insert into tbl_att_sort (pk_att_sort_no, att_sort_ename, att_sort_korname, minus_cnt)
+                  values (103, 'var_family_birthday', '자녀 및 배우자생일(오후반차)', 0.25);
+                  
+commit;
+
+

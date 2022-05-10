@@ -1,5 +1,8 @@
 package com.spring.bts.hwanmo.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.bts.common.AES256;
 import com.spring.bts.common.MyUtil;
 import com.spring.bts.hwanmo.model.CommuteVO;
 import com.spring.bts.hwanmo.model.EmployeeVO;
@@ -31,6 +35,9 @@ import com.spring.bts.jieun.model.CalendarVO;
 @Controller
 public class AttendanceController {
 
+	@Autowired
+	private AES256 aes;
+	
 	@Autowired
 	private InterAttendanceService attService;
 	
@@ -54,8 +61,57 @@ public class AttendanceController {
 	
 	// === 일정관리 시작 페이지 ===
 	@RequestMapping(value="/att/reportVacation.bts")
-	public ModelAndView reportVacation(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
+	public ModelAndView requiredLogin_reportVacation(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
 		
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+		String pk_emp_no = String.valueOf(loginuser.getPk_emp_no());
+		
+		// 휴대폰 복호화(잠시쉬어라)
+		/*
+		try {
+			loginuser.setUq_phone(aes.decrypt(loginuser.getUq_phone()));
+		} catch (GeneralSecurityException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} 
+		*/
+		// System.out.println(" 잘됐냐? : " + loginuser.getUq_phone());
+		
+		// 사원번호로 직급명 알아오기
+		String ko_rankname = attService.getKo_rankname(pk_emp_no);
+		loginuser.setKo_rankname(ko_rankname);
+		// System.out.println("받아왔니? ko_rankname : " + ko_rankname);
+		
+		// 사원번호로 부서명, 부서장, 부서장 사번 알아오기
+		Map<String, String> deptMap = new HashMap<>();
+		deptMap = attService.getDeptInfo(pk_emp_no);
+		
+		// System.out.println("받아왔니? ko_depname : " + deptMap.get("ko_depname"));
+		// System.out.println("받아왔니? manager : " + deptMap.get("manager"));
+		// System.out.println("받아왔니? manager_name : " + deptMap.get("manager_name"));
+
+		// 사원번호로 연차테이블 불러오기
+		Map<String, String> leaveMap = new HashMap<>();
+		leaveMap = attService.getLeaveInfo(pk_emp_no);
+		/*
+		System.out.println("받아왔니? total_vac_days : " + leaveMap.get("total_vac_days"));
+		System.out.println("받아왔니? use_vac_days : " + leaveMap.get("use_vac_days"));
+		System.out.println("받아왔니? rest_vac_days : " + leaveMap.get("rest_vac_days"));
+		System.out.println("받아왔니? instead_vac_days : " + leaveMap.get("instead_vac_days"));
+		*/
+		
+		// 연차구분테이블 불러오기
+		List<Map<String, Object>> attSortList = attService.getAttSortInfo();
+		/*
+		for(int i=0; i<attSortList.size(); i++) {
+			System.out.println("잘 들어왔나~ : " + attSortList.get(i).get("pk_att_sort_no"));
+		}
+		*/
+		
+		mav.addObject("deptMap", deptMap);
+		mav.addObject("leaveMap", leaveMap);
+		mav.addObject("attSortList", attSortList);
+		mav.addObject("loginuser", loginuser);
 		mav.setViewName("reportVacation.att");
 
 		return mav;
@@ -125,7 +181,7 @@ public class AttendanceController {
 		String out_time = "미등록";		
 		// 날이 달라졌는지 알아보자.
 		int isTomorrow = attService.checkTomorrow(paraMap);
-		System.out.println("isTomorrow : " + isTomorrow);
+		// System.out.println("isTomorrow : " + isTomorrow);
 		
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("isTomorrow", isTomorrow);

@@ -82,5 +82,33 @@ public class AttendanceService implements InterAttendanceService {
 		return cmtList;
 	}
 
+	// 직급번호로 직급명 알아오기
+	@Override
+	public String getKo_rankname(String pk_emp_no) {
+		String ko_rankname = attDAO.getKo_rankname(pk_emp_no);
+		return ko_rankname;
+	}
+
+	// 사원번호로 부서명, 부서장, 부서장 사번 알아오기
+	@Override
+	public Map<String, String> getDeptInfo(String pk_emp_no) {
+		Map<String, String> paraMap = attDAO.getDeptInfo(pk_emp_no);
+		return paraMap;
+	}
+
+	// 사원번호로 연차테이블 불러오기
+	@Override
+	public Map<String, String> getLeaveInfo(String pk_emp_no) {
+		Map<String, String> paraMap = attDAO.getLeaveInfo(pk_emp_no);
+		return paraMap;
+	}
+
+	// 연차구분테이블 불러오기
+	@Override
+	public List<Map<String, Object>> getAttSortInfo() {
+		List<Map<String, Object>> attSortList = attDAO.getAttSortInfo();
+		return attSortList;
+	}
+
 	
 }

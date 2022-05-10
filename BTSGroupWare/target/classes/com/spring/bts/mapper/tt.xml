@@ -57,8 +57,8 @@
 	
 	<!-- 사원 한명의 연차테이블 생성 -->
 	<insert id="registerLeave" parameterType="int">
-		insert into tbl_leave (pk_vacation_no, total_vacation_days, use_vacation_days, rest_vacation_days, fk_emp_no, regdate)
-						values(leaveSeq.nextval, '15', '0', '15', #{pk_emp_no}, to_char(sysdate, 'yyyy'))
+		insert into tbl_leave (pk_vac_no, total_vac_days, use_vac_days, rest_vac_days, instead_vac_days, fk_emp_no, regdate)
+						values(leaveSeq.nextval, '15', '0', '15', '0', #{pk_emp_no}, to_char(sysdate, 'yyyy'))
 	</insert>
 	
 	<!-- 출퇴근 했는지 조회(사이드바 표시 목적) -->
@@ -126,6 +126,61 @@
 		</if>
 	</select>
 	
+	<!-- 직급번호로 직급명 알아오기 -->
+	<select id="getKo_rankname" parameterType="String" resultType="String">
+		select S.ko_rankname AS ko_rankname
+		from tbl_employees E join tbl_rank_sort S
+		on E.fk_rank_id = S.PK_RANK_NO
+		where E.pk_emp_no = #{pk_emp_no}
+	</select>
 	
+	<!-- 사원번호로 부서명, 부서장, 부서장 사번 알아오기 -->
+	<resultMap type="Map" id="getDeptInfoMap">
+		<result property="ko_depname" 			column="ko_depname" 		javaType="String" />
+		<result property="manager" 				column="manager" 			javaType="String" />
+		<result property="manager_name" 		column="manager_name" 		javaType="String" />
+	</resultMap>
+	
+	<select id="getDeptInfo" parameterType="String" resultMap="getDeptInfoMap">
+		select V.ko_depname AS ko_depname, V.manager AS manager, M.emp_name AS manager_name
+		from 
+			(
+			select D.ko_depname AS ko_depname, D.manager AS manager
+			from tbl_employees E join TBL_DEP_SORT D
+			on E.fk_department_id = D.pk_dep_no
+			where E.pk_emp_no = #{pk_emp_no}
+			) V
+		join tbl_employees M
+		on V.manager = M.pk_emp_no
+	</select>
+	
+	
+	<!-- 사원번호로 연차테이블 불러오기 -->
+	<resultMap type="Map" id="getLeaveInfoMap">
+		<result property="total_vac_days" 				column="total_vac_days" 		javaType="String" />
+		<result property="use_vac_days" 				column="use_vac_days" 			javaType="String" />
+		<result property="rest_vac_days" 				column="rest_vac_days" 			javaType="String" />
+		<result property="instead_vac_days" 			column="instead_vac_days" 		javaType="String" />
+	</resultMap>
+	
+	<select id="getLeaveInfo" parameterType="String" resultMap="getLeaveInfoMap">
+		select total_vac_days, use_vac_days, rest_vac_days, instead_vac_days
+		from tbl_leave
+		where fk_emp_no = #{pk_emp_no}
+	</select>
+	
+	<!-- // 연차구분테이블 불러오기 -->
+	<resultMap type="Map" id="getAttSortInfoMap">
+		<result property="pk_att_sort_no" 				column="pk_att_sort_no" 	javaType="String" />
+		<result property="att_sort_ename" 				column="att_sort_ename" 	javaType="String" />
+		<result property="att_sort_korname" 			column="att_sort_korname" 	javaType="String" />
+		<result property="minus_cnt" 					column="minus_cnt" 			javaType="float" />
+	</resultMap>
+	
+	<select id="getAttSortInfo" resultMap="getAttSortInfoMap">
+		select pk_att_sort_no, att_sort_ename, att_sort_korname, minus_cnt
+		from tbl_att_sort
+		order by pk_att_sort_no
+	</select>
 	
 </mapper>
