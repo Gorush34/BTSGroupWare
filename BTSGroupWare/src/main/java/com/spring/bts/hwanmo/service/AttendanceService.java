@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.bts.common.AES256;
+import com.spring.bts.hwanmo.model.AttendanceVO;
 import com.spring.bts.hwanmo.model.CommuteVO;
 import com.spring.bts.hwanmo.model.InterAttendanceDAO;
+import com.spring.bts.hwanmo.model.LeaveVO;
 
 //=== #31. Service 선언 === 
 //트랜잭션 처리를 담당하는곳 , 업무를 처리하는 곳, 비지니스(Business)단
@@ -68,12 +70,89 @@ public class AttendanceService implements InterAttendanceService {
 		return n;
 	}
 
-	// 한 사원에 대한 출퇴근기록 가져오기
+	// 총 출퇴근 건수 알아오기
 	@Override
-	public List<CommuteVO> getMyCommute(int pk_emp_no) {
-		List<CommuteVO> cmtList = attDAO.getMyCommute(pk_emp_no);
+	public int getTotalCommuteCount(Map<String, String> paraMap) {
+		int n = attDAO.getTotalCommuteCount(paraMap);
+		return n;
+	}
+
+	// 페이징처리가 있는 한 사원에 대한 출퇴근기록 가져오기
+	@Override
+	public List<CommuteVO> getMyCommute(Map<String, String> paraMap) {
+		List<CommuteVO> cmtList = attDAO.getMyCommute(paraMap);
 		return cmtList;
 	}
 
+	// 직급번호로 직급명 알아오기
+	@Override
+	public String getKo_rankname(String pk_emp_no) {
+		String ko_rankname = attDAO.getKo_rankname(pk_emp_no);
+		return ko_rankname;
+	}
 
+	// 사원번호로 부서명, 부서장, 부서장 사번 알아오기
+	@Override
+	public Map<String, String> getDeptInfo(String pk_emp_no) {
+		Map<String, String> paraMap = attDAO.getDeptInfo(pk_emp_no);
+		return paraMap;
+	}
+
+	// 사원번호로 연차테이블 불러오기
+	@Override
+	public Map<String, String> getLeaveInfo(String pk_emp_no) {
+		Map<String, String> paraMap = attDAO.getLeaveInfo(pk_emp_no);
+		return paraMap;
+	}
+
+	// 연차구분테이블 불러오기
+	@Override
+	public List<Map<String, Object>> getAttSortInfo() {
+		List<Map<String, Object>> attSortList = attDAO.getAttSortInfo();
+		return attSortList;
+	}
+
+	// 첨부파일이 없는 연차신청 작성
+	@Override
+	public int reportVacation(AttendanceVO attVO) {
+		int n = attDAO.reportVacation(attVO);
+		return n;
+	}
+
+	// 첨부파일이 있는 연차신청 작성
+	@Override
+	public int reportVacation_withFile(AttendanceVO attVO) {
+		int n = attDAO.reportVacation_withFile(attVO);
+		return n;
+	}
+
+	// 사원의 연차테이블 최신화
+	@Override
+	public int updateLeave(Map<String, String> paraMap) {
+		int n = attDAO.updateLeave(paraMap);
+		return n;
+	}
+
+	// 로그인한 사용자의 연차테이블 불러오기
+	@Override
+	public LeaveVO getOneLeave(String fk_emp_no) {
+		LeaveVO leavevo = attDAO.getOneLeave(fk_emp_no);
+		return leavevo;
+	}
+
+	// 총 올린  연차신청 수 가져오기
+	@Override
+	public int getTotalVacReportCount(String fk_emp_no) {
+		int totalCount = attDAO.getTotalVacReportCount(fk_emp_no);
+		return totalCount;
+	}
+
+	// 페이징처리 한 받은 공가/경조신청목록 
+	@Override
+	public List<Map<String, Object>> getMyAttListWithPaging(Map<String, String> paraMap) {
+		List<Map<String, Object>> myAttList = attDAO.getMyAttListWithPaging(paraMap);
+		return myAttList;
+	}
+
+	
 }

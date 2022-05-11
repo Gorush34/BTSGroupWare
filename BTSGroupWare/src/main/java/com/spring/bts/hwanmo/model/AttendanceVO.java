@@ -13,10 +13,10 @@ public class AttendanceVO {
 	private int fk_emp_no; /* 사원번호 */
 	private int fk_mid_app_no; /* 중간승인자 */
 	private int fk_fin_app_no; /* 최종승인자 */
-	private String att_title; /* 제목 */
-	private String server_file_name; /* 서버파일명 */
-	private String org_file_name; /* 실제파일명 */
-	private String file_path; /* 파일경로 */
+	private String att_content; /* 내용 */
+	private String filename; /* 서버파일명 */
+	private String orgfilename; /* 실제파일명 */
+	private String filesize;                // NUMBER        		파일크기
 	private int mid_approval_ok; /* 중간승인여부 */
 	private int fin_approval_ok; /* 최종승인여부 */
 	private int approval_status; /* 결재진행상태 */
@@ -37,10 +37,10 @@ public class AttendanceVO {
 	//기본생성자
 	public AttendanceVO() {}
 	public AttendanceVO(int pk_att_num, int fk_att_sort_no, int fk_vacation_no, int vacation_days, String leave_start,
-			String leave_end, int fk_emp_no, int fk_mid_app_no, int fk_fin_app_no, String att_title,
-			String server_file_name, String org_file_name, String file_path, int mid_approval_ok, int fin_approval_ok,
+			String leave_end, int fk_emp_no, int fk_mid_app_no, int fk_fin_app_no, String att_content,
+			String filename, String orgfilename, int mid_approval_ok, int fin_approval_ok,
 			int approval_status, String mid_app_opinion, String fin_app_opinion, String emp_name, String dept_name,
-			EmployeeVO empvo, EmployeeVO midapprvo, EmployeeVO finapprvo) {
+			EmployeeVO empvo, EmployeeVO midapprvo, EmployeeVO finapprvo, MultipartFile attach, String filesize) {
 		super();
 		this.pk_att_num = pk_att_num;
 		this.fk_att_sort_no = fk_att_sort_no;
@@ -51,10 +51,9 @@ public class AttendanceVO {
 		this.fk_emp_no = fk_emp_no;
 		this.fk_mid_app_no = fk_mid_app_no;
 		this.fk_fin_app_no = fk_fin_app_no;
-		this.att_title = att_title;
-		this.server_file_name = server_file_name;
-		this.org_file_name = org_file_name;
-		this.file_path = file_path;
+		this.att_content = att_content;
+		this.filename = filename;
+		this.orgfilename = orgfilename;
 		this.mid_approval_ok = mid_approval_ok;
 		this.fin_approval_ok = fin_approval_ok;
 		this.approval_status = approval_status;
@@ -65,6 +64,8 @@ public class AttendanceVO {
 		this.empvo = empvo;
 		this.midapprvo = midapprvo;
 		this.finapprvo = finapprvo;
+		this.attach = attach;
+		this.filesize = filesize;
 	}
 	
 	public int getPk_att_num() {
@@ -121,29 +122,23 @@ public class AttendanceVO {
 	public void setFk_fin_app_no(int fk_fin_app_no) {
 		this.fk_fin_app_no = fk_fin_app_no;
 	}
-	public String getAtt_title() {
-		return att_title;
+	public String getAtt_content() {
+		return att_content;
 	}
-	public void setAtt_title(String att_title) {
-		this.att_title = att_title;
+	public void setAtt_content(String att_content) {
+		this.att_content = att_content;
 	}
-	public String getServer_file_name() {
-		return server_file_name;
+	public String getFilename() {
+		return filename;
 	}
-	public void setServer_file_name(String server_file_name) {
-		this.server_file_name = server_file_name;
+	public void setFilename(String filename) {
+		this.filename = filename;
 	}
-	public String getOrg_file_name() {
-		return org_file_name;
+	public String getOrgfilename() {
+		return orgfilename;
 	}
-	public void setOrg_file_name(String org_file_name) {
-		this.org_file_name = org_file_name;
-	}
-	public String getFile_path() {
-		return file_path;
-	}
-	public void setFile_path(String file_path) {
-		this.file_path = file_path;
+	public void setOrgfilename(String orgfilename) {
+		this.orgfilename = orgfilename;
 	}
 	public int getMid_approval_ok() {
 		return mid_approval_ok;
@@ -210,6 +205,12 @@ public class AttendanceVO {
 	}
 	public void setAttach(MultipartFile attach) {
 		this.attach = attach;
+	}
+	public String getFilesize() {
+		return filesize;
+	}
+	public void setFilesize(String filesize) {
+		this.filesize = filesize;
 	}
 	
 	

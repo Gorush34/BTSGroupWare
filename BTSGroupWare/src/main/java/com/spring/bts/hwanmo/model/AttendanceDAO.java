@@ -72,11 +72,91 @@ public class AttendanceDAO implements InterAttendanceDAO {
 		return n;
 	}
 
-	// 한 사원에 대한 출퇴근기록 가져오기
+
+	// 총 출퇴근 건수 알아오기
 	@Override
-	public List<CommuteVO> getMyCommute(int pk_emp_no) {
-		List<CommuteVO> cmtlist = sqlsession.selectList("hwanmo.getMyCommute", pk_emp_no);
+	public int getTotalCommuteCount(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("hwanmo.getTotalCommuteCount", paraMap);
+		return n;
+	}
+
+	
+	// 페이징처리가 있는 한 사원에 대한 출퇴근기록 가져오기
+	@Override
+	public List<CommuteVO> getMyCommute(Map<String, String> paraMap) {
+		List<CommuteVO> cmtlist = sqlsession.selectList("hwanmo.getMyCommute", paraMap);
 		return cmtlist;
 	}
+
+	// 직급번호로 직급명 알아오기
+	@Override
+	public String getKo_rankname(String pk_emp_no) {
+		String ko_rankname = sqlsession.selectOne("hwanmo.getKo_rankname", pk_emp_no);
+		return ko_rankname;
+	}
+
+	// 사원번호로 부서명, 부서장, 부서장 사번 알아오기
+	@Override
+	public Map<String, String> getDeptInfo(String pk_emp_no) {
+		Map<String, String> paraMap = sqlsession.selectOne("hwanmo.getDeptInfo", pk_emp_no);
+		return paraMap;
+	}
+
+	// 사원번호로 연차테이블 불러오기
+	@Override
+	public Map<String, String> getLeaveInfo(String pk_emp_no) {
+		Map<String, String> paraMap = sqlsession.selectOne("hwanmo.getLeaveInfo", pk_emp_no);
+		return paraMap;
+	}
+
+	// 연차구분테이블 불러오기
+	@Override
+	public List<Map<String, Object>> getAttSortInfo() {
+		List<Map<String, Object>> attSortList = sqlsession.selectList("hwanmo.getAttSortInfo");
+		return attSortList;
+	}
+
+	// 첨부파일이 없는 연차신청 작성
+	@Override
+	public int reportVacation(AttendanceVO attVO) {
+		int n = sqlsession.insert("hwanmo.reportVacation", attVO);
+		return n;
+	}
+
+	// 첨부파일이 있는 연차신청 작성
+	@Override
+	public int reportVacation_withFile(AttendanceVO attVO) {
+		int n = sqlsession.insert("hwanmo.reportVacation_withFile", attVO);
+		return n;
+	}
+
+	// 사원의 연차테이블 최신화
+	@Override
+	public int updateLeave(Map<String, String> paraMap) {
+		int n = sqlsession.update("hwanmo.updateLeave", paraMap);
+		return n;
+	}
+
+	// 로그인한 사용자의 연차테이블 불러오기
+	@Override
+	public LeaveVO getOneLeave(String fk_emp_no) {
+		LeaveVO leavevo = sqlsession.selectOne("hwanmo.getOneLeave", fk_emp_no);
+		return leavevo;
+	}
+
+	// 총 올린  연차신청 수 가져오기
+	@Override
+	public int getTotalVacReportCount(String fk_emp_no) {
+		int totalCount = sqlsession.selectOne("hwanmo.getTotalVacReportCount", fk_emp_no);
+		return totalCount;
+	}
+
+	// 페이징처리 한 받은 공가/경조신청목록 
+	@Override
+	public List<Map<String, Object>> getMyAttListWithPaging(Map<String, String> paraMap) {
+		List<Map<String, Object>> myAttList = sqlsession.selectList("hwanmo.getMyAttListWithPaging", paraMap);
+		return myAttList;
+	}
+	
 	
 }
