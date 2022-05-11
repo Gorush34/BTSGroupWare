@@ -150,9 +150,6 @@
 	<h2 style="margin-bottom: 30px;">글쓰기</h2>
  --%>
 		<h2 style="margin-bottom: 30px;">글쓰기</h2>
-
-	<a data-toggle="modal" data-target="#myModal">임시저장글</a>
-
 <%-- 	
 	<form action="<%= ctxPath%>/board/temp_list.bts" method="post" style="text-align: right;">
 			<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />

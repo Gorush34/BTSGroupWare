@@ -62,6 +62,14 @@
            obj.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
          <%-- === 스마트 에디터 구현 끝 === --%>
 		  
+         
+     	 // 헤더 유효성 검사
+		  const header = $("select#header").val();
+		  if(header == "" || header == null) {
+			  alert("머릿말을 설정하세요.");
+			  return;
+		  }
+         
 		  // 글제목 유효성 검사
 		  const subject = $("input#subject").val().trim();
 		  if(subject == "") {
@@ -101,7 +109,7 @@
 		  // 폼(form)을 전송(submit)
 		  const frm = document.addFrm;
 		  frm.method = "POST";
-		  frm.action = "<%= ctxPath%>/board/write_end.bts";
+		  frm.action = "<%= ctxPath%>/notice/write_end.bts";
 		  frm.submit();
 	  });
 	  
@@ -164,7 +172,6 @@
  <%-- == 원글쓰기 인 경우 == --%>
 	<c:if test="${requestScope.fk_seq eq ''}">
 		<h2>글쓰기</h2>
-		<a id="temp" data-toggle="modal" data-target="#myModal" style="color:gray; float: right; padding-right: 20px;">임시저장글</a>
 	</c:if>
 <%-- == 답글쓰기 인 경우 == --%>
 	<c:if test="${requestScope.fk_seq ne ''}">
@@ -182,13 +189,21 @@
 	 --%>
 <form name="addFrm" enctype="multipart/form-data">
 	<table style="width: 1024px" class="table table-bordered">
-		<tr>
-			<th style="width: 15%; background-color: #DDDDDD; text-align: right;">성명</th>
-			<td>
-				<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
-				<input type="text" name="user_name" value="${sessionScope.loginuser.emp_name}" readonly />
-			</td>
-		</tr>
+	
+			<tr>
+				<th style="width: 15%; background-color: #DDDDDD; text-align: right;">머릿말</th>
+					<td>
+						<select id="header" name="header" style="height: 30px;">
+							<option value="" selected disabled>==머릿말 선택==</option>	
+							<option value="알려드립니다">알려드립니다</option>				 								
+							<option value="인사이동">인사이동</option>				 								
+							<option value="부고">부고</option>				 					 
+						</select>
+						<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
+						<input type="hidden" name="user_name" value="관리자" readonly />
+						
+					</td>						
+			</tr>
 		
 		<tr>
 			<th style="width: 15%; background-color: #DDDDDD; text-align: right;">제목</th>
@@ -248,52 +263,4 @@
 </div>
 </div>
 
-<div class="modal fade" id="myModal" role="dialog"> 
-<div class="modal-dialog"> 
-<div class="modal-content"> 
-<div class="modal-header"> 
-
-<h2 class="modal-title">
-임시저장
-</h2> 
-
-<button type="button" class="close" data-dismiss="modal">
-×
-</button> 
-
-</div> 
-<div class="modal-body"> 
-<div style="padding: 0 15px !important; margin-right: auto !important; margin-left: auto !important;">
-
-
-		<table class="table table-hover">
-		<thead>
-			<tr>	
-				<th scope="col" class="text-center" style="width: 250px;">제목</th>
-				<th scope="col" class="text-center" style="width: 150px;">작성일</th>
-			</tr>
-		</thead>
-		<tbody>
-			<c:forEach var="boardvo" items="${requestScope.boardList}" varStatus="status">
-			   <tr>
-					<td align="center">  	
-				      	<form action="<%= request.getContextPath()%>/board/tmp_write.bts?pk_seq=${requestScope.boardvo.pk_seq}">
-							<input type="hidden" name="pk_seq" value="${boardvo.pk_seq}" />
-							<input style="color: gray; border:none; background-color: white;" type="submit" value="${boardvo.subject}" />
-						</form>			      	
-			    	</td> 	 
-
-				  <td align="center">${boardvo.write_day}</td>
-			   </tr>
-			</c:forEach>
-		</tbody>
-	</table>
-
-
- 
-	</div>
-</div> 
- </div> 
- </div> 
- </div>
 

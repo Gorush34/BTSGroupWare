@@ -10,7 +10,7 @@
 <!-- 게시판 목록 -->
     <select id="boardList" resultType="com.spring.bts.moongil.model.BoardVO">
     
-	  select pk_seq, fk_emp_no, user_name, subject  
+	  select pk_seq, fk_emp_no, user_name, subject, content  
 		     , read_count, to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') as write_day
 		     , comment_count
 		from tbl_board
@@ -30,23 +30,27 @@
     </select> 
 
 	<select id="boardListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.moongil.model.BoardVO">
-		select pk_seq, fk_emp_no, user_name, subject, read_count, write_day, comment_count,
+		select pk_seq, fk_emp_no, user_name, subject, read_count, write_day, comment_count, content,
 		       groupno, fk_seq, depthno,
-		       filename
+		       filename, ko_rankname
 		from
 		(
 		    select rownum AS rno,
-		           pk_seq, fk_emp_no, user_name, subject, read_count, write_day, comment_count, 
+		           pk_seq, fk_emp_no, user_name, subject, read_count, write_day, comment_count, content,
 		           groupno, fk_seq, depthno,
-		           filename
+		           filename, ko_rankname
 		        from
 		        (
-		            select pk_seq, fk_emp_no, user_name, subject, read_count, 
-		                   to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') AS write_day, 
-		                   comment_count,
-		                   groupno, fk_seq, depthno, 
-		                   filename
-		            from tbl_board
+		            select B.pk_seq AS pk_seq, B.fk_emp_no AS fk_emp_no, B.user_name AS user_name, B.subject AS subject, B.read_count AS read_count, B.content AS content,
+		                   to_char(B.write_day, 'yyyy-mm-dd hh24:mi:ss') AS write_day, 
+		                   B.comment_count AS comment_count,
+		                   B.groupno AS groupno, B.fk_seq AS fk_seq, B.depthno AS depthno, 
+		                   B.filename AS filename,
+		          		   S.ko_rankname AS ko_rankname
+		            from tbl_board B join tbl_employees E
+                    ON B.user_name = E.emp_name
+                    join tbl_rank_sort S
+                    ON E.FK_RANK_ID = S.PK_RANK_NO
 		            where status = 1
 		            <if test='searchType !="" and searchWord != "" '>
 		            and lower(${searchType}) like '%'||lower(#{searchWord}) ||'%'
@@ -76,24 +80,24 @@
 		select previousseq, previoussubject
 		     , pk_seq, fk_emp_no, user_name, subject, content, read_count, write_day, pw 
 		     , nextseq, nextsubject 
-		     , groupno, fk_seq, depthno
-		     , filename, org_Filename, file_size, comment_count
+		     , groupno, fk_seq, depthno, like_cnt
+		     , filename, org_Filename, file_size, comment_count, ko_rankname
 		from 
 		(
 		    select lag(pk_seq,1) over(order by pk_seq desc) AS previousseq 
-		         , lag(subject,1) over(order by pk_seq desc) AS previoussubject 
-		         
+		         , lag(subject,1) over(order by pk_seq desc) AS previoussubject  
 		         , pk_seq, fk_emp_no, user_name, subject, content, read_count
 		         , to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') as write_day
-		         , pw 
-		         
+		         , pw, like_cnt 	         
 		         , lead(pk_seq,1) over(order by pk_seq desc) AS nextseq
-		         , lead(subject,1) over(order by pk_seq desc) AS nextsubject
-		         
+		         , lead(subject,1) over(order by pk_seq desc) AS nextsubject         
 		         , groupno, fk_seq, depthno
-		         
-		         , filename, org_Filename, file_size, comment_count
-		    from tbl_board
+		         , filename, org_Filename, file_size, comment_count,
+		            S.ko_rankname AS ko_rankname
+		            from tbl_board B join tbl_employees E
+                    ON B.user_name = E.emp_name
+                    join tbl_rank_sort S
+                    ON E.FK_RANK_ID = S.PK_RANK_NO
 		    where status = 1
 		    <if test='searchType != "" and searchWord != "" '>
 		    and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
@@ -109,32 +113,6 @@
     </update>
     
     
-        <!-- === #111. 검색어 입력시 자동글 완성하기 6 === -->
-    <select id="wordSearchShow" parameterType="HashMap" resultType="String">
-    	<choose>
-    		<when test="searchType eq 'user_name'">
-    			select distinct ${searchType}
-    		</when>
-    		<otherwise>
-    			select ${searchType}
-    		</otherwise>
-    	</choose>
-    	from tbl_board
-    	where status = 1 
-    	and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%' 
-    	<!-- select 문에서 distinct 와 order by 절을 함께 사용할때는 조심해야 한다.
-		     order by 절에는 select 문에서 사용된 컬럼만 들어올 수가 있다.
-		         또는 order by 절을 사용하지 않아야 한다.
-		 -->
-		 <choose>
-    		<when test="searchType neq 'subject'">
-    			order by ${searchType} asc
-    		</when>
-    		<otherwise>
-    			order by pk_seq desc
-    		</otherwise>
-    	</choose>
-    </select>
     
 	<!-- === #146. tbl_board 테이블에서  groupno 컬럼의 최대값 알아오기 === -->
 	<select id="getGroupnoMax" resultType="int">
@@ -259,8 +237,8 @@
     
         <!-- #88. 댓글쓰기(tbl_comment 테이블에 insert) === -->
     <insert id="addComment" parameterType="com.spring.bts.moongil.model.CommentVO">
-	        insert into tbl_comment(pk_seq, fk_emp_no, user_name, content, write_day, fk_seq, status) 
-	        values(commentSeq.nextval, #{fk_emp_no}, #{user_name}, #{content}, default, #{fk_seq}, default)
+	        insert into tbl_comment(pk_seq, fk_emp_no, name, content, regDate, fk_seq, status) 
+	        values(commentSeq.nextval, #{fk_emp_no}, #{name}, #{content}, default, #{fk_seq}, default)
     </insert>
     
     <!--  === #89.-1  tbl_board 테이블에 commentCount 컬럼의 값을 1증가(update) === -->  
@@ -271,10 +249,10 @@
     
     <!-- === #93. 원게시물에 딸린 댓글들을 조회해오기 === -->  
     <select id="getCommentList" parameterType="String" resultType="com.spring.bts.moongil.model.CommentVO"> 
-	    select user_name, content, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS write_day 
+	    select name, content, to_char(regDate, 'yyyy-mm-dd hh24:mi') AS regDate 
 		from tbl_comment
 		where status = 1 and fk_seq = #{fk_seq}
-		order by pk_seq desc
+		order by pk_seq asc
     </select>
     
    
@@ -289,14 +267,218 @@
     
     <select id="getCommentListPaging" parameterType="HashMap" resultType="com.spring.bts.moongil.model.CommentVO">
 
-		select user_name, content, write_day
+		select name, content, regDate, fk_emp_no, pk_seq, fk_seq
 		from 
 		(
-		select row_number() over(order by pk_seq desc) AS rno, user_name, content, to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') AS write_day
+		select row_number() over(order by pk_seq desc) AS rno, name, content, fk_emp_no, pk_seq, fk_seq, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate
 		from tbl_comment
 		where status = 1 and fk_seq = #{fk_seq}
 		) V
 		where rno between #{startRno} and #{endRno}
 	</select>	
 	
+	<update id="delComment" parameterType="String">
+		update tbl_comment set status = 0
+		where pk_seq = #{pk_seq}
+	</update>
+	
+
+	<update id="minusCommentCount" parameterType="String">
+    	update tbl_board set comment_count = comment_count - 1 
+    	where pk_seq = #{fk_seq}
+    </update>
+	
+	
+	<!-- ====================================공지사항시작=================================================== -->
+	
+	<select id="noticeListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.moongil.model.NoticeVO">
+		select pk_seq, fk_emp_no, user_name, subject, read_count, write_day, content,
+		       groupno, fk_seq, depthno, filename, header
+		from
+		(
+		    select rownum AS rno,
+		           pk_seq, fk_emp_no, user_name, subject, read_count, write_day, content,
+		           groupno, fk_seq, depthno,filename, header
+		        from
+		        (
+		            select pk_seq, fk_emp_no, user_name, subject, read_count, content,
+		                   to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') AS write_day,
+		                   groupno, fk_seq, depthno, filename, header
+		            from tbl_notice
+		            where status = 1
+		            <if test='searchType !="" and searchWord != "" '>
+		            and lower(${searchType}) like '%'||lower(#{searchWord}) ||'%'
+		            </if>
+		            <if test='headerCategory != "" and headerCategory != null'>
+		            and header = '${headerCategory}'
+		            </if>
+		            start with fk_seq = 0
+		            connect by prior pk_seq = fk_seq
+		            order siblings by groupno desc, pk_seq desc 
+		        ) V
+	     )T
+		 where rno between #{startRno} and #{endRno}
+		 
+	</select>
+	
+	
+	<!-- === 총게시물 건수. === -->
+    <select id="getTotalCount_notice" parameterType="HashMap" resultType="int">
+	    select count(*)
+		from tbl_notice
+		where status = 1
+		<if test='searchType != ""'>
+		and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+		</if>
+    </select> 
+    
+    <select id="temp_list_notice" resultType="com.spring.bts.moongil.model.NoticeVO">
+    
+	  select subject, to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') as write_day, pk_seq
+		from tbl_board
+		where status = 2 and fk_emp_no = #{fk_emp_no}
+		order by write_day desc
+    
+    </select>
+    
+     <!--  ==== #147. 원글쓰기 또는 답변글쓰기(파일첨부가 없는 글쓰기) ==== -->
+	<insert id="add_notice" parameterType="com.spring.bts.moongil.model.NoticeVO">
+		<if test='fk_seq.equals("")'>
+		     insert into tbl_notice(pk_seq, header, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno)
+		     values(noticeSeq.nextval, #{header}, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, default, default)   
+		</if>
+		<!-- 답글 -->
+		 <if test='!fk_seq.equals("")'>
+		     insert into tbl_notice(pk_seq, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno, header)
+		     values(noticeSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, #{fk_seq}, #{depthno}+1, #{header})   
+		</if>     
+	</insert>
+    
+    <!-- === #158. 글쓰기(첨부파일이 있는 경우) ===  -->
+	<insert id="add_withFile_notice" parameterType="com.spring.bts.moongil.model.NoticeVO" >
+		<if test='fk_seq.equals("")'>
+		     insert into tbl_notice(pk_seq, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno, header, filename, org_filename, file_size)
+		     values(noticeSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, default, default, #{header}, #{filename}, #{org_filename}, #{file_size})   
+	     </if>
+	     <!-- 답글 -->
+	     <if test='!fk_seq.equals("")'>
+		     insert into tbl_notice(pk_seq, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno, header, filename, org_filename, file_size)
+		     values(noticeSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, #{fk_seq}, #{depthno}+1, #{header}, #{filename}, #{org_filename}, #{file_size})    
+	     </if>
+	</insert>
+    
+    <!-- 조회수 증가 -->
+    <update id="setAddReadCount_notice" parameterType="String">
+    	update tbl_notice set read_count = read_count + 1
+    	where pk_seq = #{pk_seq}
+    </update>
+    
+     <!-- ==== #161. (댓글 및 답변글쓰기 및 파일첨부가 있는 게시판에서) 글1개 조회하기 ==== 
+                         먼저 위의 #140 을 주석처리 한 다음에 아래와 같이 한다.
+    -->
+    <select id="getView_notice" parameterType="HashMap" resultType="com.spring.bts.moongil.model.NoticeVO">
+		select previousseq, previoussubject
+		     , pk_seq, fk_emp_no, user_name, subject, content, read_count, write_day, pw, header
+		     , nextseq, nextsubject 
+		     , groupno, fk_seq, depthno
+		     , filename, org_Filename, file_size
+		from 
+		(
+		    select lag(pk_seq,1) over(order by pk_seq desc) AS previousseq 
+		         , lag(subject,1) over(order by pk_seq desc) AS previoussubject 
+		         
+		         , pk_seq, fk_emp_no, user_name, subject, content, read_count
+		         , to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') as write_day
+		         , pw, header
+		         
+		         , lead(pk_seq,1) over(order by pk_seq desc) AS nextseq
+		         , lead(subject,1) over(order by pk_seq desc) AS nextsubject
+		         
+		         , groupno, fk_seq, depthno
+		         
+		         , filename, org_Filename, file_size
+		    from tbl_notice
+		    where status = 1
+		    <if test='searchType != "" and searchWord != "" '>
+		    and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+		    </if>
+		) V
+		where V.pk_seq = #{pk_seq}
+    </select>
+    
+    
+    <!-- 게시글 추천수 -->
+	<update id="updateLike" parameterType="int">
+	update tbl_board set 
+	like_cnt = like_cnt+1
+	where pk_seq = #{fk_seq}
+	</update>
+	
+	<!-- 게시글 추천수취소 -->
+	<update id="updateLikeCancel" parameterType="int">
+	update tbl_board set 
+	like_cnt = like_cnt - 1
+	where pk_seq = #{fk_seq}
+	</update>
+	
+	<!-- 게시글 추천 시 Like 테이블에 insert -->
+	<insert id="insertLike">
+	insert into tbl_board_like(pk_seq , fk_seq , fk_emp_no) 
+	values((SELECT NVL(MAX(pk_seq), 0) + 1 FROM tbl_board_like) ,#{fk_seq} ,#{fk_emp_no})
+	</insert>
+	
+	<!-- 게시글 추천취소 시 delete -->
+	<delete id="deleteLike">
+	delete from tbl_board_like where fk_seq = #{fk_seq} and fk_emp_no = #{fk_emp_no}
+	</delete>
+	
+	<!-- 게시글 추천 중복방지 select문 -->
+	<select id="likeCheck" resultType="int">
+	select count(*) from tbl_board_like where fk_seq = #{fk_seq} and fk_emp_no = #{fk_emp_no} 
+	</select>
+	
+	
+    <select id="get_heart" parameterType="HashMap" resultType="com.spring.bts.moongil.model.LikeVO">
+		    select pk_seq, fk_emp_no, fk_seq, emp_name, ko_ranknam
+			from
+			(
+			select L.pk_seq AS pk_seq, L.fk_emp_no AS fk_emp_no, L.like_date as like_date, L.fk_seq as fk_seq, E.emp_name as emp_name, S.ko_rankname AS ko_ranknam
+			from tbl_board_like L
+			JOIN tbl_employees E
+			ON L.fk_emp_no = E.pk_emp_no
+			join tbl_rank_sort S
+			ON E.FK_RANK_ID = S.PK_RANK_NO
+			) V
+		    where fk_seq = #{pk_seq} 
+
+    </select>
+    
+    
+    <!-- === #111. 검색어 입력시 자동글 완성하기 6 === -->
+    <select id="wordSearchShow" parameterType="HashMap" resultType="String">
+    	<choose>
+    		<when test="searchType eq 'name'">
+    			select distinct ${searchType}
+    		</when>
+    		<otherwise>
+    			select ${searchType}
+    		</otherwise>
+    	</choose>
+    	from tbl_board
+    	where status = 1 
+    	and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%' 
+    	<!-- select 문에서 distinct 와 order by 절을 함께 사용할때는 조심해야 한다.
+		     order by 절에는 select 문에서 사용된 컬럼만 들어올 수가 있다.
+		         또는 order by 절을 사용하지 않아야 한다.
+		 -->
+		 <choose>
+    		<when test="searchType neq 'subject'">
+    			order by ${searchType} asc
+    		</when>
+    		<otherwise>
+    			order by pk_seq desc
+    		</otherwise>
+    	</choose>
+    </select>
+    
 </mapper>

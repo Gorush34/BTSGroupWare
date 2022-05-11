@@ -4,7 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 //=== #52. vo 생성하기
 //  먼저, 오라클에서 tbl_board 테이블을 생성해야 한다.
-public class BoardVO {
+public class NoticeVO {
 
 
 	private String pk_seq;
@@ -17,16 +17,13 @@ public class BoardVO {
 	private String read_count;
 	private String pw;
 	private String status;
-	private String comment_count;
 	private String org_filename;
 	private String filename;
 	private String file_size;
 	private String groupno;
 	private String fk_seq;
 	private String depthno;
-	private String ko_rankname;
-	private String like_cnt;
-	
+	private String header;
 	
 	private String previousseq;      // 이전글번호
 	private String previoussubject;  // 이전글제목
@@ -36,15 +33,14 @@ public class BoardVO {
 	
 	private MultipartFile attach;
 	
-	public BoardVO() {}
+	public NoticeVO() {}
 
 
-	public BoardVO(String pk_seq, String like_cnt, String fk_emp_no, String subject, String content, String user_name, String write_day,
-			String ip, String read_count, String pw, String status, String comment_count, String org_filename,
+	public NoticeVO(String pk_seq, String fk_emp_no, String subject, String content, String user_name, String write_day,
+			String ip, String read_count, String pw, String status, String org_filename, String header,
 			String filename, String file_size, String groupno, String fk_seq, String depthno, String previousseq,
-			String previoussubject, String nextseq, String nextsubject, MultipartFile attach, String ko_rankname) {
+			String previoussubject, String nextseq, String nextsubject, MultipartFile attach) {
 		this.pk_seq = pk_seq;
-		this.like_cnt = like_cnt;
 		this.fk_emp_no = fk_emp_no;
 		this.subject = subject;
 		this.content = content;
@@ -54,7 +50,6 @@ public class BoardVO {
 		this.read_count = read_count;
 		this.pw = pw;
 		this.status = status;
-		this.comment_count = comment_count;
 		this.org_filename = org_filename;
 		this.filename = filename;
 		this.file_size = file_size;
@@ -66,7 +61,7 @@ public class BoardVO {
 		this.nextseq = nextseq;
 		this.nextsubject = nextsubject;
 		this.attach = attach;
-		this.ko_rankname = ko_rankname;
+		this.header = header;
 	}
 
 
@@ -170,16 +165,6 @@ public class BoardVO {
 
 	public void setStatus(String status) {
 		this.status = status;
-	}
-
-
-	public String getComment_count() {
-		return comment_count;
-	}
-
-
-	public void setComment_count(String comment_count) {
-		this.comment_count = comment_count;
 	}
 
 
@@ -292,23 +277,13 @@ public class BoardVO {
 	}
 
 
-	public String getKo_rankname() {
-		return ko_rankname;
+	public String getHeader() {
+		return header;
 	}
 
 
-	public void setKo_rankname(String ko_rankname) {
-		this.ko_rankname = ko_rankname;
-	}
-
-
-	public String getLike_cnt() {
-		return like_cnt;
-	}
-
-
-	public void setLike_cnt(String like_cnt) {
-		this.like_cnt = like_cnt;
+	public void setHeader(String header) {
+		this.header = header;
 	}
 	
 	

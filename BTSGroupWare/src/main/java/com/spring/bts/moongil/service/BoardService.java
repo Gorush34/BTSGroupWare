@@ -14,6 +14,8 @@ import com.spring.bts.common.FileManager;
 import com.spring.bts.moongil.model.BoardVO;
 import com.spring.bts.moongil.model.CommentVO;
 import com.spring.bts.moongil.model.InterBoardDAO;
+import com.spring.bts.moongil.model.LikeVO;
+import com.spring.bts.moongil.model.NoticeVO;
 
 
 
@@ -71,11 +73,6 @@ public class BoardService implements InterBoardService {
 		return boardvo;
 	}
 
-	@Override
-	public List<String> wordSearchShow(Map<String, String> paraMap) {
-		List<String> wordList = dao.wordSearchShow(paraMap);
-		return wordList;
-	}
 
 	@Override
 	public int add(BoardVO boardvo) {
@@ -109,17 +106,6 @@ public class BoardService implements InterBoardService {
 		return n;
 	}
 
-	@Override
-	public int totalBoardCnt(Map<String, String> paraMap) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public List<BoardVO> boardListSearchP(Map<String, String> paraMap) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 
 	// === #78. 1개글 삭제하기 === // 
@@ -242,7 +228,137 @@ public class BoardService implements InterBoardService {
 		List<CommentVO> commentList = dao.getCommentListPaging(paraMap);
 		return commentList;
 	}
-	
+
+	@Override
+	public int delComment(String pk_seq) {
+		int n = dao.delComment(pk_seq);
+		return n;
+	}
+
+	@Override
+	public int minusCommentCount(String fk_seq) {
+		int m = dao.minusCommentCount(fk_seq);
+		return m;
+	}
+
+	@Override
+	public List<NoticeVO> noticeListSearchWithPaging(Map<String, String> paraMap) {
+		List<NoticeVO> noticeList = dao.noticeListSearchWithPaging(paraMap);
+		return noticeList;
+	}
+
+	@Override
+	public int getTotalCount_notice(Map<String, String> paraMap) {
+		int n = dao.getTotalCount_notice(paraMap);
+		return n;
+	}
+
+	@Override
+	public List<NoticeVO> temp_list_notice(Map<String, String> paraMap) {
+		List<NoticeVO> temp_list_notice = dao.temp_list_notice(paraMap);
+		return temp_list_notice;
+	}
+
+	@Override
+	public int add_notice(NoticeVO noticevo) {
+		 // == 원글쓰기인지, 답변글쓰기 인지 구분하기 시작 == //
+		if("".contentEquals(noticevo.getFk_seq())) {
+			// 원글쓰기인 경우
+			// groupno 컬럼의 값은 groupno 컬럼의 최대값(max)+1 로 해야한다.
+			int groupno = dao.getGroupnoMax() + 1;
+			noticevo.setGroupno(String.valueOf(groupno));
+		}
+	  // == 원글쓰기인지, 답변글쓰기 인지 구분하기 끝 == //	
+		
+		
+		int n = dao.add_notice(noticevo);
+		return n;
+	}
+
+	@Override
+	public int add_withFile_notice(NoticeVO noticevo) {
+		if("".contentEquals(noticevo.getFk_seq())) {
+			// 원글쓰기인 경우
+			// groupno 컬럼의 값은 groupno 컬럼의 최대값(max)+1 로 해야한다.
+			int groupno = dao.getGroupnoMax() + 1;
+			noticevo.setGroupno(String.valueOf(groupno));
+		}
+ 	    // == 원글쓰기인지, 답변글쓰기 인지 구분하기 끝 == //
+		
+		int n = dao.add_withFile_notice(noticevo); // 첨부파일이 있는 경우
+		
+		return n;
+	}
+
+	@Override
+	public NoticeVO getView_notice(Map<String, String> paraMap) {
+		NoticeVO noticevo = dao.getView_notice(paraMap); // 글1개 조회하기
+		
+		String login_userid = paraMap.get("login_userid");  
+		
+		int login_userid1 = Integer.parseInt(login_userid);
+
+		
+		if(login_userid1 != 0 &&
+				noticevo != null &&
+		  !login_userid.equals(noticevo.getFk_emp_no())) {
+			
+			dao.setAddReadCount_notice(noticevo.getPk_seq());  
+			noticevo = dao.getView_notice(paraMap); 
+		}
+		
+		return noticevo;
+	}
+
+	@Override
+	public NoticeVO getViewWithNoAddCount_notice(Map<String, String> paraMap) {
+		NoticeVO noticevo = dao.getView_notice(paraMap); // 글1개 조회하기
+		return noticevo;
+	}
+
+
+
+	@Override
+	public void insertLike(int fk_seq, int fk_emp_no) throws Exception {
+		dao.insertLike(fk_seq, fk_emp_no);
+		
+	}
+
+	@Override
+	public void updateLike(int fk_seq) throws Exception {
+		dao.updateLike(fk_seq);
+		
+	}
+
+
+	@Override
+	public void updateLikeCancel(int fk_seq) throws Exception {
+		dao.updateLikeCancel(fk_seq);
+		
+	}
+
+	@Override
+	public void deleteLike(int fk_seq, int fk_emp_no) throws Exception {
+		dao.deleteLike(fk_seq, fk_emp_no);
+		
+	}
+
+	@Override
+	public int likeCheck(int fk_seq, int fk_emp_no) throws Exception {
+		return dao.likeCheck(fk_seq, fk_emp_no);
+	}
+
+	@Override
+	public List<LikeVO> get_heart(Map<String, String> paraMap) {
+		List<LikeVO> likeList = dao.get_heart(paraMap); // 글1개 조회하기
+		return likeList;
+	}
+
+	@Override
+	public List<String> wordSearchShow(Map<String, String> paraMap) {
+		List<String> wordList = dao.wordSearchShow(paraMap);
+		return wordList;
+	}	
 
 
 }

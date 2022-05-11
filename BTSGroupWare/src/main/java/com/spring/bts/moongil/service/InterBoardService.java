@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.spring.bts.moongil.model.BoardVO;
 import com.spring.bts.moongil.model.CommentVO;
+import com.spring.bts.moongil.model.LikeVO;
+import com.spring.bts.moongil.model.NoticeVO;
 
 public interface InterBoardService {
 
@@ -16,15 +18,9 @@ public interface InterBoardService {
 
 	BoardVO getViewWithNoAddCount(Map<String, String> paraMap);
 
-	List<String> wordSearchShow(Map<String, String> paraMap);
-
 	int add(BoardVO boardvo);
 
 	int add_withFile(BoardVO boardvo);
-
-	int totalBoardCnt(Map<String, String> paraMap);
-
-	List<BoardVO> boardListSearchP(Map<String, String> paraMap);
 
 	int del(Map<String, String> paraMap);
 
@@ -49,6 +45,40 @@ public interface InterBoardService {
 	int getCommentTotalPage(Map<String, String> paraMap);
 
 	List<CommentVO> getCommentListPaging(Map<String, String> paraMap);
+
+	int delComment(String pk_seq);
+
+	int minusCommentCount(String fk_seq);
+
+	List<NoticeVO> noticeListSearchWithPaging(Map<String, String> paraMap);
+
+	int getTotalCount_notice(Map<String, String> paraMap);
+
+	List<NoticeVO> temp_list_notice(Map<String, String> paraMap);
+
+	int add_notice(NoticeVO noticevo);
+
+	int add_withFile_notice(NoticeVO noticevo);
+
+	NoticeVO getView_notice(Map<String, String> paraMap);
+
+	NoticeVO getViewWithNoAddCount_notice(Map<String, String> paraMap);
+	
+	int likeCheck(int fk_seq, int fk_emp_no) throws Exception;
+
+	void insertLike(int fk_seq, int fk_emp_no) throws Exception;
+
+	void updateLike(int fk_seq) throws Exception;
+
+	void updateLikeCancel(int fk_seq) throws Exception;
+
+	void deleteLike(int fk_seq, int fk_emp_no) throws Exception;
+
+	List<LikeVO> get_heart(Map<String, String> paraMap);
+
+	List<String> wordSearchShow(Map<String, String> paraMap);
+
+
 
 
 

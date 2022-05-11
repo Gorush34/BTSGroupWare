@@ -5,16 +5,20 @@ public class LikeVO {
 	private int pk_seq;
 	private int fk_seq;
 	private int fk_emp_no;
-	private int like_check;
-
+	private int like_date;
+	private String emp_name;
+	private String ko_ranknam;
+	
 	public LikeVO() {}
 	
-	public LikeVO(int pk_seq, int fk_seq, int fk_emp_no, int like_check) {
+	public LikeVO(int like_date, int pk_seq, int fk_seq, int fk_emp_no, String emp_name, String ko_ranknam) {
 		
 		this.pk_seq = pk_seq;
 		this.fk_seq = fk_seq;
 		this.fk_emp_no = fk_emp_no;
-		this.like_check = like_check;
+		this.like_date = like_date;
+		this.emp_name = emp_name;
+		this.ko_ranknam = ko_ranknam;
 	}
 
 	public int getPk_seq() {
@@ -41,12 +45,28 @@ public class LikeVO {
 		this.fk_emp_no = fk_emp_no;
 	}
 
-	public int getLike_check() {
-		return like_check;
+	public int getLike_date() {
+		return like_date;
 	}
 
-	public void setLike_check(int like_check) {
-		this.like_check = like_check;
+	public void setLike_date(int like_date) {
+		this.like_date = like_date;
+	}
+
+	public String getEmp_name() {
+		return emp_name;
+	}
+
+	public void setEmp_name(String emp_name) {
+		this.emp_name = emp_name;
+	}
+
+	public String getKo_ranknam() {
+		return ko_ranknam;
+	}
+
+	public void setKo_ranknam(String ko_ranknam) {
+		this.ko_ranknam = ko_ranknam;
 	}
 	
 	

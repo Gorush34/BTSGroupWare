@@ -16,9 +16,7 @@ public interface InterBoardDAO {
 
 	BoardVO getView(Map<String, String> paraMap);
 
-	void setAddReadCount(String seq);
-
-	List<String> wordSearchShow(Map<String, String> paraMap);
+	void setAddReadCount(String pk_seq);
 
 	int getGroupnoMax();
 
@@ -53,6 +51,40 @@ public interface InterBoardDAO {
 	int getCommentTotalPage(Map<String, String> paraMap);
 
 	List<CommentVO> getCommentListPaging(Map<String, String> paraMap);
+
+	int delComment(String pk_seq);
+
+	int minusCommentCount(String fk_seq);
+
+	List<NoticeVO> noticeListSearchWithPaging(Map<String, String> paraMap);
+
+	int getTotalCount_notice(Map<String, String> paraMap);
+
+	List<NoticeVO> temp_list_notice(Map<String, String> paraMap);
+
+	int add_notice(NoticeVO noticevo);
+
+	int add_withFile_notice(NoticeVO noticevo);
+
+	NoticeVO getView_notice(Map<String, String> paraMap);
+
+	void setAddReadCount_notice(String pk_seq);
+
+	int likeCheck(int fk_seq, int fk_emp_no);
+
+	void insertLike(int fk_seq, int fk_emp_no);
+
+	void updateLike(int fk_seq);
+
+	void updateLikeCancel(int fk_seq);
+
+	void deleteLike(int fk_seq, int fk_emp_no);
+
+	List<LikeVO> get_heart(Map<String, String> paraMap);
+
+	List<String> wordSearchShow(Map<String, String> paraMap);
+
+//	int add_like(LikeVO likevo);
 
 	
 	
