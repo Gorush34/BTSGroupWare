@@ -157,7 +157,7 @@
 						<li class="secondHeaderList">
 							<button type="button" id="delTrash" onclick="goMailDelRecyclebin()">
 							<i class="fa fa-trash-o fa-fw"></i>
-								삭제
+								영구삭제
 							</button>
 						</li>
 						<li class="secondHeaderList">

@@ -155,11 +155,33 @@
 		   	//	console.log(frm);		// form 태그 전체
 		   	//	console.log(frm.importanceVal.value);	// 체크 안했을 때 0
 		   	//	console.log(frm.method); 	// post
-		   
+
+				// === 발송 예약 시 사용자가 입력한 날짜 값이 존재한다면 메일 테이블에서 RESERVATION_STATUS 를 0에서 1로 바꿔주도록 한다.
+				if($("span#reservationTime").text() != "") {
+				
+					var sendResSetTime = $("span#reservationTime").text();
+					var frm = document.mailWriteFrm;
+					frm.importanceVal.value = importanceVal;
+					frm.mail_reservation_date.value = sendResSetTime;
+					frm.method = "POST";
+					frm.action = "<%= ctxPath%>/mail/mailWriteReservationEnd.bts";
+					frm.submit();
+					
+				//	console.log(frm);	// 전체 mailWriteFrm form 태그
+				//	console.log(frm.importanceVal.value);			// 0
+				//	console.log(frm.mail_reservation_date.value);	// 2022-06-03:18:15
+				//	console.log(frm.method);	// post
+				//	console.log(frm.action);	// http://localhost:9090/bts/mail/mailWriteReservationEnd.bts
+					
+				}
+				else {
+					return false;
+				}
+		   	
 			});// end of $("button#btnMailSend").click(function() {})-------------------------
 
 		
-			// 임시저장 버튼 클릭 시 임시보관 테이블로 insert 하기
+			// ==== 임시저장 버튼 클릭 시 메일 테이블에서 TEMP_STATUS 을 0에서 1로 update 하기
 			$("button#tempSave").click(function() {
 
 	  		 <%-- === 스마트 에디터 구현 시작 === --%>
@@ -242,9 +264,10 @@
 			//	console.log("확인용 frm : " + frm);
 			//	console.log("확인용 method : " + frm.method);
 			//	console.log("확인용 action : " + frm.action);
-				
-			});// end of $("button#tempSave").click(function(){})---------------
+
 			
+			});// end of $("button#tempSave").click(function(){})---------------
+
 	   
 	 <%--    
 		// 직원 주소록 자동 검색 (aJax)
@@ -276,6 +299,27 @@
 	
 	});// end of $(document).ready(function (){})--------------------
 
+	// function declaration
+	<%-- 발송예약 모달에서 시간 선택 후 '확인'버튼( onClick() ) 클릭 시 실행하는 함수 --%>
+	function sendReservationOk() {
+		
+		// 메일 쓰기 창에서 사용자가 선택한 날짜값 받아오기
+		var SendDateVal = $("input#selectSendDate").val();
+		
+		// 메일 쓰기 창에서 사용자가 선택한 시 값 받아오기
+		var SendTimeHourVal = $("#selectSendTimeHour option:selected").val();
+		
+		// 메일 쓰기 창에서 사용자가 선택한 분 값 받아오기
+		var SendTimeMinuteVal = $("#selectSendTimeMinute option:selected").val();
+		
+		var sendReservationDate = SendDateVal+ ":" + SendTimeHourVal + ":" + SendTimeMinuteVal;
+	//	console.log(sendReservationDate);
+		
+		$("span#reservationTime").text(sendReservationDate);
+		
+		$('.modal').modal('hide');	// 확인버튼 클릭 후 모달창 숨기기
+	}
+	
 </script>
 
 <div class="container" style="width: 100%; margin: 50px;">
@@ -284,7 +328,7 @@
 			<h4 class="page-title" style="color: black;">메일 쓰기</h4>
 		</div>
 	</div>
-
+	
 	<ul id="buttonGroup">
 		<li class="buttonList">
 			<button type="button" id="btnMailSend" class="btn btn-secondary btn-sm">
@@ -355,27 +399,89 @@
 		</table>
 		
 		<%-- 예약시간 설정하기 --%>
-		<input type="hidden" name="mail_reservation" />
+		<input type="hidden" name="mail_reservation_date" id="mail_reservation_date" />
 		
 		<%-- 메일 내용 끝 --%>
 	</form>
 	
 	<ul id="buttonGroup" style="margin-top: 10px;">
 		<li class="buttonList">
-			<button type="button" id="reservation" class="btn btn-secondary"
-					data-toggle="modal" data-target="$mailResrvationModal">
+			<button type="button" id="Reservation" name="Reservation" class="btn btn-secondary btn-sm"
+					data-toggle="modal" data-target="#sendReservation_Modal">
 			<i class="fa fa-clock-o fa-fw" aria-hidden="true"></i>
 			발송예약
 			</button>
-			<span style="margin-left: 20px;"></span>
+			<span id="reservationTime" style="margin-left: 20px;"></span>
 		</li>	
 	</ul>	
 </div>
 
 <%-- 발송예약 모달 --%>
-
-
-
-
-
-
+<div id="sendReservation_Modal" class="modal fade" role="dialog" data-keyword="false" data-backdrop="static">
+  <div class="modal-dialog" style="width: 400px;">
+  
+    <div class="modal-content">   
+      <div class="modal-header" style="height: 60px;">
+        <h5 class="modal-title" id="staticBackdropLabel">발송예약</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+      	<div id="sendReservation">
+      		<%-- 발송예약 모달 내용 시작 --%>
+	      		
+	      		<div id="sendReservation_content">
+		      		<%-- 모달 form 태그 시작 --%>
+					<form>
+						<div class="form-group form-wrap form-sendDate">
+							<label for="selectSendDate" class="sendLabel">발송날짜 :</label>
+							<input type="date" id="selectSendDate" />
+						</div>
+						
+						<div class="form-group form-wrap">
+							<label for="selectSendTime" class="sendLabel">발송시간 : </label>
+							<select class="form-control" id="selectSendTimeHour" style="display:inline-block; height: 35px; width: 70px;">
+							  	<c:forEach begin="0" end="9" varStatus="loop">
+							  		 <option>0${loop.index}</option>
+							  	</c:forEach>
+							  	<c:forEach begin="0" end="9" varStatus="loop">
+							  		 <option>1${loop.index}</option>
+							  	</c:forEach>	
+							  	<c:forEach begin="0" end="3" varStatus="loop">
+							  		 <option>2${loop.index}</option>
+							  	</c:forEach>
+							</select>
+						  	<span>시</span>		
+							<select class="form-control" id="selectSendTimeMinute" style="display:inline-block; height: 35px; width: 70px;">
+							  	<option>00</option>
+							  	<option>05</option>
+						  		<option>10</option>
+						  		<option>15</option>
+						  		<option>20</option>
+						  		<option>25</option>
+						  		<option>30</option>
+						  		<option>35</option>
+						  		<option>40</option>
+						  		<option>45</option>
+						  		<option>50</option>
+						  		<option>55</option>
+							</select>	
+							<span>분</span>					  								
+						</div>
+					</form> 	
+		      		<%-- 모달 form 태그 끝 --%>
+	      		</div>	      		
+      		<%-- 발송예약 모달 내용 끝 --%>
+      	</div>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn" style="border: solid 1px gray; background-color: #e6e6e6;" onclick="sendReservationOk()">확인</button>
+        <button type="button" class="btn btn-light" data-dismiss="modal" style="border: solid 1px gray">취소</button>
+      </div>
+    </div>
+    
+  </div>
+</div>

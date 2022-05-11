@@ -179,7 +179,7 @@
 									<input type="checkbox" id="checkAll" />
 								</th>
 								<th style="width: 2%;">
-									<span class="fa fa-star-o"></span>
+									<span class="fa fa-star-o "></span>
 								</th>
 								<th style="width: 2%;">
 									<span class="fa fa-paperclip"></span>

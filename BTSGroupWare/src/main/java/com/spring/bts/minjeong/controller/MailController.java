@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.bts.common.AES256;
@@ -68,6 +69,8 @@ public class MailController {
 		
 		return mav;
 	}
+	
+	// =========================== 메일쓰기  =========================== //
 	
 	// 메일 쓰기 완료 페이지 요청 (DB 에 글쓴 내용을 보내기)
 	@RequestMapping(value = "/mail/mailWriteEnd.bts", method= {RequestMethod.POST})	
@@ -221,7 +224,7 @@ public class MailController {
 	}	
 	
 	
-	
+	// =========================== 받은메일함  =========================== //
 	
 	// 받은메일함 목록 보기 페이지 요청 (페이징 처리 및 검색기능 포함)
 	@RequestMapping(value = "/mail/mailReceiveList.bts")	
@@ -444,6 +447,7 @@ public class MailController {
 	}		
 	
 	
+	// =========================== 보낸메일함  =========================== //
 	
 	// 보낸메일함 목록 보기 페이지 요청 (페이징 처리 및 검색기능 포함)
 	@RequestMapping(value = "/mail/mailSendList.bts")	
@@ -661,6 +665,9 @@ public class MailController {
 		return mav;
 	}		
 		
+
+	
+	// =========================== 중요메일함  =========================== //
 	
 	// 중요메일함
 	@RequestMapping(value = "/mail/mailImportantList.bts")	
@@ -678,6 +685,8 @@ public class MailController {
 		return mav;
 	}		
 	
+
+	// =========================== 임시보관함  =========================== //
 	
 	// 임시보관함 완료 페이지 요청 (MailTempVO 따로 사용)
 	@RequestMapping(value = "/mail/mailTemporaryEnd.bts")	
@@ -733,7 +742,165 @@ public class MailController {
 		mav.setViewName("mailTemporaryDetail.mail");
 		return mav;
 	}		
+
 	
+	// =========================== 예약메일함  =========================== //
+	
+	// === 발송 예약 시 사용자가 입력한 날짜 값이 존재한다면 메일 테이블에서 RESERVATION_STATUS 를 0에서 1로 바꿔주도록 한다.
+	@RequestMapping(value = "/mail/mailWriteReservationEnd.bts", method = RequestMethod.POST)	
+	public ModelAndView mailWriteReservationEnd(MultipartHttpServletRequest mrequest, ModelAndView mav, MailVO mailvo) {
+		
+
+		// VO 에 set 되지 않은 값들을 받아오도록 한다.
+		// form 태그의 name 값들을 불러온다.
+	/*	
+		String recemail = mrequest.getParameter("recemail");
+		String sendemail = mrequest.getParameter("sendemail");
+		String fk_senduser_num = mrequest.getParameter("fk_senduser_num");
+		String sendempname = mrequest.getParameter("sendempname");
+		String importance = mrequest.getParameter("importance");
+		String importanceVal = mrequest.getParameter("importanceVal");
+		String subject = mrequest.getParameter("subject");
+		String attach = mrequest.getParameter("attach");
+		String content = mrequest.getParameter("content");
+	*/
+		
+		// VO 에 없는 컬럼들을 set 해주도록 한다.
+
+		String uq_email = "";	   /* 이메일 */
+        try {
+			uq_email = aes.encrypt(mrequest.getParameter("recemail"));
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+        
+        // 값을 1개만 보낼때에는 String 으로 보내고, 
+        // return 타입으로 받아올 때에는 List 또는 Map 으로 받아온다.
+        
+        Map<String, String> recEmpnameAndNum = new HashMap<>();
+        // 발송예약시 선택한 날짜 값
+		String mail_reservation_date = mrequest.getParameter("mail_reservation_date");
+       
+        recEmpnameAndNum = service.getEmpnameAndNum(uq_email);
+        
+        String emp_name = recEmpnameAndNum.get("emp_name");
+        String pk_emp_no = recEmpnameAndNum.get("pk_emp_no");
+        
+        mailvo.setRecempname(emp_name);
+        mailvo.setFk_receiveuser_num(pk_emp_no);
+        
+   //   System.out.println("확인용 emp_name :" + emp_name);
+   //   System.out.println("확인용 pk_emp_no :" + pk_emp_no);
+   //   System.out.println("확인용 uq_email : " + uq_email);
+               
+        /*
+        service.getRecEmpname(uq_email);
+   
+        mailvo.setRecempname(recempname);
+         */
+        
+		// 사용자가 쓴 메일에 파일이 첨부되어 있는지 아닌지를 구분지어준다.
+		
+		/////////////////// 첨부파일 있는 경우 시작 (스마트에디터 X) ///////////////////////
+		MultipartFile attach = mailvo.getAttach();		// 실제 첨부된 파일
+		
+		if( !attach.isEmpty() ) {	// 첨부파일 존재시 true, 존재X시 false
+			// 첨부파일이 존재한다면 (true) 업로드 해야한다.
+			// 1. 사용자가 보낸 첨부파일을 WAS(톰캣)의 특정 폴더에 저장해준다.
+			// WAS 의 절대경로를 알아와야 한다.
+			
+			HttpSession session = mrequest.getSession();
+			String root = session.getServletContext().getRealPath("/");
+			
+			String path = root+"resources"+File.separator+"files";
+			// path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다. --> path 에 파일을 업로드 한다.
+			
+			// 2. 파일첨부를 위한 변수 설정 및 값을 초기화 한 후 파일 업로드 하기
+			String newFileName = "";
+			// WAS(톰캣)의 디스크에 저장될 파일명
+
+			// 내용물을 읽어온다.
+			byte[] bytes = null;	// bytes 가 null 이라면 내용물이 없다는 것이다.
+			// 첨부파일의 내용물을 담는 것, return 타입은 byte 의 배열
+
+			long fileSize = 0;		// 첨부파일의 크기
+		
+			try {
+				bytes = attach.getBytes();	// 파일에서 내용물을 꺼내오자. 파일을 올렸을 때 깨진파일이 있다면 (입출력이 안된다!!) 그때 Exception 을 thorws 한다.
+				// 첨부파일의 내용물을 읽어오는 것. 그 다음, 첨부한 파일의 파일명을 알아와야 DB 에 넣을 수가 있다. 그러므로 파일명을 알아오도록 하자.
+				// 즉 파일을 올리고 성공해야 - 내용물을 읽어올 수 있고 - 파일명을 알아와서 DB 에 넣을 수가 있다.
+				
+				String originalFilename = attach.getOriginalFilename();
+				// attach.getOriginalFilename() 이 첨부파일의 파일명(예: 강아지.png) 이다.
+	
+				// 의존객체인 FileManager 를 불러온다. (String 타입으로 return 함.)
+				// 리턴값 : 서버에 저장된 새로운 파일명(예: 2022042912181535243254235235234.png)
+				newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
+				// 첨부된 파일을 업로드 한다.
+				
+				// 파일을 받아와야만 service 에 보낼 수 있다. (DB 에 보내도록 한다.)
+				mailvo.setFilename(newFileName);			// 톰캣(WAS)에 저장될 파일명
+				mailvo.setOrgfilename(originalFilename); 	// 사용자가 파일 다운로드시 사용되는 파일명
+				
+				fileSize = attach.getSize();					// 첨부파일의 크기
+				mailvo.setFilesize(String.valueOf(fileSize));	// long 타입인 fileSize 를 String 타입으로 바꾼 후 vo 에 set 한다.
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}	
+		/////////////////// 첨부파일 있는 경우 끝 (스마트에디터 X) ///////////////////////
+		
+		// 메일 data 를 DB 로 보낸다. (첨부파일 있을 때 / 첨부파일 없을 때)
+		int n = 0;
+		
+		if(attach.isEmpty()) {
+			// 첨부파일이 없을 때
+			n = service.add(mailvo);
+		}
+		else {
+			// 첨부파일 있을 때
+			n = service.add_withFile(mailvo);
+		}
+		
+		// 성공 시 보낸 메일함으로 이동 or 메일 발송 성공 페이지로 이동
+		// insert 가 성공적으로 됐을 때 / 실패했을 때
+		if(n==1) {
+			mav.setViewName("redirect:/mail/mailSendList.bts");
+		}
+		else {// 실패 시 메일쓰기로 이동 (back)		
+	//		mav.setViewName("redirect:/mailReceiveList.bts");
+		}
+		return mav;
+
+		
+	/*	
+		System.out.println("확인용 recemail : " + recemail);
+		System.out.println("확인용 sendemail : " + sendemail);
+		System.out.println("확인용 fk_senduser_num : " + fk_senduser_num);
+		System.out.println("확인용 sendempname : " + sendempname);
+		System.out.println("확인용 importance : " + importance);	// 확인용 importance : null
+		System.out.println("확인용 importanceVal : " + importanceVal);
+		System.out.println("확인용 subject : " + subject);
+		System.out.println("확인용 attach : " + attach);
+		System.out.println("확인용 content : " + content);
+		System.out.println("확인용 mail_reservation_date : " + mail_reservation_date);
+	*/	
+	/*
+		확인용 recemail : kimsj@bts.com
+		확인용 sendemail : kimmj@bts.com
+		확인용 fk_senduser_num : 80000010
+		확인용 sendempname : 김민정
+		확인용 importance : null
+		확인용 importanceVal : 0
+		확인용 subject : 20220510 김사장에게 예약메일함 값 들어가는지 테스트
+		확인용 attach : null
+		확인용 content : 20220510 김사장에게 예약메일함 값 들어가는지 테스트&nbsp;
+		확인용 mail_reservation_date : 2022-05-26:21:40
+	*/
+
+		
+	}	
 	
 	
 	// 예약메일함
@@ -754,7 +921,7 @@ public class MailController {
 			
 
 	
-	// ======== 휴지통 ======== //
+	// =========================== 휴지통  =========================== //
 	// 휴지통에서 삭제 클릭시 아예 메일 테이블에서 해당 글 삭제하기
 	
 	// 받은메일함 및 보낸메일함 목록에서 메일 선택 시 휴지통으로 이동하기 (aJax, @ResponseBody)
@@ -1097,7 +1264,8 @@ public class MailController {
 		return jsonObj.toString();
 	}				
 
-	
+
+	// =========================== 첨부파일 다운로드  =========================== //
 	
 	// 첨부파일 다운로드 하기 (메일 상세내용 보기 클릭 시 첨부된 파일 다운로드)
 	@RequestMapping(value = "/mail/download.bts")
@@ -1175,8 +1343,7 @@ public class MailController {
 					out.println("<script type='text/javascript'>alert('파일 다운로드에 실패했습니다.'); history.back(); <script>");
 				}
 				
-			}
-			
+			}			
 			
 		} catch (NumberFormatException | IOException e) {
 			// 숫자 이외의 것이 들어왔을 때 대비해서 예외처리 / 입출력 예외처리			
@@ -1189,12 +1356,7 @@ public class MailController {
 			}
 			
 		}
-		
-		
-		
-		
-		
-	}
-	
+				
+	}	
 	
 }
