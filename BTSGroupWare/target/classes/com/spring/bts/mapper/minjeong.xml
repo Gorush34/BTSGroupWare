@@ -21,7 +21,7 @@
 	<select id="getTotalCount" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_mail
-		where fk_receiveuser_num = #{fk_receiveuser_num} and del_status = 0
+		where fk_receiveuser_num = #{fk_receiveuser_num} and del_status = 0 and reservation_status = 0
 		<if test="searchType != ''">
 		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
 		</if>		
@@ -38,7 +38,7 @@
 		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
 		       , filename
 		from tbl_mail
-		where fk_receiveuser_num = #{fk_receiveuser_num} and del_status = 0
+		where fk_receiveuser_num = #{fk_receiveuser_num} and del_status = 0 and reservation_status = 0
 		<if test="searchType != ''">
 		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
 		</if>	
@@ -51,7 +51,7 @@
 	<select id="getTotalCount_send" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_mail
-		where fk_senduser_num = #{fk_senduser_num} and del_status = 0
+		where fk_senduser_num = #{fk_senduser_num} and del_status = 0 and reservation_status = 0
 		<if test="searchType != ''">
 		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
 		</if>		
@@ -68,7 +68,7 @@
 		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
 		       , filename
 		from tbl_mail
-		where fk_senduser_num = #{fk_senduser_num} and del_status = 0
+		where fk_senduser_num = #{fk_senduser_num} and del_status = 0 and reservation_status = 0
 		<if test="searchType != ''">
 		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
 		</if>	
@@ -156,24 +156,24 @@
 	
 	<!-- 메일쓰기 (파일첨부가 없는 메일쓰기) -->
 	<insert id="add" parameterType="com.spring.bts.minjeong.model.MailVO">
-		insert into tbl_mail(pk_mail_num, fk_senduser_num, fk_receiveuser_num, recempname, sendempname, recemail, sendemail, subject, content, reg_date, importance, reservation_status, read_status) 
-		values(SEQ_MAIL.nextval, to_number(#{fk_senduser_num}), to_number(#{fk_receiveuser_num}), #{recempname}, #{sendempname}, #{recemail}, #{sendemail}, #{subject}, #{content}, default, default, default, default)
+		insert into tbl_mail(pk_mail_num, fk_senduser_num, fk_receiveuser_num, recempname, sendempname, recemail, sendemail, subject, content, reg_date, importance, reservation_date, reservation_status, read_status) 
+		values(SEQ_MAIL.nextval, to_number(#{fk_senduser_num}), to_number(#{fk_receiveuser_num}), #{recempname}, #{sendempname}, #{recemail}, #{sendemail}, #{subject}, #{content}, default, default, to_date(#{reservation_date}, 'yyyy-mm-dd hh24:mi'), #{reservation_status}, default)
     </insert>
 
 	
 	<!-- 메일쓰기 (파일첨부가 있는 메일쓰기) -->
 	<insert id="add_withFile" parameterType="com.spring.bts.minjeong.model.MailVO">
 		insert into tbl_mail(pk_mail_num, fk_senduser_num, fk_receiveuser_num, recempname, sendempname
-						   , recemail, sendemail, subject, content, reg_date, filename, orgfilename, filesize, importance, reservation_status, read_status) 
+						   , recemail, sendemail, subject, content, reg_date, filename, orgfilename, filesize, importance, reservation_date, reservation_status, read_status) 
 		values(SEQ_MAIL.nextval, to_number(#{fk_senduser_num}), to_number(#{fk_receiveuser_num}), #{recempname}
-			   , #{sendempname}, #{recemail}, #{sendemail}, #{subject}, #{content}, default, #{filename}, #{orgfilename}, #{filesize}, default, default, default)
+			   , #{sendempname}, #{recemail}, #{sendemail}, #{subject}, #{content}, default, #{filename}, #{orgfilename}, #{filesize}, default, to_date(#{reservation_date}, 'yyyy-mm-dd hh24:mi'), #{reservation_status}, default)
 	</insert>
 
 	<!-- 받은메일함 or 보낸메일함에서 선택한 글번호에 해당하는 메일을 삭제 시, 메일 테이블에서 해당 메일번호의 삭제 상태를 1로 변경해주기 --> 
 	<!-- 메일 테이블에서 해당 메일의 삭제 상태(del_status)를 1로 변경해주기 -->
 	<update id="updateFromTblMailDelStatus" parameterType="HashMap">
 		update tbl_mail set del_status = 1
-		where pk_mail_num = #{pk_mail_num}		
+		where pk_mail_num = #{pk_mail_num}
 	</update>
 
 	<!--  휴지통 총 메일개수 구해오기 -->
@@ -196,7 +196,7 @@
 		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
 		       , filename
 		from tbl_mail
-		where (fk_receiveuser_num = #{fk_receiveuser_num} or fk_senduser_num = #{fk_receiveuser_num} ) and del_status = 1
+		where (fk_receiveuser_num = #{fk_receiveuser_num} or fk_senduser_num = #{fk_receiveuser_num} ) and del_status = 1 and reservation_status = 0
 		<if test="searchType != ''">
 		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
 		</if>	
@@ -227,6 +227,36 @@
 		delete from tbl_mail
 		where pk_mail_num = #{pk_mail_num}	
 	</delete>
+
+
+	<!--  총 예약메일 개수 구해오기 -->
+	<select id="getTotalCount_reservation" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_mail
+		where fk_senduser_num = #{fk_senduser_num} and del_status = 0 and reservation_status = 1
+		<if test="searchType != ''">
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>		
+	</select>
+
 	
+	<!--  페이징처리 한 예약메일함목록 (검색 있든, 없든 모두 다 포함)  -->
+ 	<select id="getReservationListWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
+		select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename
+		from 
+		(
+		select row_number() over(order by pk_mail_num desc) AS rno,
+		       pk_mail_num, fk_receiveuser_num, recempname, subject
+		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+		       , filename
+		from tbl_mail
+		where fk_senduser_num = #{fk_senduser_num} and del_status = 0 and reservation_status = 1
+		<if test="searchType != ''">
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>	
+		) V
+		where rno between #{startRno} and #{endRno}
+	</select> 
+		
 	
 </mapper>

@@ -18,9 +18,9 @@ public class MailVO {
 	private String orgfilename;             // VARCHAR2(100) 		파일 원래이름(저장시)
 	private String filesize;                // NUMBER        		파일크기
 	private String reg_date;                // DATE          		메일쓰기 일자
-	private String reservation_date;        // DATE          		발송예약 날짜
 	private String importance;              // NUMBER(2)     		파일 중요표시 여부(0: 중요표시안함X ,1:중요표시선택O)
 	private String read_status;             // NUMBER(2)     		받는사람 읽음 여부 (0 :안읽음X ,1:읽음O)
+	private String reservation_date;        // DATE          		발송예약 날짜
 	private String reservation_status;      // NUMBER(2)     		발송예약여부 (0: 발송예약X, 1: 발송예약O)
 	private String del_status;				// NUMBER(2)  			삭제여부(0: 삭제X, 1:삭제)
 //	private String temp_status;				// NUMBER(2) 			임시보관함 저장여부 (0:저장 X, 1:저장O)

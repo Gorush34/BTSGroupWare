@@ -146,6 +146,30 @@ public class MailDAO implements InterMailDAO {
 		return n;
 	}
 
+	// ==== 예약메일함 시작 ==== //
+	// 총 게시물 건수 구해오기 - 예약메일함 (service 단으로 보내기)
+	@Override
+	public int getTotalCount_reservation(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("minjeong.getTotalCount_reservation", paraMap);
+		return n;
+	}
+
+	// 페이징처리 한 예약메일함 목록 (검색 있든, 없든 모두 다 포함 // reservation_status = 1 인 글만 보여주기)
+	@Override
+	public List<MailVO> getReservationListWithPaging(Map<String, String> paraMap) {
+		List<MailVO> reservationList = sqlsession.selectList("minjeong.getReservationListWithPaging", paraMap);
+		return reservationList;
+	}
+
+	// 페이징처리 한 예약메일함 목록 (검색 있든, 없든 모두 다 포함 // reservation_status = 1 인 글만 보여주기 
+	// 파라미터 없음 (스프링스케줄러)
+	@Override
+	public List<MailVO> getReservationListWithPaging() {
+
+		return null;
+	}
+	// ==== 예약메일함 끝 ==== //
+
 
 
 }

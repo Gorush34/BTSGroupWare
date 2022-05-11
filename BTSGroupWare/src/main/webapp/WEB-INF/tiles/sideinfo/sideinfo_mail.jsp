@@ -38,16 +38,16 @@
 					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailSendList.bts"><i class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp;&nbsp;보낸메일함</a></div>
 				</li>
 				<li style="margin-bottom: 15px;">
-					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailWrite.bts"><i class="fa fa-star" aria-hidden="true"></i>&nbsp;&nbsp;중요메일함</a></div>
+					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailImportantList.bts"><i class="fa fa-star" aria-hidden="true"></i>&nbsp;&nbsp;중요메일함</a></div>
 				</li>
 				<li style="margin-bottom: 15px;">
-					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailWrite.bts"><i class="fa fa-folder" aria-hidden="true"></i>&nbsp;&nbsp;임시보관함</a></div>
+					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailTemporaryList.bts"><i class="fa fa-folder" aria-hidden="true"></i>&nbsp;&nbsp;임시보관함</a></div>
 				</li>		
 				<li style="margin-bottom: 15px;">
-					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailWrite.bts"><i class="fa fa-clock-o" aria-hidden="true"></i>&nbsp;&nbsp;예약메일함</a></div>
+					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailReservationList.bts"><i class="fa fa-clock-o" aria-hidden="true"></i>&nbsp;&nbsp;예약메일함</a></div>
 				</li>												
 				<li style="margin-bottom: 15px;">
-					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailWrite.bts"><i class="fa fa-file-text" aria-hidden="true"></i>&nbsp;&nbsp;내게쓴메일함</a></div>
+					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailSendToMeList.bts"><i class="fa fa-file-text" aria-hidden="true"></i>&nbsp;&nbsp;내게쓴메일함</a></div>
 				</li>	
 				<li style="margin-bottom: 15px;">
 					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailRecyclebinList.bts"><i class="fa fa-trash" aria-hidden="true"></i>&nbsp;&nbsp;휴지통</a></div>

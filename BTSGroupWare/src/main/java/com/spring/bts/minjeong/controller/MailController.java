@@ -744,12 +744,179 @@ public class MailController {
 	}		
 
 	
-	// =========================== 예약메일함  =========================== //
+	// =========================== 예약메일함  =========================== //	
+	
+	// === 예약메일함 목록 페이지 요청
+	@RequestMapping(value = "/mail/mailReservationList.bts")	
+	public ModelAndView mailReservation(HttpServletRequest request, ModelAndView mav) {
+		
+		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
+		
+	//	System.out.println("보낸메일함 페이지에서 로그인한 사용자 id (사원번호) 받아오기 " + loginuser.getPk_emp_no());
+		
+		String fk_senduser_num = String.valueOf(loginuser.getPk_emp_no());
+		String empname = String.valueOf(loginuser.getEmp_name());
+				
+		
+		List<MailVO> ReservationMailList = null;
+	
+		// 검색 목록
+		String searchType = request.getParameter("searchType");		// 사용자가 선택한 검색 타입
+		String searchWord = request.getParameter("searchWord");		// 사용자가 입력한 검색어
+		String str_currentShowPageNo = request.getParameter("currentShowPageNo");	// 현재 페이지 번호
+		
+		// searchType 에는 제목 및 사원명이 있는데, 이 외의 것들이 들어오게 되면 기본값으로 보여준다
+		if(searchType == null || (!"subject".equals(searchType)) && (!"recempname".equals(searchType)) ) {
+			searchType = "";
+		}
+		
+		// 검색 입력창에 아무것도 입력하지 않았을 때 or 공백일 때 기본값을 보여주도록 한다.
+		if(searchWord == null || "".equals(searchWord) && searchWord.trim().isEmpty()) {
+			searchWord = "";
+		}
+		
+		// DB 로 보내기 위해 요청된 정보를 Map에 담는다.
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("searchType", searchType);
+		paraMap.put("searchWord", searchWord);
+
+		paraMap.put("fk_senduser_num",fk_senduser_num);	// 로그인한 사용자의 사원번호 map 에 담아서 보내주기
+		
+		// 먼저 총 받은 메일 수(totalCount)를 구해와야 한다.
+		// 총 게시물 건수는 검색조건이 있을 때와 없을 때로 나뉜다.
+		int totalCount = 0;
+		int sizePerPage = 10;
+		int currentShowPageNo = 0;
+		int totalPage = 0;
+		
+		int startRno = 0;
+		int endRno = 0;
+		
+		// 총 예약 메일 건수 구해오기 (service 단으로 보내기) 
+		totalCount =service.getTotalCount_reservation(paraMap); // 검색기능 포함시 paraMap 에 담아서 파라미터에 넣을 것
+	//	System.out.println("확인용 : "+totalCount);
+		
+		totalPage = (int) Math.ceil((double)totalCount/sizePerPage);	// 총 페이지 수 (전체게시물 / 페이지당 보여줄 갯수)
+
+		if(str_currentShowPageNo == null) {
+			// 페이지바를 거치지 않은 맨 처음 화면
+			currentShowPageNo = 1;
+		}
+		else {	
+			try {	// 사용자가 페이지 넘버에 정수만 입력할 수 있도록 설정		
+				currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+				if(currentShowPageNo < 1 || currentShowPageNo > totalPage) {
+					// 1 미만의 페이지 또는 총 페이지 수를 넘어서는 페이지수 입력 시 기본페이지로
+					currentShowPageNo = 1;
+				}				
+			} catch (NumberFormatException e) {
+				currentShowPageNo = 1;
+			}
+		}
+		
+		startRno = ( (currentShowPageNo - 1) * sizePerPage ) + 1;
+		endRno = startRno + sizePerPage - 1;
+		
+		paraMap.put("startRno", String.valueOf(startRno));
+		paraMap.put("endRno", String.valueOf(endRno));
+		
+		 // 페이징처리 한 예약 메일목록 (검색 있든, 없든 모두 다 포함) 
+		ReservationMailList = service.getReservationListWithPaging(paraMap);
+		
+		// 검색대상 컬럼(searchType) 및 검색어(searchWord) 유지시키기 위함
+		if(!"".equals(searchType) && !"".equals(searchWord)) {
+			mav.addObject("paraMap", paraMap);
+		}
+		
+		
+		// === 페이지바 만들기 시작
+		int blockSize = 3;
+		// blockSize 는 1개 블럭(토막) 당 보여지는 페이지번호의 개수이다.
+		/*
+	        		1  2  3  4  5  6  7  8  9 10 [다음][마지막]  -- 1개블럭
+			[맨처음][이전]  11 12 13 14 15 16 17 18 19 20 [다음][마지막]  -- 1개블럭
+			[맨처음][이전]  21 22 23
+		*/		
+		
+		int loop = 1;
+		/*
+    		loop는 1부터 증가하여 1개 블럭을 이루는 페이지번호의 개수[ 지금은 10개(== blockSize) ] 까지만 증가하는 용도이다.
+		*/		
+		
+		int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+		
+		String pageBar = "<ul style='list-style:none;'>";
+		String url = "mailReservationList.bts";	// 상대경로 mailReservationList.bts	(앞에 /mail 붙이지 말고 맨 끝에 부분만 붙이도록 한다.)
+		
+		
+		// [맨처음][이전] 만들기
+		if(pageNo != 1) {
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1'>[맨처음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+		}
+		
+		while ( !(loop > blockSize || pageNo > totalPage) ) {
+			
+			if(pageNo == currentShowPageNo) {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; color:black; padding: 2px 4px;'>"+pageNo+"</li>";				
+			}
+			else {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";				
+			}
+			
+			loop++;
+			pageNo++;
+			
+		}// end of while------------------------------------------
+		
+		
+		// [다음][마지막] 만들기
+		if(pageNo <= totalPage) {
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>";	
+		}
+		
+		pageBar += "</ul>";
+		
+		mav.addObject("pageBar", pageBar);
+
+
+		// === 페이징 처리되어진 후 특정 글제목을 클릭하여 상세내용을 본 이후
+		//     사용자가 목록보기 버튼을 클릭했을때 돌아갈 페이지를 알려주기 위해
+		//     현재 페이지 주소를 뷰단으로 넘겨준다.
+	//	String goBackURL = MyUtil.getCurrnetURL(request);
+	//	System.out.println("*** 확인용 goBackURL : "+goBackURL);
+		/*
+			*** 확인용 goBackURL : /list.action
+			*** 확인용 goBackURL : /list.action?searchType= searchWord=%20 currentShowPageNo=2
+			*** 확인용 goBackURL : /list.action?searchType=subject searchWord=j
+			*** 확인용 goBackURL : /list.action?searchType=subject searchWord=j%20 currentShowPageNo=2
+		*/
+	//	mav.addObject("goBackURL", goBackURL.replaceAll("&", " "));		// view 단에 넘겨주자. & 을 " " 로 바꿔준 결과값들.
+		// === 페이징 처리를 한 검색어가 있는 전체 글목록 보여주기 끝 === //	
+		///////////////////////////////////////////////////////////////////////////////////////////
+		
+	//	System.out.println("확인용 : " + ReservationMailList.get(0).getRecempname());
+		mav.addObject("fk_senduser_num", fk_senduser_num);
+		mav.addObject("ReservationMailList", ReservationMailList);				
+		mav.setViewName("mailReservationList.mail");
+		return mav;
+	}	
+	
+	// 예약메일함 내용 읽기 페이지 요청
+	@RequestMapping(value = "/mail/mailReservationDetail.bts")	
+	public ModelAndView mailReservationDetail(HttpServletRequest request, ModelAndView mav) {
+		
+		mav.setViewName("mailReservationDetail.mail");
+		return mav;
+	}		
+	
 	
 	// === 발송 예약 시 사용자가 입력한 날짜 값이 존재한다면 메일 테이블에서 RESERVATION_STATUS 를 0에서 1로 바꿔주도록 한다.
 	@RequestMapping(value = "/mail/mailWriteReservationEnd.bts", method = RequestMethod.POST)	
-	public ModelAndView mailWriteReservationEnd(MultipartHttpServletRequest mrequest, ModelAndView mav, MailVO mailvo) {
-		
+	public ModelAndView mailWriteReservationEnd(MultipartHttpServletRequest mrequest, ModelAndView mav, MailVO mailvo) throws Exception {
 
 		// VO 에 set 되지 않은 값들을 받아오도록 한다.
 		// form 태그의 name 값들을 불러온다.
@@ -761,8 +928,32 @@ public class MailController {
 		String importance = mrequest.getParameter("importance");
 		String importanceVal = mrequest.getParameter("importanceVal");
 		String subject = mrequest.getParameter("subject");
-		String attach = mrequest.getParameter("attach");
+	//	String attach = mrequest.getParameter("attach");
 		String content = mrequest.getParameter("content");
+	*/
+		
+	/*
+		System.out.println("확인용 recemail : " + recemail);
+		System.out.println("확인용 sendemail : " + sendemail);
+		System.out.println("확인용 fk_senduser_num : " + fk_senduser_num);
+		System.out.println("확인용 sendempname : " + sendempname);
+		System.out.println("확인용 importance : " + importance);	// 확인용 importance : null
+		System.out.println("확인용 importanceVal : " + importanceVal);
+		System.out.println("확인용 subject : " + subject);
+	//	System.out.println("확인용 attach : " + attach);
+		System.out.println("확인용 content : " + content);
+	*/
+		
+	/*
+		확인용 recemail : kimmj@bts.com
+		확인용 sendemail : kimmj@bts.com
+		확인용 fk_senduser_num : 80000010
+		확인용 sendempname : 김민정
+		확인용 importance : null
+		확인용 importanceVal : 0
+		확인용 subject : 20220512 예약메일함 reservation_status = 1 업데이트 및 mail 테이블에 reservation_date 날짜 들어가는지 확인
+		확인용 content : 20220512 예약메일함 reservation_status = 1 업데이트 및 mail 테이블에 reservation_date 날짜 들어가는지 확인&nbsp;
+		확인용 reservation_date : 2022-05-19 16:35
 	*/
 		
 		// VO 에 없는 컬럼들을 set 해주도록 한다.
@@ -777,10 +968,14 @@ public class MailController {
         // 값을 1개만 보낼때에는 String 으로 보내고, 
         // return 타입으로 받아올 때에는 List 또는 Map 으로 받아온다.
         
-        Map<String, String> recEmpnameAndNum = new HashMap<>();
-        // 발송예약시 선택한 날짜 값
-		String mail_reservation_date = mrequest.getParameter("mail_reservation_date");
-       
+        // 발송예약시 사용자가 선택한 날짜 값 받아오기 (service 로 보내야함)
+		String reservation_date = mrequest.getParameter("reservation_date");
+		mailvo.setReservation_date(reservation_date);	// form 태그에서 받아온 예약 날짜를 mailvo 에 넣어주도록 한다.
+
+	//	System.out.println("확인용 reservation_date : " + reservation_date);
+
+	
+		Map<String, String> recEmpnameAndNum = new HashMap<>();
         recEmpnameAndNum = service.getEmpnameAndNum(uq_email);
         
         String emp_name = recEmpnameAndNum.get("emp_name");
@@ -855,71 +1050,61 @@ public class MailController {
 		int n = 0;
 		
 		if(attach.isEmpty()) {
-			// 첨부파일이 없을 때
+			// 첨부파일이 없을 때 & 		
+			// 예약발송버튼 눌렀을 때 예약테이블에서 reservation_status 를 1로 바꿔주기 (메일쓰기-발송예약 jsp 에서 넘어왔음)
+			mailvo.setReservation_status("1");
+			mailvo.setReservation_date(reservation_date);
+			
 			n = service.add(mailvo);
 		}
 		else {
 			// 첨부파일 있을 때
+			// 예약발송버튼 눌렀을 때 예약테이블에서 reservation_status 를 1로 바꿔주기 (메일쓰기-발송예약 jsp 에서 넘어왔음)
+			mailvo.setReservation_status("1");
+			mailvo.setReservation_date(reservation_date);
+			
 			n = service.add_withFile(mailvo);
 		}
 		
-		// 성공 시 보낸 메일함으로 이동 or 메일 발송 성공 페이지로 이동
-		// insert 가 성공적으로 됐을 때 / 실패했을 때
 		if(n==1) {
-			mav.setViewName("redirect:/mail/mailSendList.bts");
+			// 메일테이블에 발송예약글 insert 가 성공적으로 됐을 때 현재시간을 읽어서 mail 을 예정시간에 발송해주도록 하기 / 실패했을 때
+	//		service.reservationMailSendSchedular();	// 스프링 스케줄러를 이용해서 발송예약 실행하기
+			mav.setViewName("redirect:/mail/mailReservationList.bts");
+			// 메일 쓴 후 새로고침을 위해 redirect:를 해주도록 한다.
 		}
 		else {// 실패 시 메일쓰기로 이동 (back)		
-	//		mav.setViewName("redirect:/mailReceiveList.bts");
+	//		mav.setViewName("mailWrite.mail");
 		}
 		return mav;
-
-		
-	/*	
-		System.out.println("확인용 recemail : " + recemail);
-		System.out.println("확인용 sendemail : " + sendemail);
-		System.out.println("확인용 fk_senduser_num : " + fk_senduser_num);
-		System.out.println("확인용 sendempname : " + sendempname);
-		System.out.println("확인용 importance : " + importance);	// 확인용 importance : null
-		System.out.println("확인용 importanceVal : " + importanceVal);
-		System.out.println("확인용 subject : " + subject);
-		System.out.println("확인용 attach : " + attach);
-		System.out.println("확인용 content : " + content);
-		System.out.println("확인용 mail_reservation_date : " + mail_reservation_date);
-	*/	
-	/*
-		확인용 recemail : kimsj@bts.com
-		확인용 sendemail : kimmj@bts.com
-		확인용 fk_senduser_num : 80000010
-		확인용 sendempname : 김민정
-		확인용 importance : null
-		확인용 importanceVal : 0
-		확인용 subject : 20220510 김사장에게 예약메일함 값 들어가는지 테스트
-		확인용 attach : null
-		확인용 content : 20220510 김사장에게 예약메일함 값 들어가는지 테스트&nbsp;
-		확인용 mail_reservation_date : 2022-05-26:21:40
-	*/
-
 		
 	}	
-	
-	
-	// 예약메일함
-	@RequestMapping(value = "/mail/mailReservationList.bts")	
-	public ModelAndView mailReservation(HttpServletRequest request, ModelAndView mav) {
-		
-		mav.setViewName("mailReservationList.mail");
-		return mav;
-	}	
-	
-	// 예약메일함 내용 읽기
-	@RequestMapping(value = "/mail/mailReservationDetail.bts")	
-	public ModelAndView mailReservationDetail(HttpServletRequest request, ModelAndView mav) {
-		
-		mav.setViewName("mailReservationDetail.mail");
-		return mav;
-	}		
+
 			
 
+	
+	// =========================== 내게쓴메일함  =========================== //
+	
+	
+	// === 내게쓴메일함 목록 페이지 요청
+	@RequestMapping(value = "/mail/mailSendToMeList.bts")	
+	public ModelAndView mailSendToMeList(HttpServletRequest request, ModelAndView mav) {
+		
+		mav.setViewName("mailSendToMeList.mail");
+		return mav;
+	}	
+	
+	// 내게쓴메일함 내용 읽기 페이지 요청
+	@RequestMapping(value = "/mail/mailSendToMeDetail.bts")	
+	public ModelAndView mailSendToMeDetail(HttpServletRequest request, ModelAndView mav) {
+		
+		mav.setViewName("mailSendToMeDetail.mail");
+		return mav;
+	}		
+	
+	
+	
+	
+	
 	
 	// =========================== 휴지통  =========================== //
 	// 휴지통에서 삭제 클릭시 아예 메일 테이블에서 해당 글 삭제하기

@@ -162,14 +162,14 @@
 					var sendResSetTime = $("span#reservationTime").text();
 					var frm = document.mailWriteFrm;
 					frm.importanceVal.value = importanceVal;
-					frm.mail_reservation_date.value = sendResSetTime;
+					frm.reservation_date.value = sendResSetTime;
 					frm.method = "POST";
 					frm.action = "<%= ctxPath%>/mail/mailWriteReservationEnd.bts";
 					frm.submit();
 					
 				//	console.log(frm);	// 전체 mailWriteFrm form 태그
 				//	console.log(frm.importanceVal.value);			// 0
-				//	console.log(frm.mail_reservation_date.value);	// 2022-06-03:18:15
+				//	console.log(frm.reservation_date.value);	// 2022-06-03:18:15
 				//	console.log(frm.method);	// post
 				//	console.log(frm.action);	// http://localhost:9090/bts/mail/mailWriteReservationEnd.bts
 					
@@ -312,7 +312,7 @@
 		// 메일 쓰기 창에서 사용자가 선택한 분 값 받아오기
 		var SendTimeMinuteVal = $("#selectSendTimeMinute option:selected").val();
 		
-		var sendReservationDate = SendDateVal+ ":" + SendTimeHourVal + ":" + SendTimeMinuteVal;
+		var sendReservationDate = SendDateVal+ " " + SendTimeHourVal + ":" + SendTimeMinuteVal;
 	//	console.log(sendReservationDate);
 		
 		$("span#reservationTime").text(sendReservationDate);
@@ -399,7 +399,7 @@
 		</table>
 		
 		<%-- 예약시간 설정하기 --%>
-		<input type="hidden" name="mail_reservation_date" id="mail_reservation_date" />
+		<input type="hidden" name="reservation_date" id="reservation_date" />
 		
 		<%-- 메일 내용 끝 --%>
 	</form>
