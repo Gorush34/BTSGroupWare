@@ -113,6 +113,11 @@ public class AttendanceController {
 		startRno = ( (currentShowPageNo - 1) * sizePerPage ) + 1;
 		endRno = startRno + sizePerPage - 1;
 		
+		// 페이지에 보여줄 인덱스 맵 생성
+		Map<String, Object> idx = new HashMap<>();
+		idx.put("startIdx", (startRno-1));
+		idx.put("endIdx", (endRno-1));
+		
 		paraMap.put("startRno", String.valueOf(startRno));
 		paraMap.put("endRno", String.valueOf(endRno));
 		
@@ -167,7 +172,7 @@ public class AttendanceController {
 
 		mav.addObject("gobackURL", gobackURL.replaceAll("&", " "));
 		
-		
+		mav.addObject("idx", idx);
 		mav.addObject("myAttList", myAttList);
 		mav.addObject("leaveVO", leaveVO);
 		mav.setViewName("myAtt.att");

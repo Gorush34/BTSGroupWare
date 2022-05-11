@@ -68,7 +68,7 @@
         		<br>
         		<span style="margin-bottom: 20px; "> ※ 현재 시스템에 표기된 연자일수는 관리의 편의상 <b>회계연도</b> 기준으로 계산되었으며, <b>퇴사 시</b> 입사일 기준으로 <b>재정산</b> 합니다.</span>
         	</div>
-        	<c:set var="myAtt" value="${requestScope.myAttList.get(0)}" />
+        	
         	<table class="table" id="tbl_vacList">
 				  <thead class="thead-light">
 				    <tr style="text-align: center;">
@@ -84,6 +84,7 @@
 				    </tr>
 				  </thead>
 				  <tbody>
+				  <c:forEach var="myAtt" items="${requestScope.myAttList}" begin="${requestScope.idx.startIdx}" end="${requestScope.idx.endIdx}" step="1">
 					<tr style="text-align: center;">
 				      <td style="width:7%; text-align: center;">${myAtt.pk_att_num}</td>
 				      <td style="width:10%; text-align: center;">${myAtt.ko_depname}</td>
@@ -133,7 +134,9 @@
 			      		  </c:if>
 				      </td>
 				    </tr>
+				    </c:forEach>
 				  </tbody>
+				  
 			</table>
 			
 			<%-- === #122. 페이지바 보여주기 === --%>
