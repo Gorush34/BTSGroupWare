@@ -3,6 +3,7 @@ package com.spring.bts.hwanmo.service;
 import java.util.List;
 import java.util.Map;
 
+import com.spring.bts.hwanmo.model.AttendanceVO;
 import com.spring.bts.hwanmo.model.CommuteVO;
 
 public interface InterAttendanceService {
@@ -42,5 +43,14 @@ public interface InterAttendanceService {
 
 	// 연차구분테이블 불러오기
 	List<Map<String, Object>> getAttSortInfo();
+
+	// 첨부파일이 없는 연차신청 작성
+	int reportVacation(AttendanceVO attVO);
+
+	// 첨부파일이 있는 연차신청 작성
+	int reportVacation_withFile(AttendanceVO attVO);
+
+	// 사원의 연차테이블 최신화
+	int updateLeave(Map<String, String> paraMap);
 
 }

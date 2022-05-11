@@ -1,5 +1,6 @@
 package com.spring.bts.hwanmo.controller;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
@@ -15,13 +16,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.bts.common.AES256;
+import com.spring.bts.common.FileManager;
 import com.spring.bts.common.MyUtil;
+import com.spring.bts.hwanmo.model.AttendanceSortVO;
+import com.spring.bts.hwanmo.model.AttendanceVO;
 import com.spring.bts.hwanmo.model.CommuteVO;
 import com.spring.bts.hwanmo.model.EmployeeVO;
+import com.spring.bts.hwanmo.model.LeaveVO;
 import com.spring.bts.hwanmo.service.InterAttendanceService;
 import com.spring.bts.jieun.model.CalendarVO;
 
@@ -40,6 +48,10 @@ public class AttendanceController {
 	
 	@Autowired
 	private InterAttendanceService attService;
+	
+	// === #155. 파일업로드 및 다운로드를 해주는 FileManager 클래스 의존객체 주입하기(DI : DependencyInjection) ===	  
+	@Autowired // Type에 따라 알아서 Bean 을 주입해준다. 
+	private FileManager fileManager; // type (FileManager) 만 맞으면 다 주입해준다.
 	
 	// === 근태관리 시작 페이지 ===
 	@RequestMapping(value="/att/attMain.bts")
@@ -426,9 +438,99 @@ public class AttendanceController {
 		mav.setViewName("myCommute.att");
 
 		return mav;
+	} // end of public ModelAndView myCommute(HttpServletRequest request, CommuteVO cmtvo, ModelAndView mav)---------------
+	
+	
+	// 연차신청서 제출
+	@RequestMapping(value="/att/reportVacationSubmit.bts", method = {RequestMethod.POST}, produces="text/plain;charset=UTF-8")
+	public ModelAndView reportVacationSubmit(MultipartHttpServletRequest mrequest,  ModelAndView mav, AttendanceVO attVO, LeaveVO leaveVO, AttendanceSortVO attSortVO) { 
+	
+		/////////////////// 첨부파일 있는 경우 시작 (스마트에디터 X) ///////////////////////
+		MultipartFile attach = attVO.getAttach();		// 실제 첨부된 파일
+
+		if( !attach.isEmpty() ) {	// 첨부파일 존재시 true, 존재X시 false
+			// 첨부파일이 존재한다면 (true) 업로드 해야한다.
+			// 1. 사용자가 보낸 첨부파일을 WAS(톰캣)의 특정 폴더에 저장해준다.
+			// WAS 의 절대경로를 알아와야 한다.
+			
+			HttpSession session = mrequest.getSession();
+			String root = session.getServletContext().getRealPath("/");
+			
+			String path = root+"resources"+File.separator+"files";
+			// path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다. --> path 에 파일을 업로드 한다.
+			
+			// 2. 파일첨부를 위한 변수 설정 및 값을 초기화 한 후 파일 업로드 하기
+			String newFileName = "";
+			// WAS(톰캣)의 디스크에 저장될 파일명
+
+			// 내용물을 읽어온다.
+			byte[] bytes = null;	// bytes 가 null 이라면 내용물이 없다는 것이다.
+			// 첨부파일의 내용물을 담는 것, return 타입은 byte 의 배열
+
+			long fileSize = 0;		// 첨부파일의 크기
+		
+			try {
+				bytes = attach.getBytes();	// 파일에서 내용물을 꺼내오자. 파일을 올렸을 때 깨진파일이 있다면 (입출력이 안된다!!) 그때 Exception 을 thorws 한다.
+				// 첨부파일의 내용물을 읽어오는 것. 그 다음, 첨부한 파일의 파일명을 알아와야 DB 에 넣을 수가 있다. 그러므로 파일명을 알아오도록 하자.
+				// 즉 파일을 올리고 성공해야 - 내용물을 읽어올 수 있고 - 파일명을 알아와서 DB 에 넣을 수가 있다.
+				
+				String originalFilename = attach.getOriginalFilename();
+				// attach.getOriginalFilename() 이 첨부파일의 파일명(예: 강아지.png) 이다.
+	
+				// 의존객체인 FileManager 를 불러온다. (String 타입으로 return 함.)
+				// 리턴값 : 서버에 저장된 새로운 파일명(예: 2022042912181535243254235235234.png)
+				newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
+				// 첨부된 파일을 업로드 한다.
+				
+				// 파일을 받아와야만 service 에 보낼 수 있다. (DB 에 보내도록 한다.)
+				attVO.setFilename(newFileName);			// 톰캣(WAS)에 저장될 파일명
+				attVO.setOrgfilename(originalFilename); 	// 사용자가 파일 다운로드시 사용되는 파일명
+				
+				fileSize = attach.getSize();					// 첨부파일의 크기
+				attVO.setFilesize(String.valueOf(fileSize));	// long 타입인 fileSize 를 String 타입으로 바꾼 후 vo 에 set 한다.
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}	
+		/////////////////// 첨부파일 있는 경우 끝 (스마트에디터 X) ///////////////////////
+		
+		// 메일 data 를 DB 로 보낸다. (첨부파일 있을 때 / 첨부파일 없을 때)
+		int n = 0;
+		
+		if(attach.isEmpty()) {
+			// 첨부파일이 없을 때
+			n = attService.reportVacation(attVO);
+		}
+		else {
+			// 첨부파일 있을 때
+			n = attService.reportVacation_withFile(attVO);
+		}
+		
+		// 성공 시 나의 연차페이지로 이동
+		// insert 가 성공적으로 됐을 때 / 실패했을 때
+		if(n==1) {
+			// 연차테이블 최신화 위해 사원번호와 연차차감개수 가져옴
+			/*
+			String fk_emp_no = mrequest.getParameter("fk_emp_no");
+			String minus_cnt = mrequest.getParameter("minus_cnt");
+			String instead_vac_days = mrequest.getParameter("instead_vac_days");
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("fk_emp_no", fk_emp_no);
+			paraMap.put("minus_cnt", minus_cnt);
+			paraMap.put("instead_vac_days", instead_vac_days);
+				사원의 연차테이블 최신화(결재맡고 깎아야지 이녀석아~~~~~~~)
+			int up = attService.updateLeave(paraMap);
+			*/
+			mav.setViewName("redirect:/att/myAtt.bts");
+			System.out.println("완전성공!!");
+		}
+		else {// 실패 시 연차신청 페이지로 이동	
+			System.out.println("실패했어..");
+			mav.setViewName("redirect:/att/reportVacation.bts");
+		}
+		
+		return mav;
 	}
-	
-	
-	
 	
 }

@@ -184,4 +184,33 @@
 		order by pk_att_sort_no
 	</select>
 	
+	
+	<!-- // 첨부파일이 없는 연차신청 작성 -->
+	<insert id="reportVacation" parameterType="com.spring.bts.hwanmo.model.AttendanceVO" >
+	insert into tbl_attendance (pk_att_num, fk_att_sort_no, fk_vacation_no, vacation_days
+	                          , leave_start, leave_end, fk_emp_no, fk_fin_app_no
+	                          , att_content, mid_approval_ok, fin_approval_ok, approval_status)
+						values (attSeq.nextval, #{fk_att_sort_no}, #{fk_vacation_no}, #{vacation_days}
+						      , #{leave_start}, #{leave_end}, #{fk_emp_no}, #{fk_fin_app_no}
+						      , #{att_content}, default, default, default)
+	</insert>
+	
+	
+	<!-- // 첨부파일이 있는 연차신청 작성 -->
+	<insert id="reportVacation_withFile" parameterType="com.spring.bts.hwanmo.model.AttendanceVO" >
+	insert into tbl_attendance (pk_att_num, fk_att_sort_no, fk_vacation_no, vacation_days
+	                          , leave_start, leave_end, fk_emp_no, fk_fin_app_no
+	                          , att_content, filename, orgfilename, file_path, filesize
+	                          , mid_approval_ok, fin_approval_ok, approval_status)
+						values (attSeq.nextval, #{fk_att_sort_no}, #{fk_vacation_no}, #{vacation_days}
+						      , #{leave_start}, #{leave_end}, #{fk_emp_no}, #{fk_fin_app_no}
+						      , #{att_content}, #{filename}, #{orgfilename}, #{file_path}, #{filesize}
+						      , default, default, default)
+	</insert>
+	
+	<update id="updateLeave" parameterType="HashMap">
+	update tbl_leave set use_vac_days = #{minus_cnt}, rest_vac_days = total_vac_days - #{minus_cnt}, instead_vac_days = #{instead_vac_days}
+	where fk_emp_no = #{fk_emp_no}
+	</update>
+	
 </mapper>

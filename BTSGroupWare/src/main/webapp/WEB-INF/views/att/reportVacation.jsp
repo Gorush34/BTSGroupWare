@@ -13,12 +13,11 @@
 </style>
 
 <script type="text/javascript">
-	// 휴가일수
-	var vacDay = "";
-	// 휴가시작일
-	let strDate = "";
-	// 휴가종료일
-	var endDay = "";
+	
+	var vacDay = ""; // 휴가일수
+	var strDate = ""; // 휴가시작일
+	var endDay = ""; // 휴가종료일
+	let b_flagCheckCalVacation = false; 	// 신청하기 버튼 클릭시 휴가일계산 클릭여부 확인하기 위한 변수
 
 	$(function() {
         //모든 datepicker에 대한 공통 옵션 설정
@@ -68,9 +67,14 @@
 		// 연차 종류에 따른 차감연차값 가져오기
 		$('input#van_common').click(function () {
 	          var radioVal = $('input[name="van_common"]:checked').val();
-	          console.log(radioVal);
+	          $("input#fk_att_sort_no").val(radioVal); // 연차구분번호 저장
+	          var minus_cnt =  $(this).next().val();
+	          $("input#minus_cnt").val(minus_cnt);
+	          // console.log("들어갔나요 히든에? : " + $("input#fk_vacation_no").val() );
+	          // console.log("제발 들어가 연차차감개수 : " + minus_cnt );
+	          // console.log(radioVal);
 	          
-	          if( 0 < radioVal && radioVal < 1 ) {
+	          if( 0 < minus_cnt && minus_cnt < 1 ) {
 	          		$("input#vac_days").prop("disabled", true);
 	          		$("input#vac_days").val("1");
 	          }	
@@ -78,6 +82,7 @@
 	        	  	$("input#vac_days").prop("disabled", false);
 		          	$("input#vac_days").val("");
 	          }
+	          
         }); // end of $('input#van_common').click(function () {}---------------
         		
         // 휴가일계산 버튼 클릭시
@@ -113,15 +118,10 @@
         		$("input#vacation_days").val(vacDay);
         		$("input#leave_start").val(strDate);
         		$("input#leave_end").val(endDate);
+        		
+        		b_flagCheckCalVacation = true; // 휴가계산일 버튼 누름 확인용
         	}
         }); // end of $("button#btn_vac_cal").click(function()--------------------
-        
-        		
-        $("button#btnReportVacation").click(function(){
-        	
-        	
-        	
-        }); // end of $("button#btnReportVacation").click(function(){})-------------
 		
 	}); // end of $(document).ready(function() {})-----------------------------
 	
@@ -152,13 +152,20 @@
 		return d.getFullYear() + "-" + ((d.getMonth() + 1) > 9 ? (d.getMonth() + 1).toString() : "0" + (d.getMonth() + 1)) + "-" + (d.getDate() > 9 ? d.getDate().toString() : "0" + d.getDate().toString());
 	} // end of function getYmd10(d) {}--------------------
 	
+	// 신청하기 버튼 클릭시
 	function reportVacation() {
 		
-		if( $("td#vacation_days").text() == "" ) {
+		if( b_flagCheckCalVacation == false || $("td#vacation_days").text() == "" ) {
 			// 휴가기간이 없을 때
 			alert("휴가일계산 버튼을 클릭하신 뒤 확인 후 제출하세요!");
+			// console.log(b_flagCheckCalVacation);
 			return;
 		}
+		
+		const frm = document.reportVacationFrm;
+		frm.action = "<%= ctxPath%>/att/reportVacationSubmit.bts";
+		frm.method = "POST";
+		frm.submit();
 		
 	} // end of function reportVacation()----------------------
 	
@@ -168,7 +175,7 @@
     <%-- 공가/경조신청서 작성 시작 --%>
     <div class="row" style="padding-left:15px;">
         <div class="col-xs-12" style="width:90%;">
-        <form name="reportVacationFrm">
+        <form name="reportVacationFrm" enctype="multipart/form-data">
         	<div id="title" style="margin-bottom: 20px;">
         		<span style="font-size: 24px; margin-bottom: 20px; margin-right:20px; font-weight: bold;">공가 /연가 신청서 작성하기</span>
         		<div>
@@ -215,18 +222,18 @@
 						      	<tr>
 						      		<td>
 						      		<c:forEach items="${requestScope.attSortList}" var="attSort" begin="0" end="3" step="1">
-						      			<input type="radio" id="van_common" name="van_common" value="${attSort.minus_cnt}">
+						      			<input type="radio" id="van_common" name="van_common" value="${attSort.pk_att_sort_no}">
+						      			<input type="hidden" id="m_cnt" value="${attSort.minus_cnt}" />
 						      			<label for="van_common">${attSort.att_sort_korname}</label>
-						      			<input type="hidden" id="fk_att_sort_no" value="${attSort.pk_att_sort_no}" />
 						      		</c:forEach>
 						      		</td>
 						      	</tr>	
 						      	<tr>
 						      		<td>
 					      			<c:forEach items="${requestScope.attSortList}" var="attSort" begin="4" end="7" step="1">
-						      			<input type="radio" id="van_common" name="van_common" value="${attSort.minus_cnt}">
+						      			<input type="radio" id="van_common" name="van_common" value="${attSort.pk_att_sort_no}">
+						      			<input type="hidden" id="m_cnt" value="${attSort.minus_cnt}" />
 						      			<label for="van_common">${attSort.att_sort_korname}</label>
-						      			<input type="hidden" id="fk_att_sort_no" value="${attSort.pk_att_sort_no}" />
 						      		</c:forEach>
 						      		</td>
 						      	</tr>
@@ -238,9 +245,9 @@
 						      	<tr>
 						      		<td>
 					      			<c:forEach items="${requestScope.attSortList}" var="attSort" begin="8" end="11" step="1">
-						      			<input type="radio" id="van_common" name="van_common" value="${attSort.minus_cnt}">
+						      			<input type="radio" id="van_common" name="van_common" value="${attSort.pk_att_sort_no}">
+						      			<input type="hidden" id="m_cnt" value="${attSort.minus_cnt}" />
 						      			<label for="van_common">${attSort.att_sort_korname}</label>
-						      			<input type="hidden" id="fk_att_sort_no" value="${attSort.pk_att_sort_no}" />
 						      		</c:forEach>
 						      		</td>
 						      	</tr>
@@ -346,8 +353,11 @@
 			<button type="button" class="btn btn-secondary btn-sm mr-3" id="btn_vac_certification" style="margin-right: 20px; width:80px; height:30px;">목록보기</button>
 				      	
 		</div>	
+		<input type="hidden" id="fk_emp_no" name="fk_emp_no" value="${requestScope.loginuser.pk_emp_no}" />
 		<input type="hidden" id="fk_fin_app_no" name="fk_fin_app_no" value="${requestScope.deptMap.manager}" />
+		<input type="hidden" id="fk_att_sort_no" name="fk_att_sort_no" value="" />
 		<input type="hidden" id="fk_vacation_no" name="fk_vacation_no" value="${requestScope.leaveMap.pk_vac_no}" />
+		<input type="hidden" id="minus_cnt" name="minus_cnt" value="" />
 		<input type="hidden" id="total_vac_days" name="total_vac_days" value="${requestScope.leaveMap.total_vac_days}" />
 		<input type="hidden" id="use_vac_days" name="use_vac_days" value="${requestScope.leaveMap.use_vac_days}" />
 		<input type="hidden" id="rest_vac_days" name="rest_vac_days" value="${requestScope.leaveMap.rest_vac_days}" />

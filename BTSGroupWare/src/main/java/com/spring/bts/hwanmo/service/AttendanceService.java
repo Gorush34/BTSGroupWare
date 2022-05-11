@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.bts.common.AES256;
+import com.spring.bts.hwanmo.model.AttendanceVO;
 import com.spring.bts.hwanmo.model.CommuteVO;
 import com.spring.bts.hwanmo.model.InterAttendanceDAO;
 
@@ -108,6 +109,27 @@ public class AttendanceService implements InterAttendanceService {
 	public List<Map<String, Object>> getAttSortInfo() {
 		List<Map<String, Object>> attSortList = attDAO.getAttSortInfo();
 		return attSortList;
+	}
+
+	// 첨부파일이 없는 연차신청 작성
+	@Override
+	public int reportVacation(AttendanceVO attVO) {
+		int n = attDAO.reportVacation(attVO);
+		return n;
+	}
+
+	// 첨부파일이 있는 연차신청 작성
+	@Override
+	public int reportVacation_withFile(AttendanceVO attVO) {
+		int n = attDAO.reportVacation_withFile(attVO);
+		return n;
+	}
+
+	// 사원의 연차테이블 최신화
+	@Override
+	public int updateLeave(Map<String, String> paraMap) {
+		int n = attDAO.updateLeave(paraMap);
+		return n;
 	}
 
 	

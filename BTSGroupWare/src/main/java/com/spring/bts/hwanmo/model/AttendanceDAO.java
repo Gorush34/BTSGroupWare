@@ -115,6 +115,27 @@ public class AttendanceDAO implements InterAttendanceDAO {
 		List<Map<String, Object>> attSortList = sqlsession.selectList("hwanmo.getAttSortInfo");
 		return attSortList;
 	}
+
+	// 첨부파일이 없는 연차신청 작성
+	@Override
+	public int reportVacation(AttendanceVO attVO) {
+		int n = sqlsession.insert("hwanmo.reportVacation", attVO);
+		return n;
+	}
+
+	// 첨부파일이 있는 연차신청 작성
+	@Override
+	public int reportVacation_withFile(AttendanceVO attVO) {
+		int n = sqlsession.insert("hwanmo.reportVacation_withFile", attVO);
+		return n;
+	}
+
+	// 사원의 연차테이블 최신화
+	@Override
+	public int updateLeave(Map<String, String> paraMap) {
+		int n = sqlsession.update("hwanmo.updateLeave", paraMap);
+		return n;
+	}
 	
 	
 }

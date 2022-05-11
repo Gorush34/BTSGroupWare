@@ -211,3 +211,49 @@ insert into tbl_att_sort (pk_att_sort_no, att_sort_ename, att_sort_korname, minu
 commit;
 
 
+create sequence attSeq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+-- Sequence ATTSEQ이(가) 생성되었습니다.
+
+desc tbl_attendance;
+
+
+insert into tbl_attendance (pk_att_num, fk_att_sort_no, fk_vacation_no, vacation_days
+                          , leave_start, leave_end, fk_emp_no, fk_fin_app_no
+                          , att_content, filename, orgfilename, file_path, filesize
+                          , mid_approval_ok, fin_approval_ok, approval_status)
+values (attSeq.nextval, '10', '9', '5'
+      , '2022-05-15', '2022-05-17', 80000002, 80000560
+      , '그냥 보내주세요', '강아지', '12341', '해남', '2904'
+      , default, default, default)  
+
+select *
+from tbl_att_sort
+
+select *
+from tbl_leave
+
+select *
+from tbl_attendance
+
+delete from tbl_attendance
+where 1=1
+
+commit;
+
+-- 연차최신화 
+select *
+from tbl_leave
+order by fk_emp_no asc
+
+desc tbl_leave
+
+update tbl_leave set use_vac_days = 0.5, rest_vac_days = total_vac_days - 0.5, instead_vac_days = 0
+where fk_emp_no = 80000002
+
+rollback;

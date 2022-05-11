@@ -41,4 +41,13 @@ public interface InterAttendanceDAO {
 	// 연차구분테이블 불러오기
 	List<Map<String, Object>> getAttSortInfo();
 
+	// 첨부파일이 없는 연차신청 작성
+	int reportVacation(AttendanceVO attVO);
+
+	// 첨부파일이 있는 연차신청 작성
+	int reportVacation_withFile(AttendanceVO attVO);
+
+	// 사원의 연차테이블 최신화
+	int updateLeave(Map<String, String> paraMap);
+
 }
