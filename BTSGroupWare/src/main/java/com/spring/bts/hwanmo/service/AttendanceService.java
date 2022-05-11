@@ -10,6 +10,7 @@ import com.spring.bts.common.AES256;
 import com.spring.bts.hwanmo.model.AttendanceVO;
 import com.spring.bts.hwanmo.model.CommuteVO;
 import com.spring.bts.hwanmo.model.InterAttendanceDAO;
+import com.spring.bts.hwanmo.model.LeaveVO;
 
 //=== #31. Service 선언 === 
 //트랜잭션 처리를 담당하는곳 , 업무를 처리하는 곳, 비지니스(Business)단
@@ -130,6 +131,27 @@ public class AttendanceService implements InterAttendanceService {
 	public int updateLeave(Map<String, String> paraMap) {
 		int n = attDAO.updateLeave(paraMap);
 		return n;
+	}
+
+	// 로그인한 사용자의 연차테이블 불러오기
+	@Override
+	public LeaveVO getOneLeave(String fk_emp_no) {
+		LeaveVO leavevo = attDAO.getOneLeave(fk_emp_no);
+		return leavevo;
+	}
+
+	// 총 올린  연차신청 수 가져오기
+	@Override
+	public int getTotalVacReportCount(String fk_emp_no) {
+		int totalCount = attDAO.getTotalVacReportCount(fk_emp_no);
+		return totalCount;
+	}
+
+	// 페이징처리 한 받은 공가/경조신청목록 
+	@Override
+	public List<Map<String, Object>> getMyAttListWithPaging(Map<String, String> paraMap) {
+		List<Map<String, Object>> myAttList = attDAO.getMyAttListWithPaging(paraMap);
+		return myAttList;
 	}
 
 	

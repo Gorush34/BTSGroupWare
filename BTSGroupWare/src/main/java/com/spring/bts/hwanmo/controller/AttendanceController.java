@@ -66,12 +66,116 @@ public class AttendanceController {
 	@RequestMapping(value="/att/myAtt.bts")
 	public ModelAndView showSchedule(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
 		
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+		String fk_emp_no = String.valueOf(loginuser.getPk_emp_no());
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("fk_emp_no", fk_emp_no);
+		
+		// 로그인한 사용자의 연차테이블 불러오기
+		LeaveVO leaveVO = attService.getOneLeave(fk_emp_no);
+		
+		// ================== 페이징처리 시작 =====================
+		
+		// 먼저 총 받은 메일 수(totalCount)를 구해와야 한다.
+		// 총 게시물 건수는 검색조건이 있을 때와 없을 때로 나뉜다.
+		String str_currentShowPageNo = request.getParameter("currentShowPageNo");	// 현재 페이지 번호
+		int totalCount = 0;
+		int sizePerPage = 3;
+		int currentShowPageNo = 0;
+		int totalPage = 0;
+		
+		int startRno = 0;
+		int endRno = 0;
+		
+		// 총 올린  연차신청 수 가져오기
+		totalCount = attService.getTotalVacReportCount(fk_emp_no); 
+		
+		totalPage = (int) Math.ceil((double)totalCount/sizePerPage);	// 총 페이지 수 (전체게시물 / 페이지당 보여줄 갯수)
+
+		if(str_currentShowPageNo == null) {
+			// 페이지바를 거치지 않은 맨 처음 화면
+			currentShowPageNo = 1;
+		}
+		else {	
+			try {	// 사용자가 페이지 넘버에 정수만 입력할 수 있도록 설정		
+				currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+				if(currentShowPageNo < 1 || currentShowPageNo > totalPage) {
+					// 1 미만의 페이지 또는 총 페이지 수를 넘어서는 페이지수 입력 시 기본페이지로
+					currentShowPageNo = 1;
+				}				
+			} catch (NumberFormatException e) {
+				currentShowPageNo = 1;
+			}
+		}
+		
+		startRno = ( (currentShowPageNo - 1) * sizePerPage ) + 1;
+		endRno = startRno + sizePerPage - 1;
+		
+		paraMap.put("startRno", String.valueOf(startRno));
+		paraMap.put("endRno", String.valueOf(endRno));
+		
+		// 페이징처리 한 받은 공가/경조신청목록 
+		List<Map<String, Object>> myAttList = attService.getMyAttListWithPaging(paraMap);
+		
+		
+		// ================= 페이징처리 끝 ====================
+		
+		// === 페이지바 만들기 === //
+		int blockSize = 10;
+		
+		int loop = 1;
+		
+		int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+		
+		String pageBar = "<ul style='list-style: none;'>";
+		String url = "myAtt.bts";
+		
+		// === [맨처음][이전] 만들기 === //
+		if(pageNo != 1) {
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?currentShowPageNo=1'>[맨처음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+		}
+		
+		while( !(loop > blockSize || pageNo > totalPage) ) {
+			
+			if(pageNo == currentShowPageNo) {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";  
+			}
+			else {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>"; 
+			}
+			
+			loop++;
+			pageNo++;
+			
+		}// end of while-----------------------
+		
+		
+		// === [다음][마지막] 만들기 === //
+		if( pageNo <= totalPage ) {
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?currentShowPageNo="+totalPage+"'>[마지막]</a></li>"; 
+		}
+		
+		pageBar += "</ul>";
+		
+		mav.addObject("pageBar", pageBar);
+		
+		String gobackURL = MyUtil.getCurrentURL(request);
+
+		mav.addObject("gobackURL", gobackURL.replaceAll("&", " "));
+		
+		
+		mav.addObject("myAttList", myAttList);
+		mav.addObject("leaveVO", leaveVO);
 		mav.setViewName("myAtt.att");
 
 		return mav;
 	}
 	
-	// === 일정관리 시작 페이지 ===
+	// 연차신청 페이지
 	@RequestMapping(value="/att/reportVacation.bts")
 	public ModelAndView requiredLogin_reportVacation(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
 		
@@ -519,13 +623,13 @@ public class AttendanceController {
 			paraMap.put("fk_emp_no", fk_emp_no);
 			paraMap.put("minus_cnt", minus_cnt);
 			paraMap.put("instead_vac_days", instead_vac_days);
-				사원의 연차테이블 최신화(결재맡고 깎아야지 이녀석아~~~~~~~)
+				사원의 연차테이블 최신화(결재받고 깎아야지 이녀석아~~~~~~~)
 			int up = attService.updateLeave(paraMap);
 			*/
 			mav.setViewName("redirect:/att/myAtt.bts");
 			System.out.println("완전성공!!");
 		}
-		else {// 실패 시 연차신청 페이지로 이동	
+		else { // 실패 시 연차신청 페이지로 이동	
 			System.out.println("실패했어..");
 			mav.setViewName("redirect:/att/reportVacation.bts");
 		}

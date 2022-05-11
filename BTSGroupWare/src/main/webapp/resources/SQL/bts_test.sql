@@ -238,11 +238,13 @@ from tbl_att_sort
 select *
 from tbl_leave
 
-select *
+select count(*)
 from tbl_attendance
+where fk_emp_no = '80000002'
 
-delete from tbl_attendance
-where 1=1
+select pk_vac_no, total_vac_days, use_vac_days, regdate, rest_vac_days, instead_vac_days, fk_emp_no
+from tbl_leave
+where fk_emp_no = '80000002'
 
 commit;
 
@@ -256,4 +258,37 @@ desc tbl_leave
 update tbl_leave set use_vac_days = 0.5, rest_vac_days = total_vac_days - 0.5, instead_vac_days = 0
 where fk_emp_no = 80000002
 
-rollback;
+
+
+select (select emp_name from tbl_employees where pk_emp_no = 80000560) AS managername
+from tbl_attendance A JOIN tbl_leave L
+ON A.fk_emp_no = L.fk_emp_no
+JOIN tbl_employees E
+ON L.fk_emp_no = E.pk_emp_no
+JOIN tbl_dep_sort D
+ON E.fk_department_id = D.pk_dep_no
+JOIN tbl_att_sort S
+On A.fk_att_sort_no = S.pk_att_sort_no
+where A.fk_emp_no = 80000002
+
+
+select pk_att_num, ko_depname, fk_emp_no, emp_name, att_sort_korname, vacation_days, leave_start, leave_end
+     , managername, manager, approval_status
+from
+(
+select row_number() over(order by pk_att_num desc) AS rno
+     , A.pk_att_num AS pk_att_num, D.ko_depname AS ko_depname, A.fk_emp_no AS fk_emp_no, E.emp_name AS emp_name
+     , S.att_sort_korname AS att_sort_korname, A.vacation_days AS vacation_days, A.leave_start AS leave_start, A.leave_end AS leave_end
+     , (select emp_name from tbl_employees where pk_emp_no = 80000560) AS managername
+     , D.manager AS manager, A.approval_status AS approval_status
+from tbl_attendance A JOIN tbl_leave L
+ON A.fk_emp_no = L.fk_emp_no
+JOIN tbl_employees E
+ON L.fk_emp_no = E.pk_emp_no
+JOIN tbl_dep_sort D
+ON E.fk_department_id = D.pk_dep_no
+JOIN tbl_att_sort S
+On A.fk_att_sort_no = S.pk_att_sort_no
+where A.fk_emp_no = 80000002
+) V
+where rno between 1 and 3

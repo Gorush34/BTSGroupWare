@@ -50,4 +50,13 @@ public interface InterAttendanceDAO {
 	// 사원의 연차테이블 최신화
 	int updateLeave(Map<String, String> paraMap);
 
+	// 로그인한 사용자의 연차테이블 불러오기
+	LeaveVO getOneLeave(String fk_emp_no);
+
+	// 총 올린  연차신청 수 가져오기
+	int getTotalVacReportCount(String fk_emp_no);
+
+	// 페이징처리 한 받은 공가/경조신청목록 
+	List<Map<String, Object>> getMyAttListWithPaging(Map<String, String> paraMap);
+
 }

@@ -16,7 +16,6 @@ public class AttendanceVO {
 	private String att_content; /* 내용 */
 	private String filename; /* 서버파일명 */
 	private String orgfilename; /* 실제파일명 */
-	private String file_path; /* 파일경로 */
 	private String filesize;                // NUMBER        		파일크기
 	private int mid_approval_ok; /* 중간승인여부 */
 	private int fin_approval_ok; /* 최종승인여부 */
@@ -39,7 +38,7 @@ public class AttendanceVO {
 	public AttendanceVO() {}
 	public AttendanceVO(int pk_att_num, int fk_att_sort_no, int fk_vacation_no, int vacation_days, String leave_start,
 			String leave_end, int fk_emp_no, int fk_mid_app_no, int fk_fin_app_no, String att_content,
-			String filename, String orgfilename, String file_path, int mid_approval_ok, int fin_approval_ok,
+			String filename, String orgfilename, int mid_approval_ok, int fin_approval_ok,
 			int approval_status, String mid_app_opinion, String fin_app_opinion, String emp_name, String dept_name,
 			EmployeeVO empvo, EmployeeVO midapprvo, EmployeeVO finapprvo, MultipartFile attach, String filesize) {
 		super();
@@ -55,7 +54,6 @@ public class AttendanceVO {
 		this.att_content = att_content;
 		this.filename = filename;
 		this.orgfilename = orgfilename;
-		this.file_path = file_path;
 		this.mid_approval_ok = mid_approval_ok;
 		this.fin_approval_ok = fin_approval_ok;
 		this.approval_status = approval_status;
@@ -141,12 +139,6 @@ public class AttendanceVO {
 	}
 	public void setOrgfilename(String orgfilename) {
 		this.orgfilename = orgfilename;
-	}
-	public String getFile_path() {
-		return file_path;
-	}
-	public void setFile_path(String file_path) {
-		this.file_path = file_path;
 	}
 	public int getMid_approval_ok() {
 		return mid_approval_ok;

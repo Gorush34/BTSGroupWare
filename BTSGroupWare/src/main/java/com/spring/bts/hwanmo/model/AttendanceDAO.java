@@ -136,6 +136,27 @@ public class AttendanceDAO implements InterAttendanceDAO {
 		int n = sqlsession.update("hwanmo.updateLeave", paraMap);
 		return n;
 	}
+
+	// 로그인한 사용자의 연차테이블 불러오기
+	@Override
+	public LeaveVO getOneLeave(String fk_emp_no) {
+		LeaveVO leavevo = sqlsession.selectOne("hwanmo.getOneLeave", fk_emp_no);
+		return leavevo;
+	}
+
+	// 총 올린  연차신청 수 가져오기
+	@Override
+	public int getTotalVacReportCount(String fk_emp_no) {
+		int totalCount = sqlsession.selectOne("hwanmo.getTotalVacReportCount", fk_emp_no);
+		return totalCount;
+	}
+
+	// 페이징처리 한 받은 공가/경조신청목록 
+	@Override
+	public List<Map<String, Object>> getMyAttListWithPaging(Map<String, String> paraMap) {
+		List<Map<String, Object>> myAttList = sqlsession.selectList("hwanmo.getMyAttListWithPaging", paraMap);
+		return myAttList;
+	}
 	
 	
 }

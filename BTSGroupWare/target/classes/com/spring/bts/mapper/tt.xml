@@ -200,11 +200,11 @@
 	<insert id="reportVacation_withFile" parameterType="com.spring.bts.hwanmo.model.AttendanceVO" >
 	insert into tbl_attendance (pk_att_num, fk_att_sort_no, fk_vacation_no, vacation_days
 	                          , leave_start, leave_end, fk_emp_no, fk_fin_app_no
-	                          , att_content, filename, orgfilename, file_path, filesize
+	                          , att_content, filename, orgfilename, filesize
 	                          , mid_approval_ok, fin_approval_ok, approval_status)
 						values (attSeq.nextval, #{fk_att_sort_no}, #{fk_vacation_no}, #{vacation_days}
 						      , #{leave_start}, #{leave_end}, #{fk_emp_no}, #{fk_fin_app_no}
-						      , #{att_content}, #{filename}, #{orgfilename}, #{file_path}, #{filesize}
+						      , #{att_content}, #{filename}, #{orgfilename}, #{filesize}
 						      , default, default, default)
 	</insert>
 	
@@ -212,5 +212,58 @@
 	update tbl_leave set use_vac_days = #{minus_cnt}, rest_vac_days = total_vac_days - #{minus_cnt}, instead_vac_days = #{instead_vac_days}
 	where fk_emp_no = #{fk_emp_no}
 	</update>
+	
+	<!-- 로그인 유저의 연차테이블 불러오기 -->
+	<select id="getOneLeave" parameterType="String" resultType="com.spring.bts.hwanmo.model.LeaveVO">
+		select pk_vac_no, total_vac_days, use_vac_days, rest_vac_days, regdate, instead_vac_days, fk_emp_no
+		from tbl_leave
+		where fk_emp_no = #{fk_emp_no}
+	</select>
+	
+	<!-- // 총 올린  연차신청 수 가져오기 -->
+	<select id="getTotalVacReportCount" parameterType="String" resultType="int">
+	select count(*)
+	from tbl_attendance
+	where fk_emp_no = #{fk_emp_no}
+	</select>
+	
+	
+	<!-- // 페이징처리 한 받은 공가/경조신청목록  -->
+	<resultMap type="Map" id="MyAttList_map">
+		<result property="pk_att_num" 				column="pk_att_num" 		javaType="int" />
+		<result property="ko_depname" 				column="ko_depname" 		javaType="String" />
+		<result property="fk_emp_no" 				column="fk_emp_no" 			javaType="int" />
+		<result property="emp_name" 				column="emp_name" 			javaType="String" />
+		<result property="att_sort_korname" 		column="att_sort_korname" 	javaType="String" />
+		<result property="vacation_days" 			column="vacation_days" 		javaType="int" />
+		<result property="leave_start" 				column="leave_start" 		javaType="String" />
+		<result property="leave_end" 				column="leave_end" 			javaType="String" />
+		<result property="managername" 				column="managername" 		javaType="String" />
+		<result property="manager" 					column="manager" 			javaType="int" />
+		<result property="approval_status" 			column="approval_status" 	javaType="int" />
+	</resultMap>
+	
+	<select id="getMyAttListWithPaging" resultType="HashMap" resultMap="MyAttList_map">
+		select pk_att_num, ko_depname, fk_emp_no, emp_name, att_sort_korname, vacation_days, leave_start, leave_end
+		     , managername, manager, approval_status
+		from
+		(
+		select row_number() over(order by pk_att_num desc) AS rno
+		     , A.pk_att_num AS pk_att_num, D.ko_depname AS ko_depname, A.fk_emp_no AS fk_emp_no, E.emp_name AS emp_name
+		     , S.att_sort_korname AS att_sort_korname, A.vacation_days AS vacation_days, A.leave_start AS leave_start, A.leave_end AS leave_end
+		     , (select emp_name from tbl_employees where pk_emp_no = D.manager) AS managername
+		     , D.manager AS manager, A.approval_status AS approval_status
+		from tbl_attendance A JOIN tbl_leave L
+		ON A.fk_emp_no = L.fk_emp_no
+		JOIN tbl_employees E
+		ON L.fk_emp_no = E.pk_emp_no
+		JOIN tbl_dep_sort D
+		ON E.fk_department_id = D.pk_dep_no
+		JOIN tbl_att_sort S
+		On A.fk_att_sort_no = S.pk_att_sort_no
+		where A.fk_emp_no = #{fk_emp_no}
+		) V
+		where rno between #{startRno} and #{endRno}
+	</select>
 	
 </mapper>
