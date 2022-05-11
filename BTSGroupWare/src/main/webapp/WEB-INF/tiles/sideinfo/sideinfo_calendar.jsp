@@ -19,6 +19,11 @@
     /////////////////////////////////////
      let arr_checkbox_com_calno = [];
      let arr_checkbox_my_calno = [];
+     
+     let arr_checkbox_com_calno_a = []; //페이지 처음 로딩될 때 찍힌 체크박스 불러오기 (변동X) : 사내
+     let arr_checkbox_my_calno_a = [];  //페이지 처음 로딩될 때 찍힌 체크박스 불러오기 (변동X) : 내
+     
+     let arr_checkbox_calno = [];       // 사내 캘린더와 내 캘린더 전부 포함 체크 유무
     /////////////////////////////////////
 
 	$(document).ready(function(){
@@ -43,10 +48,11 @@
 		$(document).on("click","input.com_calno",function(){
 			
 			let str_checkbox_com_calno =  sessionStorage.getItem('arr_checkbox_com_calno');
+			let str_checkbox_calno =  sessionStorage.getItem('arr_checkbox_calno');
 			
 			if($(this).prop("checked")) {
 				
-				arr_checkbox_com_calno = str_checkbox_com_calno.split(",");
+				arr_checkbox_com_calno = str_checkbox_com_calno.split(",");				
 				
 				let flag = false;
 				for(let i=0; i<arr_checkbox_com_calno.length; i++) {
@@ -58,7 +64,7 @@
 				if(flag == false) {
 					arr_checkbox_com_calno.push($(this).val());
 					
-					let str = arr_checkbox_com_calno.join(); 
+					let str = arr_checkbox_com_calno.join();
 					if(str.substring(0,1) == ",") {
 						str = str.substring(1);
 					}
@@ -76,6 +82,7 @@
 					}
 					sessionStorage.setItem('arr_checkbox_com_calno', str);
 				}
+				
 			}
 			// alert(arr_checkbox_com_calno.join());
 			
@@ -100,7 +107,7 @@
 				if(flag == false) {
 					arr_checkbox_my_calno.push($(this).val());
 					
-					let str = arr_checkbox_my_calno.join(); 
+					let str = arr_checkbox_my_calno.join();
 					if(str.substring(0,1) == ",") {
 						str = str.substring(1);
 					}
@@ -118,6 +125,51 @@
 					}
 					sessionStorage.setItem('arr_checkbox_my_calno', str);
 				}
+				
+			}
+			// alert(arr_checkbox_com_calno.join());
+			
+		});
+		
+		
+		
+		$(document).on("click","input.calendar_checkbox",function(){
+			
+			let str_checkbox_calno =  sessionStorage.getItem('arr_checkbox_calno');
+			
+			if($(this).prop("checked")) {
+				
+				arr_checkbox_calno = str_checkbox_calno.split(",");
+				
+				let flag = false;
+				for(let i=0; i<arr_checkbox_calno.length; i++) {
+					if( arr_checkbox_calno[i] == $(this).val() ) {
+						flag = true;
+					}
+				}// end of for---------------------
+				
+				if(flag == false) {
+					arr_checkbox_calno.push($(this).val());
+					
+					let str = arr_checkbox_calno.join();
+					if(str.substring(0,1) == ",") {
+						str = str.substring(1);
+					}
+					
+					sessionStorage.setItem('arr_checkbox_calno', str);
+				}
+				
+			}
+			else {
+				const idx = str_checkbox_calno.indexOf($(this).val());
+				if(idx != -1) {
+					let str = str_checkbox_calno.substring(0,idx) + str_checkbox_calno.substring(idx+$(this).val().length+1);  
+					if(str.substring(str.length-1) == ',') {
+						str = str.substring(0, str.length-1);
+					}
+					sessionStorage.setItem('arr_checkbox_calno', str);
+				}
+				
 			}
 			// alert(arr_checkbox_com_calno.join());
 			
@@ -129,11 +181,6 @@
 			
 	//Function Declaration
 	
-	// == 값 넘겨주기
-	
-	function forgetname(){
-		
-	}
 	
 	<%-- 사내 캘린더 관련 --%>
 	
@@ -209,7 +256,11 @@
 						arr_checkbox_com_calno.push(item.pk_calno);
 						sessionStorage.setItem('arr_checkbox_com_calno', arr_checkbox_com_calno.join());
 						
+						arr_checkbox_com_calno_a.push(item.pk_calno);
+						sessionStorage.setItem('arr_checkbox_com_calno_a', arr_checkbox_com_calno_a.join());
 						
+						arr_checkbox_calno.push(item.pk_calno);
+						sessionStorage.setItem('arr_checkbox_calno', arr_checkbox_calno.join());
 						////////////////////////////////////////////////////////////////////////////////
 					});
 					html += "</tbody>";
@@ -339,7 +390,11 @@
 						arr_checkbox_my_calno.push(item.pk_calno);
 						sessionStorage.setItem('arr_checkbox_my_calno', arr_checkbox_my_calno.join());
 						
+						arr_checkbox_my_calno_a.push(item.pk_calno);
+						sessionStorage.setItem('arr_checkbox_my_calno_a', arr_checkbox_my_calno_a.join());
 						
+						arr_checkbox_calno.push(item.pk_calno);
+						sessionStorage.setItem('arr_checkbox_calno', arr_checkbox_calno.join());
 						////////////////////////////////////////////////////////////////////////////////
 					});
 					html += "</tbody>";

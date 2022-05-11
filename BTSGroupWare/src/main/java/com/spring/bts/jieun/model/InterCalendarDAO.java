@@ -49,7 +49,7 @@ public interface InterCalendarDAO {
 	
 	
 	// === 일정 보여주기 === //
-	List<ScheduleVO> selectSchedule(String fk_emp_no);
+	List<ScheduleVO> selectSchedule(Map<String, String> paraMap);
 	
 	// === 일정 상세 페이지 === //
 	Map<String, String> detailSchedule(String pk_schno);
@@ -61,6 +61,12 @@ public interface InterCalendarDAO {
 	int editSchedule_end(ScheduleVO svo);
 	
 	
+	
+	// == 총 일정 검색 건수(totalCount) == //
+	int getTotalCount(Map<String, String> paraMap);
+	
+	// == 페이징 처리한 캘린더 가져오기(검색어가 없다라도 날짜범위 검색은 항시 포함된 것임) == //
+	List<Map<String, String>> scheduleListSearchWithPaging(Map<String, String> paraMap);
 
 
 	

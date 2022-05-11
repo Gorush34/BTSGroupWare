@@ -112,8 +112,8 @@ public class CalendarService implements InterCalendarService {
 
 	// === 일정 보여주기 === //
 	@Override
-	public List<ScheduleVO> selectSchedule(String fk_emp_no) {
-		List<ScheduleVO> scheduleList = dao.selectSchedule(fk_emp_no);
+	public List<ScheduleVO> selectSchedule(Map<String, String> paraMap) {
+		List<ScheduleVO> scheduleList = dao.selectSchedule(paraMap);
 		return scheduleList;
 	}
 
@@ -136,6 +136,20 @@ public class CalendarService implements InterCalendarService {
 	public int editSchedule_end(ScheduleVO svo) {
 		int n = dao.editSchedule_end(svo);
 		return n;
+	}
+
+	// 총 일정 검색 건수(totalCount)
+	@Override
+	public int getTotalCount(Map<String, String> paraMap) {
+		int n = dao.getTotalCount(paraMap);
+		return n;
+	}
+
+	// 페이징 처리한 캘린더 가져오기(검색어가 없다라도 날짜범위 검색은 항시 포함된 것임)
+	@Override
+	public List<Map<String, String>> scheduleListSearchWithPaging(Map<String, String> paraMap) {
+		List<Map<String, String>> calendarSearchList  = dao.scheduleListSearchWithPaging(paraMap);
+		return calendarSearchList;
 	}
 
 	

@@ -23,15 +23,18 @@ body {font-family: font-family: 'Noto Sans KR', sans-serif; }
 div.calenderbtn{cursor: pointer;}	
 
 
-span#addmyschedule, #addschedule{
-	color:#ccc;
+span#addMyCalendar, #addComCalendar{
 	cursor: pointer;
 }
 	
 
-span#addmyschedule:hover, #addschedule:hover{
+span#addMyCalendar:hover, #addComCalendar:hover{
 	color: #00ace6;
 	font-weight: bold;
+	cursor: pointer;
+}
+
+span#detailSearch{
 	cursor: pointer;
 }
 
@@ -58,10 +61,16 @@ div.modal_content{
   line-height:23px; cursor:pointer;
 }
 
+.table td, .table th{
+	border-top: none;
+}
+
+
+
 /* === 모달창 관련 css 끝 == */
 
 /* 메인 캘린더 파트*/
-div#search{
+div#calendarSearch{
   border: 1px solid #999;
   position: relative;
   width: 320px;
@@ -271,3 +280,28 @@ table#detailScheduleContent > tbody  div.panel-heading{
 table#detailScheduleContent > tbody  table#reservationTable{
 	padding: 30px;
 }
+
+
+/* 일정 검색 결과 페이지 */
+table#searchListContentTable th, td{
+	 	
+	 	vertical-align: middle;
+	}
+	
+	tr.scheduleSearchResult{
+		background-color: white;
+		cursor: pointer;
+	}
+	
+	a{
+	    color: #395673;
+	    text-decoration: none;
+	    cursor: pointer;
+	}
+	
+	a:hover {
+	    color: #395673;
+	    cursor: pointer;
+	    text-decoration: none;
+		font-weight: bold;
+	}
