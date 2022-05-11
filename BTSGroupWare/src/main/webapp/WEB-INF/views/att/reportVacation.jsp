@@ -91,12 +91,17 @@
         	else if( $("input#vac_days").val().trim() == "" ) {
         		// 휴가일자를 입력하지 않았을 때
         		alert("휴가일수를 입력해주세요!");
+        		return;
+        	}
+        	else if($('input:radio[name="van_common"]').is(':checked') == false ) {
+        		// 휴가구분을 체크하지 않았을 때
+        		alert("휴가구분을 반드시 선택해주세요!");
+        		return;
         	}
         	else {
         		// 잔여휴가일수가 휴가일자보다 많을 때
         		var vacDay = $("input#vac_days").val();
 				let strDate = $("input#eDatepicker").val();
-        		
         		
         		endDate = getVacationDate(vacDay, strDate);
         		endDate = getYmd10(endDate);
@@ -104,13 +109,19 @@
         		// console.log("종료일 : " + endDate);
         		$("td#vacation_days").text(strDate+" ~ "+endDate);
         		
-        		
+        		// 시작, 종료일, 휴가기간 담아줌
+        		$("input#vacation_days").val(vacDay);
+        		$("input#leave_start").val(strDate);
+        		$("input#leave_end").val(endDate);
         	}
-        	
-        	
-        	
         }); // end of $("button#btn_vac_cal").click(function()--------------------
         
+        		
+        $("button#btnReportVacation").click(function(){
+        	
+        	
+        	
+        }); // end of $("button#btnReportVacation").click(function(){})-------------
 		
 	}); // end of $(document).ready(function() {})-----------------------------
 	
@@ -139,7 +150,17 @@
 	function getYmd10(d) {
 	    
 		return d.getFullYear() + "-" + ((d.getMonth() + 1) > 9 ? (d.getMonth() + 1).toString() : "0" + (d.getMonth() + 1)) + "-" + (d.getDate() > 9 ? d.getDate().toString() : "0" + d.getDate().toString());
-	}
+	} // end of function getYmd10(d) {}--------------------
+	
+	function reportVacation() {
+		
+		if( $("td#vacation_days").text() == "" ) {
+			// 휴가기간이 없을 때
+			alert("휴가일계산 버튼을 클릭하신 뒤 확인 후 제출하세요!");
+			return;
+		}
+		
+	} // end of function reportVacation()----------------------
 	
 </script>
 		
@@ -196,7 +217,7 @@
 						      		<c:forEach items="${requestScope.attSortList}" var="attSort" begin="0" end="3" step="1">
 						      			<input type="radio" id="van_common" name="van_common" value="${attSort.minus_cnt}">
 						      			<label for="van_common">${attSort.att_sort_korname}</label>
-						      			<input type="hidden" id="pk_att_sort_no" value="${attSort.pk_att_sort_no}" />
+						      			<input type="hidden" id="fk_att_sort_no" value="${attSort.pk_att_sort_no}" />
 						      		</c:forEach>
 						      		</td>
 						      	</tr>	
@@ -205,7 +226,7 @@
 					      			<c:forEach items="${requestScope.attSortList}" var="attSort" begin="4" end="7" step="1">
 						      			<input type="radio" id="van_common" name="van_common" value="${attSort.minus_cnt}">
 						      			<label for="van_common">${attSort.att_sort_korname}</label>
-						      			<input type="hidden" id="pk_att_sort_no" value="${attSort.pk_att_sort_no}" />
+						      			<input type="hidden" id="fk_att_sort_no" value="${attSort.pk_att_sort_no}" />
 						      		</c:forEach>
 						      		</td>
 						      	</tr>
@@ -219,7 +240,7 @@
 					      			<c:forEach items="${requestScope.attSortList}" var="attSort" begin="8" end="11" step="1">
 						      			<input type="radio" id="van_common" name="van_common" value="${attSort.minus_cnt}">
 						      			<label for="van_common">${attSort.att_sort_korname}</label>
-						      			<input type="hidden" id="pk_att_sort_no" value="${attSort.pk_att_sort_no}" />
+						      			<input type="hidden" id="fk_att_sort_no" value="${attSort.pk_att_sort_no}" />
 						      		</c:forEach>
 						      		</td>
 						      	</tr>
@@ -311,7 +332,7 @@
 				    
 				    <tr style="text-align: center; " id="bold_hr">
 				      <th class="th_title" style="text-align: center;">휴가사유</th>
-				      <td colspan="3" style="text-align: left;"><input type="text" id="vac_reason" name="vac_reason" style="width: 80%;"/>			    
+				      <td colspan="3" style="text-align: left;"><input type="text" id="att_content" name="att_content" style="width: 80%;"/>			    
 				      	<br>포상휴가시 필수항목 : 포상휴가 사유 및 포상내용을 꼭 적어주시기 바랍니다.
 				      	<br>대체휴가시 필수항목 : 대체휴가에 해당하는 날짜(기간) 및 사유, 휴가내용을 꼭 적어주시기 바랍니다.
 				      	<br>그 외 휴가시 필수항목 : 휴가 사유 및 포상내용을 꼭 적어주시기 바랍니다.
@@ -321,14 +342,20 @@
 			</table>
 			
 		<div id="vac_button" style="text-align: center;">
-			<button type="button" class="btn btn-secondary btn-sm mr-3" id="btn_vac_certification" style="margin-right: 20px; width:80px; height:30px;">신청하기</button>
+			<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnReportVacation" onclick="reportVacation();" style="margin-right: 20px; width:80px; height:30px;">신청하기</button>
 			<button type="button" class="btn btn-secondary btn-sm mr-3" id="btn_vac_certification" style="margin-right: 20px; width:80px; height:30px;">목록보기</button>
 				      	
 		</div>	
-		<input type="hidden" id="total_vac_days" value="${requestScope.leaveMap.total_vac_days}" />
-		<input type="hidden" id="use_vac_days" value="${requestScope.leaveMap.use_vac_days}" />
-		<input type="hidden" id="rest_vac_days" value="${requestScope.leaveMap.rest_vac_days}" />
-        <input type="hidden" id="instead_vac_days" value="${requestScope.leaveMap.instead_vac_days}" />
+		<input type="hidden" id="fk_fin_app_no" name="fk_fin_app_no" value="${requestScope.deptMap.manager}" />
+		<input type="hidden" id="fk_vacation_no" name="fk_vacation_no" value="${requestScope.leaveMap.pk_vac_no}" />
+		<input type="hidden" id="total_vac_days" name="total_vac_days" value="${requestScope.leaveMap.total_vac_days}" />
+		<input type="hidden" id="use_vac_days" name="use_vac_days" value="${requestScope.leaveMap.use_vac_days}" />
+		<input type="hidden" id="rest_vac_days" name="rest_vac_days" value="${requestScope.leaveMap.rest_vac_days}" />
+        <input type="hidden" id="instead_vac_days" name="instead_vac_days" value="${requestScope.leaveMap.instead_vac_days}" />
+        <input type="hidden" id="vacation_days" name="vacation_days" />
+        <input type="hidden" id="leave_start" name="leave_start" />
+        <input type="hidden" id="leave_end" name="leave_end" />
+
         </form>
         </div>
     </div>

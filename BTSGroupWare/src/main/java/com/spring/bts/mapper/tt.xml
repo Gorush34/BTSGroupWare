@@ -157,6 +157,7 @@
 	
 	<!-- 사원번호로 연차테이블 불러오기 -->
 	<resultMap type="Map" id="getLeaveInfoMap">
+		<result property="pk_vac_no" 					column="pk_vac_no" 				javaType="String" />
 		<result property="total_vac_days" 				column="total_vac_days" 		javaType="String" />
 		<result property="use_vac_days" 				column="use_vac_days" 			javaType="String" />
 		<result property="rest_vac_days" 				column="rest_vac_days" 			javaType="String" />
@@ -164,7 +165,7 @@
 	</resultMap>
 	
 	<select id="getLeaveInfo" parameterType="String" resultMap="getLeaveInfoMap">
-		select total_vac_days, use_vac_days, rest_vac_days, instead_vac_days
+		select pk_vac_no, total_vac_days, use_vac_days, rest_vac_days, instead_vac_days
 		from tbl_leave
 		where fk_emp_no = #{pk_emp_no}
 	</select>

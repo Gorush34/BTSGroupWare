@@ -13,7 +13,7 @@ public class AttendanceVO {
 	private int fk_emp_no; /* 사원번호 */
 	private int fk_mid_app_no; /* 중간승인자 */
 	private int fk_fin_app_no; /* 최종승인자 */
-	private String att_title; /* 제목 */
+	private String att_content; /* 내용 */
 	private String server_file_name; /* 서버파일명 */
 	private String org_file_name; /* 실제파일명 */
 	private String file_path; /* 파일경로 */
@@ -37,7 +37,7 @@ public class AttendanceVO {
 	//기본생성자
 	public AttendanceVO() {}
 	public AttendanceVO(int pk_att_num, int fk_att_sort_no, int fk_vacation_no, int vacation_days, String leave_start,
-			String leave_end, int fk_emp_no, int fk_mid_app_no, int fk_fin_app_no, String att_title,
+			String leave_end, int fk_emp_no, int fk_mid_app_no, int fk_fin_app_no, String att_content,
 			String server_file_name, String org_file_name, String file_path, int mid_approval_ok, int fin_approval_ok,
 			int approval_status, String mid_app_opinion, String fin_app_opinion, String emp_name, String dept_name,
 			EmployeeVO empvo, EmployeeVO midapprvo, EmployeeVO finapprvo) {
@@ -51,7 +51,7 @@ public class AttendanceVO {
 		this.fk_emp_no = fk_emp_no;
 		this.fk_mid_app_no = fk_mid_app_no;
 		this.fk_fin_app_no = fk_fin_app_no;
-		this.att_title = att_title;
+		this.att_content = att_content;
 		this.server_file_name = server_file_name;
 		this.org_file_name = org_file_name;
 		this.file_path = file_path;
@@ -121,11 +121,11 @@ public class AttendanceVO {
 	public void setFk_fin_app_no(int fk_fin_app_no) {
 		this.fk_fin_app_no = fk_fin_app_no;
 	}
-	public String getAtt_title() {
-		return att_title;
+	public String getatt_content() {
+		return att_content;
 	}
-	public void setAtt_title(String att_title) {
-		this.att_title = att_title;
+	public void setatt_content(String att_content) {
+		this.att_content = att_content;
 	}
 	public String getServer_file_name() {
 		return server_file_name;

@@ -199,6 +199,9 @@ select pk_att_sort_no, att_sort_ename, att_sort_korname, minus_cnt
 from tbl_att_sort
 order by pk_att_sort_no
 
+update tbl_att_sort set minus_cnt = 0
+where pk_att_sort_no = 12
+
 delete from tbl_att_sort
 where 1=1;
 
