@@ -1,6 +1,7 @@
 package com.spring.bts.byungyoon.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,9 +30,9 @@ public class AddBookService implements InterAddBookService  {
 	
 	// 주소록 메인페이지에 select 해오기
 	@Override
-	public List<AddBookVO> addBook_main_select() {
+	public List<AddBookVO> addBook_main_select(Map<String, String> paraMap) {
 		
-		List<AddBookVO> adbList = dao.addBook_main_select();
+		List<AddBookVO> adbList = dao.addBook_main_select(paraMap);
 		
 		return adbList;
 	}
@@ -41,16 +42,13 @@ public class AddBookService implements InterAddBookService  {
 	@Override
 	public int addBook_telAdd_insert(AddBookVO avo) {
 		
-		System.out.println("service 단" + avo.getAddb_name());
-		
 		int n = dao.addBook_telAdd_insert(avo);
-		
 		
 		return n;
 	}
 
 	
-	// 상세부서정보 페이지 사원목록 불러오기 (영업팀)
+	// 상세부서정보 페이지 사원목록 불러오기 
 	@Override
 	public List<EmployeeVO> addBook_depInfo_select() {
 		List<EmployeeVO> empList = dao.addBook_depInfo_select();
@@ -74,13 +72,33 @@ public class AddBookService implements InterAddBookService  {
 	}
 
 
-	// 주소록 메인에서 select 해와서 연락처 update 하기
+	// 주소록 메인에서 select 해와서 연락처 update 하기 (select)
 	@Override
-	public AddBookVO addBook_main_telUpdate(int pk_addbook_no) {
+	public AddBookVO addBook_main_telUpdate_select(int pk_addbook_no) {
 		
-		AddBookVO avo = dao.addBook_main_telUpdate(pk_addbook_no);
+		AddBookVO avo = dao.addBook_main_telUpdate_select(pk_addbook_no);
 		
 		return avo;
+	}
+
+
+	// 주소록 메인에서 select 해와서 연락처 update 하기 (update)
+	@Override
+	public int addBook_main_telUpdate_update(AddBookVO avo) {
+		
+		int n = dao.addBook_main_telUpdate_update(avo);
+		
+		return n;
+	}
+
+
+	// 주소록 메인에서 총 연락처 개수 가져오기
+	@Override
+	public int addBook_main_totalPage() {
+		
+		int n = dao.addBook_main_totalPage();
+		
+		return n;
 	}
 
 	
