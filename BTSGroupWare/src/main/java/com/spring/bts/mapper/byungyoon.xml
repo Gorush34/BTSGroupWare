@@ -73,6 +73,12 @@
 		from tbl_addbook
 	</select>
 	
+	<!-- // 주소록 삭제하기 -->
+	<delete id="addBook_delete" parameterType="int">
+		delete from tbl_addBook
+		where PK_ADDBOOK_NO = #{pk_addBook_no} 
+	</delete>
+	
 	
 
 </mapper>

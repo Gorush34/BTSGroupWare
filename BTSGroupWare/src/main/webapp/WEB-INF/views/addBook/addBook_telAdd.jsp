@@ -44,8 +44,6 @@
 	  $( "button#h_team" ).click( function() {
 	    $( "div#h_teamwon" ).slideToggle();
 	  });
-
-
 	  
 	  $('input:checkbox[name=empno]').click(function(){
 		  
@@ -82,7 +80,6 @@
 		  element.checked = true;
 		}		
 	/* 체크박스 하나만 선택되게 하는 함수 끝 */
-	
 
 	function middle_approve(){
 		
@@ -117,7 +114,6 @@
 	 	$("input#middle_name").val("");
 	 	$("input#middle_rank").val("");
 	 	$("input#middle_dept").val("");
-	
 	}
 	
 	function last_reset() {

@@ -94,4 +94,14 @@ public class AddBookService implements InterAddBookService  {
 	}
 
 
+	// 주소록 삭제하기
+	@Override
+	public int addBook_delete(int pk_addbook_no) {
+
+		int n = dao.addBook_delete(pk_addbook_no);
+		
+		return n;
+	}
+
+
 }

@@ -8,6 +8,7 @@
    String ctxPath = request.getContextPath();
   //       /board 
 %>
+
 <script type="text/javascript">
 
 $( document ).ready( function() {
@@ -46,6 +47,27 @@ $( document ).ready( function() {
 	}
 	
 	
+	function deletebtn() {
+		
+		if(!confirm("정말 삭제하시겠습니까?")){  
+			
+			alert("삭제가 취소 되었습니다."); 
+		}
+		else{ 
+			
+			const frm = document.updateFrm;
+		    frm.action = "<%=ctxPath%>/addBook/addBook_delete.bts"
+		    frm.method = "post"
+	    	frm.submit();
+		}
+
+		
+			
+	 	
+		
+		
+	}
+	
 	<%-- function updateFrm() {
 		
 		const frm = document.updateFrm;
@@ -57,6 +79,7 @@ $( document ).ready( function() {
 
 </script>
 
+<title>주소록</title>
 
 	<table id="Main_main_tbl">
 		<tr>
@@ -121,12 +144,12 @@ $( document ).ready( function() {
         <c:forEach var="adb" items="${requestScope.adbList}" varStatus="i">
 		<tr>
 			<td><input type="hidden" id="pk_addbook_no_${i.count}" name="pk_addbook_no_${i.count}" value="${adb.pk_addbook_no}" readonly /></td>
-			<td><button class="btn btn-default" onclick="telUpdate(${i.count})" data-toggle="modal" data-target="#viewModal" onclick="modal_view('이름','부서','직급','이메일','휴대폰','회사','회사전화번호','회사주소','메모사항');">${adb.addb_name}</button></td>
-			<td><button class="btn btn-default" onclick="telUpdate(${i.count})" data-toggle="modal" data-target="#viewModal" onclick="modal_view('이름','부서','직급','이메일','휴대폰','회사','회사전화번호','회사주소','메모사항');" >${adb.ko_rankname}</button></td>
-			<td><button class="btn btn-default" onclick="telUpdate(${i.count})" data-toggle="modal" data-target="#viewModal" onclick="modal_view('이름','부서','직급','이메일','휴대폰','회사','회사전화번호','회사주소','메모사항');" >${adb.phone}</button></td>
-			<td><button class="btn btn-default" onclick="telUpdate(${i.count})" data-toggle="modal" data-target="#viewModal" onclick="modal_view('이름','부서','직급','이메일','휴대폰','회사','회사전화번호','회사주소','메모사항');" >${adb.email}</button></td>
-			<td><button class="btn btn-default" onclick="telUpdate(${i.count})" data-toggle="modal" data-target="#viewModal" onclick="modal_view('이름','부서','직급','이메일','휴대폰','회사','회사전화번호','회사주소','메모사항');" >${adb.companyname}</button></td>
-			<td><button class="btn btn-default" onclick="telUpdate(${i.count})" data-toggle="modal" data-target="#viewModal" onclick="modal_view('이름','부서','직급','이메일','휴대폰','회사','회사전화번호','회사주소','메모사항');" >${adb.com_tel}</button></td>
+			<td><input type="text" class="form-control" style="text-align:center; border:none; " onclick="telUpdate(${i.count})" data-toggle="modal" data-target="#viewModal" onclick="modal_view('이름','부서','직급','이메일','휴대폰','회사','회사전화번호','회사주소','메모사항');" value="${adb.addb_name}" readonly></td>
+			<td><input type="text" class="form-control" style="text-align:center; border:none;" onclick="telUpdate(${i.count})" data-toggle="modal" data-target="#viewModal" onclick="modal_view('이름','부서','직급','이메일','휴대폰','회사','회사전화번호','회사주소','메모사항');" value="${adb.ko_rankname}" readonly></td>
+			<td><input type="text" class="form-control" style="text-align:center; border:none;" onclick="telUpdate(${i.count})" data-toggle="modal" data-target="#viewModal" onclick="modal_view('이름','부서','직급','이메일','휴대폰','회사','회사전화번호','회사주소','메모사항');" value="${adb.phone}" readonly></td>
+			<td><input type="text" class="form-control" style="text-align:center; border:none;" onclick="telUpdate(${i.count})" data-toggle="modal" data-target="#viewModal" onclick="modal_view('이름','부서','직급','이메일','휴대폰','회사','회사전화번호','회사주소','메모사항');" value="${adb.email}" readonly></td>
+			<td><input type="text" class="form-control" style="text-align:center; border:none;" onclick="telUpdate(${i.count})" data-toggle="modal" data-target="#viewModal" onclick="modal_view('이름','부서','직급','이메일','휴대폰','회사','회사전화번호','회사주소','메모사항');" value="${adb.companyname}" readonly></td>
+			<td><input type="text" class="form-control" style="text-align:center; border:none;" onclick="telUpdate(${i.count})" data-toggle="modal" data-target="#viewModal" onclick="modal_view('이름','부서','직급','이메일','휴대폰','회사','회사전화번호','회사주소','메모사항');" value="${adb.com_tel}" readonly></td>
 		</tr>
 		</c:forEach>
 		</c:if>
@@ -163,11 +186,13 @@ $( document ).ready( function() {
 	<div class="modal-content">
 	<div class="modal-header">
 	<h4 class="modal-title" id="exampleModalLabel">연락처 수정</h4>
+	<button type="button" class="btn btn-danger" id="insert_customer_btn" onclick="deletebtn()">삭제</button>
 	</div>
 	
 	<div class="modal-body">
 	<form name="updateFrm" action="<%=ctxPath%>/addBook/addBook_main_telUpdate_update.bts" method="POST" >
 		<input type="hidden" class="form-control" id="pk_addbook_no" name="pk_addbook_no">
+		
 		
 		<div class="form-group">
 		<label for="recipient-name" class="control-label"><strong>이름</strong></label>
@@ -236,8 +261,8 @@ $( document ).ready( function() {
 	</div>
 	
 	<div class="modal-footer">
-	<button type="button" class="btn btn-primary" id="insert_customer_btn" onclick="javascript:document.updateFrm.submit()">등록</button>
-	<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+	<button type="button" class="btn btn-primary" id="insert_customer_btn" onclick="javascript:document.updateFrm.submit()">수정</button>
+	<button type="button" class="btn btn-success" data-dismiss="modal">닫기</button>
 	</div>
 	</div>
 	</div>

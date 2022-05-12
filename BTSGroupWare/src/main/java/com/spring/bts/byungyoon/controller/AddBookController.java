@@ -131,15 +131,6 @@ public class AddBookController {
 	   
 	   mav.addObject("empList", empList);
 	   
-	   System.out.println(request.getParameter("middle_empno"));
-	   System.out.println(request.getParameter("middle_name"));
-	   System.out.println(request.getParameter("middle_rank"));
-	   System.out.println(request.getParameter("middle_dept"));
-	   System.out.println(request.getParameter("last_empno"));
-	   System.out.println(request.getParameter("last_name"));
-	   System.out.println(request.getParameter("last_rank"));
-	   System.out.println(request.getParameter("last_dept"));
-	   
 	   /* 유리 줄 부분 끝 */
 	   
 	   mav.setViewName("addBook_telAdd.addBook");
@@ -313,6 +304,27 @@ public class AddBookController {
 		depInfoMap.put("extraaddress", evo.getExtraaddress());	   
 		
 		return depInfoMap;
+	}
+	
+	
+	// 주소록 삭제하기
+	@RequestMapping(value = "/addBook/addBook_delete.bts", method = {RequestMethod.POST})
+	public ModelAndView addBook_delete(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	      
+		int pk_addbook_no = Integer.parseInt(request.getParameter("pk_addbook_no")); 
+		
+		int n = service.addBook_delete(pk_addbook_no);
+	        
+		if(n == 0) {
+			mav.addObject("message", "삭제할 수 없습니다.");
+		} else {
+			mav.addObject("message", "삭제되었습니다.");
+		}
+	  
+		mav.addObject("loc", request.getContextPath()+"/addBook/addBook_main.bts");
+		mav.setViewName("msg");
+	      
+		return mav;
 	}
 	
 

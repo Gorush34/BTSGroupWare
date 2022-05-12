@@ -19,7 +19,7 @@ public interface InterAddBookDAO {
 
 	
 	// 상세부서정보 페이지 사원목록 불러오기
-	public List<EmployeeVO> addBook_depInfo_select(); // 영업팀
+	public List<EmployeeVO> addBook_depInfo_select();  
 
 	
 	// 상세부서정보 페이지에서 사원상세정보 ajax로 select 해오기
@@ -36,6 +36,10 @@ public interface InterAddBookDAO {
 
 	// 주소록 메인에서 총 연락처 개수 가져오기
 	public int addBook_main_totalPage();
+
+
+	// 주소록 삭제하기
+	public int addBook_delete(int pk_addbook_no);
 
 
 

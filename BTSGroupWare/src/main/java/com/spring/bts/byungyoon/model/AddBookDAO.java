@@ -83,6 +83,14 @@ public class AddBookDAO implements InterAddBookDAO {
 	}
 
 
+	// 주소록 삭제하기
+	@Override
+	public int addBook_delete(int pk_addbook_no) {
+		int n = sqlsession.delete("byungyoon.addBook_delete" , pk_addbook_no);
+		return n;
+	}
+
+
 
 	
 	

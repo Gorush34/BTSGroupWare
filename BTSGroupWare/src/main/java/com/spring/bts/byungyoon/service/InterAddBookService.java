@@ -31,6 +31,9 @@ public interface InterAddBookService {
 
 	// 주소록 메인에서 총 연락처 개수 가져오기
 	int addBook_main_totalPage();
+
+	// 주소록 삭제하기
+	int addBook_delete(int pk_addbook_no);
 	
 	
 }
