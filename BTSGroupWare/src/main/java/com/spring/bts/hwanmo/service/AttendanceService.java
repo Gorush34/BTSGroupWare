@@ -154,5 +154,20 @@ public class AttendanceService implements InterAttendanceService {
 		return myAttList;
 	}
 
+	// 근태신청번호로 공가/경조신청 상세내역 담아오기
+	@Override
+	public List<Map<String, Object>> getVacReportList(int pk_att_num) {
+		
+		List<Map<String, Object>> vacReportList = attDAO.getVacReportList(pk_att_num);
+		return vacReportList;
+	}
+
+	// 부서장인지 확인하기
+	@Override
+	public int checkManager(String fk_emp_no) {
+		int isManager = attDAO.checkManager(fk_emp_no);
+		return isManager;
+	}
+
 	
 }

@@ -417,7 +417,7 @@ public class AttendanceController {
 	
 	// === 내 출퇴근기록 페이지 요청
 	@RequestMapping(value="/att/myCommute.bts")
-	public ModelAndView requiredLogin_myCommute(HttpServletRequest request, CommuteVO cmtvo, ModelAndView mav) { 
+	public ModelAndView requiredLogin_myCommute(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, CommuteVO cmtvo) { 
 		
 		HttpSession session = request.getSession();
 		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
@@ -640,6 +640,60 @@ public class AttendanceController {
 		}
 		
 		return mav;
+	} // end of public ModelAndView reportVacationSubmit(MultipartHttpServletRequest mrequest,  ModelAndView mav, AttendanceVO attVO, LeaveVO leaveVO, AttendanceSortVO attSortVO)----------
+	
+	// 결재페이지 보기
+	@RequestMapping(value="/att/viewReport.bts")
+	public ModelAndView view(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		
+		String str_pk_att_num = request.getParameter("pk_att_num");
+		int pk_att_num = 0;
+		pk_att_num = Integer.parseInt(str_pk_att_num);
+		// System.out.println("확인용 : " + pk_att_num);
+		
+		
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+		String fk_emp_no = String.valueOf(loginuser.getPk_emp_no());
+		
+		// 부서장인지 확인하기
+		int checkManager = attService.checkManager(fk_emp_no);
+		
+		// 근태신청번호로 공가/경조신청 상세내역 담아오기
+		List<Map<String, Object>> vacReportList = attService.getVacReportList(pk_att_num);
+		
+		// 연락처 복호화
+		String uq_phone = "";
+		try {
+			uq_phone = aes.decrypt( (String) vacReportList.get(0).get("uq_phone"));
+		} catch(GeneralSecurityException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		//결재나 반려가 완료되었는지 확인하기 
+		int isDecided = 0;
+		// 결재완료나 반려가 되었다면
+		if( "1".equals(vacReportList.get(0).get("approval_status")) || "2".equals(vacReportList.get(0).get("approval_status")) ) { 
+			isDecided = 1;
+		}
+		
+		int isManager = 0;
+		if( fk_emp_no.equals(vacReportList.get(0).get("manager")) && checkManager == 1 ) {
+			isManager = 1;
+		}
+		
+		System.out.println(" isDecided : " + isDecided);
+		System.out.println(" isManager : " + isManager);
+		
+		// System.out.println(vacReportList.toString());
+		mav.addObject("isManager", isManager);
+		mav.addObject("isDecided", isDecided);
+		mav.addObject("uq_phone", uq_phone);
+		mav.addObject("vacReportList", vacReportList);
+		mav.setViewName("viewReport.att");
+		
+		return mav;
 	}
+	
 	
 }

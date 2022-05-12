@@ -10,7 +10,35 @@
 
 <style type="text/css">
 
+	span.view:hover {
+		cursor: pointer;
+	}
+
 </style>
+
+<script type="text/javascript">
+	
+	$(document).ready(function() {
+		
+		$("span.view").click(function(){
+			
+			var pk_att_num = $(this).parent().find("span#num").text();
+			console.log(pk_att_num);
+			
+			viewReport(pk_att_num);
+		})
+		
+	}); // end of $(document).ready(function() {})-----------------------------
+	
+	// Function Declaration
+	function viewReport(pk_att_num) {
+		
+		location.href="<%= ctxPath%>/att/viewReport.bts?pk_att_num="+pk_att_num; 
+		
+	} // end of function viewReport(pk_att_num)-----------------------
+	
+	
+</script>
 
 <div class="container_myAtt">
     <div class="row">
@@ -18,7 +46,8 @@
         <div class="col-md-6">
         	<div id="title"><span style="font-size: 30px; margin-bottom: 20px; font-weight: bold;">공가 / 경조신청</span></div>
         	
-        	<div id="vacCnt">
+        	<div id="vacCnt" style="margin-top: 20px;">
+        		<!--
         		<div id="selectYear">
 	        		<form name="vacCntFrm" style="margin-top: 20px;">
 		        		<span style="">년도 :</span>
@@ -29,6 +58,7 @@
 					    <button type="button" id="btn_vacCnt" class="btn btn-secondary btn-sm" onclick="goSearchMyVacCnt()">검색</button>
 			        </form>
 			     </div>
+			     -->
 			     <table class="table" id="tbl_vacCnt">
 					  <thead class="thead-light">
 					    <tr style="text-align: center;">
@@ -84,9 +114,11 @@
 				    </tr>
 				  </thead>
 				  <tbody>
-				  <c:forEach var="myAtt" items="${requestScope.myAttList}" begin="${requestScope.idx.startIdx}" end="${requestScope.idx.endIdx}" step="1">
+				  <c:if test="${ not empty requestScope.myAttList}">
+				  <c:forEach var="myAtt" items="${requestScope.myAttList}" >
 					<tr style="text-align: center;">
-				      <td style="width:7%; text-align: center;">${myAtt.pk_att_num}</td>
+						
+				      <td style="width:7%; text-align: center;"><span class="view" id="num" >${myAtt.pk_att_num}</span></td>
 				      <td style="width:10%; text-align: center;">${myAtt.ko_depname}</td>
 				      <td style="width:10%; text-align: center;">${myAtt.fk_emp_no}</td>
 				      <td style="width:7%; text-align: center;">${myAtt.emp_name}</td>
@@ -98,7 +130,7 @@
 					      	<table id="vac_dms" style="width: 100%;">
 					      		<thead>
 						      		<tr>
-							      		<th>결재자</th>
+							      		<th>최종결재자</th>
 						      		</tr>
 					      		</thead>
 					      		<tbody>
@@ -133,16 +165,26 @@
 			      		  <span style="color:blue;">결재완료</span>
 			      		  </c:if>
 				      </td>
-				    </tr>
+				    </tr style="text-align: center;">
 				    </c:forEach>
+				    </c:if>
+				    
+				    <c:if test="${ empty requestScope.myAttList }">
+				    <tr>
+				    	<td colspan="9" style="text-align: center; height: 100px; font-size: 20px;" >신청한 공가/경조내역이 없습니다.</td>
+				    </tr>
+				  	</c:if>
+				  
 				  </tbody>
 				  
 			</table>
 			
 			<%-- === #122. 페이지바 보여주기 === --%>
+			<c:if test="${not empty requestScope.myAttList }">
 		    <div align="center" style="border: solid 0px gray; width: 70%; margin: 20px auto;">
 			  ${requestScope.pageBar}
 		    </div>
+		    </c:if>
         </div>
     </div>
     <%-- 공가/경조신청내역 끝 --%>

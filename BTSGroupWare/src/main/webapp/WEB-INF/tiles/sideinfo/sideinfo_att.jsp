@@ -291,7 +291,7 @@
 				   					<td><span style="margin-left: 5px;"><a href="<%= ctxPath %>/att/reportVacation.bts">연차신청</a></span></label></td>
 				   				</tr>
 				   				<tr>
-				   					<td><span style="margin-left: 5px;">내 인사정보</span></label></td>
+				   					<td><span style="margin-left: 5px;"><a href="<%= ctxPath %>/att/viewReport.bts">결재대기문서 확인</a></span></label></td>
 				   				</tr>
 			   				</tbody>	
 		   				</table>	
