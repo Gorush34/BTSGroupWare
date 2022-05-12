@@ -417,7 +417,7 @@ public class AttendanceController {
 	
 	// === 내 출퇴근기록 페이지 요청
 	@RequestMapping(value="/att/myCommute.bts")
-	public ModelAndView myCommute(HttpServletRequest request, CommuteVO cmtvo, ModelAndView mav) { 
+	public ModelAndView requiredLogin_myCommute(HttpServletRequest request, CommuteVO cmtvo, ModelAndView mav) { 
 		
 		HttpSession session = request.getSession();
 		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
