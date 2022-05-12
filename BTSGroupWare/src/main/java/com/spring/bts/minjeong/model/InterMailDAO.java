@@ -68,12 +68,7 @@ public interface InterMailDAO {
 	// 예약 메일 1개 상세내용을 읽어오기
 	MailVO getReservationMailView(Map<String, String> paraMap);
 
-	// 첨부파일이 존재하는 경우 (filename 이 null 이 아님 ==> 존재한다는 것)
-	// mail 테이블에서 reservation_status 를 1에서 다시 0으로 바꿔준다? --> 그럼 보낸메일함에서 보여질 테니까?
-	// Insert 가 아닌 update 를 해주자.
-	int add_withFile_updateResStatus(MailVO mailvo);
-
-	// 첨부파일이 존재하지 않는 경우 (filename == null)
+	// 첨부파일이 존재하는 경우 && 존재하지 않는 경우 (filename == null)
 	// mail 테이블에서 reservation_status 를 1에서 다시 0으로 바꿔준다? --> 그럼 보낸메일함에서 보여질 테니까?
 	// Insert 가 아닌 update 를 해주자.
 	int add_updateResStatus(MailVO mailvo);

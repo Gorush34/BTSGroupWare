@@ -298,6 +298,7 @@
 		where V.pk_mail_num = #{pk_mail_num}	
 	</select>	
 	
+	<!-- 발송예약된 예약메일의 상태값을 1에서 0으로 변경한다. -->
 	<update id="add_updateResStatus" parameterType="com.spring.bts.minjeong.model.MailVO">
 		update tbl_mail set reservation_status = 0
 		where pk_mail_num = #{pk_mail_num}

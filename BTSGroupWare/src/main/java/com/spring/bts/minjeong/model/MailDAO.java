@@ -189,14 +189,6 @@ public class MailDAO implements InterMailDAO {
 		return n;
 	}
 
-	
-	@Override
-	public int add_withFile_updateResStatus(MailVO mailvo) {
-
-		return 0;
-	}
-
-	
 	// ==== 예약메일함 끝 ==== //
 
 

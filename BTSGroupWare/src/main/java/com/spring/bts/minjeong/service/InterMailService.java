@@ -52,6 +52,7 @@ public interface InterMailService {
 	// 휴지통에서 선택한 글들을 mail 테이블에서 삭제하기
 	int deleteFromTblMail(Map<String, String> paraMap);
 
+	
 	// ==== 예약메일함 (스프링 스케줄러) 시작 ==== //
 
 	// 총 게시물 건수 구해오기 - 예약메일함 (service 단으로 보내기)
@@ -65,10 +66,6 @@ public interface InterMailService {
 
 	// 스프링 스케줄러를 이용해서 발송예약 실행하기
 	void reservationMailSendSchedular() throws Exception ;
-
-
-
-	
 	
 	// ==== 예약메일함 (스프링 스케줄러) 끝 ==== //
 
