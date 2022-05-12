@@ -19,14 +19,6 @@ public class AddBookService implements InterAddBookService  {
 	 
  	@Autowired
  	private AES256 aes;
- 
- 	// 주소록 메인페이지에서 주소록검색 ajax 쓰기
-	@Override
-	public String getNameNumber(int no) {
-	 	String ab = dao.getNameMember(no);
-	 	return ab;
-	}
-	
 	
 	// 주소록 메인페이지에 select 해오기
 	@Override
@@ -101,5 +93,5 @@ public class AddBookService implements InterAddBookService  {
 		return n;
 	}
 
-	
+
 }

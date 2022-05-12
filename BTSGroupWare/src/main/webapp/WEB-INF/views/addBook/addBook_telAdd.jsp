@@ -44,75 +44,114 @@
 	  $( "button#h_team" ).click( function() {
 	    $( "div#h_teamwon" ).slideToggle();
 	  });
+
+
 	  
+	  $('input:checkbox[name=empno]').click(function(){
+		  
+		  checkOnlyOne(this);
+		  
+		  $("input#emp_no").val("");
+		  $("input#emp_name").val("");
+		  $("input#emp_rank").val("");
+		  $("input#emp_dept").val("");
+		  
+		  var employee_no =  $(this).val();
+		     $("input#emp_no").val(employee_no);
+		  var employee_name =  $(this).next().val();
+		     $("input#emp_name").val(employee_name);
+		     var employee_rank =  $(this).next().next().val();
+		     $("input#emp_rank").val(employee_rank);
+		     var employee_dept =  $(this).next().next().next().val();
+		     $("input#emp_dept").val(employee_dept);
+		     
+	  });
 	  
 	}); // end of $( document ).ready( function()
 	
-	/* 유리 줄 부분 모달꺼 끝 */
+	/* 체크박스 하나만 선택되게 하는 함수 시작 */
+	function checkOnlyOne(element) {
+		  
+		  const checkboxes 
+		      = document.getElementsByName("empno");
+		  
+		  checkboxes.forEach((cb) => {
+		    cb.checked = false;
+		  })
+		  
+		  element.checked = true;
+		}		
+	/* 체크박스 하나만 선택되게 하는 함수 끝 */
 	
 
-	function goTelAdd() {
+	function middle_approve(){
 		
-		const frm = document.telAddFrm;
-	    frm.action = "<%=ctxPath%>/addBook/addBook_telAdd_insert.bts"
-	    frm.method = "post"
-	    frm.submit();
+		var emp_no = $("input#emp_no").val();
+		var emp_name = $("input#emp_name").val();
+		var emp_rank = $("input#emp_rank").val();
+		var emp_dept = $("input#emp_dept").val();
+		
+		$("input#middle_empno").val(emp_no);
+	 	$("input#middle_name").val(emp_name);
+	 	$("input#middle_rank").val(emp_rank);
+	 	$("input#middle_dept").val(emp_dept);
+	}
+	    
+	function last_approve(){
+			
+			var emp_no = $("input#emp_no").val();
+			var emp_name = $("input#emp_name").val();
+			var emp_rank = $("input#emp_rank").val();
+			var emp_dept = $("input#emp_dept").val();
+			
+		 	$("input#last_empno").val(emp_no);
+		 	$("input#last_name").val(emp_name);
+		 	$("input#last_rank").val(emp_rank);
+		 	$("input#last_dept").val(emp_dept);
+		}
+ 	
+	
+	function middle_reset() {
+		
+		$("input#middle_empno").val("");
+	 	$("input#middle_name").val("");
+	 	$("input#middle_rank").val("");
+	 	$("input#middle_dept").val("");
+	
 	}
 	
-/*	
-	 function middelapprove(){
-	        var obj = $("[name=empno]");
-	        var chkArray = new Array(); // 배열 선언
-	 
-	        $('input:checkbox[name=empno]:checked').each(function() { // 체크된 체크박스의 value 값을 가지고 온다.
-	            chkArray.push(this.value);
-	        });
-	        $('#hiddenEmpno').val(chkArray);
-	        
-	    }
-*/	 
-	 function lastapprove(){
-	        var obj = $("[name=empno]");
-	        var chkArray = new Array(); // 배열 선언
-	 
-	        $('input:checkbox[name=empno]:checked').each(function() { // 체크된 체크박스의 value 값을 가지고 온다.
-	            chkArray.push(this.value);
-	        });
-	        $('#hiddenEmpno').val(chkArray);
-	        
-	    }
-	 
-	 
-	 function middelapprove()	{
-		 
-		 	var obj = $("[name=empno]");
-	        var chkArray = new Array(); // 배열 선언
-	 
-	        $('input:checkbox[name=empno]:checked').each(function() { // 체크된 체크박스의 value 값을 가지고 온다.
-	            chkArray.push(this.value);
-	        });
-	        $('#hiddenEmpno').val(chkArray);
-		 
-			$.ajax({
-				url:"<%= ctxPath%>/addBook/addBook_telAdd_select_ajax.bts",
-				data:{"hiddenEmpno" : $("input#hiddenEmpno").val()},
-				type: "post",
-				dataType: 'json',
-				success : function(json) {
-					
-				},
-				error: function(request){
-					
-				}
-			});
-		}	
-
+	function last_reset() {
+		
+		$("input#last_empno").val("");
+	 	$("input#last_name").val("");
+	 	$("input#last_rank").val("");
+	 	$("input#last_dept").val("");
+	
+	}
 
 	
+	$(document).on("click", "#insert_customer_btn", function(event){
+		if( $("#last_name").val() == ""){
+		     alert("최종승인자 값이 없습니다");
+		     return false;
+		}
+		else if ( $("#last_empno").val() != "" ) {
+			const frm = document.submitFrm;
+		    frm.action = "<%=ctxPath%>/addBook/addBook_telAdd.bts"
+		    frm.method = "post"
+	    	frm.submit();
+	 	}
+	});
 	
-
+	 /* 유리 줄 부분 모달꺼 끝 */
 	
-    
+		function goTelAdd() {
+			
+			const frm = document.telAddFrm;
+		    frm.action = "<%=ctxPath%>/addBook/addBook_telAdd_insert.bts"
+		    frm.method = "post"
+		    frm.submit();
+		}
 
 </script>
 
@@ -262,7 +301,7 @@
 		<div id="tbl_one" style="float:left; width:22%;">
 			<table style="text-align:center;">
 				<tr>
-					<input type="text" name="hiddenEmpno" id="hiddenEmpno" value="" />
+					<input type="hidden" name="hiddenEmpno" id="hiddenEmpno" value="" />
 					<td><button class="btn btn-default" id="y_team" style="width:150px; border: solid darkgray 2px;">영업팀</button></td>
 				</tr>
 				<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
@@ -272,6 +311,9 @@
 					<div id="y_teamwon">
 						<label>
 							<input type="checkbox" id="pk_emp_no_${i.count}" name="empno" value="${emp.pk_emp_no}" />
+							<input type="hidden" id="employee_name" name="employee_name" value="${emp.emp_name}" />
+							<input type="hidden" id="employee_rank" name="employee_rank" value="${emp.ko_rankname}" />
+							<input type="hidden" id="employee_dept" name="employee_dept" value="${emp.ko_depname}" />
 							&nbsp;${emp.emp_name}&nbsp;[${emp.ko_rankname}]
 						</label>
 					</div>
@@ -279,6 +321,7 @@
 				</tr>
 				</c:if>
 		   		</c:forEach>
+		   		
 				<tr>
 					<td><button class="btn btn-default" id="m_team" style="width:150px; border: solid darkgray 2px;">마케팅팀</button></td>
 				</tr>
@@ -289,6 +332,9 @@
 					<div id="m_teamwon">
 						<label>
 							<input type="checkbox" id="pk_emp_no_${i.count}" name="empno" value="${emp.pk_emp_no}" />
+							<input type="hidden" id="employee_name" name="employee_name" value="${emp.emp_name}" />
+							<input type="hidden" id="employee_rank" name="employee_rank" value="${emp.ko_rankname}" />
+							<input type="hidden" id="employee_dept" name="employee_dept" value="${emp.ko_depname}" />
 							&nbsp;${emp.emp_name}&nbsp;[${emp.ko_rankname}]
 						</label>
 					</div>
@@ -306,6 +352,9 @@
 					<div id="g_teamwon">
 						<label>
 							<input type="checkbox" id="pk_emp_no_${i.count}" name="empno" value="${emp.pk_emp_no}" />
+							<input type="hidden" id="employee_name" name="employee_name" value="${emp.emp_name}" />
+							<input type="hidden" id="employee_rank" name="employee_rank" value="${emp.ko_rankname}" />
+							<input type="hidden" id="employee_dept" name="employee_dept" value="${emp.ko_depname}" />
 							&nbsp;${emp.emp_name}&nbsp;[${emp.ko_rankname}]
 						</label>
 					</div>
@@ -323,6 +372,9 @@
 					<div id="c_teamwon">
 						<label>
 							<input type="checkbox" id="pk_emp_no_${i.count}" name="empno" value="${emp.pk_emp_no}" />
+							<input type="hidden" id="employee_name" name="employee_name" value="${emp.emp_name}" />
+							<input type="hidden" id="employee_rank" name="employee_rank" value="${emp.ko_rankname}" />
+							<input type="hidden" id="employee_dept" name="employee_dept" value="${emp.ko_depname}" />
 							&nbsp;${emp.emp_name}&nbsp;[${emp.ko_rankname}]
 						</label>
 					</div>
@@ -340,6 +392,9 @@
 					<div id="i_teamwon">
 						<label>
 							<input type="checkbox" id="pk_emp_no_${i.count}" name="empno" value="${emp.pk_emp_no}" />
+							<input type="hidden" id="employee_name" name="employee_name" value="${emp.emp_name}" />
+							<input type="hidden" id="employee_rank" name="employee_rank" value="${emp.ko_rankname}" />
+							<input type="hidden" id="employee_dept" name="employee_dept" value="${emp.ko_depname}" />
 							&nbsp;${emp.emp_name}&nbsp;[${emp.ko_rankname}]
 						</label>
 					</div>
@@ -357,6 +412,9 @@
 					<div id="h_teamwon">
 						<label>
 							<input type="checkbox" id="pk_emp_no_${i.count}" name="empno" value="${emp.pk_emp_no}" />
+							<input type="hidden" id="employee_name" name="employee_name" value="${emp.emp_name}" />
+							<input type="hidden" id="employee_rank" name="employee_rank" value="${emp.ko_rankname}" />
+							<input type="hidden" id="employee_dept" name="employee_dept" value="${emp.ko_depname}" />
 							&nbsp;${emp.emp_name}&nbsp;[${emp.ko_rankname}]
 						</label>
 					</div>
@@ -365,18 +423,23 @@
 				</c:if>
 		   		</c:forEach>
 		  	</table>
+		  		<input type="hidden" id="emp_no" name="emp_no" />
+		  		<input type="hidden" id="emp_name" name="emp_name" />
+		   		<input type="hidden" id="emp_rank" name="emp_rank" />
+		   		<input type="hidden" id="emp_dept" name="emp_dept" />
 	  	</div>
 	  	
 	  	<div id="tbl_two" style="float:left; width:20%;">
 		  	<table>
-			  	<tr><td><button class="arrow-next_1" onclick="middelapprove();" ></button></td></tr>
-			  	<tr><td><button class="arrow-next_2" onclick="lastapprove();" style="margin-top:115%;"></button></td></tr>
+			  	<tr><td><button class="arrow-next_1" onclick="middle_approve();" ></button></td></tr>
+			  	<tr><td><button class="arrow-next_2" onclick="last_approve();" style="margin-top:115%;"></button></td></tr>
 		  	</table>
 	  	</div>
 	  	
 	  	<div id="tbl_three" style="float:left; width:50%;">
+	  		<form name="submitFrm">
 		  	<table style="text-align:center;">
-		  		<tr><td colspan="7">중간 결재</td></tr>
+		  		<tr><td colspan="7">중간 결재&nbsp;<input type="reset" value="삭제" onclick="middle_reset()"/></td></tr>
 				<tr style="border: solid darkgray 2px; margin-left:2%">
 					<td style="width:0%;"><input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly /></td>
 					<td style="width:13%;"><strong>이름</strong></td>
@@ -384,14 +447,15 @@
 					<td style="width:13%;"><strong>부서</strong></td>
 				</tr>
 				<tr style="border-bottom: solid darkgray 2px;">
-					<td style="width:0%;"><input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly /></td>
-					<td><input type="text" id="name" name="name"  style="border:none; text-align:center; " ><br></td>
-					<td><input type="text" id="rank" name="rank"  style="border:none; text-align:center;" ><br></td>
-					<td><input type="text" id="department" name="department"  style="border:none; text-align:center;"  ><br></td>
+					<td style="width:0%;"><input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly />
+					<input type="hidden" id="middle_empno" name="middle_empno"  style="border:none; text-align:center; " ></td>
+					<td><input type="text" id="middle_name" name="middle_name"  style="border:none; text-align:center; " ><br></td>
+					<td><input type="text" id="middle_rank" name="middle_rank"  style="border:none; text-align:center;" ><br></td>
+					<td><input type="text" id="middle_dept" name="middle_dept"  style="border:none; text-align:center;"  ><br></td>
 				</tr>
 			</table>
 			<table style="text-align:center; margin-top:30%;">
-				<tr><td colspan="7">최종 결재</td></tr>
+				<tr><td colspan="7">최종 결재&nbsp;<input type="reset" value="삭제" onclick="last_reset()" /></td></tr>
 				<tr style="border: solid darkgray 2px; margin-left:2%">
 					<td style="width:0%;"><input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly /></td>
 					<td style="width:13%;"><strong>이름</strong></td>
@@ -399,17 +463,19 @@
 					<td style="width:13%;"><strong>부서</strong></td>
 				</tr>
 				<tr style="border-bottom: solid darkgray 2px;">
-					<td style="width:0%;"><input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly /></td>
-					<td><input type="text" id="name" name="name"  style="border:none; text-align:center; " ><br></td>
-					<td><input type="text" id="rank" name="rank"  style="border:none; text-align:center;" ><br></td>
-					<td><input type="text" id="department" name="department"  style="border:none; text-align:center;"  ><br></td>
+					<td style="width:0%;"><input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly />
+					<input type="hidden" id="last_empno" name="last_empno"  style="border:none; text-align:center; " ></td>
+					<td><input type="text" id="last_name" name="last_name"  style="border:none; text-align:center; " ><br></td>
+					<td><input type="text" id="last_rank" name="last_rank"  style="border:none; text-align:center;" ><br></td>
+					<td><input type="text" id="last_dept" name="last_dept"  style="border:none; text-align:center;"  ><br></td>
 				</tr>
 			</table>
+			</form>
 	  	</div>
-	</div><!-- modal-body --> 
+	</div><!-- modal-body -->
 	
 	<div class="modal-footer">
-	<button type="button" class="btn btn-primary" id="insert_customer_btn" onclick="javascript:document.updateFrm.submit()">등록</button>
+	<input type="button" class="btn btn-primary" id="insert_customer_btn" onclick="" value="등록">
 	<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
 	</div>
 	</div>

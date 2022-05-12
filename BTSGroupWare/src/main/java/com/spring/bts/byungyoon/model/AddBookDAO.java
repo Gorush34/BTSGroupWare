@@ -17,15 +17,6 @@ public class AddBookDAO implements InterAddBookDAO {
 	@Autowired
 	private SqlSessionTemplate sqlsession;
 	
-	// 주소록 메인페이지에서 주소록검색 ajax 쓰기
-	@Override
-	public String getNameMember(int no) {
-		
-		String loginuser = sqlsession.selectOne("byungyoon.mby_test", no);
-		return loginuser;
-	}
-
-	
 	// 주소록 메인페이지에 select 해오기
 	@Override
 	public List<AddBookVO> addBook_main_select(Map<String, String> paraMap) {
@@ -90,6 +81,8 @@ public class AddBookDAO implements InterAddBookDAO {
 		int n = sqlsession.selectOne("byungyoon.addBook_main_totalPage");
 		return n;
 	}
+
+
 
 	
 	

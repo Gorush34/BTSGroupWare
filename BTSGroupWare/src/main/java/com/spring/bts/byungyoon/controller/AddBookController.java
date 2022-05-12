@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.spring.bts.byungyoon.model.AddBookVO;
 import com.spring.bts.byungyoon.service.InterAddBookService;
 import com.spring.bts.hwanmo.model.EmployeeVO;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 //=== 컨트롤러 선언 === //
 /* 
@@ -31,23 +32,7 @@ public class AddBookController {
 
 	@Autowired
 	private InterAddBookService service;
- /*  
-	// 주소록 메인페이지에서 주소록검색 ajax 쓰기
-	@RequestMapping(value="/addBook/test.bts", produces = "application/json; charset=utf-8")
-	public Map<String, Object> addBook_test(HttpServletRequest request, HttpServletResponse response, String search) {
-	   
-	   Map<String, Object> testMap = new HashMap<String, Object>();
-	   String a = service.getNameNumber(1);
-	   
-	   testMap.put("search", search);
-	   testMap.put("name", a);
-	   
-	   System.out.println(search);
-	   System.out.println(a);
-	   
-	   return testMap;
-	}
-*/	
+ 
 	
    // 주소록 메인페이지
    @RequestMapping(value="/addBook/addBook_main.bts")
@@ -146,6 +131,14 @@ public class AddBookController {
 	   
 	   mav.addObject("empList", empList);
 	   
+	   System.out.println(request.getParameter("middle_empno"));
+	   System.out.println(request.getParameter("middle_name"));
+	   System.out.println(request.getParameter("middle_rank"));
+	   System.out.println(request.getParameter("middle_dept"));
+	   System.out.println(request.getParameter("last_empno"));
+	   System.out.println(request.getParameter("last_name"));
+	   System.out.println(request.getParameter("last_rank"));
+	   System.out.println(request.getParameter("last_dept"));
 	   
 	   /* 유리 줄 부분 끝 */
 	   
@@ -322,35 +315,7 @@ public class AddBookController {
 		return depInfoMap;
 	}
 	
-	
-	// 유리한테 줄 모달 페이지에서 사원상세정보 ajax로 select 해오기
-	@RequestMapping(value="/addBook/addBook_telAdd_select_ajax.bts", produces = "application/json; charset=utf-8")
-	public Map<String,Object> addBook_telAdd_select_ajax(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
-		Map<String,Object> depInfoMap = new HashMap<>();
-		
-		String hiddenEmpno = request.getParameter("hiddenEmpno");
-	   
-		List<String> list = Arrays.asList(hiddenEmpno.split(","));
-		
-		System.out.println(list.get(0));
-		System.out.println(list.get(1));
-		System.out.println(list.get(2));
-/*		
-		EmployeeVO evo = service.addBook_depInfo_select_ajax(pk_emp_no);
-		
-		depInfoMap.put("name",evo.getEmp_name());
-		depInfoMap.put("department", evo.getKo_depname());
-		depInfoMap.put("rank", evo.getKo_rankname());
-		depInfoMap.put("email", evo.getUq_email());
-		depInfoMap.put("phone", evo.getUq_phone());
-		depInfoMap.put("address", evo.getAddress());
-		depInfoMap.put("detailaddress", evo.getDetailaddress());
-		depInfoMap.put("extraaddress", evo.getExtraaddress());	   
-*/		
-		return depInfoMap;
-	}
-   
+
    
 
    

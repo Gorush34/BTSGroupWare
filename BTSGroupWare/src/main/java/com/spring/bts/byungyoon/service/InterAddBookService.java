@@ -11,9 +11,6 @@ import com.spring.bts.hwanmo.model.EmployeeVO;
 @Service
 public interface InterAddBookService {
 
-	// 주소록 메인페이지에서 주소록검색 ajax 쓰기
-	String getNameNumber(int no);
-
 	// 주소록 메인페이지에 select 해오기
 	List<AddBookVO> addBook_main_select(Map<String, String> paraMap); 
 	
@@ -33,5 +30,7 @@ public interface InterAddBookService {
 	int addBook_main_telUpdate_update(AddBookVO avo);
 
 	// 주소록 메인에서 총 연락처 개수 가져오기
-	int addBook_main_totalPage(); 
+	int addBook_main_totalPage();
+	
+	
 }

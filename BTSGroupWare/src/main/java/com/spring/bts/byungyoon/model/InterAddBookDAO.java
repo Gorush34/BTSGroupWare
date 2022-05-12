@@ -9,10 +9,6 @@ import com.spring.bts.hwanmo.model.EmployeeVO;
 
 @Repository
 public interface InterAddBookDAO {
-
-	// 주소록 메인페이지에서 주소록검색 ajax 쓰기
-	public String getNameMember(int no);
-	
 	
 	// 주소록 메인페이지에 select 해오기
 	public List<AddBookVO> addBook_main_select(Map<String, String> paraMap);
@@ -40,6 +36,7 @@ public interface InterAddBookDAO {
 
 	// 주소록 메인에서 총 연락처 개수 가져오기
 	public int addBook_main_totalPage();
+
 
 
 	
