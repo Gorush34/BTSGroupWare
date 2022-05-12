@@ -209,7 +209,7 @@
 					
 					<td>${apprvo.writeday}</td>
 					
-					<td>결재양식</td> <%-- ${apprvo.fk_appr_sortno} --%>
+					<td>${apprvo.fk_appr_sortno}</td> <%-- ${apprvo.fk_appr_sortno} --%>
 					
 					<td>
 					<c:if test="${apprvo.emergency == 1}">
@@ -221,7 +221,8 @@
 					</td>
 					
 					<td>
-						<span class="title" onclick="goView('${apprvo.pk_appr_no}')">${apprvo.title}</span>
+						<span class="title" onclick="goView('${apprvo.pk_appr_no}')" style="cursor: pointer;">${apprvo.title}</span>
+						
 					</td>
 					
 					<td>
@@ -252,7 +253,7 @@
 		
 		
 		<%-- === 페이지바 보여주기 --%>
-		<div align="center" style="border: solid 1px grey; width: 70%; margin: 20px auto;">
+		<div align="center" style="border: solid 0px grey; width: 70%; margin: 20px auto;">
 			${requestScope.pageBar}
 		</div>
 		

@@ -512,7 +512,7 @@
 		<tr>
 			<th class="edmsView_th">제목</th>
 			<td colspan="4">
-				<input type="text" name="title" id="title" size="100" style="width: 100%;" value="제목/휴가신청서" />
+				<input type="text" name="title" id="title" size="100" style="width: 100%;" class="form-control" placeholder="제목을 입력하세요"/>
 			</td>
 		</tr>
 		<tr>

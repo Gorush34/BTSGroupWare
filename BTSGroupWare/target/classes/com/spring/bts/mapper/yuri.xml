@@ -72,21 +72,22 @@
 
 
 	<!-- 페이징 처리를 안한 검색어가 없는 전체 대기문서 목록 보여주기 -->
-	<select id="waitListNoSearch" resultType="com.spring.bts.yuri.model.ApprVO">
+<!-- 	<select id="waitListNoSearch" resultType="com.spring.bts.yuri.model.ApprVO">
 		select A.fk_emp_no, A.writeday, S.appr_name, A.emergency, A.title, NVL(A.filename,'파일없음'), A.pk_appr_no, a.status
 		from tbl_appr A left join tbl_appr_sort S
 		on A.fk_appr_sortno = S.pk_appr_sortno
 		order by A.pk_appr_no desc
-	</select>
+	</select> -->
 
 
-	<!-- 파일첨부가 있는 대기문서 1개 조회하기 -->
+	<!-- 이전글/다음글이 있는, 파일첨부가 있는 대기문서 1개 조회하기 -->
 	<select id="getView" parameterType="HashMap" resultType="com.spring.bts.yuri.model.ApprVO">
 		SELECT  previousseq, previoussubject
-		      , pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno, fk_fin_empno, emergency
-		      , title, contents, filename, orgfilename, fileSize, status, mid_accept, fin_accept
-		      , mid_opinion, fin_opinion, writeday, viewcnt
-		      , nextseq, nextsubject
+	            , pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno, fk_fin_empno, emergency
+	            , title, contents, filename, orgfilename, fileSize, status, mid_accept, fin_accept
+	            , mid_opinion, fin_opinion, writeday, viewcnt
+	            , nextseq, nextsubject
+              , emp_name , ko_rankname , ko_depname
 		from
 		(
 		    select  lag(pk_appr_no,1) over(order by pk_appr_no desc)  as previousseq
@@ -96,7 +97,16 @@
 		          , NVL(mid_opinion, '중간결재자의견없음') AS mid_opinion, fin_opinion, to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') as writeday, viewcnt
 		          , lead(pk_appr_no,1) over(order by pk_appr_no desc) as nextseq
 		          , lead(title,1) over(order by pk_appr_no desc) as nextsubject
-		    from tbl_appr
+		          , E.EMP_NAME AS emp_name
+		          , R.ko_rankname AS ko_rankname
+		          , D.ko_depname AS ko_depname
+		    from tbl_appr A
+		     join tbl_employees E 
+		    on A.FK_EMP_NO = E.pk_emp_no
+		    join tbl_rank_sort R
+		    on E.FK_RANK_ID = R.PK_RANK_NO
+		    join tbl_dep_sort D
+		    on E.FK_DEPARTMENT_ID = D.PK_DEP_NO
 		) V
 		where pk_appr_no = #{pk_appr_no}
 	</select>
@@ -114,8 +124,8 @@
 	
 	<!-- 1개글 수정하기 -->
 	<update id="edit" parameterType="com.spring.bts.yuri.model.ApprVO">
-		update contents set title = #{title}, contents = #{contents}
-		where pk_appr_vo = #{pk_appr_vo}
+		update tbl_appr set title = #{title}, contents = #{contents}
+		where pk_appr_vo = #{pk_appr_vo} and fk_emp_no = #{fk_emp_no}
 	</update>
 	
 	<!-- 1개글 삭제하기 -->

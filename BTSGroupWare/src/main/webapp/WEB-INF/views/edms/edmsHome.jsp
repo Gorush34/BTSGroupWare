@@ -34,13 +34,13 @@
 	<div class="divClear"></div>
 				
 	<%-- 결재대기 문서가 없는 경우 시작 --%>
-	<c:if test="${empty requestScope.edmsList}">
+	<%-- <c:if test="${empty requestScope.edmsList}"> --%>
 		<div class="card"><span>결재 대기 문서가 없습니다.</span></div>
-	</c:if>
+	<%-- </c:if> --%>
 	<%-- 결재대기 문서가 없는 경우 종료 --%>
 		
 	<%-- 결재대기 문서가 있는 경우 시작 --%>
-	<c:if test="${not empty requestScope.edmsList}">
+	<%-- <c:if test="${not empty requestScope.edmsList}"> --%>
 		<%-- 반응형 웹(카드) 시작 --%>
 		<div class="row">
 			<%-- 반복문 시작 --%>
@@ -61,7 +61,7 @@
 			</c:forEach>
 		</div>
 		<%-- 반응형 웹(카드) 종료 --%>
-	</c:if>
+	<%-- </c:if> --%>
 	<%-- 결재대기 문서가 있는 경우 종료 --%>
 		
 		<!-- 결재대기 문서 종료 -->

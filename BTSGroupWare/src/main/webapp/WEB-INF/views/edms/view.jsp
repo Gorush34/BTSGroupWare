@@ -21,8 +21,12 @@
 
 <script type="text/javascript">
 	
-	$(document).ready(function(){		
+	$(document).ready(function(){	
 		
+		const frm = document.viewfrm;
+		frm.method = "POST";
+		frm.action = "<%= ctxPath%>/edms/view.bts";
+		frm.submit();
 	}); // end of $(document).ready(function(){}) --------------------
 	
 </script>
@@ -65,7 +69,7 @@
 	<div id="edms_view">
 	
 	<!-- ------------------------------------------------------------------------ -->
-
+<!-- <form name="viewfrm"> -->
 	<table style="width: 100%" class="table table-bordered">
 		<colgroup>
 		<col style="width: 16%; background-color: #e8e8e8;" />
@@ -88,20 +92,22 @@
           	</td>
           	
           	<td rowspan="4" style="valign: center;">승인</td>
-          	<td style="background-color: #F7F7F7;">중간결재자</td>
+          	<td style="background-color: #F7F7F7;">중간결재자 사번&nbsp;[${requestScope.apprvo.fk_mid_empno}]</td>
              
 			<td rowspan="4" style="valign: center;">승인</td>
-          	<td style="background-color: #F7F7F7;">최종결재자</td>
+          	<td style="background-color: #F7F7F7;">최종결재자 사번&nbsp;[${requestScope.apprvo.fk_fin_empno}]</td>
 		</tr>
+		
 		<tr>
-			<th>작성자</th>
-          	<td style="background-color: #F7F7F7;">${requestScope.apprvo.emp_name}</td>
+			<th>작성자 <input type="text" value="${requestScope.apprvo.fk_emp_no}"></th> 
+          	<td style="background-color: #F7F7F7;">${requestScope.apprvo.emp_name}&nbsp;[${requestScope.apprvo.ko_rankname}]</td>
           	<td rowspan="2" style="background-color: #F7F7F7;">중간결재자이름</td>
 			<td rowspan="2" style="background-color: #F7F7F7;">최종결재자이름</td>
 		</tr>
+		
         <tr>
 			<th>소속</th>
-          	<td style="background-color: #F7F7F7;">${requestScope.apprvo.ko_rankname}</td>
+          	<td style="background-color: #F7F7F7;">${requestScope.apprvo.ko_depname}</td>
 		</tr>
 		
 		<tr>
@@ -111,7 +117,7 @@
 			<td style="background-color: #F7F7F7;">결재상태</td>
 		</tr>
 	</table>
-
+</form>
 	</div>
 
 	
@@ -152,14 +158,12 @@
 				<td>
 					<%-- 로그인을 한 경우 --%>
 					<c:if test="${sessionScope.loginuser != null}">
-						<a href="<%= request.getContextPath()%>/download.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}">${requestScope.apprvo.orgfilename}</a>
-						로그인시 파일제목 링크 걸어서 다운로드
+						<a href="<%= request.getContextPath()%>/edms/download.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}">${requestScope.apprvo.orgfilename}</a>
 					</c:if>
 					<%-- 로그인을 한 경우 --%>
 					
 					<%-- 로그인을 안 한 경우 --%>
 					<c:if test="${sessionScope.loginuser == null}">
-						로그인 안했으면 아예 못 오지만 어쨌든 파일제목은 보여지도록
 						${requestScope.apprvo.orgfilename}		<%-- 로그인을 안 했을 때는 진짜 파일명만 보여준다. --%>
 					</c:if>
 					<%-- 로그인을 안 한 경우 --%>
@@ -177,11 +181,11 @@
 		
 		<div style="margin-bottom: 1%;">
 				이전글제목&nbsp;&nbsp;
-				<span class="move" onclick="javascript:location.href='view_2.bts?pk_appr_no=${requestScope.apprvo.previousseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.apprvo.previoussubject}</span>
+				<span class="move" onclick="javascript:location.href='/bts/edms/view_2.bts?pk_appr_no=${requestScope.apprvo.previousseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.apprvo.previoussubject}</span>
 			</div>
 			<div style="margin-bottom: 1%;">
 				다음글제목&nbsp;&nbsp;
-				<span class="move" onclick="javascript:location.href='view_2.bts?pk_appr_no=${requestScope.apprvo.nextseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.apprvo.nextsubject}</span>
+				<span class="move" onclick="javascript:location.href='/bts/edms/view_2.bts?pk_appr_no=${requestScope.apprvo.nextseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.apprvo.nextsubject}</span>
 			</div>
 			
 			<br />
