@@ -185,7 +185,7 @@
 									</th>
 								<th style="width: 10%;" class="text-center">받는이</th>
 								<th style="width: 70%;">제목</th>
-								<th style="width: 20%;" class="text-left">날짜</th>
+								<th style="width: 20%;" class="text-left">예약발송일자</th>
 							</tr>
 						</thead>
 						
@@ -210,7 +210,7 @@
 								--%>
 								<span class="subject" onclick="goReservationMailView('${ReservationMailList.pk_mail_num}')">${ReservationMailList.subject}</span>
 								</td>
-								<td class="text-left">${ReservationMailList.reg_date}</td>
+								<td class="text-left">${ReservationMailList.reservation_date}</td>
 							</tr>	
 						</c:forEach>																				
 						</tbody>

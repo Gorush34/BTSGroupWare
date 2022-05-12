@@ -57,14 +57,14 @@ public interface InterMailService {
 	// 총 게시물 건수 구해오기 - 예약메일함 (service 단으로 보내기)
 	int getTotalCount_reservation(Map<String, String> paraMap);
 	
-	// 페이징처리 한 예약메일함 목록 (검색 있든, 없든 모두 다 포함 // reservation_status = 1 인 글만 보여주기)
-	List<MailVO> getReservationListWithPaging(Map<String, String> paraMap);	
-	
-	// 첨부파일이 없을 때 or 있을 때 & 발송예약 실행 후 예약테이블에서 reservation_status 를 1로 바꿔주기
-//	int updateReservationStatus(MailVO mailvo);
+	// 페이징처리 한 예약메일함 목록 1 (검색 있든, 없든 모두 다 포함 // reservation_status = 1 인 글만 보여주기)
+	List<MailVO> getReservationListWithPaging(Map<String, String> paraMap);
+
+	// 예약 메일 1개 상세내용을 읽어오기
+	MailVO getReservationMailView(Map<String, String> paraMap);	
 
 	// 스프링 스케줄러를 이용해서 발송예약 실행하기
-//	void reservationMailSendSchedular() throws Exception ;
+	void reservationMailSendSchedular() throws Exception ;
 
 
 

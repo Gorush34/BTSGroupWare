@@ -61,7 +61,22 @@ public interface InterMailDAO {
 	// 페이징처리 한 예약메일함 목록 (검색 있든, 없든 모두 다 포함 // reservation_status = 1 인 글만 보여주기, 파라미터 없음)
 	// 파라미터 없음 (스프링스케줄러)
 	// (insert 된 예약메일함 글목록을 DB 에서 조회해온다. RESERVATION_STATUS 가 1인 것들만 조회) 
+	// 예약 메일(email)을 발송할 회원이 누구인지 알아와야 한다. // (DB 에서 조회해온다. reservation_status 가 1인 것들만 조회) - paraMap 파라미터 없음 
+	// 사용자가 발송예약 버튼을 누른 후 - 현재 예약메일함에 들어가 있는 것들(reservation_status = 1 && reservation_date 존재)
 	List<MailVO> getReservationListWithPaging();
+
+	// 예약 메일 1개 상세내용을 읽어오기
+	MailVO getReservationMailView(Map<String, String> paraMap);
+
+	// 첨부파일이 존재하는 경우 (filename 이 null 이 아님 ==> 존재한다는 것)
+	// mail 테이블에서 reservation_status 를 1에서 다시 0으로 바꿔준다? --> 그럼 보낸메일함에서 보여질 테니까?
+	// Insert 가 아닌 update 를 해주자.
+	int add_withFile_updateResStatus(MailVO mailvo);
+
+	// 첨부파일이 존재하지 않는 경우 (filename == null)
+	// mail 테이블에서 reservation_status 를 1에서 다시 0으로 바꿔준다? --> 그럼 보낸메일함에서 보여질 테니까?
+	// Insert 가 아닌 update 를 해주자.
+	int add_updateResStatus(MailVO mailvo);
 
 	// ==== 예약메일함 끝 ==== //
 

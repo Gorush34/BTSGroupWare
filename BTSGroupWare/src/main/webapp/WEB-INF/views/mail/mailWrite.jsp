@@ -103,6 +103,13 @@
 		      		 alert("제목을 입력해주세요.");
 		      		 return false;
 		      	 }
+
+		      	 // 메일제목 글자수 검사
+		      	 var subject_length = $("input#subject").val().length;
+		      	 if(subject_length > 150) {
+		      		 alert("제목은 150자 이상 입력이 불가합니다.");
+		      		 return false;
+		      	 }
 		      	 
 		      	 // 메일내용 유효성 검사 (스마트 에디터)
 		 		<%-- === 스마트에디터 구현 시작 === --%>
@@ -302,15 +309,68 @@
 	// function declaration
 	<%-- 발송예약 모달에서 시간 선택 후 '확인'버튼( onClick() ) 클릭 시 실행하는 함수 --%>
 	function sendReservationOk() {
+	
+	/*	
+		// 사용자가 선택한 날짜값이 오늘 이전의 날짜에 선택되게 해서는 안됨. (유효성검사)
+		var SelectResDate = $("input#resSendDate").val();	// 사용자가 선택하는 날짜
+		var today = new Date();
 		
+		if(SelectResDate < today) {	
+			alert("예약시간은 현재시간보다 늦은 시간이어야 합니다.");	
+			return false;
+		}
+	*/
+	
+		// === 메일쓰기 모달 JS 시작 === //
+
+		var today = new Date();				
+		var year = today.getFullYear();		// 년
+		var month = (today.getMonth() + 1);	// 월
+		var date = today.getDate();	// 일
+		
+		if(month < 10)
+			month = "0" + month;
+		
+		if(date < 10)
+			date = "0" + date;
+		
+		var dateToday = year + '-' + month + '-' + date;
+		// 2022-05-12
+		resSendDate = $('#resSendDate').val();
+		
+		// 사용자가 선택한 날짜값이 오늘 이전의 날짜에 선택되게 해서는 안됨.
+		if(resSendDate < dateToday) {
+			alert("예약시간은 현재시간보다 늦은 시간이어야 합니다.")
+			return false;
+		}
+		
+		// 현재 hour 구하기
+		var date = new Date();
+		var hour = date.getHours();
+				
+		$("#resSendTimeHour").val();
+		
+		// 현재 minute 구하기
+		var minute = date.getMinutes();
+		$("#resSendTimeMinute").val();
+		
+		$("#resSendTimeHour option").filter(function () {	// option 에서 text가 minute과 있으면 select
+			return $(this).text() == hour;
+		}).attr('selected', true);
+
+		$("#resSendTimeMinute option").eq(0).attr('selected', true);		
+
+		// === 메일쓰기 모달 JS 끝 === //
+	
+	
 		// 메일 쓰기 창에서 사용자가 선택한 날짜값 받아오기
-		var SendDateVal = $("input#selectSendDate").val();
+		var SendDateVal = $("input#resSendDate").val();
 		
 		// 메일 쓰기 창에서 사용자가 선택한 시 값 받아오기
-		var SendTimeHourVal = $("#selectSendTimeHour option:selected").val();
+		var SendTimeHourVal = $("#resSendTimeHour option:selected").val();
 		
 		// 메일 쓰기 창에서 사용자가 선택한 분 값 받아오기
-		var SendTimeMinuteVal = $("#selectSendTimeMinute option:selected").val();
+		var SendTimeMinuteVal = $("#resSendTimeMinute option:selected").val();
 		
 		var sendReservationDate = SendDateVal+ " " + SendTimeHourVal + ":" + SendTimeMinuteVal;
 	//	console.log(sendReservationDate);
@@ -400,7 +460,7 @@
 		
 		<%-- 예약시간 설정하기 --%>
 		<input type="hidden" name="reservation_date" id="reservation_date" />
-		
+				
 		<%-- 메일 내용 끝 --%>
 	</form>
 	
@@ -436,13 +496,13 @@
 		      		<%-- 모달 form 태그 시작 --%>
 					<form>
 						<div class="form-group form-wrap form-sendDate">
-							<label for="selectSendDate" class="sendLabel">발송날짜 :</label>
-							<input type="date" id="selectSendDate" />
+							<label for="resSendDate" class="sendLabel">발송날짜 :</label>
+							<input type="date" id="resSendDate" />
 						</div>
 						
 						<div class="form-group form-wrap">
 							<label for="selectSendTime" class="sendLabel">발송시간 : </label>
-							<select class="form-control" id="selectSendTimeHour" style="display:inline-block; height: 35px; width: 70px;">
+							<select class="form-control" id="resSendTimeHour" style="display:inline-block; height: 35px; width: 70px;">
 							  	<c:forEach begin="0" end="9" varStatus="loop">
 							  		 <option>0${loop.index}</option>
 							  	</c:forEach>
@@ -454,7 +514,7 @@
 							  	</c:forEach>
 							</select>
 						  	<span>시</span>		
-							<select class="form-control" id="selectSendTimeMinute" style="display:inline-block; height: 35px; width: 70px;">
+							<select class="form-control" id="resSendTimeMinute" style="display:inline-block; height: 35px; width: 70px;">
 							  	<option>00</option>
 							  	<option>05</option>
 						  		<option>10</option>
@@ -481,7 +541,6 @@
         <button type="button" class="btn" style="border: solid 1px gray; background-color: #e6e6e6;" onclick="sendReservationOk()">확인</button>
         <button type="button" class="btn btn-light" data-dismiss="modal" style="border: solid 1px gray">취소</button>
       </div>
-    </div>
-    
+    </div>    
   </div>
 </div>

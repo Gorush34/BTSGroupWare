@@ -176,7 +176,7 @@
 		where pk_mail_num = #{pk_mail_num}
 	</update>
 
-	<!--  휴지통 총 메일개수 구해오기 -->
+	<!-- 휴지통 총 메일개수 구해오기 -->
 	<select id="getTotalCount_recyclebin" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_mail
@@ -196,7 +196,7 @@
 		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
 		       , filename
 		from tbl_mail
-		where (fk_receiveuser_num = #{fk_receiveuser_num} or fk_senduser_num = #{fk_receiveuser_num} ) and del_status = 1 and reservation_status = 0
+		where (fk_receiveuser_num = #{fk_receiveuser_num} or fk_senduser_num = #{fk_receiveuser_num} ) and del_status = 1
 		<if test="searchType != ''">
 		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
 		</if>	
@@ -229,7 +229,8 @@
 	</delete>
 
 
-	<!--  총 예약메일 개수 구해오기 -->
+	<!-- 예약메일함 부분 시작 -->	
+	<!-- 총 예약메일 개수 구해오기 -->
 	<select id="getTotalCount_reservation" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_mail
@@ -238,25 +239,70 @@
 		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
 		</if>		
 	</select>
-
 	
-	<!--  페이징처리 한 예약메일함목록 (검색 있든, 없든 모두 다 포함)  -->
+	<!--  페이징처리 한 예약메일함목록 1 (검색 있든, 없든 모두 다 포함)  -->
  	<select id="getReservationListWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
-		select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename
+		select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date
 		from 
 		(
 		select row_number() over(order by pk_mail_num desc) AS rno,
 		       pk_mail_num, fk_receiveuser_num, recempname, subject
 		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
-		       , filename
+		       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi') as reservation_date
 		from tbl_mail
 		where fk_senduser_num = #{fk_senduser_num} and del_status = 0 and reservation_status = 1
 		<if test="searchType != ''">
 		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
-		</if>	
+		</if>
+		order by reservation_date desc	
 		) V
 		where rno between #{startRno} and #{endRno}
+	</select>
+
+	
+	<!--  페이징처리 한 예약메일함목록 2 / 파라미터 X (검색 있든, 없든 모두 다 포함)  -->
+ 	<select id="reservationListWithPaging" resultType="com.spring.bts.minjeong.model.MailVO">
+		select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recempname, sendempname
+		     , recemail, sendemail, subject, content, importance, reg_date
+		     , filename, orgfilename, filesize, reservation_date, del_status
+		     , reservation_status, read_status
+		from 
+		(
+		select row_number() over(order by pk_mail_num desc) AS rno,
+		       pk_mail_num, fk_senduser_num, fk_receiveuser_num, recempname, sendempname
+		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date, recemail, sendemail, subject, content, importance
+		       , filename, orgfilename, filesize, to_char(reservation_date, 'yyyy-mm-dd hh24:mi') as reservation_date
+		       , del_status, reservation_status, read_status
+		from tbl_mail
+		where del_status = 0 and reservation_status = 1
+		order by reservation_date desc	
+		) V
 	</select> 
 		
+	<!-- 페이징처리 / 검색기능 포함 된 보낸메일함 목록에서 상세내용 조회하기 (이전글, 다음글 제외) -->
+	<select id="getReservationMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
+		select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail
+			 , recempname, sendempname, subject, content, reg_date, reservation_date
+			 , filename, orgfilename, filesize
+				from
+				(
+				    select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content
+				         , to_char(reg_date, 'yyyy-mm-dd hh24:mi:ss') as reg_date    
+				         , to_char(reservation_date, 'yyyy-mm-dd hh24:mi') as reservation_date     
+				         , fileName, orgFilename, fileSize
+				    from tbl_mail
+					<if test='searchType != "" and searchWord != "" '>
+					where lower(${searchType}) like '%'|| lower(#{searchWord}) || '%'
+					</if>	    
+				) V
+		where V.pk_mail_num = #{pk_mail_num}	
+	</select>	
+	
+	<update id="add_updateResStatus" parameterType="com.spring.bts.minjeong.model.MailVO">
+		update tbl_mail set reservation_status = 0
+		where pk_mail_num = #{pk_mail_num}
+	</update>	
+	<!-- 예약메일함 부분 끝 -->
+	
 	
 </mapper>

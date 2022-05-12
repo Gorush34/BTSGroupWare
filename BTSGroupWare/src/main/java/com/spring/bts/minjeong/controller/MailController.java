@@ -822,6 +822,7 @@ public class MailController {
 		paraMap.put("startRno", String.valueOf(startRno));
 		paraMap.put("endRno", String.valueOf(endRno));
 		
+		
 		 // 페이징처리 한 예약 메일목록 (검색 있든, 없든 모두 다 포함) 
 		ReservationMailList = service.getReservationListWithPaging(paraMap);
 		
@@ -907,7 +908,51 @@ public class MailController {
 	
 	// 예약메일함 내용 읽기 페이지 요청
 	@RequestMapping(value = "/mail/mailReservationDetail.bts")	
-	public ModelAndView mailReservationDetail(HttpServletRequest request, ModelAndView mav) {
+	public ModelAndView mailReservationDetail(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		
+			//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+			
+			// view 단에서 요청한 검색타입 및 검색어, 글번호 받아오기
+			String pk_mail_num = request.getParameter("pk_mail_num");	// 글번호
+			String searchType = request.getParameter("searchType");		// 검색타입
+			String searchWord = request.getParameter("searchWord");		// 검색어
+			
+			// 사용자가 검색타입 및 검색어를 입력하지 않았을 경우
+			if(searchType == null) {
+				searchType = "";
+			}
+			
+			if(searchWord == null) {
+				searchWord = "";
+			}
+			
+			// 사용자가 메일번호(pk_mail_num=?) 뒤에 정수외의 것을 입력하지 않도록 exception 처리를 한다.
+			try {
+				Integer.parseInt(pk_mail_num);			
+
+			
+				// 글 내용 한개 뿐만 아니라 검색도 해야하므로 Map 에 담는다.
+				Map<String, String> paraMap = new HashMap<>();
+				paraMap.put("pk_mail_num", pk_mail_num);
+				
+				// mapper 로 사용자가 입력한 검색타입과 검색어를 map 에 담아서 보낸다.
+				paraMap.put("searchType", searchType);
+				paraMap.put("searchWord", searchWord);
+				
+				// map 에 담은 검색타입과 검색어를 view 단으로 보낸다.
+				mav.addObject("paraMap", paraMap);
+				
+				// 예약메일 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
+				MailVO mailvo = null;
+				mailvo = service.getReservationMailView(paraMap);
+				mav.addObject("mailvo", mailvo);
+				
+				// 이전글 및 다음글 보여주기
+				
+				
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
 		
 		mav.setViewName("mailReservationDetail.mail");
 		return mav;
@@ -1067,23 +1112,20 @@ public class MailController {
 		}
 		
 		if(n==1) {
-			// 메일테이블에 발송예약글 insert 가 성공적으로 됐을 때 현재시간을 읽어서 mail 을 예정시간에 발송해주도록 하기 / 실패했을 때
-	//		service.reservationMailSendSchedular();	// 스프링 스케줄러를 이용해서 발송예약 실행하기
+			// 메일테이블에 발송예약글 reservation status 가 1에서 0으로 update 됐을 때 현재시간을 읽어서 mail 을 예정시간에 발송해주도록 하기 / 실패했을 때
+			service.reservationMailSendSchedular();	// 스프링 스케줄러를 이용해서 발송예약 실행하고 다시 reservation_status 를 0으로 바꿔주기.
 			mav.setViewName("redirect:/mail/mailReservationList.bts");
-			// 메일 쓴 후 새로고침을 위해 redirect:를 해주도록 한다.
 		}
 		else {// 실패 시 메일쓰기로 이동 (back)		
-	//		mav.setViewName("mailWrite.mail");
+			mav.setViewName("mailWrite.mail");
 		}
-		return mav;
-		
+		return mav;		
 	}	
 
 			
 
 	
 	// =========================== 내게쓴메일함  =========================== //
-	
 	
 	// === 내게쓴메일함 목록 페이지 요청
 	@RequestMapping(value = "/mail/mailSendToMeList.bts")	
@@ -1166,19 +1208,21 @@ public class MailController {
 		return jsonObj.toString();
 	}		
 	
-	
-	// 보낸메일함에서 메일 선택 시 휴지통으로 이동하기 (aJax, @ResponseBody)
-	// 보낸메일함에서 삭제할 메일 선택 후 삭제버튼 클릭 시 휴지통목록으로 해당 메일 이동
-	@ResponseBody
-	@RequestMapping(value = "/mail/SendmailMoveToRecyclebin.bts", produces = "text/plain; charset=UTF-8")	
-	public String SendmailMoveToRecyclebin(HttpServletRequest request) {
-	
-		
-		
-		return "";
-	}		
-	
-	
+	/*
+	 * // 보낸메일함에서 메일 선택 시 휴지통으로 이동하기 (aJax, @ResponseBody) // 보낸메일함에서 삭제할 메일 선택 후
+	 * 삭제버튼 클릭 시 휴지통목록으로 해당 메일 이동
+	 * 
+	 * @ResponseBody
+	 * 
+	 * @RequestMapping(value = "/mail/SendmailMoveToRecyclebin.bts", produces = "text/plain; charset=UTF-8") 
+	 * public String SendmailMoveToRecyclebin(HttpServletRequest request) {
+	 * 
+	 * 
+	 * 
+	 * return ""; 
+	   }
+	 * 
+	 */
 	
 	// 휴지통 목록 보여주기 (del_status 가 1인 글들만 보여주기, 받은메일 및 보낸메일 모두 상관 X)
 	@RequestMapping(value = "/mail/mailRecyclebinList.bts")	
@@ -1331,10 +1375,7 @@ public class MailController {
 		// === 페이징 처리를 한 검색어가 있는 전체 글목록 보여주기 끝 === //	
 		///////////////////////////////////////////////////////////////////////////////////////////
 
-		
-		// 	받은 메일함 글목록 보여주기 
-		// 	receiveMailList = service.getReceiveMailList();
-				
+					
 		mav.addObject("RecyclebinMailList", RecyclebinMailList);		
 		mav.addObject("fk_receiveuser_num", fk_receiveuser_num);		
 		
