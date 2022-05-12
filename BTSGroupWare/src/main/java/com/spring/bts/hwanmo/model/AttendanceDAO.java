@@ -171,6 +171,13 @@ public class AttendanceDAO implements InterAttendanceDAO {
 		int isManager = sqlsession.selectOne("hwanmo.checkManager", fk_emp_no);
 		return isManager;
 	}
+
+	// 결재상황 업데이트하기
+	@Override
+	public int goSign(Map<String, String> paraMap) {
+		int n = sqlsession.update("hwanmo.goSign", paraMap);
+		return n;
+	}
 	
 	
 }

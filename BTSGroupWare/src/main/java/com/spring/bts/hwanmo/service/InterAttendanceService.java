@@ -69,4 +69,7 @@ public interface InterAttendanceService {
 	// 관리자인지 확인하기
 	int checkManager(String fk_emp_no);
 
+	// 결재상황 업데이트하기
+	int goSign(Map<String, String> paraMap);
+
 }

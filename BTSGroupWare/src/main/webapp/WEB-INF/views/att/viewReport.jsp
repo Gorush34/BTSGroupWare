@@ -16,11 +16,68 @@
 	
 	$(document).ready(function() {
 		
+		// 로그인유저가 관리자인지 확인용 변수
+		var isManager = $("input#isManager").val();
+		// 해당 보고서가 결재완료 / 반려처리가 되었는지 확인용 변수
+		var isDecided = $("input#isDecided").val();
+		// 혹시 모를 연락처
+		var uq_phone = $("input#uq_phone").val();
+		// 반려버튼을 클릭했는지 확인용 변수
+		var isRejected = 0;
 		
+		// 대체휴가일 경우 휴가일수 넣어줌.
+		var instead_vac_days = 0;
+		
+		// 기능 테스트 다하고 열어라
+		/*
+		$("button#btnSignOff").hide();
+		$("button#btnReject").hide();
+		
+		
+		if( isManager == 1 && isDecided == 0
+			&& $("input#manager").val() == $("input#fk_emp_no").val()	) {
+			$("button#btnSignOff").show();
+			$("button#btnReject").show();
+		}
+		*/
+		
+		// 결재 버튼 클릭시
+		$("button#btnSignOff").click(function(){
+			goSign();
+		}) // end of $("button#btnSignOff").click(function(){})------------
+		
+		// 결재 버튼 클릭시
+		$("button#btnReject").click(function(){
+			
+			if( $("input#fin_app_opinion").val().trim() == "" ) {
+				alert("반려사유는 필수 입력사항입니다.");
+				return;
+			}
+			else{
+				isRejected = 1; // 반려사용시 값 지정
+				$("input#isRejected").val(isRejected);
+				goSign();
+			}
+		}) // end of $("button#btnSignOff").click(function(){})------------
 		
 	}); // end of $(document).ready(function() {})-----------------------------
 	
 	// Function Declaration
+	
+	// 결재완료 혹은 반려
+	function goSign() {
+		/*
+		if( $("input#att_sort_korname").val().indexOf("대체") != -1 ) {
+			instead_vac_days = $("input#vacation_days").val();
+		}
+		*/
+		
+		instead_vac_days = $("input#instead_vac_days").val();
+		const frm = document.goSignFrm;
+		frm.action = "<%= ctxPath%>/att/goSign.bts";
+		frm.method = "POST";
+		frm.submit();
+	}
 	
 </script>
 		
@@ -28,7 +85,7 @@
     <%-- 공가/경조신청서 상세 시작 --%>
     <div class="row" style="padding-left:15px;">
         <div class="col-xs-12" style="width:90%;">
-        <form name="reportVacationFrm" enctype="multipart/form-data">
+        <form name="goSignFrm" enctype="multipart/form-data">
         <c:set var="vac" value="${requestScope.vacReportList.get(0)}" />
         	<div id="title" style="margin-bottom: 20px;">
         		<span style="font-size: 24px; margin-bottom: 20px; margin-right:20px; font-weight: bold;">공가 /연가 신청서</span>
@@ -56,7 +113,9 @@
 				    </tr>
 				    <tr style="text-align: center; " id="bold_hr">
 				      <th class="th_title" style="text-align: center;">증빙서류</th>
-				      <td style="width:35%; text-align: left;">${vac.leave_start}</td>
+				      <td style="width:35%; text-align: left;">
+							<span><a href="<%= ctxPath%>/att/download.bts?pk_att_num=${vac.pk_att_num}">${vac.orgfilename}</a></span>
+					  </td>
 				      <th class="th_title" style="text-align: center;">결재상태</th>
 				      <td style="width:25%; text-align: left;">
 					    <c:if test="${vac.approval_status eq 0}">
@@ -106,15 +165,23 @@
 		</table>
 			
 		<div id="vac_button" style="text-align: center;">
-			<button type="button" class="btn btn-primary btn-sm mr-3" id="btnReportVacation" onclick="signOff();" style="margin-right: 20px; width:80px; height:30px;">승인</button>
-			<button type="button" class="btn btn-danger btn-sm mr-3" id="btnReportVacation" onclick="reject();" style="margin-right: 20px; width:80px; height:30px;">반려</button>
+			<button type="button" class="btn btn-primary btn-sm mr-3" id="btnSignOff" style="margin-right: 20px; width:80px; height:30px;">승인</button>
+			<button type="button" class="btn btn-danger btn-sm mr-3" id="btnReject" style="margin-right: 20px; width:80px; height:30px;">반려</button>
 			<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnReportVacation" onclick="goList();" style="margin-right: 20px; width:80px; height:30px;">목록</button>
 			<!-- <button type="button" class="btn btn-secondary btn-sm mr-3" id="btn_vac_certification" style="margin-right: 20px; width:80px; height:30px;">목록보기</button>  -->
 				      	
 		</div>	
+		<input type="hidden" id="minus_cnt" name="minus_cnt"  value="${vac.minus_cnt}"/>
+		<input type="hidden" id="instead_vac_days" name="instead_vac_days" />
+		<input type="hidden" id="vacation_days" name="vacation_days" value="${vac.vacation_days}" />
+		<input type="hidden" id="report_emp_no" name="report_emp_no" value="${vac.fk_emp_no}" />
+		<input type="hidden" id="manager" name="manager" value="${vac.manager}" />
+		<input type="hidden" id="fk_emp_no" name="fk_emp_no" value="${requestScope.fk_emp_no}" />
+		<input type="hidden" id="pk_att_num" name="pk_att_num" value="${vac.pk_att_num}" />
 		<input type="hidden" id="isManager" name="isManager" value="${requestScope.isManager}" />
 		<input type="hidden" id="isDecided" name="isDecided" value="${requestScope.isDecided}" />
 		<input type="hidden" id="uq_phone" name="uq_phone" value="${requestScope.uq_phone}" />
+		<input type="hidden" id="isRejected" name="isRejected" />
         </form>
         </div>
     </div>

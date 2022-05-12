@@ -208,9 +208,10 @@
 						      , default, default, default)
 	</insert>
 	
+	<!-- 연차테이블 변경 -->
 	<update id="updateLeave" parameterType="HashMap">
-	update tbl_leave set use_vac_days = #{minus_cnt}, rest_vac_days = total_vac_days - #{minus_cnt}, instead_vac_days = #{instead_vac_days}
-	where fk_emp_no = #{fk_emp_no}
+	update tbl_leave set use_vac_days = use_vac_days + #{minus_cnt}, rest_vac_days = rest_vac_days - #{minus_cnt}, instead_vac_days = instead_vac_days + #{instead_vac_days}
+	where fk_emp_no = #{report_emp_no}
 	</update>
 	
 	<!-- 로그인 유저의 연차테이블 불러오기 -->
@@ -286,6 +287,7 @@
 		<result property="managername" 				column="managername" 		javaType="String" />
 		<result property="manager" 					column="manager" 			javaType="int" />
 		<result property="manager_rankname" 		column="manager_rankname" 	javaType="String" />
+		<result property="minus_cnt" 				column="minus_cnt" 			javaType="float" />
 	</resultMap>
 	
 	<select id="getVacReportList" resultType="int" resultMap="getVacReportList_map">
@@ -298,7 +300,7 @@
 		     , A.filename AS filename, A.orgfilename AS orgfilename, A.approval_status AS approval_status
 		     , A.att_content AS att_content
 		     , (select emp_name from tbl_employees where pk_emp_no = D.manager) AS managername
-		     , D.manager AS manager
+		     , D.manager AS manager, S.minus_cnt AS minus_cnt
 		     , (select ko_rankname from tbl_rank_sort R join tbl_employees E ON R.pk_rank_no = E.fk_rank_id where E.pk_emp_no = D.manager) AS manager_rankname
 		from tbl_attendance A JOIN tbl_leave L
 		ON A.fk_emp_no = L.fk_emp_no
@@ -316,5 +318,18 @@
 		from tbl_dep_sort
 		where manager = #{fk_emp_no}
 	</select>
+	
+	
+	<update id="goSign" parameterType="HashMap"  >
+		update tbl_attendance set att_content = #{att_content}
+		<if test=" isRejected == 0 ">
+		, approval_status = 2
+		</if>
+		<if test=" isRejected == 1 ">
+		, approval_status = 1
+		</if>
+		where pk_att_num = #{pk_att_num}
+	</update>
+	
 	
 </mapper>

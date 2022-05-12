@@ -169,5 +169,12 @@ public class AttendanceService implements InterAttendanceService {
 		return isManager;
 	}
 
+	// 결재상황 업데이트하기
+	@Override
+	public int goSign(Map<String, String> paraMap) {
+		int n = attDAO.goSign(paraMap);
+		return n;
+	}
+
 	
 }

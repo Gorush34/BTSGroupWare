@@ -682,10 +682,11 @@ public class AttendanceController {
 			isManager = 1;
 		}
 		
-		System.out.println(" isDecided : " + isDecided);
-		System.out.println(" isManager : " + isManager);
+		// System.out.println(" isDecided : " + isDecided);
+		// System.out.println(" isManager : " + isManager);
 		
 		// System.out.println(vacReportList.toString());
+		mav.addObject("fk_emp_no", fk_emp_no);
 		mav.addObject("isManager", isManager);
 		mav.addObject("isDecided", isDecided);
 		mav.addObject("uq_phone", uq_phone);
@@ -693,7 +694,60 @@ public class AttendanceController {
 		mav.setViewName("viewReport.att");
 		
 		return mav;
-	}
+	} // end of public ModelAndView view(HttpServletRequest request, HttpServletResponse response, ModelAndView mav)---------------------
 	
+	@RequestMapping(value="/att/goSign.bts", method = {RequestMethod.POST})
+	public ModelAndView goSign(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 	
+		String isRejected = request.getParameter("isRejected");
+		String att_content = request.getParameter("att_content");
+		String pk_att_num = request.getParameter("pk_att_num");
+		
+		if( "".equals(att_content.trim()) ) {
+			att_content = "내용없음";
+		}
+
+		System.out.println(" isRejected : " + isRejected);
+		System.out.println(" att_content : " + att_content);
+		System.out.println(" pk_att_num : " + pk_att_num);
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("isRejected", isRejected);
+		paraMap.put("att_content", att_content);
+		paraMap.put("pk_att_num", pk_att_num);
+		
+		// 결재상황 업데이트하기
+		int n = attService.goSign(paraMap);
+		
+		if( n == 1 ) {
+			System.out.println("결재상황 업데이트 성공");
+			// 연차테이블 최신화 위해 사원번호와 연차차감개수 가져옴
+			String report_emp_no = request.getParameter("report_emp_no"); // 상신자 사원번호
+			String minus_cnt = request.getParameter("minus_cnt");
+			String instead_vac_days = request.getParameter("instead_vac_days");
+			
+			System.out.println(" report_emp_no : " + report_emp_no);
+			System.out.println(" minus_cnt : " + minus_cnt);
+			System.out.println(" instead_vac_days : " + instead_vac_days);
+			
+			Map<String, String> attMap = new HashMap<>();
+			attMap.put("report_emp_no", report_emp_no);
+			attMap.put("minus_cnt", minus_cnt);
+			attMap.put("instead_vac_days", instead_vac_days);
+			// 사원의 연차테이블 최신화
+			int up = attService.updateLeave(attMap);
+			
+			if(up == 1) {
+				System.out.println("연차테이블 업데이트 성공");
+			}
+		
+		}
+		
+		
+		// mav.addObject("");
+		mav.setViewName("myAtt.att");
+		return mav;
+	} // end of public ModelAndView goSign(HttpServletRequest request, HttpServletResponse response, ModelAndView mav)------	
+		
+		
 }
