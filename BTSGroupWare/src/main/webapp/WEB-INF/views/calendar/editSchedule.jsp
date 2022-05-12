@@ -505,7 +505,7 @@
 			
 		<div style="text-align: center;">
 		<button type="button" class="btn btn-primary btn-sm" id="edit" >수정</button>
-		<button type="button" class="btn btn-outline-primary btn-sm" onclick="javascript:location.href='<%= ctxPath%>/${gobackURL_ds}'">취소</button>
+		<button type="button" class="btn btn-outline-primary btn-sm" onclick="location.href='javascript:history.back()'">취소</button>
 		</div>
 	 </div>	
 </div>

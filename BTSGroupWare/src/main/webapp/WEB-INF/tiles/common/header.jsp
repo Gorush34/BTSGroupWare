@@ -78,7 +78,7 @@
 	      </li>
 	      
 	      <li class="nav-item">
-	        <a class="nav-link" href="#" id="navbar" role="button" aria-expanded="false">
+	        <a class="nav-link" href="<%= ctxPath %>/reservation/reservationMain.bts" id="navbar" role="button" aria-expanded="false">
 	          	자원관리
 	        </a>
 	      </li>

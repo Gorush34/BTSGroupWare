@@ -15,6 +15,26 @@ body {font-family: font-family: 'Noto Sans KR', sans-serif; }
  
 #myheader a {text-decoration:none;}
 
+/* 헤더 스타일  시작 */
+
+li.login_dropdown  { 
+   list-style: none;
+   display: inline-block;
+}
+
+img#memberProfile {
+   max-width: 40px;
+   max-height: 40px;
+   border-radius: 100%;
+}
+
+ul#secondHeaderGroup, .secondHeaderList {
+      list-style-type: none;
+      display: inline-block;
+}
+
+/* 헤더 스타일  끝 */
+
 
 /* 자원 등록 */
 table#resourceRegisterContent > tbody > tr > th  {
@@ -30,3 +50,21 @@ table#resourceRegisterContent > tbody  div.panel-heading{
 table#resourceRegisterContent > tbody  table#reservationTable{
 	padding: 30px;
 }
+
+/* 예약 메인*/
+#container {
+    max-width: 1200px;
+    min-width: 800px;
+    height: 400px;
+    margin: 1em auto;
+}
+
+.scrolling-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+table#resourceListContentTable th, td{
+	 	
+	 	vertical-align: middle;
+	}

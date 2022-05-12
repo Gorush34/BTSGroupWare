@@ -275,7 +275,42 @@
 <!-- ======================================================================== -->
 
 
-	
+	<!-- 예약 페이지에 띄울 자원 리스트 가져오기 -->
+	<resultMap type="HashMap" id="resourceReservation_Map">
+		<result property="PK_RNO"     column="pk_rno"      javaType="String"/>
+		<result property="FK_CLASSNO" column="fk_classno"  javaType="String"/>
+		<result property="RNAME"      column="rname"       javaType="String"/>
+		<result property="RINFO"      column="rinfo"       javaType="String"/>
+		<result property="RQTY"       column="rqty"        javaType="String"/>
+		<result property="RUSE"       column="ruse"        javaType="String"/>	
+	</resultMap>
+	<select id="resourceReservation" resultMap="resourceReservation_Map">
+		select pk_rno, fk_classno, rname, rinfo, rqty, ruse
+		from tbl_resource
+	</select>
 
+	<!-- 해당 자원 예약내용 가져오기 -->
+	<resultMap type="HashMap" id="resourceSpecialReservation_Map">
+		<result property="PK_RSERNO"       column="pk_rserno"        javaType="String"/>
+		<result property="FK_CLASSNO"      column="fk_classno"       javaType="String"/>
+		<result property="FK_RNO"          column="fk_rno"           javaType="String"/>
+		<result property="FK_EMP_NO"       column="fk_emp_no"        javaType="String"/>
+		<result property="EMP_NAME"        column="emp_name"         javaType="String"/>
+		<result property="RNAME"           column="rname"            javaType="String"/>
+		<result property="RSERSTARTDATE"   column="rserstartdate"    javaType="String"/>
+		<result property="RSERENDDATE"     column="rserenddate"      javaType="String"/>
+		<result property="RSERUSECASE"     column="rserusecase"      javaType="String"/>
+	</resultMap>
+	<select id="resourceSpecialReservation" parameterType="HashMap" resultMap="resourceSpecialReservation_Map">	
+	select RV.pk_rserno, RV.fk_classno, RV.fk_rno, RV.fk_emp_no, 
+		   E.emp_name, R.rname, 
+		   RV.rserstartdate, RV.rserenddate, RV.rserusecase
+	from tbl_resource R
+	join tbl_reservation RV
+	ON R.pk_rno = RV.fk_rno 
+	join tbl_employees E
+	ON RV.fk_emp_no = E.pk_emp_no
+	where R.rname = #{rname}
+	</select>
 
 </mapper>
