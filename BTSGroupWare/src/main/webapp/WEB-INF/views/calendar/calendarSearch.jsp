@@ -78,7 +78,7 @@
 	// == 상세 검색 모달창 띄우기 == //
 	function goSearchDetailModal(){
 		$("#searchDetailModal").modal('show');
-	}// end of function goSearchDetailModal(){
+	}// end of function goSearchDetailModal(){---------------------------
 	
 			
 </script>
@@ -102,7 +102,7 @@
 		<div id="searchList">
 			<div id="searchWordList" style="border: solid 1px #00ace6; border-radius: 20px; background-color:#00ace6; color:white; margin: 30px 20px 0 20px; padding: 10px; width: 70%;">
 				&nbsp;&nbsp;검색어&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;
-				<c:if test="">
+				<c:if test="${not empty requestScope.paraMap.searchWord}">
 				${requestScope.paraMap.searchWord}
 				</c:if>
 				<c:if test="${not empty requestScope.paraMap.searchSubject}">

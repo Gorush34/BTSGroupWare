@@ -480,6 +480,8 @@
 		}
 	}// end of function delCalendar(pk_calno, calname)-------------------------------------
 	
+	// function declaration
+	
 </script>
 
 	<div>
