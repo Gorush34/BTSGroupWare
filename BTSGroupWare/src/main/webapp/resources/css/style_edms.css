@@ -58,7 +58,10 @@ div.edmsSideMenu{cursor: pointer;}
  * 전자결재 서식 시작
  *****************************************/
 	
-	
+	/* 결재선 지정 병윤 모달창 */
+	.modal {
+		z-index: 1050;
+	}
 	
 	/* 전체 제목 */
 	div.edmsHomeTitle {

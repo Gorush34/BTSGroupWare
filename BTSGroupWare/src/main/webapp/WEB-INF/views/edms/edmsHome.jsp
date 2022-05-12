@@ -18,54 +18,60 @@
 
 <%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
 	
+	<div class="edmsHome">
+	
 	<div class="edmsHomeTitle">
 		<span class="edms_maintitle">전자결재 홈</span>
 		<p style="margin-bottom: 10px;"></p>
 	</div>
 	
-	<!-- 나의 현황(최근문서) 시작 -->
-	<div id="edms_current">
-		<span class="edms_title"> 
-			<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
-			<input type="hidden" class="form-control-plaintext" type="text" name="name" value="${sessionScope.loginuser.emp_name}" readonly />${sessionScope.loginuser.emp_name}님의 현황</span>
-		<!-- </span>
-		<span class="edms_title"> -->
-		<!-- <button id="btnEdmsAdd" type="button" class="btn btn-light">문서작성</button> -->
+	<!-- 결재대기문서 시작 -->
+	<span class="edms_title"> 
+		<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
+		<input type="hidden" class="form-control-plaintext" type="text" name="name" value="${sessionScope.loginuser.emp_name}" readonly />${sessionScope.loginuser.emp_name}님의 현황
+	</span>
 		
-		<%-- 결재 대기 중인 문서가 있을 때 시작 --%>
-		
-		<div class="divClear"></div>
+	<div class="divClear"></div>
 				
-		<!-- 반응형 웹 시작 -->
-		<div class="row">
+	<%-- 결재대기 문서가 없는 경우 시작 --%>
+	<c:if test="${empty requestScope.edmsList}">
+		<div class="card"><span>결재 대기 문서가 없습니다.</span></div>
+	</c:if>
+	<%-- 결재대기 문서가 없는 경우 종료 --%>
 		
-			<!-- 나의현황 카드 시작 -->
-			<%-- 나중에 c:forEach 으로 여러 개 불러오기 --%>
- 			<c:forEach var="i" begin="1" end="6">
-				<div class="col-2">
-					<div class="card">
-						<div class="card-body">
-							<p style="display: none;"><c:out value="${i}" /></p>
-							<span style="border: none; background-color: #A6C76C; width: 32px; color: #fff;">대기중</span>&nbsp;<span><c:out value="${i}" />&nbsp;(나중에 hidden 처리하기)</span>
-							<h5 class="card-title">기안서 제목 </h5>
-							<h6 class="card-subtitle mb-2 text-muted">
-								기안자 : 김부장
-							</h6>
-							<hr>
-							<!-- <a href="/bts/edms/edmsMydoc.bts" class="stretched-link btn btn-sm text-primary" class="card-link">자세히 보기</a> -->
-							<span onclick="javascript:location.href='<%= request.getContextPath()%>/edms/wait/view.bts'" class="stretched-link btn btn-sm text-primary" class="card-link">자세히 보기</span>
-						</div>
-					</div>
+	<%-- 결재대기 문서가 있는 경우 시작 --%>
+	<c:if test="${not empty requestScope.edmsList}">
+		<%-- 반응형 웹(카드) 시작 --%>
+		<div class="row">
+			<%-- 반복문 시작 --%>
+			<c:forEach var="apprvo" items="${requestScope.edmsList}" >
+			<div class="col-2">
+				<div class="card-body">
+					<p style="display: none;"><c:out value="${i}" /></p>
+					<span style="border: none; background-color: #A6C76C; width: 32px; color: #fff;">${apprvo.status}</span>&nbsp;<span><c:out value="${i}" />&nbsp;(나중에 hidden 처리하기)</span>
+					<h5 class="card-title">${apprvo.title}</h5>
+					<h6 class="card-subtitle mb-2 text-muted">
+						기안자 : ${apprvo.pk_appr_no}
+					</h6>
+					<hr>
+					<!-- <a href="/bts/edms/edmsMydoc.bts" class="stretched-link btn btn-sm text-primary" class="card-link">자세히 보기</a> -->
+					<span onclick="javascript:location.href='<%= request.getContextPath()%>/edms/view.bts'" class="stretched-link btn btn-sm text-primary" class="card-link">자세히 보기</span>
 				</div>
+			</div>
 			</c:forEach>
-			<!-- 나의현황 카드 종료 -->
 		</div>
-		<!-- 반응형 웹 종료 -->
+		<%-- 반응형 웹(카드) 종료 --%>
+	</c:if>
+	<%-- 결재대기 문서가 있는 경우 종료 --%>
+		
+		<!-- 결재대기 문서 종료 -->
+	
+	<!-- 반응형 웹 종료 -->
 		
 		<div class="divClear"></div>
 		
 		<div class="more">
-			<span class="more" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsMydoc_wait.bts'">전체보기</span>
+			<span class="more" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/list.bts'">전체보기</span>
 		</div>
 		
 		<div class="divClear"></div>
@@ -225,5 +231,5 @@
 		
 	</div>
 	<!-- 결재반려 문서목록 종료 -->
-	
+	</div>
 	<div class="divClear"></div>

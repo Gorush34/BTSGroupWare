@@ -256,7 +256,6 @@
           		<%-- EmployeeVO에서 가져와야 하므로  userid가 아니라 get 뒤의 ~를 가져와야 함 --%>
 				<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
 				<input type="text" class="form-control-plaintext" name="name" value="${sessionScope.loginuser.emp_name}" readonly />
-				
 			</td>
 		</tr>
 		<tr>

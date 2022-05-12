@@ -118,35 +118,26 @@
 				<!-- 내문서함 종료 -->
 				
 				<!-- 부서 문서함 시작 -->
-				<div id="edmsSideBar3" class="edmsSideMenu">부서 문서함</div>
+				<div id="edmsSideBar3" class="edmsSideMenu">테스트용 링크</div>
 				
 				<div id="slideTogglebox3" class="slideTogglebox3">
 					<table style="margin: 0 20px;">
 						<tr>
-							<td><label for="mySche"><span style="margin-left: 5px;">결재하기?</span></label></td>
+							<td><label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/edmsHome.bts'">home</span></label></td>
 						</tr>
-						<!--
+						<tr>
+							<td><label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/list.bts'">list</span></label></td>
+						</tr>
 						<tr>
 							<td>
-								<label for="mySche"><span style="margin-left: 5px;">대기문서함</span></label>
+								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/view.bts'">view</span></label>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<label for="mySche"><span style="margin-left: 5px;">승인문서함</span></label>
+								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/edmsAdd.bts'">add</span></label>
 							</td>
 						</tr>
-						<tr>
-							<td>
-								<label for="mySche"><span style="margin-left: 5px;">반려문서함</span></label>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<label for="mySche"><span style="margin-left: 5px;">임시문서함</span></label>
-							</td>
-						</tr>
-						-->
 					</table>
 				</div>
 				<!-- 부서 문서함 종료 -->
