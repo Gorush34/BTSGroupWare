@@ -6,24 +6,17 @@
 <!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <!-- ==== 대부분은 namespace에 파일이름 사용(유일하니까) ==== -->
 <mapper namespace="byungyoon">
-	
-	<!-- 주소록 메인페이지에서 주소록검색 ajax 쓰기 -->
-	<select id="mby_test" parameterType="int" resultType="String">
-		select name from mby_test where no = #{no}
-	</select>
-	
-	<select id="mby_rank" parameterType="int" resultType="String">
-		select rank from mby_test where no = #{no}
-	</select>
-
 
 	<!-- 주소록 메인페이지에 select 해오기 -->
-	<select id="addBook_main_select"  resultType="com.spring.bts.byungyoon.model.AddBookVO">
-		select A.pk_addbook_no , A.addb_name , R.ko_rankname, A.phone AS phone, A.email AS email, A.companyname, A.com_tel
-		from tbl_ADDBOOK A 
-		join tbl_rank_sort R
-		on R.PK_RANK_NO = A.fk_rank_no
-	</select>
+	<select id="addBook_main_select" parameterType="HashMap" resultType="com.spring.bts.byungyoon.model.AddBookVO">
+      select *
+      from(
+      select ROW_NUMBER() OVER(ORDER BY A.addb_name) AS rno, A.pk_addbook_no , A.addb_name , R.ko_rankname, A.phone AS phone, A.email AS email, A.companyname, A.com_tel
+            from tbl_ADDBOOK A 
+            join tbl_rank_sort R
+            on R.PK_RANK_NO = A.fk_rank_no)
+      where rno between #{startRno} and #{endRno}
+   </select>
 	
 	
 	<!-- 주소록 연락처에 insert 하기 -->
@@ -56,9 +49,9 @@
 		where pk_emp_no = #{pk_emp_no}
 	</select>
 	
-	<!-- 주소록 메인에서 select 해와서 연락처 update 하기 -->
-	<select id="addBook_main_telUpdate" parameterType="int" resultType="com.spring.bts.byungyoon.model.AddBookVO">
-		select A.ADDB_NAME , (D.ko_depname) AS ko_depname , (R.ko_rankname) AS ko_rankname , A.EMAIL , A.PHONE , A.COMPANYNAME , A.COM_TEL , A.COMPANY_ADDRESS , A.MEMO
+	<!-- 주소록 메인에서 select 해와서 연락처 update 하기 (select) -->
+	<select id="addBook_main_telUpdate_select" parameterType="int" resultType="com.spring.bts.byungyoon.model.AddBookVO">
+		select A.pk_addbook_no , A.ADDB_NAME , (D.ko_depname) AS ko_depname , (R.ko_rankname) AS ko_rankname , A.EMAIL , A.PHONE , A.COMPANYNAME , A.COM_TEL , A.COMPANY_ADDRESS , A.MEMO
 		from tbl_addbook A
 		join tbl_rank_sort R
 		on A.fk_rank_no = R.pk_rank_no
@@ -66,7 +59,25 @@
 		on A.fk_dept_no = D.pk_dep_no
         WHERE pk_addbook_no = #{pk_addbook_no}
 	</select>
+	
+	<!-- 주소록 메인에서 select 해와서 연락처 update 하기 (update) -->
+	<update id="addBook_main_telUpdate_update" parameterType="com.spring.bts.byungyoon.model.AddBookVO" >
+		UPDATE tbl_addbook
+     	SET ADDB_NAME = #{addb_name} , FK_DEPT_NO = #{fk_dept_no} , FK_RANK_NO = #{fk_rank_no} , EMAIL = #{email} , PHONE = #{phone} , COMPANYNAME = #{companyname} , COM_TEL = #{com_tel} , COMPANY_ADDRESS = #{company_address} , MEMO = #{memo}   
+  		WHERE pk_addbook_no = #{pk_addbook_no}
+	</update>
 
+	<!-- 주소록 메인에서 총 연락처 개수 가져오기 -->
+	<select id="addBook_main_totalPage" resultType="int">
+		select count(*) 
+		from tbl_addbook
+	</select>
+	
+	<!-- // 주소록 삭제하기 -->
+	<delete id="addBook_delete" parameterType="int">
+		delete from tbl_addBook
+		where PK_ADDBOOK_NO = #{pk_addBook_no} 
+	</delete>
 	
 	
 

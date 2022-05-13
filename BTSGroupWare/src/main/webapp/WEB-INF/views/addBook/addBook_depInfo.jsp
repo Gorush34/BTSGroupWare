@@ -258,11 +258,11 @@
 			</tr>
 			<tr>
 				<td style="padding-bottom:25px;"><strong>이메일</strong></td>
-				<td><input type="text" class="form-control" id="email" name="email" placeholder="이메일"  readonly><br></td>
+				<td><input type="text" class="form-control" id="email" name="email" placeholder="이메일" readonly><br></td>
 			</tr>
 			<tr>
 				<td style="padding-bottom:25px;"><strong>휴대폰</strong></td>
-				<td><input type="text" class="form-control" id="phone" name="phone" placeholder="휴대폰"  readonly><br></td>
+				<td><input type="text" class="form-control" id="phone" name="phone" placeholder="휴대폰" readonly><br></td>
 			</tr>
 			<tr>
 				

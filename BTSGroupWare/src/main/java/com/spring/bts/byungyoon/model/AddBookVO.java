@@ -60,6 +60,7 @@ public class AddBookVO {
 		this.ko_rankname = ko_rankname;
 		this.ko_depname = ko_depname;
 		this.company_address = company_address;
+		
 	}
 
 	public EmployeeVO getEvo() {
@@ -221,6 +222,8 @@ public class AddBookVO {
 	public void setKo_depname(String ko_depname) {
 		this.ko_depname = ko_depname;
 	}
+
+
 	
 	
 		

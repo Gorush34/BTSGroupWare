@@ -1,6 +1,7 @@
 package com.spring.bts.byungyoon.model;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -16,20 +17,11 @@ public class AddBookDAO implements InterAddBookDAO {
 	@Autowired
 	private SqlSessionTemplate sqlsession;
 	
-	// 주소록 메인페이지에서 주소록검색 ajax 쓰기
-	@Override
-	public String getNameMember(int no) {
-		
-		String loginuser = sqlsession.selectOne("byungyoon.mby_test", no);
-		return loginuser;
-	}
-
-	
 	// 주소록 메인페이지에 select 해오기
 	@Override
-	public List<AddBookVO> addBook_main_select() {
+	public List<AddBookVO> addBook_main_select(Map<String, String> paraMap) {
 		
-		List<AddBookVO> adbList = sqlsession.selectList("byungyoon.addBook_main_select");
+		List<AddBookVO> adbList = sqlsession.selectList("byungyoon.addBook_main_select", paraMap);
 		
 		return adbList;
 	}
@@ -38,7 +30,6 @@ public class AddBookDAO implements InterAddBookDAO {
 	// 주소록 연락처에 insert 하기
 	@Override
 	public int addBook_telAdd_insert(AddBookVO avo) {
-		
 		
 		int n = sqlsession.insert("byungyoon.addBook_telAdd_insert", avo);
 		
@@ -64,14 +55,42 @@ public class AddBookDAO implements InterAddBookDAO {
 	}
 
 
-	// 주소록 메인에서 select 해와서 연락처 update 하기
+	// 주소록 메인에서 select 해와서 연락처 update 하기 (select)
 	@Override
-	public AddBookVO addBook_main_telUpdate(int pk_addbook_no) {
+	public AddBookVO addBook_main_telUpdate_select(int pk_addbook_no) {
 
-		AddBookVO avo = sqlsession.selectOne("byungyoon.addBook_main_telUpdate", pk_addbook_no);
+		AddBookVO avo = sqlsession.selectOne("byungyoon.addBook_main_telUpdate_select", pk_addbook_no);
 		
 		return avo;
 	}
+
+
+	// 주소록 메인에서 select 해와서 연락처 update 하기 (update)
+	@Override
+	public int addBook_main_telUpdate_update(AddBookVO avo) {
+
+		int n = sqlsession.update("byungyoon.addBook_main_telUpdate_update" , avo);
+		
+		return n;
+	}
+
+
+	// 주소록 메인에서 총 연락처 개수 가져오기
+	@Override
+	public int addBook_main_totalPage() {
+		int n = sqlsession.selectOne("byungyoon.addBook_main_totalPage");
+		return n;
+	}
+
+
+	// 주소록 삭제하기
+	@Override
+	public int addBook_delete(int pk_addbook_no) {
+		int n = sqlsession.delete("byungyoon.addBook_delete" , pk_addbook_no);
+		return n;
+	}
+
+
 
 	
 	
