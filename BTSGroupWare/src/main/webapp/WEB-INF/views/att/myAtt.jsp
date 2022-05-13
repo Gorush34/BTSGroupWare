@@ -18,6 +18,9 @@
 
 <script type="text/javascript">
 	
+	// 반려의견 담는 곳
+	let opinion = "";
+	
 	$(document).ready(function() {
 		
 		$("span.view").click(function(){
@@ -28,6 +31,14 @@
 			viewReport(pk_att_num);
 		})
 		
+		
+		$("button#showOpinion").click(function(){
+			opinion = $(this).parent().find("input#fin_app_opinion").val();
+			 $("input#opinion").val(opinion);
+			
+			$('#modal_app_opinion').modal('show'); // 모달창 보여주기	
+		})
+		
 	}); // end of $(document).ready(function() {})-----------------------------
 	
 	// Function Declaration
@@ -36,8 +47,16 @@
 		location.href="<%= ctxPath%>/att/viewReport.bts?pk_att_num="+pk_att_num; 
 		
 	} // end of function viewReport(pk_att_num)-----------------------
-	
-	
+	/*
+	// === 의견보기 버튼 클릭시 ===
+	function showOpinion(){
+		
+		opinion = $(this).parent().find("input#fin_app_opinion").val();
+		 $("input#opinion").val(opinion);
+		
+		$('#modal_app_opinion').modal('show'); // 모달창 보여주기	
+	}// end of function showOpinion(){}--------------------
+	*/
 </script>
 
 <div class="container_myAtt">
@@ -156,16 +175,19 @@
 				      </td>
 				      <td style="width:10%; text-align: center;">
 					      <c:if test="${myAtt.approval_status eq 0}">
-			      		    결재대기
+			      		  	  <span style="text-align: center;">결재대기</span>
 			      		  </c:if>
 			      		  <c:if test="${myAtt.approval_status eq 1}">
-			      		  <span style="color:red;">반려</span>
+				      		  <span style="text-align: center; color:red;">반려</span>
+				      		  <button type="button" class="btn btn-secondary btn-sm mr-3" id="showOpinion"  style="margin-left: 15px; margin-top: 10px; width:80px; height:30px;">의견보기</button>
 			      		  </c:if>
 			      		  <c:if test="${myAtt.approval_status eq 2}">
-			      		  <span style="color:blue;">결재완료</span>
+			      		  	<span style="text-align: center; color:blue;">결재완료</span>
+			      		  	<button type="button" class="btn btn-secondary btn-sm mr-3" id="showOpinion"  style="margin-left: 15px; margin-top: 10px; width:80px; height:30px;">의견보기</button>
 			      		  </c:if>
+			      		  <input type="hidden" id="fin_app_opinion" name="fin_app_opinion" value="${myAtt.fin_app_opinion}" />
 				      </td>
-				    </tr style="text-align: center;">
+				    </tr>
 				    </c:forEach>
 				    </c:if>
 				    
@@ -174,7 +196,6 @@
 				    	<td colspan="9" style="text-align: center; height: 100px; font-size: 20px;" >신청한 공가/경조내역이 없습니다.</td>
 				    </tr>
 				  	</c:if>
-				  
 				  </tbody>
 				  
 			</table>
@@ -188,5 +209,39 @@
         </div>
     </div>
     <%-- 공가/경조신청내역 끝 --%>
+    
+    <%-- === 의견보기 모달 === --%>
+	<div class="modal fade" id="modal_app_opinion" role="dialog" data-backdrop="static">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	    
+	      <!-- Modal header -->
+	      <div class="modal-header">
+	        <h4 class="modal-title">결재자 의견</h4>
+	        <button type="button" class="close modal_close" data-dismiss="modal">&times;</button>
+	      </div>
+	      
+	      <!-- Modal body -->
+	      <div class="modal-body">
+	       	<form name="modal_frm">
+	       	<table style="width: 100%;" class="table table-bordered">
+	     			<tr>
+	     				<td style="text-align: center;">의견</td>
+	     				<td style="text-align: left; padding-left: 5px;">
+	     					<input type="text" name="opinion" id="opinion" width="330px;" />
+	     				</td>
+	     			</tr>
+	     		</table>
+	       	</form>	
+	      </div>
+	      
+	      <!-- Modal footer -->
+	      <div class="modal-footer">
+	          <button type="button" class="btn btn-danger btn-sm modal_close" data-dismiss="modal">닫기</button>
+	      </div>
+	      
+	    </div>
+	  </div>
+	</div>
     
 </div>

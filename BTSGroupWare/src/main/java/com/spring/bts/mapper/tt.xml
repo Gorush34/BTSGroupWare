@@ -241,16 +241,17 @@
 		<result property="leave_start" 				column="leave_start" 		javaType="String" />
 		<result property="leave_end" 				column="leave_end" 			javaType="String" />
 		<result property="managername" 				column="managername" 		javaType="String" />
+		<result property="fin_app_opinion" 			column="fin_app_opinion" 	javaType="String" />
 		<result property="manager" 					column="manager" 			javaType="int" />
 		<result property="approval_status" 			column="approval_status" 	javaType="int" />
 	</resultMap>
 	
 	<select id="getMyAttListWithPaging" resultType="HashMap" resultMap="MyAttList_map">
 		select pk_att_num, ko_depname, fk_emp_no, emp_name, att_sort_korname, vacation_days, leave_start, leave_end
-		     , managername, manager, approval_status
+		     , managername, manager, approval_status, fin_app_opinion
 		from
 		(
-		select row_number() over(order by pk_att_num desc) AS rno
+		select row_number() over(order by pk_att_num desc) AS rno, A.fin_app_opinion AS fin_app_opinion
 		     , A.pk_att_num AS pk_att_num, D.ko_depname AS ko_depname, A.fk_emp_no AS fk_emp_no, E.emp_name AS emp_name
 		     , S.att_sort_korname AS att_sort_korname, A.vacation_days AS vacation_days, A.leave_start AS leave_start, A.leave_end AS leave_end
 		     , (select emp_name from tbl_employees where pk_emp_no = D.manager) AS managername

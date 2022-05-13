@@ -126,7 +126,7 @@ public class AttendanceController {
 		
 		// 페이징처리 한 받은 공가/경조신청목록 
 		List<Map<String, Object>> myAttList = attService.getMyAttListWithPaging(paraMap);
-		
+		// System.out.println("의견 : " + myAttList.get(0).get("fin_app_opinion"));
 		
 		// ================= 페이징처리 끝 ====================
 		

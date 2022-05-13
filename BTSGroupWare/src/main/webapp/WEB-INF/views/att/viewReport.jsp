@@ -104,6 +104,15 @@
 		frm.submit();
 	}
 	
+	function goWaitingSign() {
+		
+		const frm = document.goSignFrm;
+		frm.action = "<%= ctxPath%>/att/waitingSign.bts";
+		frm.method = "GET";
+		frm.submit();
+	}
+	
+	
 </script>
 		
 <div class="container_myAtt">
@@ -200,6 +209,9 @@
 			<button type="button" class="btn btn-primary btn-sm mr-3" id="btnSignOff" style="margin-right: 20px; width:80px; height:30px;">승인</button>
 			<button type="button" class="btn btn-danger btn-sm mr-3" id="btnReject" style="margin-right: 20px; width:80px; height:30px;">반려</button>
 			<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnReportVacation" onclick="goList();" style="margin-right: 20px; width:80px; height:30px;">목록</button>
+			<c:if test="${requestScope.isManager eq 1}">
+			<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnReportVacation" onclick="goWaitingSign();" style="margin-right: 20px; width:120px; height:30px;">결재대기목록</button>
+			</c:if>
 			<!-- <button type="button" class="btn btn-secondary btn-sm mr-3" id="btn_vac_certification" style="margin-right: 20px; width:80px; height:30px;">목록보기</button>  -->
 				      	
 		</div>	
