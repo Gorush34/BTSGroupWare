@@ -28,5 +28,11 @@ public class ResourceService implements InterResourceService {
 		List<Map<String, String>> reservationEmployeeList = dao.resourceSpecialReservation(paraMap);
 		return reservationEmployeeList;
 	}
+
+	@Override
+	public List<Map<String, String>> classSelect() {
+		List<Map<String, String>> classList = dao.classSelect();
+		return classList;
+	}
 	
 }

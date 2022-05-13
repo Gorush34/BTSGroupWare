@@ -23,6 +23,9 @@
 
 	$(document).ready(function(){
 		
+		
+	
+		
 		// 모든 datepicker에 대한 공통 옵션 설정
 	    $.datepicker.setDefaults({
 	         dateFormat: 'yy-mm-dd'  // Input Display Format 변경
@@ -54,7 +57,7 @@
 	        right: 'timeGridWeek,timeGridDay'
 	      },
 	      events: function(info, successCallback, failureCallback){
-	    	  <%--   $.ajax({
+	    	     $.ajax({
 	                 url: '<%= ctxPath%>/resource/reservationView.bts',
 	                 data:{"pk_rno":$('pk_rno').val()},
 	                 dataType: "json",
@@ -89,6 +92,8 @@
 		                                   }// end of for-------------------------------------
 		                                 
 	                                 }// end of if-------------------------------------------
+	                             });
+	                     }
 	                                                             
 	                 },
 					  error: function(request, status, error){
@@ -96,9 +101,25 @@
 				      }	
 	                                           
 	            }); // end of $.ajax()--------------------------------
-	        --%> 
+	         
 	                	 
 	      },
+	      selectable: true,
+	        selectHelper: true,
+	        select: function(start, end) {
+	            // Display the modal.
+	            // You could fill in the start and end fields based on the parameters
+	            $('.modal').modal('show');
+
+	        },
+	        eventClick: function(event, element) {
+	            // Display the modal and set the values to the event values.
+	            $('.modal').modal('show');
+	            $('.modal').find('#title').val(event.title);
+	            $('.modal').find('#starts-at').val(event.start);
+	            $('.modal').find('#ends-at').val(event.end);
+
+	        }<%--,
 	      dateClick: function(info) {
 		      	//  alert('클릭한 Date: ' + info.dateStr); 
 		      	    $(".fc-day").css('background','none'); // 현재 날짜 배경색 없애기
@@ -108,16 +129,19 @@
 		      	    
 		      	   // var frm = document.dateFrm;
 		      	   // frm.method="POST";
-		      	   <%-- frm.action="<%= ctxPath%>/calendar/scheduleRegister.bts"; --%>
+		      	    frm.action="<%= ctxPath%>/calendar/scheduleRegister.bts"; 
 		      	   // frm.submit();
-		      	  }
+		      	  }--%>
 	    });
 
 	    calendar.render();
+	    
 	  });// end of $(document).ready(function(){}------------------------------------
 
 			
-	
+	function goResourceReservation(pk_rno){
+		location.href="<%= ctxPath%>/reservation/reservationMain.bts?pk_rno="+pk_rno;
+	  }
 		
 	
 
@@ -130,8 +154,37 @@
 	
 </script>
 
-<div id="calendarMain">
-	<h4 style="margin: 0 80px">자원 관리</h4>
+<div id="resourceSide" style=" min-height:1200px; position: fixed; top:60px; padding-top: 40px; float:left; width:250px;">
+	<h4>자원관리</h4>
+	<ul style="list-style-type: none; padding: 10px;">
+	 <c:if test="${not empty requestScope.classList}">
+	 <c:forEach var="map" items="${requestScope.classList}" varStatus="status">
+		<li style="margin-bottom: 15px;">
+			<div id="resourceClass" class="resourceClass" style="font-weight: bold; color:#00ace6;"><input type="hidden" value="${map.PK_CLASSNO}">${map.CLASSNAME}</div>
+				<div id="slideTogglebox1"  class="slideTogglebox" style="margin: 5px 0 5px 10px;">
+					<table>
+						<c:if test="${not empty requestScope.resourceList}">
+							<c:forEach var="map2" items="${requestScope.resourceList}">
+							<c:if test="${map.PK_CLASSNO eq map2.PK_CLASSNO}">
+							<tr>
+								<td style="padding: 3px; cursor: pointer;" onclick="goResourceReservation('${map2.PK_RNO}')"><input type="hidden" id="resource" name="pk_rno" value="${map2.PK_RNO}">${map2.RNAME}</td>
+							</tr>
+							</c:if>
+							</c:forEach>
+							
+						</c:if>
+					</table>
+				</div>
+		</li>
+		</c:forEach>
+		</c:if>
+	</ul>
+	
+
+</div>
+
+<div id="reservateMain" style="margin-left:250px;">
+	<h4 style="margin: 0 80px">예약하기</h4>
 	
 	<%-- 캘린더를 보여주는 곳 --%>
 	<input type="hidden" value="${sessionScope.loginuser.pk_emp_no}" id="fk_emp_no"/>

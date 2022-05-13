@@ -11,4 +11,6 @@ public interface InterResourceService {
 	// === 해당 자원 예약내용 가져오기 === //
 	List<Map<String, String>> resourceSpecialReservation(Map<String, String> paraMap);
 
+	List<Map<String, String>> classSelect();
+
 }

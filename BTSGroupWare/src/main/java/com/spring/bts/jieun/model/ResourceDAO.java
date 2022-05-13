@@ -30,4 +30,10 @@ public class ResourceDAO implements InterResourceDAO {
 		return reservationEmployeeList;
 	}
 
+	@Override
+	public List<Map<String, String>> classSelect() {
+		List<Map<String, String>> classList = sqlsession.selectList("jieun.classSelect");
+		return classList;
+	}
+
 }
