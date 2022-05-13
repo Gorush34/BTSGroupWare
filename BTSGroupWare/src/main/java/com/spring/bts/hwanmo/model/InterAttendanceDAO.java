@@ -68,4 +68,10 @@ public interface InterAttendanceDAO {
 	// 결재상황 업데이트하기
 	int goSign(Map<String, String> paraMap);
 
+	// 총 올린 결재대기중인 연차신청 수 가져오기
+	int getTotalVacReportNoSignCount(String fk_emp_no);
+
+	// 페이징처리 한 결재대기중인 공가/경조신청목록 
+	List<Map<String, Object>> getMyAttListNoSignWithPaging(Map<String, String> paraMap);
+
 }

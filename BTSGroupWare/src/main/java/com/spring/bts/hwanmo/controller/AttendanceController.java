@@ -1,9 +1,12 @@
 package com.spring.bts.hwanmo.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -64,7 +67,7 @@ public class AttendanceController {
 	
 	// === 연차내역 페이지 ===
 	@RequestMapping(value="/att/myAtt.bts")
-	public ModelAndView showSchedule(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
+	public ModelAndView myAtt(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
 		
 		HttpSession session = request.getSession();
 		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
@@ -178,7 +181,7 @@ public class AttendanceController {
 		mav.setViewName("myAtt.att");
 
 		return mav;
-	}
+	} // end of public ModelAndView myAtt(HttpServletRequest request, HttpServletResponse response, ModelAndView mav)------
 	
 	// 연차신청 페이지
 	@RequestMapping(value="/att/reportVacation.bts")
@@ -677,13 +680,17 @@ public class AttendanceController {
 			isDecided = 1;
 		}
 		
+		// System.out.println("로그인한 사원번호 : " + fk_emp_no);
+		// System.out.println("신청저 최종결재자 사원번호 : " + vacReportList.get(0).get("fk_fin_app_no"));
+		// System.out.println("부서장이냐 : " + checkManager);
+		
 		int isManager = 0;
-		if( fk_emp_no.equals(vacReportList.get(0).get("manager")) && checkManager == 1 ) {
+		if( fk_emp_no.equals( String.valueOf(vacReportList.get(0).get("fk_fin_app_no")) ) && checkManager == 1 ) {
 			isManager = 1;
 		}
 		
-		// System.out.println(" isDecided : " + isDecided);
-		// System.out.println(" isManager : " + isManager);
+		 // System.out.println(" isDecided : " + isDecided);
+		 // System.out.println(" isManager : " + isManager);
 		
 		// System.out.println(vacReportList.toString());
 		mav.addObject("fk_emp_no", fk_emp_no);
@@ -696,58 +703,316 @@ public class AttendanceController {
 		return mav;
 	} // end of public ModelAndView view(HttpServletRequest request, HttpServletResponse response, ModelAndView mav)---------------------
 	
+	// 결재/반려처리하기
 	@RequestMapping(value="/att/goSign.bts", method = {RequestMethod.POST})
 	public ModelAndView goSign(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 	
 		String isRejected = request.getParameter("isRejected");
-		String att_content = request.getParameter("att_content");
+		String fin_app_opinion = request.getParameter("fin_app_opinion");
 		String pk_att_num = request.getParameter("pk_att_num");
 		
-		if( "".equals(att_content.trim()) ) {
-			att_content = "내용없음";
+		if( "".equals(fin_app_opinion.trim()) ) {
+			fin_app_opinion = "내용없음";
 		}
 
-		System.out.println(" isRejected : " + isRejected);
-		System.out.println(" att_content : " + att_content);
-		System.out.println(" pk_att_num : " + pk_att_num);
+		
+		
+		// System.out.println(" isRejected : " + isRejected);
+		// System.out.println(" att_content : " + att_content);
+		// System.out.println(" pk_att_num : " + pk_att_num);
 		
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("isRejected", isRejected);
-		paraMap.put("att_content", att_content);
+		paraMap.put("fin_app_opinion", fin_app_opinion);
 		paraMap.put("pk_att_num", pk_att_num);
 		
 		// 결재상황 업데이트하기
 		int n = attService.goSign(paraMap);
 		
+		String message = "";
+		String loc = "";
+		
 		if( n == 1 ) {
-			System.out.println("결재상황 업데이트 성공");
+			
+			// System.out.println("결재상황 업데이트 성공");
 			// 연차테이블 최신화 위해 사원번호와 연차차감개수 가져옴
 			String report_emp_no = request.getParameter("report_emp_no"); // 상신자 사원번호
 			String minus_cnt = request.getParameter("minus_cnt");
 			String instead_vac_days = request.getParameter("instead_vac_days");
 			
-			System.out.println(" report_emp_no : " + report_emp_no);
-			System.out.println(" minus_cnt : " + minus_cnt);
-			System.out.println(" instead_vac_days : " + instead_vac_days);
-			
-			Map<String, String> attMap = new HashMap<>();
-			attMap.put("report_emp_no", report_emp_no);
-			attMap.put("minus_cnt", minus_cnt);
-			attMap.put("instead_vac_days", instead_vac_days);
-			// 사원의 연차테이블 최신화
-			int up = attService.updateLeave(attMap);
-			
-			if(up == 1) {
-				System.out.println("연차테이블 업데이트 성공");
+
+			// 반려시 차감 없음
+			if( "1".equals(isRejected) ) {
+				// System.out.println("반려됐음.");
+				report_emp_no = "";
+				minus_cnt = "";
+				instead_vac_days = "";
+				
+				message = "반려처리 되었습니다.";
+				loc =  request.getContextPath()+"/att/myAtt.bts"; 
 			}
-		
+			else {
+				// System.out.println(" report_emp_no : " + report_emp_no);
+				// System.out.println(" minus_cnt : " + minus_cnt);
+				// System.out.println(" instead_vac_days : " + instead_vac_days);
+				
+				Map<String, String> attMap = new HashMap<>();
+				attMap.put("report_emp_no", report_emp_no);
+				attMap.put("minus_cnt", minus_cnt);
+				attMap.put("instead_vac_days", instead_vac_days);
+				
+				// 사원의 연차테이블 최신화
+				int up = attService.updateLeave(attMap);
+				
+				if(up == 1) {
+					// System.out.println(" 결재완료와에 동시에 연차테이블 수정 : " + up);
+					message = "업데이트가 성공하였습니다.";
+					loc =  request.getContextPath()+"/att/myAtt.bts"; 
+				}
+			}
 		}
 		
+		mav.addObject("message", message);
+		mav.addObject("loc", loc);
 		
-		// mav.addObject("");
-		mav.setViewName("myAtt.att");
+		mav.setViewName("msg");
 		return mav;
 	} // end of public ModelAndView goSign(HttpServletRequest request, HttpServletResponse response, ModelAndView mav)------	
 		
+	
+	// =========================== 첨부파일 다운로드  =========================== //
+	
+	// 첨부파일 다운로드 하기 (공가/경조신청 상세내용 보기 클릭 시 첨부된 파일 다운로드)
+	@RequestMapping(value = "/att/download.bts")
+	public void download(HttpServletRequest request, HttpServletResponse response) {
+	// 파일 다운로드만 받기 때문에 return 타입은 없다.
+	// 원글에 대한 첨부파일 다운로드 이므로, 원글번호를 알아와야 한다.
+	// 로그인 하지 않은 사용자가 url 에 주소를 입력하고 바로 들어올 수도 있다. (파일 다운로드는 로그인 해야만 다운받을 수 있다. 로그인을 했는지 안했는지 검사한다.)
+	// 따라서 before,after 를 통해 로그인 유무를 검사해야한다.		
+		String str_pk_att_num = request.getParameter("pk_att_num");
+		int pk_att_num = 0;
+		pk_att_num = Integer.parseInt(str_pk_att_num);
 		
+		/*
+		 	첨부파일이 있는 글번호에서
+		 	202204291419371025088801698800.jpg 처럼
+		 	이러한 fileName 값을 DB 에서 가져와야 한다.
+		 	또한 orgFilename 값도 DB 에서 가져와야 한다.
+		 */
+		
+		// HttpServletResponse response 객체는 넘어온 데이터를 조작해서 결과물을 나타내고자 할 때 쓰인다. (웹에 보여주도록 하겠다.)
+		response.setContentType("text/html; charset=UTF-8");	// content 타입을 셋팅한다.
+		PrintWriter out = null;
+		// out 은 웹브라우저에 기술하는 대상체라고 생각하자.
+
+		try {
+			
+			// 근태신청번호로 공가/경조신청 상세내역 담아오기
+			List<Map<String, Object>> vacReportList = attService.getVacReportList(pk_att_num);
+			
+			// 글은 존재하지만 파일이 존재하지 않는 경우 (파일명이 존재하지 않는것 --> 파일이 존재 X)
+			if(vacReportList == null || (vacReportList != null && vacReportList.get(0).get("filename") == null) ) {
+				out = response.getWriter();
+				
+				out.println("<script type='text/javascript'>alert('존재하지 않는 글번호이거나 첨부파일이 없으므로 파일 다운로드가 불가합니다.'); history.back(); <script>");
+				return;	// 종료
+				
+			}
+			else {
+				// 글도 존재하고 파일도 존재하는 경우 (올바르게 다운로드 될 수 있도록 한다.)
+				String filename = (String) vacReportList.get(0).get("filename");
+				// WAS(톰캣) 디스크에 저장된 파일명이다.
+				
+				String orgfilename = (String) vacReportList.get(0).get("orgfilename");
+				// 다운로드를 받을 때에는 orgName 으로 받아야 한다. (숫자로 된 파일명을 다운받을 순 없으니..)
+				
+				// 첨부파일이 저장되어 있는 WAS(톰캣)의 디스크 경로명을 알아와야만 다운로드를 해줄수 있다. 
+	            // 이 경로는 우리가 파일첨부를 위해서 /addEnd.action 에서 설정해두었던 경로와 똑같아야 한다.
+	            // WAS 의 webapp 의 절대경로를 알아와야 한다.
+				HttpSession session = request.getSession();
+				String root = session.getServletContext().getRealPath("/");	// /webapp
+				
+				String path = root+"resources"+File.separator+"files";
+				/* File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
+				      운영체제가 Windows 이라면 File.separator 는  "\" 이고,
+				      운영체제가 UNIX, Linux 이라면  File.separator 는 "/" 이다. 
+				*/				
+				
+				// path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다. --> path 에 파일을 업로드 한다.
+				// System.out.println("**** 확인용 path 의 절대경로 "+ path);
+			
+				// **** file 다운로드 하기 **** // 경로명을 알아왔으니 파일을 다운로드 받자.
+				// fileManager 에서 파일다운로드 하기 부분을 참고하자. (의존객체 DI)	
+				boolean flag = false;
+				flag = fileManager.doFileDownload(filename, orgfilename, path, response);
+				// fileName : 저장된 파일명, orgFilename : 다운로드 받을 때 필요 , path : 저장된 경로, response : 파라미터에 존재)
+				// 파일 다운로드 성공시 flag는 true, 실패하면 flag는 false를 가진다.
+				
+				if(!flag) {
+					// 다운로드 실패 시 메시지를 띄운다.
+					out = response.getWriter();
+					
+					out.println("<script type='text/javascript'>alert('파일 다운로드에 실패했습니다.'); history.back(); <script>");
+				}
+				
+			}			
+			
+		} catch (NumberFormatException | IOException e) {
+			// 숫자 이외의 것이 들어왔을 때 대비해서 예외처리 / 입출력 예외처리			
+			try {
+				out = response.getWriter();
+				
+				out.println("<script type='text/javascript'>alert('파일 다운로드가 불가합니다.'); history.back(); <script>");
+			} catch (Exception e1) {
+				e.printStackTrace();	
+			}
+			
+		}
+				
+	}	
+	
+	// === 연차내역 페이지 ===
+	@RequestMapping(value="/att/waitingSign.bts")
+	public ModelAndView waitingSign(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
+		
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+		String fk_emp_no = String.valueOf(loginuser.getPk_emp_no());
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("fk_emp_no", fk_emp_no);
+		
+		// 부서장인지 확인하기
+		int checkManager = attService.checkManager(fk_emp_no);
+		
+		String message = "";
+		String loc = "";
+		
+		// System.out.println(" 부서장이니? : " + checkManager );
+		
+		if(checkManager == 0) {
+			// 부서장이 아니라면
+			message = "접근권한이 없습니다.";
+			loc =  request.getContextPath()+"/att/myAtt.bts"; 
+			
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+			
+			mav.setViewName("msg");
+		}
+		else {
+			// ================== 페이징처리 시작 =====================
+			
+			// 먼저 총 받은 메일 수(totalCount)를 구해와야 한다.
+			// 총 게시물 건수는 검색조건이 있을 때와 없을 때로 나뉜다.
+			String str_currentShowPageNo = request.getParameter("currentShowPageNo");	// 현재 페이지 번호
+			int totalCount = 0;
+			int sizePerPage = 3;
+			int currentShowPageNo = 0;
+			int totalPage = 0;
+			
+			int startRno = 0;
+			int endRno = 0;
+			
+			// 총 올린 결재대기중인 연차신청 수 가져오기
+			totalCount = attService.getTotalVacReportNoSignCount(fk_emp_no); 
+			
+			totalPage = (int) Math.ceil((double)totalCount/sizePerPage);	// 총 페이지 수 (전체게시물 / 페이지당 보여줄 갯수)
+	
+			if(str_currentShowPageNo == null) {
+				// 페이지바를 거치지 않은 맨 처음 화면
+				currentShowPageNo = 1;
+			}
+			else {	
+				try {	// 사용자가 페이지 넘버에 정수만 입력할 수 있도록 설정		
+					currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+					if(currentShowPageNo < 1 || currentShowPageNo > totalPage) {
+						// 1 미만의 페이지 또는 총 페이지 수를 넘어서는 페이지수 입력 시 기본페이지로
+						currentShowPageNo = 1;
+					}				
+				} catch (NumberFormatException e) {
+					currentShowPageNo = 1;
+				}
+			}
+			
+			startRno = ( (currentShowPageNo - 1) * sizePerPage ) + 1;
+			endRno = startRno + sizePerPage - 1;
+			
+			// 페이지에 보여줄 인덱스 맵 생성
+			Map<String, Object> idx = new HashMap<>();
+			idx.put("startIdx", (startRno-1));
+			idx.put("endIdx", (endRno-1));
+			
+			paraMap.put("startRno", String.valueOf(startRno));
+			paraMap.put("endRno", String.valueOf(endRno));
+			
+			// 페이징처리 한 결재대기중인 공가/경조신청목록 
+			List<Map<String, Object>> myAttList = attService.getMyAttListNoSignWithPaging(paraMap);
+			
+			
+			// ================= 페이징처리 끝 ====================
+			
+			// === 페이지바 만들기 === //
+			int blockSize = 10;
+			
+			int loop = 1;
+			
+			int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+			
+			String pageBar = "<ul style='list-style: none;'>";
+			String url = "waitingSign.bts";
+			
+			// === [맨처음][이전] 만들기 === //
+			if(pageNo != 1) {
+				pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?currentShowPageNo=1'>[맨처음]</a></li>";
+				pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+			}
+			
+			while( !(loop > blockSize || pageNo > totalPage) ) {
+				
+				if(pageNo == currentShowPageNo) {
+					pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";  
+				}
+				else {
+					pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>"; 
+				}
+				
+				loop++;
+				pageNo++;
+				
+			}// end of while-----------------------
+			
+			
+			// === [다음][마지막] 만들기 === //
+			if( pageNo <= totalPage ) {
+				pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+				pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?currentShowPageNo="+totalPage+"'>[마지막]</a></li>"; 
+			}
+			
+			pageBar += "</ul>";
+			
+			mav.addObject("pageBar", pageBar);
+			
+			String gobackURL = MyUtil.getCurrentURL(request);
+	
+			mav.addObject("gobackURL", gobackURL.replaceAll("&", " "));
+			
+			mav.addObject("idx", idx);
+			mav.addObject("myAttList", myAttList);
+			mav.setViewName("waitingSign.att");
+		}
+		
+		return mav;
+	} // end of public ModelAndView waitingSign(HttpServletRequest request, HttpServletResponse response, ModelAndView mav)------
+		
+	/////////////////////////////////////////////////////////////////////////////////////////////
+		
+	// === 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 생성 === //
+	public void getCurrentURL(HttpServletRequest request) {
+	HttpSession session = request.getSession();
+	session.setAttribute("goBackURL", MyUtil.getCurrentURL(request));
+	}
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////
+	
 }

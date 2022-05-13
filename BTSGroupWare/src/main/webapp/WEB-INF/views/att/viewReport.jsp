@@ -24,29 +24,42 @@
 		var uq_phone = $("input#uq_phone").val();
 		// 반려버튼을 클릭했는지 확인용 변수
 		var isRejected = 0;
-		
+		// 연차나 대체휴가의 경우 차감값 넣어주기
+		var cnt = 0;
 		// 대체휴가일 경우 휴가일수 넣어줌.
 		var instead_vac_days = 0;
 		
+		console.log("isManager : " + isManager);
+		console.log("isDecided : " + isManager);
+		console.log("매니저값 : " + $("input#manager").val());
+		console.log("사원번호 : " + $("input#fk_emp_no").val());
 		// 기능 테스트 다하고 열어라
-		/*
+		
 		$("button#btnSignOff").hide();
 		$("button#btnReject").hide();
+		$("tr.managerOnly").hide();
 		
 		
 		if( isManager == 1 && isDecided == 0
 			&& $("input#manager").val() == $("input#fk_emp_no").val()	) {
 			$("button#btnSignOff").show();
 			$("button#btnReject").show();
+			$("tr.managerOnly").show();
 		}
-		*/
+		
+		
+		// 연차나 대체휴가일 떄 차감개수 넣어주기
+		if( $("input#minus_cnt").val() == "0.0" ) {
+			cnt = $("input#vacation_days").val();
+			$("input#minus_cnt").val(cnt);
+		}
 		
 		// 결재 버튼 클릭시
 		$("button#btnSignOff").click(function(){
 			goSign();
 		}) // end of $("button#btnSignOff").click(function(){})------------
 		
-		// 결재 버튼 클릭시
+		// 반려 버튼 클릭시
 		$("button#btnReject").click(function(){
 			
 			if( $("input#fin_app_opinion").val().trim() == "" ) {
@@ -66,9 +79,13 @@
 	
 	// 결재완료 혹은 반려
 	function goSign() {
+		
 		/*
-		if( $("input#att_sort_korname").val().indexOf("대체") != -1 ) {
+		if( $("input#att_sort_korname").val().indexOf("대체") != "-1" ) {
 			instead_vac_days = $("input#vacation_days").val();
+		}
+		else {
+			instead_vac_days = $("input#vacation_days").val("0");
 		}
 		*/
 		
@@ -76,6 +93,14 @@
 		const frm = document.goSignFrm;
 		frm.action = "<%= ctxPath%>/att/goSign.bts";
 		frm.method = "POST";
+		frm.submit();
+	}
+	
+	function goList() {
+		
+		const frm = document.goSignFrm;
+		frm.action = "<%= ctxPath%>/att/myAtt.bts";
+		frm.method = "GET";
 		frm.submit();
 	}
 	
@@ -156,12 +181,19 @@
 			      </td>
 			    </tr>
 			    
-			    <tr style="text-align: center; " id="bold_hr">
+			    <tr style="text-align: center; " class="managerOnly" id="bold_hr">
 			      <th class="th_title" style="text-align: center;">의견작성란</th>
 			      <td colspan="3" style="text-align: left;"><input type="text" id="fin_app_opinion" name="fin_app_opinion" style="width: 80%; height: 100px;"/>			    
 			      </td>
 			    </tr>
-			    	
+			    
+			    <c:if test="${vac.approval_status ne 0}">
+			    <tr style="text-align: center; " id="bold_hr">
+			      <th class="th_title" style="text-align: center;">결재자의견</th>
+			      <td colspan="3" style="text-align: left;"><input type="text" id="app_opinion" name="app_opinion" style="width: 80%; height: 100px;" value="${vac.fin_app_opinion}" readonly />			    
+			      </td>
+			    </tr>
+			    </c:if>	
 		</table>
 			
 		<div id="vac_button" style="text-align: center;">

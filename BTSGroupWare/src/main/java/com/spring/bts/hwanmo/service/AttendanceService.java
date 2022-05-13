@@ -176,5 +176,19 @@ public class AttendanceService implements InterAttendanceService {
 		return n;
 	}
 
+	// 총 올린 결재대기중인 연차신청 수 가져오기
+	@Override
+	public int getTotalVacReportNoSignCount(String fk_emp_no) {
+		int totalCount = attDAO.getTotalVacReportNoSignCount(fk_emp_no);
+		return totalCount;
+	}
+
+	// 페이징처리 한 결재대기중인 공가/경조신청목록 
+	@Override
+	public List<Map<String, Object>> getMyAttListNoSignWithPaging(Map<String, String> paraMap) {
+		List<Map<String, Object>> myAttList = attDAO.getMyAttListNoSignWithPaging(paraMap);
+		return myAttList;
+	}
+
 	
 }
