@@ -210,7 +210,7 @@
 								--%>
 								<span class="subject" onclick="goReservationMailView('${ReservationMailList.pk_mail_num}')">${ReservationMailList.subject}</span>
 								</td>
-								<td class="text-left">${ReservationMailList.reservation_date}</td>
+								<td class="text-left">${ReservationMailList.reservation_date}:00</td>
 							</tr>	
 						</c:forEach>																				
 						</tbody>

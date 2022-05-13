@@ -346,12 +346,12 @@
 		
 		// 현재 hour 구하기
 		var date = new Date();
-		var hour = date.getHours();
+		var hour = date.getHours();			// 현재날짜에서 hour 갖고옴
 				
 		$("#resSendTimeHour").val();
 		
 		// 현재 minute 구하기
-		var minute = date.getMinutes();
+		var minute = date.getMinutes();		// 현재날짜에서 minute 갖고옴
 		$("#resSendTimeMinute").val();
 		
 		$("#resSendTimeHour option").filter(function () {	// option 에서 text가 minute과 있으면 select

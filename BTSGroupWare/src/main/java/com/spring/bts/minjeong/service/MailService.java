@@ -40,9 +40,7 @@ public class MailService implements InterMailService {
 	public List<MailVO> recMailListSearchWithPaging(Map<String, String> paraMap) {
 		List<MailVO> receiveMailList = dao.recMailListSearchWithPaging(paraMap);
 	//	System.out.println("확인용 서비스");
-
-		return receiveMailList;
-		
+		return receiveMailList;		
 	}
 
 	// 총 게시물 건수 구해오기 - 보낸메일함 (service 단으로 보내기)
@@ -225,9 +223,9 @@ public class MailService implements InterMailService {
 			  if( reservationList.get(i).getReservation_date().equals(dateFormat.format(currentDate.getTime())) ) {
 				  // 발송예약함의 한 행 한행의 발송예약날짜가 dateFormat 인 "yyyy-MM-dd HH:mm"과 형식이 같고 == 현재 컴퓨터의 날짜와 시간이 같다면
 				  // DB 에 있는 사용자가 선택한 예약날짜와 현재 컴퓨터에 찍히는 currentTime이 같다면!!
-				  System.out.println("if 문 확인 테스트");
-				  System.out.println("if 문 발송예약시간 test" + reservationList.get(i).getReservation_date());
-				  System.out.println("if 문 컴퓨터 현재시간" + dateFormat.format(currentDate.getTime()));
+			//	  System.out.println("if 문 확인 테스트");
+			//	  System.out.println("if 문 발송예약시간 test" + reservationList.get(i).getReservation_date());
+			//	  System.out.println("if 문 컴퓨터 현재시간" + dateFormat.format(currentDate.getTime()));
 				  
 				  // 해당 정보들을 mailvo 에 set 해주도록 하자.
 				  MailVO mailvo = new MailVO();
@@ -254,41 +252,56 @@ public class MailService implements InterMailService {
 				  mailvo.setDel_status(reservationList.get(i).getDel_status());
 				  
 				  // 작성일자는 사용자가 설정한 발송예약일자로 설정하도록 한다. (발송예약시간)
-				  //mailvo 에 set 해둔 내용을 발송예약시간에 따라 mail테이블에 insert 할 수 있도록 한다.
+				  //mailvo 에 set 해둔 내용을 발송예약시간에 따라 메일을 발송하고 status 를 update 할 수 있도록 한다.
 				  // 첨부파일이 있는경우와 없는 경우로 나눈다.
 				  
 				  // 첨부파일이 존재하는 경우 (filename 이 null 이 아님 ==> 존재한다는 것)
-				  // mail 테이블에서 reservation_status 를 1에서 다시 0으로 바꿔준다? --> 그럼 보낸메일함에서 보여질 테니까?
+				  // mail 테이블에서 reservation_status 를 1에서 다시 0으로 바꿔준다.
 				  // Insert 가 아닌 update 를 해주자.
 				  if(reservationList.get(i).getFilename() != null) {
 					 n = dao.add_updateResStatus(mailvo);
 				  }
 				  else {
 					// 첨부파일이 존재하지 않는 경우 (filename == null)
-					// mail 테이블에서 reservation_status 를 1에서 다시 0으로 바꿔준다? --> 그럼 보낸메일함에서 보여질 테니까?
+					// mail 테이블에서 reservation_status 를 1에서 다시 0으로 바꿔준다.
 					// Insert 가 아닌 update 를 해주자.
 					 n = dao.add_updateResStatus(mailvo);
 				}
 			  }// end of if()--------------------------------
 			  else {
-				System.out.println("if문 실행 실패 ㅠㅠㅠㅠ");
+			//	System.out.println("if문 실행 실패 !!!!!");
 			  }
 			  
 		  }// end of for()---------------------------------------------
 		  		  
 		  	if(n==1) {
 		  		// 예약 발송 성공
-		  		System.out.println("****** 예약시간에 따른 발송이 완료되었습니다. ******");
+		  		System.out.println("****** 발송예약에 성공했습니다. ******");
 		  	}
 		  	else {
 				// 예약 발송 실패
-		  		System.out.println("****** 예약시간에 따른 발송이 실패되었습니다. ******");
+		  		System.out.println("****** 발송예약에 실패했습니다. ******");
 			}		  
 		  
 	  }// end of if(reservationList != null && reservationList.size() > 0)---------------------------------------------------
 	  
 	}// end of public void reservationMailSendSchedular() throws Exception-----------------
-	 
+
 	// === 예약메일함 끝 === //
+
+	// 총 임시보관함 메일 건수 구해오기 (service 단으로 보내기) 
+	@Override
+	public int getTotalCount_temporary(Map<String, String> paraMap) {
+		int n = dao.getTotalCount_temporary(paraMap);		
+		return n;
+	}
+	
+	// 페이징처리 한 임시보관함 메일목록 (검색 있든, 없든 모두 다 포함) 
+	@Override
+	public List<MailVO> getTemporaryMailListWithPaging(Map<String, String> paraMap) {
+		List<MailVO> TemporaryMailList = dao.getTemporaryMailListWithPaging(paraMap);
+		return TemporaryMailList;
+	}
+
 	
 }

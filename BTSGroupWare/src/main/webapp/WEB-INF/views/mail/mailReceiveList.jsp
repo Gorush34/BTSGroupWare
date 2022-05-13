@@ -210,7 +210,14 @@
 								--%>
 								<span class="subject" onclick="goRecMailView('${receiveMailList.pk_mail_num}')">${receiveMailList.subject}</span>
 								</td>
-								<td class="text-left">${receiveMailList.reg_date}</td>
+								<td class="text-left">									
+									<c:if test="${not empty receiveMailList.reservation_date}">
+										${receiveMailList.reservation_date}:00
+									</c:if>
+									<c:if test="${empty receiveMailList.reservation_date}">
+										${receiveMailList.reg_date}
+									</c:if>	
+								</td>
 							</tr>	
 						</c:forEach>																				
 						</tbody>

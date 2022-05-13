@@ -191,6 +191,22 @@ public class MailDAO implements InterMailDAO {
 
 	// ==== 예약메일함 끝 ==== //
 
+	
+	// 총 임시보관함 메일 건수 구해오기
+	@Override
+	public int getTotalCount_temporary(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("minjeong.getTotalCount_temporary", paraMap);
+		return n;
+	}
+
+	
+	// 페이징처리 한 임시보관함 메일목록 (검색 있든, 없든 모두 다 포함) 
+	@Override
+	public List<MailVO> getTemporaryMailListWithPaging(Map<String, String> paraMap) {
+		List<MailVO> TemporaryMailList = sqlsession.selectList("minjeong.getTemporaryMailListWithPaging", paraMap);
+		return TemporaryMailList;
+	}
+
 
 
 

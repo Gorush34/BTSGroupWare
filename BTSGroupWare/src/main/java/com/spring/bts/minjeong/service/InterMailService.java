@@ -70,5 +70,11 @@ public interface InterMailService {
 	// ==== 예약메일함 (스프링 스케줄러) 끝 ==== //
 
 
+	// 총 임시보관함 메일 건수 구해오기 (service 단으로 보내기) 
+	int getTotalCount_temporary(Map<String, String> paraMap);
+	
+	// 페이징처리 한 임시보관함 메일목록 (검색 있든, 없든 모두 다 포함) 
+	List<MailVO> getTemporaryMailListWithPaging(Map<String, String> paraMap);
+
 	
 }

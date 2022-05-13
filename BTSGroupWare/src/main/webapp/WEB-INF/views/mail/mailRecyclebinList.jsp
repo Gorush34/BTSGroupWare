@@ -208,7 +208,14 @@
 								--%>
 								<span class="subject" onclick="goRecMailView('${RecyclebinMailList.pk_mail_num}')">${RecyclebinMailList.subject}</span>
 								</td>
-								<td class="text-left">${RecyclebinMailList.reg_date}</td>
+								<td class="text-left">
+									<c:if test="${not empty RecyclebinMailList.reservation_date}">
+										${RecyclebinMailList.reservation_date}:00
+									</c:if>
+									<c:if test="${empty RecyclebinMailList.reservation_date}">
+										${RecyclebinMailList.reg_date}
+									</c:if>									
+								</td>
 							</tr>	
 						</c:forEach>																				
 						</tbody>

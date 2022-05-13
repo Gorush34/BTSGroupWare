@@ -210,7 +210,14 @@
 								--%>
 								<span class="subject" onclick="goSendMailView('${SendMailList.pk_mail_num}')">${SendMailList.subject}</span>
 								</td>
-								<td class="text-left">${SendMailList.reg_date}</td>
+								<td class="text-left">									
+									<c:if test="${not empty SendMailList.reservation_date}">
+											${SendMailList.reservation_date}:00
+									</c:if>
+									<c:if test="${empty SendMailList.reservation_date}">
+											${SendMailList.reg_date}
+									</c:if>	
+								</td>
 							</tr>	
 						</c:forEach>																				
 						</tbody>

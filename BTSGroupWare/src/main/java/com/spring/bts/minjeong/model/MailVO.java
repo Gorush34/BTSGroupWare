@@ -4,7 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class MailVO {
 
-	// 메일 VO
+	// 메일 VO (Mapper WHERE 절에 STATUS 추가 잘해놓을 것)
 	private String pk_mail_num;             // NOT NULL NUMBER(14)  메일번호    
 	private String fk_senduser_num;         // NUMBER(8)     		보낸사람 사원번호
 	private String fk_receiveuser_num;     	// NUMBER(8)     		받는사람 사원번호
@@ -23,7 +23,7 @@ public class MailVO {
 	private String reservation_date;        // DATE          		발송예약 날짜
 	private String reservation_status;      // NUMBER(2)     		발송예약여부 (0: 발송예약X, 1: 발송예약O, 2:발송완료시 1->2)
 	private String del_status;				// NUMBER(2)  			삭제여부(0: 삭제X, 1:삭제)
-//	private String temp_status;				// NUMBER(2) 			임시보관함 저장여부 (0:저장 X, 1:저장O)
+	private String temp_status;				// NUMBER(2) 			임시보관함 저장여부 (0:저장 X, 1:저장O)
 	
 	// 메일 상세내용 보기
 	private String prev_seq;		// 이전글번호
@@ -42,9 +42,10 @@ public class MailVO {
 	// 생성자
 	public MailVO(String pk_mail_num, String fk_senduser_num, String fk_receiveuser_num, String recemail,
 			String sendemail, String recempname, String sendempname, String subject, String content, String filename,
-			String orgfilename, String filesize, String importance, String reservation_status, String read_status,
-			String reg_date, String reservation_date, String del_status,
-			String prev_seq, String prev_subject, String next_seq, String next_subject, MultipartFile attach) {
+			String orgfilename, String filesize, String reg_date, String importance, String read_status,
+			String reservation_date, String reservation_status, String del_status, String temp_status, String prev_seq,
+			String prev_subject, String next_seq, String next_subject, MultipartFile attach) {
+		
 		super();
 		this.pk_mail_num = pk_mail_num;
 		this.fk_senduser_num = fk_senduser_num;
@@ -58,12 +59,13 @@ public class MailVO {
 		this.filename = filename;
 		this.orgfilename = orgfilename;
 		this.filesize = filesize;
-		this.importance = importance;
-		this.reservation_status = reservation_status;
-		this.read_status = read_status;
 		this.reg_date = reg_date;
+		this.importance = importance;
+		this.read_status = read_status;
 		this.reservation_date = reservation_date;
-		this.setDel_status(del_status);
+		this.reservation_status = reservation_status;
+		this.del_status = del_status;
+		this.temp_status = temp_status;
 		this.prev_seq = prev_seq;
 		this.prev_subject = prev_subject;
 		this.next_seq = next_seq;
@@ -268,6 +270,16 @@ public class MailVO {
 
 	public void setDel_status(String del_status) {
 		this.del_status = del_status;
+	}
+
+
+	public String getTemp_status() {
+		return temp_status;
+	}
+
+
+	public void setTemp_status(String temp_status) {
+		this.temp_status = temp_status;
 	}
 
 		
