@@ -35,9 +35,12 @@ public class ResourceController {
 	@RequestMapping(value="/reservation/reservationMain.bts")
 	public ModelAndView reservationMain(ModelAndView mav) {
 		
+		List<Map<String, String>> classList = service.classSelect();
 		List<Map<String, String>> resourceList = service.resourceReservation();
 		
+		
 		mav.addObject("resourceList", resourceList);
+		mav.addObject("classList", classList);
 		mav.setViewName("reservationMain.resource");
 		
 		return mav;

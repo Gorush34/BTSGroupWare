@@ -278,16 +278,26 @@
 	<!-- 예약 페이지에 띄울 자원 리스트 가져오기 -->
 	<resultMap type="HashMap" id="resourceReservation_Map">
 		<result property="PK_RNO"     column="pk_rno"      javaType="String"/>
-		<result property="FK_CLASSNO" column="fk_classno"  javaType="String"/>
+		<result property="PK_CLASSNO" column="pk_classno"  javaType="String"/>
+		<result property="CLASSNAME"  column="classname"   javaType="String"/>
 		<result property="RNAME"      column="rname"       javaType="String"/>
-		<result property="RINFO"      column="rinfo"       javaType="String"/>
-		<result property="RQTY"       column="rqty"        javaType="String"/>
-		<result property="RUSE"       column="ruse"        javaType="String"/>	
+		<result property="RINFO"      column="rinfo"       javaType="String"/>	
 	</resultMap>
 	<select id="resourceReservation" resultMap="resourceReservation_Map">
-		select pk_rno, fk_classno, rname, rinfo, rqty, ruse
-		from tbl_resource
+		select R.pk_rno, RC.pk_classno, RC.classname, R.rname, R.rinfo
+		from tbl_resource R
+		join tbl_resourceclass RC
+		on R.fk_classno = RC.pk_classno
 	</select>
+	
+	<select id="classSelect" resultMap="resourceReservation_Map">
+		select pk_classno, classname
+		from  tbl_resourceclass 
+		order by pk_classno asc
+	</select>
+	
+	
+	
 
 	<!-- 해당 자원 예약내용 가져오기 -->
 	<resultMap type="HashMap" id="resourceSpecialReservation_Map">
