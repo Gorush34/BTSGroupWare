@@ -22,28 +22,59 @@ public interface InterMailService {
 	// 페이징처리 한 보낸 메일목록 (검색 있든, 없든 모두 다 포함)
 	List<MailVO> sendMailListSearchWithPaging(Map<String, String> paraMap);
 
+	// 메일주소로 사원이름, 사원번호 알아오기
+	Map<String, String> getEmpnameAndNum(String uq_email);
+	
 	// 메일쓰기 (파일첨부가 없는 메일쓰기)
 	int add(MailVO mailvo);
 
 	// 메일쓰기 (파일첨부가 있는 메일쓰기)
 	int add_withFile(MailVO mailvo);
 
-	// 받은 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
+	// 받은 메일 1개 상세내용을 읽어오기 
 	MailVO getRecMailView(Map<String, String> paraMap);
 
-	// *** 아래 3개의 메소드는 1 set 이다. (첨부파일 유/무 --> 메일 삭제상태 1로 변경)
-	// 메일함목록에서 선택 후 삭제버튼 클릭 시 휴지통테이블로 insert 하기 (첨부파일 있을 때)
-	int moveToRecyclebin(Map<String, String> paraMap);
+	// 보낸 메일 1개 상세내용을 읽어오기
+	MailVO getSendMailView(Map<String, String> paraMap);
 
-	// 메일함목록에서 선택 후 삭제버튼 클릭 시 휴지통테이블로 insert 하기 (첨부파일 없을 때)
-	int moveToRecyclebinNoFile(Map<String, String> paraMap);
+	// 받은메일함에서 선택한 글번호에 해당하는 메일을 삭제 시, 메일 테이블에서 해당 메일번호의 삭제 상태를 1로 변경해주기
+	int updateFromTblMailDelStatus(Map<String, String> paraMap);
 
-	// 휴지통 테이블로 insert 후 메일 테이블에서 해당 메일의 삭제 상태를 1로 변경해주기
-	int updateFromTblMailRecDelStatus(Map<String, String> paraMap);
+	// 총 게시물 건수 구해오기 - 휴지통 (service 단으로 보내기)
+	int getTotalCount_recyclebin(Map<String, String> paraMap);
+	
+	// 페이징처리 한 휴지통 목록 (검색 있든, 없든 모두 다 포함 // del_status = 1 인 글만 보여주기)
+	List<MailVO> RecyclebinMailListSearchWithPaging(Map<String, String> paraMap);
 
-	// 메일주소로 사원이름, 사원번호 알아오기
-	Map<String, String> getEmpnameAndNum(String uq_email);
+	// 휴지통 메일함 1개 상세내용을 읽어오기
+	MailVO getRecyclebinMailView(Map<String, String> paraMap);
+
+	// 휴지통에서 선택한 글들을 mail 테이블에서 삭제하기
+	int deleteFromTblMail(Map<String, String> paraMap);
 
 	
+	// ==== 예약메일함 (스프링 스케줄러) 시작 ==== //
+
+	// 총 게시물 건수 구해오기 - 예약메일함 (service 단으로 보내기)
+	int getTotalCount_reservation(Map<String, String> paraMap);
+	
+	// 페이징처리 한 예약메일함 목록 1 (검색 있든, 없든 모두 다 포함 // reservation_status = 1 인 글만 보여주기)
+	List<MailVO> getReservationListWithPaging(Map<String, String> paraMap);
+
+	// 예약 메일 1개 상세내용을 읽어오기
+	MailVO getReservationMailView(Map<String, String> paraMap);	
+
+	// 스프링 스케줄러를 이용해서 발송예약 실행하기
+	void reservationMailSendSchedular() throws Exception ;
+	
+	// ==== 예약메일함 (스프링 스케줄러) 끝 ==== //
+
+
+	// 총 임시보관함 메일 건수 구해오기 (service 단으로 보내기) 
+	int getTotalCount_temporary(Map<String, String> paraMap);
+	
+	// 페이징처리 한 임시보관함 메일목록 (검색 있든, 없든 모두 다 포함) 
+	List<MailVO> getTemporaryMailListWithPaging(Map<String, String> paraMap);
+
 	
 }

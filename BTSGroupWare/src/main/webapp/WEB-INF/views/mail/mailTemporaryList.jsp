@@ -52,19 +52,19 @@
 
 	// 검색 버튼 클릭시 동작하는 함수
 	function gomailSearch() {
-		const frm = document.goSendListSelectFrm;
+		const frm = document.goTemporaryListSelectFrm;
 		frm.method = "GET";
-		frm.action = "<%= ctxPath%>/mail/mailSendList.bts";
+		frm.action = "<%= ctxPath%>/mail/mailTemporaryList.bts";
 		frm.submit();	
 	}// end of function goMailSearch(){}-------------------------
 
 	// 글제목 클릭 시 글내용 보여주기 (고유한 글번호인 pk_mail_num 를 넘겨준다.)
-	function goSendMailView(pk_mail_num) {
+	function goTemporaryMailView(pk_mail_num) {
 		const searchType = $("select#searchType").val();
 		const searchWord = $("input#searchWord").val();
 		
-		location.href = "<%= ctxPath%>/mail/mailReservationDetail.bts?pk_mail_num="+pk_mail_num+"&searchType="+searchType+"&searchWord="+searchWord;
-<%-- 	<a href="<%= ctxPath%>/mail/mailSendDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${mailvo.subject}</a> --%>
+		location.href = "<%= ctxPath%>/mail/mailTemporaryDetail.bts?pk_mail_num="+pk_mail_num+"&searchType="+searchType+"&searchWord="+searchWord;
+<%-- 	<a href="<%= ctxPath%>/mail/mailTemporaryDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${mailvo.subject}</a> --%>
 	}
 	
 
@@ -125,14 +125,14 @@
 		
 </script>
 
-<%-- 보낸 메일함 목록 보여주기 --%>	
+<%-- 임시 보관함 목록 보여주기 --%>	
 <div class="container" style="width: 100%; margin: 50px;">
 	<div class="row bg-title" style="border-bottom: solid 1.5px #e6e6e6;">	
 		<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-			<h4 class="page-title" style="color: black;">보낸 메일함</h4>
+			<h4 class="page-title" style="color: black;">임시 보관함</h4>
 		</div>
 		
-		<form name="goSendListSelectFrm" style="display: inline-block; padding-left: 470px;">		
+		<form name="goTemporaryListSelectFrm" style="display: inline-block; padding-left: 470px;">		
 			<div id="mail_searchType">
 				<select class="form-control" id="searchType" name="searchType" style="">
 					<option value="subject" selected="selected">제목</option>
@@ -190,34 +190,27 @@
 						</thead>
 						
 						<tbody>
-						<c:forEach items="${requestScope.SendMailList}" var="SendMailList" varStatus="status">
+						<c:forEach items="${requestScope.TemporaryMailList}" var="TemporaryMailList" varStatus="status">
 							<tr>
 								<td style="width: 40px;">
-									<input type="checkbox" id="${SendMailList.pk_mail_num}" name="chkBox" class="text-center"/>
+									<input type="checkbox" id="${TemporaryMailList.pk_mail_num}" name="chkBox" class="text-center"/>
 								</td>
 								<td style="width: 40px;">
 									<span class="fa fa-star-o" class="text-center"></span>
 								</td>
 								<td style="width: 40px;">
-									<c:if test="${not empty SendMailList.filename}">
+									<c:if test="${not empty TemporaryMailList.filename}">
 										<span class="fa fa-paperclip" class="text-center"></span>
 									</c:if>
 								</td>							
-								<td class="text-center">${SendMailList.recempname}</td>
+								<td class="text-center">${TemporaryMailList.recempname}</td>
 								<td>
 								<%--
-								<a href="<%= ctxPath%>/mail/mailSendDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${sendMailList.subject}</a>
+								<a href="<%= ctxPath%>/mail/mailTemporaryDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${TemporaryMailList.subject}</a>
 								--%>
-								<span class="subject" onclick="goSendMailView('${SendMailList.pk_mail_num}')">${SendMailList.subject}</span>
+								<span class="subject" onclick="goTemporaryMailView('${TemporaryMailList.pk_mail_num}')">${TemporaryMailList.subject}</span>
 								</td>
-								<td class="text-left">									
-									<c:if test="${not empty SendMailList.reservation_date}">
-											${SendMailList.reservation_date}:00
-									</c:if>
-									<c:if test="${empty SendMailList.reservation_date}">
-											${SendMailList.reg_date}
-									</c:if>	
-								</td>
+								<td class="text-left">${TemporaryMailList.reg_date}</td>
 							</tr>	
 						</c:forEach>																				
 						</tbody>

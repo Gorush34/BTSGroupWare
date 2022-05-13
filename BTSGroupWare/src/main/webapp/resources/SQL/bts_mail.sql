@@ -6,6 +6,8 @@ show user;
 
 select *
 from tbl_mail
+where del_status = 0
+order by pk_mail_num desc;
 
 desc tbl_mail;
 --
@@ -240,7 +242,202 @@ where fk_senduser_num = '80000010' and del_status = 0
 ) V
 
 
-
-
 describe tbl_mail;
+
+select *
+from tbl_mail
+
+delete from tbl_mail
+where subject = '220503 DB 관리자로 보낸 메일';
+
+commit;
+
+
+
+-- 메일함 상세내용 보기
+select pk_mail_num, fk_senduser_num, fk_receiveuser_num, sendempname, recemail, subject, content, reg_date
+     , filename, orgfilename, filesize
+        from
+        (
+            select pk_mail_num, fk_senduser_num, fk_receiveuser_num, sendempname, recemail, subject, content
+                 , to_char(reg_date, 'yyyy-mm-dd hh24:mi:ss') as reg_date         
+                 , fileName, orgFilename, fileSize
+            from tbl_mail
+            where lower('제목') like '%'|| lower('') || '%'    
+        ) V
+where V.pk_mail_num = '31'
+
+
+delete from tbl_mail
+where pk_mail_num = '35';
+
+commit;
+
+
+-- 휴지통(DEL_STATUS)이 0 일때 받은메일함 또는 보낸메일함에 보이도록 한다. // DEL_STATUS 가 1일 때 휴지통으로 보낸 것으로 한다.
+select *
+from tbl_mail
+where DEL_STATUS = 0
+
+select *
+from tbl_mail
+where DEL_STATUS = 1
+order by pk_mail_num desc
+--	// 받은 메일 테이블/보낸메일 테이블에서 해당 메일의 삭제 상태를 1로 변경해주기 (ajax)
+--	// 받은메일함/보낸메일함에서 선택한 글번호에 해당하는 메일을 삭제 시, 메일 테이블에서 해당 메일번호의 삭제 상태를 1로 변경해주기
+update tbl_mail set del_status = 1
+where pk_mail_num = #{pk_mail_num}
+
+select *
+from tbl_mail 
+where del_status = 0 
+
+
+-- 휴지통에서 RCVUSER_DEL_STATUS = 1 or SENDUSER_DEL_STATUS = 1 일때 다 보여주기
+-- (받은메일함에서 체크한거랑 보낸메일함에서 체크한거 모두 한 휴지통에서 보일 수 있게끔 한다.)
+select *
+from tbl_mail 
+where del_status = 1
+
+
+
+-- 예약메일함에서 reservation_status 를 1로 바꾸기
+select *
+from tbl_mail
+order by pk_mail_num desc
+
+
+update tbl_mail set reservation_status = 1
+where pk_mail_num = 46;
+
+commit;
+-- 커밋 완료.
+
+select *
+from tbl_mail
+order by pk_mail_num desc;
+
+where reservation_status = 1 and del_status = 0
+
+select pk_mail_num, fk_receiveuser_num, sendempname, subject, reg_date, filename
+from 
+(
+select row_number() over(order by pk_mail_num desc) AS rno,
+       pk_mail_num, fk_receiveuser_num, sendempname, subject
+       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+       , filename
+from tbl_mail
+where fk_senduser_num = '80000010' and del_status = 0 and reservation_status = 1
+and lower('제목') like '%' || lower('') || '%'
+) V
+where rno between #{startRno} and #{endRno}
+
+commit;
+
+select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date
+from 
+(
+select row_number() over(order by pk_mail_num desc) AS rno,
+       pk_mail_num, fk_receiveuser_num, recempname, subject
+       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi') as reservation_date
+from tbl_mail
+where fk_senduser_num = '80000010' and del_status = 0 and reservation_status = 1
+and lower('제목') like '%' || lower('') || '%'
+order by reservation_date desc
+) V
+where rno between 1 and 3
+
+
+
+select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date
+from 
+(
+select row_number() over(order by pk_mail_num desc) AS rno,
+       pk_mail_num, fk_receiveuser_num, recempname, subject
+       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+       , filename, reservation_date
+from tbl_mail
+where fk_senduser_num = '80000010' and del_status = 0 and reservation_status = 1
+and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+
+select *
+from tbl_mail
+where reservation_status = 1 
+order by pk_mail_num desc;
+
+where del_status = 1
+
+select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date
+from 
+(
+select row_number() over(order by pk_mail_num desc) AS rno,
+       pk_mail_num, fk_receiveuser_num, recempname, subject
+       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi') as reservation_date
+from tbl_mail
+where del_status = 0 and reservation_status = 1
+order by reservation_date desc	
+) V
+
+
+
+
+
+-- 파라미터 없는 전체 예약메일함 정보 조회
+select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recempname, sendempname
+     , recemail, sendemail, subject, content, importance, reg_date
+     , filename, orgfilename, filesize, reservation_date, del_status
+     , reservation_status, read_status
+from 
+(
+select row_number() over(order by pk_mail_num desc) AS rno,
+       pk_mail_num, fk_senduser_num, fk_receiveuser_num, recempname, sendempname
+       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date, recemail, sendemail, subject, content, importance
+       , filename, orgfilename, filesize, to_char(reservation_date, 'yyyy-mm-dd hh24:mi') as reservation_date
+       , del_status, reservation_status, read_status
+from tbl_mail
+where del_status = 0 and reservation_status = 1
+order by reservation_date desc	
+) V
+
+-- temp_status 기본값 0 으로 설정하기
+ALTER TABLE tbl_mail MODIFY (temp_status DEFAULT 0);
+
+commit
+
+desc tbl_mail;
+
+select count(*)
+from tbl_mail
+where fk_receiveuser_num = '' and del_status = 0 and reservation_status = 0 and temp_status = 1
+and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+
+
+
+-- 보낸메일함에서.. 예약시간이 존재하는 것들은 그것만 보여주기. 예약시간이 not empty 면 (존재하면) reservation_date 를 보여주고,
+-- empty 면 그냥 reg_date 보여주기
+select *
+from tbl_mail
+where reservation_status = 1
+
+delete from tbl_mail
+where importance = 0
+
+commit;
+
+select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date
+from 
+(
+select row_number() over(order by pk_mail_num desc) AS rno,
+       pk_mail_num, fk_receiveuser_num, recempname, subject
+       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi') as reservation_date
+from tbl_mail
+where fk_senduser_num = '' and del_status = 0 and reservation_status = 1
+and lower('') like '%' || lower('') || '%'
+order by reservation_date desc	
+) V
+where rno between #{startRno} and #{endRno}
+
 

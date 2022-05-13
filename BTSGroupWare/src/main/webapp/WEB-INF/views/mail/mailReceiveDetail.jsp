@@ -76,19 +76,19 @@ $(document).ready(function (){
 				</li>
 				<li id="sender" class="detailList">
 					<span>보낸 사람 : </span>
-					<span>임유리 < ${requestScope.mailvo.sendemail} > </span>
+					<span>${requestScope.mailvo.sendempname} < ${requestScope.mailvo.sendemail} > </span>
 				</li>
 				<li id="receiver" class="detailList">
 					<span>받는 사람 : </span>
-					<span>김민정 < ${requestScope.mailvo.recemail} > </span>
+					<span>${requestScope.mailvo.recempname} < ${requestScope.mailvo.recemail} > </span>
 				</li>
 				<li id="sendDate" class="detailList">
 					<span>보낸 날짜 :</span>
-					<span>2022-05-01 23:25</span>
+					<span>${requestScope.mailvo.reg_date}</span>
 				</li>	
 				<li id="attachFile" class="detailList">
 					<span>첨부 파일 : </span>
-					<span>조직도.jpg</span>
+						<span><a href="<%= request.getContextPath()%>/mail/download.bts?pk_mail_num=${requestScope.mailvo.pk_mail_num}">${requestScope.mailvo.orgfilename}</a></span>
 					<br>
 				</li>													
 			</ul>
