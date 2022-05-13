@@ -51,7 +51,6 @@ $( document ).ready( function() {
 		
 		if(!confirm("정말 삭제하시겠습니까?")){  
 			
-			alert("삭제가 취소 되었습니다."); 
 		}
 		else{ 
 			
@@ -186,7 +185,6 @@ $( document ).ready( function() {
 	<div class="modal-content">
 	<div class="modal-header">
 	<h4 class="modal-title" id="exampleModalLabel">연락처 수정</h4>
-	<button type="button" class="btn btn-danger" id="insert_customer_btn" onclick="deletebtn()">삭제</button>
 	</div>
 	
 	<div class="modal-body">
@@ -262,6 +260,7 @@ $( document ).ready( function() {
 	
 	<div class="modal-footer">
 	<button type="button" class="btn btn-primary" id="insert_customer_btn" onclick="javascript:document.updateFrm.submit()">수정</button>
+	<button type="button" class="btn btn-danger" id="insert_customer_btn" onclick="deletebtn()">삭제</button>
 	<button type="button" class="btn btn-success" data-dismiss="modal">닫기</button>
 	</div>
 	</div>

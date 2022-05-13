@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,7 +38,10 @@ public class AddBookController {
    // 주소록 메인페이지
    @RequestMapping(value="/addBook/addBook_main.bts")
    public ModelAndView addBook_main(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
-	      
+	   
+	   HttpSession session = request.getSession();
+	   EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+	   
 	   String str_currentShowPageNo = request.getParameter("currentShowPageNo");
 	   
 	   int totalCount = 0;        // 총 게시물 건수
