@@ -10,6 +10,10 @@
 
 <style type="text/css">
 
+#link > a { 
+	text-decoration: none !important;
+	color : black;	
+}
 
 </style>
 
@@ -282,16 +286,16 @@
 						<table style="margin: 0 20px;">
 							<tbody>
 								<tr id="">
-				   					<td><span style="margin-left: 5px;"><a href="<%= ctxPath %>/att/myCommute.bts">나의 출퇴근기록</span></label></td>
+				   					<td><span id="link" style="margin-left: 5px;"><a href="<%= ctxPath %>/att/myCommute.bts">나의 출퇴근기록</span></label></td>
 				   				</tr>
 				   				<tr>
-				   					<td><span style="margin-left: 5px;"><a href="<%= ctxPath %>/att/myAtt.bts">내 연차 내역</a></span></label></td>
+				   					<td><span id="link" style="margin-left: 5px;"><a href="<%= ctxPath %>/att/myAtt.bts">내 연차 내역</a></span></label></td>
 				   				</tr>	
 				   				<tr>
-				   					<td><span style="margin-left: 5px;"><a href="<%= ctxPath %>/att/reportVacation.bts">연차신청</a></span></label></td>
+				   					<td><span id="link" style="margin-left: 5px;"><a href="<%= ctxPath %>/att/reportVacation.bts">연차신청</a></span></label></td>
 				   				</tr>
 				   				<tr>
-				   					<td><span style="margin-left: 5px;">내 인사정보</span></label></td>
+				   					<td><span id="link" style="margin-left: 5px;"><a href="<%= ctxPath %>/att/waitingSign.bts">결재대기문서 확인</a></span></label></td>
 				   				</tr>
 			   				</tbody>	
 		   				</table>	

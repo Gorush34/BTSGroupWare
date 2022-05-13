@@ -224,6 +224,7 @@
 						      		<c:forEach items="${requestScope.attSortList}" var="attSort" begin="0" end="3" step="1">
 						      			<input type="radio" id="van_common" name="van_common" value="${attSort.pk_att_sort_no}">
 						      			<input type="hidden" id="m_cnt" value="${attSort.minus_cnt}" />
+						      			<input type="hidden" id="m_cnt" value="${attSort.att_sort_korname}" />
 						      			<label for="van_common">${attSort.att_sort_korname}</label>
 						      		</c:forEach>
 						      		</td>
@@ -350,7 +351,7 @@
 			
 		<div id="vac_button" style="text-align: center;">
 			<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnReportVacation" onclick="reportVacation();" style="margin-right: 20px; width:80px; height:30px;">신청하기</button>
-			<button type="button" class="btn btn-secondary btn-sm mr-3" id="btn_vac_certification" style="margin-right: 20px; width:80px; height:30px;">목록보기</button>
+			<!-- <button type="button" class="btn btn-secondary btn-sm mr-3" id="btn_vac_certification" style="margin-right: 20px; width:80px; height:30px;">목록보기</button>  -->
 				      	
 		</div>	
 		<input type="hidden" id="fk_emp_no" name="fk_emp_no" value="${requestScope.loginuser.pk_emp_no}" />

@@ -63,4 +63,19 @@ public interface InterAttendanceService {
 	// 페이징처리 한 받은 공가/경조신청목록 
 	List<Map<String, Object>> getMyAttListWithPaging(Map<String, String> paraMap);
 
+	// 근태신청번호로 공가/경조신청 상세내역 담아오기
+	List<Map<String, Object>> getVacReportList(int pk_att_num);
+
+	// 관리자인지 확인하기
+	int checkManager(String fk_emp_no);
+
+	// 결재상황 업데이트하기
+	int goSign(Map<String, String> paraMap);
+
+	// 총 올린 결재대기중인 연차신청 수 가져오기
+	int getTotalVacReportNoSignCount(String fk_emp_no);
+
+	// 페이징처리 한 결재대기중인 공가/경조신청목록 
+	List<Map<String, Object>> getMyAttListNoSignWithPaging(Map<String, String> paraMap);
+
 }

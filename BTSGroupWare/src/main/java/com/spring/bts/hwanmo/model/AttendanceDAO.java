@@ -157,6 +157,41 @@ public class AttendanceDAO implements InterAttendanceDAO {
 		List<Map<String, Object>> myAttList = sqlsession.selectList("hwanmo.getMyAttListWithPaging", paraMap);
 		return myAttList;
 	}
+
+	// 근태신청번호로 공가/경조신청 상세내역 담아오기
+	@Override
+	public List<Map<String, Object>> getVacReportList(int pk_att_num) {
+		List<Map<String, Object>> vacReportList = sqlsession.selectList("hwanmo.getVacReportList", pk_att_num);
+		return vacReportList;
+	}
+
+	// 부서장인지 확인하기
+	@Override
+	public int checkManager(String fk_emp_no) {
+		int isManager = sqlsession.selectOne("hwanmo.checkManager", fk_emp_no);
+		return isManager;
+	}
+
+	// 결재상황 업데이트하기
+	@Override
+	public int goSign(Map<String, String> paraMap) {
+		int n = sqlsession.update("hwanmo.goSign", paraMap);
+		return n;
+	}
+
+	// 총 올린 결재대기중인 연차신청 수 가져오기
+	@Override
+	public int getTotalVacReportNoSignCount(String fk_emp_no) {
+		int totalCount = sqlsession.selectOne("hwanmo.getTotalVacReportNoSignCount", fk_emp_no);
+		return totalCount;
+	}
+
+	// 페이징처리 한 결재대기중인 공가/경조신청목록 
+	@Override
+	public List<Map<String, Object>> getMyAttListNoSignWithPaging(Map<String, String> paraMap) {
+		List<Map<String, Object>> myAttList = sqlsession.selectList("hwanmo.getMyAttListNoSignWithPaging", paraMap);
+		return myAttList;
+	}
 	
 	
 }
