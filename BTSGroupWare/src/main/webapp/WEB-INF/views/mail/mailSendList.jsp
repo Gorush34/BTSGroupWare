@@ -63,7 +63,7 @@
 		const searchType = $("select#searchType").val();
 		const searchWord = $("input#searchWord").val();
 		
-		location.href = "<%= ctxPath%>/mail/mailReservationDetail.bts?pk_mail_num="+pk_mail_num+"&searchType="+searchType+"&searchWord="+searchWord;
+		location.href = "<%= ctxPath%>/mail/mailSendDetail.bts?pk_mail_num="+pk_mail_num+"&searchType="+searchType+"&searchWord="+searchWord;
 <%-- 	<a href="<%= ctxPath%>/mail/mailSendDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${mailvo.subject}</a> --%>
 	}
 	

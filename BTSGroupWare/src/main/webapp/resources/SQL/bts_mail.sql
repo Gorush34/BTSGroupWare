@@ -419,12 +419,8 @@ and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
 -- empty 면 그냥 reg_date 보여주기
 select *
 from tbl_mail
-where reservation_status = 1
+order by pk_mail_num desc;
 
-delete from tbl_mail
-where importance = 0
-
-commit;
 
 select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date
 from 

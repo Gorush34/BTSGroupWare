@@ -198,13 +198,19 @@ public class MailDAO implements InterMailDAO {
 		int n = sqlsession.selectOne("minjeong.getTotalCount_temporary", paraMap);
 		return n;
 	}
-
 	
 	// 페이징처리 한 임시보관함 메일목록 (검색 있든, 없든 모두 다 포함) 
 	@Override
 	public List<MailVO> getTemporaryMailListWithPaging(Map<String, String> paraMap) {
 		List<MailVO> TemporaryMailList = sqlsession.selectList("minjeong.getTemporaryMailListWithPaging", paraMap);
 		return TemporaryMailList;
+	}
+
+	// 임시보관함에서 제목 클릭했을 때 넘어왔을 경우 받아온 글번호인 pk_mail_num 의 temp_status 를 update
+	@Override
+	public int updateFromTbltemp(Map<String, String> paraMap) {
+		int n = sqlsession.update("minjeong.updateFromTbltemp", paraMap);
+		return n;
 	}
 
 

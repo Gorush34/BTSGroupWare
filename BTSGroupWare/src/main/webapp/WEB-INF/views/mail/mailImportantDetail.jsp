@@ -84,7 +84,12 @@ $(document).ready(function (){
 				</li>
 				<li id="sendDate" class="detailList">
 					<span>보낸 날짜 :</span>
-					<span>${requestScope.mailvo.reg_date}</span>
+					<c:if test="${not empty requestScope.mailvo.reservation_date}">
+							${requestScope.mailvo.reservation_date}:00
+					</c:if>
+					<c:if test="${empty requestScope.mailvo.reservation_date}">
+							${requestScope.mailvo.reg_date}
+					</c:if>
 				</li>	
 				<li id="attachFile" class="detailList">
 					<span>첨부 파일 : </span>

@@ -54,13 +54,15 @@
 	$(document).ready(function(){
 		// 문서가 준비되면 매개변수로 넣은 콜백함수 실행하기
 				
-				// 새로고침 버튼 이벤트 (새로고침 버튼 클릭 시 reset)
-				$("#reset").click(function() {
-					
-					 location.reload();
-					
-				})// end of $("#reset").click(function(){})----------------------
+			// 새로고침 버튼 이벤트 (새로고침 버튼 클릭 시 reset)
+			$("#reset").click(function() {
 				
+				 location.reload();
+				
+			})// end of $("#reset").click(function(){})----------------------
+				
+			
+		 // 메일 쓰기	
 		  <%-- === 스마트 에디터 구현 시작 === --%>
 	       //전역변수
 	       var obj = [];
@@ -188,7 +190,7 @@
 			});// end of $("button#btnMailSend").click(function() {})-------------------------
 
 		
-			// ==== 임시저장 버튼 클릭 시 메일 테이블에서 TEMP_STATUS 을 0에서 1로 update 하기
+			// ==== 메일쓰기가 아닌 ***임시저장*** 버튼 클릭 시 메일 테이블에서 TEMP_STATUS 을 0에서 1로 update 하기
 			$("button#tempSave").click(function() {
 
 	  		 <%-- === 스마트 에디터 구현 시작 === --%>
@@ -250,19 +252,11 @@
 		      	// 중요 체크박스에 체크되어있는지 확인
 		      	var importanceVal = 0;
 		      	if($("input[name=importance]").prop("checked")) {
-		      		// 중요 체크박스에 체크되어 있을 때 중요메일함에 들어가도록 하기
-		      		importanceVal = 1;
+		      		// 중요 체크박스에 체크되어 있을 때 중요메일함에 들어가도록 하기 (importance = 1)
+		      		importanceVal = 1;			// 1
+		      	//	console.log(importanceVal);
 		      	}
-		      	
-				<%--	
-				  중요! 체크박스에 선택되어있는지 여부 확인하기
-				 var importanceVal = 0;
-				
-				 if($("input[name=importance]").prop("checked")) {
-					importanceVal = 1;
-				 } 
-				--%>	 
-			
+
 				const frm = document.mailWriteFrm;
 			//	frm.importanceVal.value = importanceVal;
 				frm.method = "POST";
@@ -323,6 +317,7 @@
 	
 		// === 메일쓰기 모달 JS 시작 === //
 
+		var SelectResDate = $("input#resSendDate").val();	// 사용자가 선택하는 날짜
 		var today = new Date();				
 		var year = today.getFullYear();		// 년
 		var month = (today.getMonth() + 1);	// 월
@@ -336,10 +331,11 @@
 		
 		var dateToday = year + '-' + month + '-' + date;
 		// 2022-05-12
-		resSendDate = $('#resSendDate').val();
+	//	resSendDate = $('#resSendDate').val();
+		SelectResDate = $("input#resSendDate").val();
 		
 		// 사용자가 선택한 날짜값이 오늘 이전의 날짜에 선택되게 해서는 안됨.
-		if(resSendDate < dateToday) {
+		if(SelectResDate < dateToday) {
 			alert("예약시간은 현재시간보다 늦은 시간이어야 합니다.")
 			return false;
 		}
@@ -353,12 +349,12 @@
 		// 현재 minute 구하기
 		var minute = date.getMinutes();		// 현재날짜에서 minute 갖고옴
 		$("#resSendTimeMinute").val();
-		
+/*		
 		$("#resSendTimeHour option").filter(function () {	// option 에서 text가 minute과 있으면 select
 			return $(this).text() == hour;
 		}).attr('selected', true);
-
-		$("#resSendTimeMinute option").eq(0).attr('selected', true);		
+*/
+//		$("#resSendTimeMinute option").eq(0).prop('selected', true);		
 
 		// === 메일쓰기 모달 JS 끝 === //
 	
@@ -422,13 +418,15 @@
 			     	<input type="hidden" id="sendemail" name="sendemail" value="${sessionScope.loginuser.uq_email}" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " /> 
 					<input type="hidden" id="fk_senduser_num" name="fk_senduser_num" value="${sessionScope.loginuser.pk_emp_no}"  style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
 					<input type="hidden" id="sendempname" name="sendempname" value="${sessionScope.loginuser.emp_name}" />
+               		<%-- 임시저장의 경우 --%>
+               		<input type="hidden" name="temp_status" id="temp_status" value="${temp_status}"/> 
 					<button type="button" class="btn btn-secondary btn-sm">주소록</button>
 				</td>
 			</tr>
 			<tr>
 				<th width="14%">
 					<span style="margin-right: 40px;">제목</span>
-					<c:if test="${not empty mailTempvo && mailTempvo.importance == 1}">
+					<c:if test="${not empty mailvo && mailvo.importance == 1}">
 						<input type="checkbox" checked="checked" id="importance" name="importance" />&nbsp;&nbsp;중요!
 					</c:if>
 						<input type="checkbox" id="importance" name="importance" />&nbsp;&nbsp;중요!

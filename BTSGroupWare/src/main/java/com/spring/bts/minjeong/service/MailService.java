@@ -303,5 +303,12 @@ public class MailService implements InterMailService {
 		return TemporaryMailList;
 	}
 
+	// 임시보관함에서 제목 클릭했을 때 넘어왔을 경우 받아온 글번호인 pk_mail_num 의 temp_status 를 update
+	@Override
+	public int updateFromTbltemp(Map<String, String> paraMap) {
+		int n = dao.updateFromTbltemp(paraMap);
+		return n;
+	}
+
 	
 }

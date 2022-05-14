@@ -205,9 +205,6 @@
 								</td>							
 								<td class="text-center">${TemporaryMailList.recempname}</td>
 								<td>
-								<%--
-								<a href="<%= ctxPath%>/mail/mailTemporaryDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${TemporaryMailList.subject}</a>
-								--%>
 								<span class="subject" onclick="goTemporaryMailView('${TemporaryMailList.pk_mail_num}')">${TemporaryMailList.subject}</span>
 								</td>
 								<td class="text-left">${TemporaryMailList.reg_date}</td>
