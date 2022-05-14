@@ -6,8 +6,10 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.bts.hwanmo.model.EmployeeVO;
 import com.spring.bts.jieun.model.CalendarVO;
 import com.spring.bts.jieun.model.InterCalendarDAO;
+import com.spring.bts.jieun.model.ScheduleVO;
 
 
 //=== #31. Service 선언 === 
@@ -21,7 +23,6 @@ public class CalendarService implements InterCalendarService {
 	// Type 에 따라 Spring 컨테이너가 알아서 bean 으로 등록된 com.spring.board.model.BoardDAO 의 bean 을  dao 에 주입시켜준다. 
     // 그러므로 dao 는 null 이 아니다.
 
-	
 	
 	// === 사내 캘린더에 사내 캘린더 소분류 추가하기 === //
 	@Override
@@ -67,6 +68,26 @@ public class CalendarService implements InterCalendarService {
 		return myCalList;
 	}
 
+	// === 캘린더 소분류 수정하기 === //
+	@Override
+	public int editCalendar(Map<String, String> paraMap) {
+		int n = 0;
+		
+		// 캘린더에 이름이 있는지 확인
+		int m = dao.existsCalendar(paraMap); 
+		
+		if(m==0) {
+			n = dao.editCalendar(paraMap);
+		}
+		return n;
+	}
+
+	// === 캘린더 소분류 삭제하기 === //
+	@Override
+	public int deleteCalendar(String pk_calno) {
+		int n = dao.deleteCalendar(pk_calno);
+		return n;
+	}
 
 	// === 서브 캘린더 가져오기 === //
 	@Override
@@ -75,6 +96,12 @@ public class CalendarService implements InterCalendarService {
 		return calendarvoList;
 	}
 	
+	// === 참석자 추가하기 : 사원 명단 불러오기 === //
+	@Override
+	public List<EmployeeVO> searchJoinUser(String joinUserName) {
+		List<EmployeeVO> joinUserList = dao.searchJoinUser(joinUserName);
+		return joinUserList;
+	}
 	
 	// === 일정 등록 하기 === //
 	@Override
@@ -83,6 +110,56 @@ public class CalendarService implements InterCalendarService {
 		return n;
 	}
 
+	// === 일정 보여주기 === //
+	@Override
+	public List<ScheduleVO> selectSchedule(Map<String, String> paraMap) {
+		List<ScheduleVO> scheduleList = dao.selectSchedule(paraMap);
+		return scheduleList;
+	}
+
+	// === 일정 상세 페이지 === //
+	@Override
+	public Map<String, String> detailSchedule(String pk_schno) {
+		 Map<String, String> map = dao.detailSchedule(pk_schno);
+		return map;
+	}
+
+	// === 일정 삭제 하기 === //
+	@Override
+	public int deleteSchedule(String pk_schno) {
+		int n = dao.deleteSchedule(pk_schno);
+		return n;
+	}
+
+	// == 일정 수정하기 == //
+	@Override
+	public int editSchedule_end(ScheduleVO svo) {
+		int n = dao.editSchedule_end(svo);
+		return n;
+	}
+
+	// 총 일정 검색 건수(totalCount)
+	@Override
+	public int getTotalCount(Map<String, String> paraMap) {
+		int n = dao.getTotalCount(paraMap);
+		return n;
+	}
+
+	// 페이징 처리한 캘린더 가져오기(검색어가 없다라도 날짜범위 검색은 항시 포함된 것임)
+	@Override
+	public List<Map<String, String>> scheduleListSearchWithPaging(Map<String, String> paraMap) {
+		List<Map<String, String>> calendarSearchList  = dao.scheduleListSearchWithPaging(paraMap);
+		return calendarSearchList;
+	}
+
+	
+	
+
+	
+
+	
+
+	
 	
 
 

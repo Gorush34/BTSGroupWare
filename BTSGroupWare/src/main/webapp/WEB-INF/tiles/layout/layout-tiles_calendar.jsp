@@ -11,7 +11,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>게시판</title>
+<title>일정 관리</title>
   <!-- Required meta tags -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> 

@@ -7,6 +7,335 @@
 <!-- ==== 대부분은 namespace에 파일이름 사용(유일하니까) ==== -->
 <mapper namespace="minjeong">
 
+	<!-- 받은메일함 목록 보여주기 (검색 X, 페이징 X) -->
+	<!-- 
+	<select id="getReceiveMailList" resultType="com.spring.bts.minjeong.model.MailVO">
+		select pk_mail_num, fk_senduser_num, sendempname, subject
+			 , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+		from tbl_mail
+		order by pk_mail_num desc		
+	</select>
+ 	-->
+
+	<!--  총 받은메일 개수 구해오기 -->
+	<select id="getTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_mail
+		where fk_receiveuser_num = #{fk_receiveuser_num} and del_status = 0 and reservation_status = 0 and temp_status = 0
+		<if test="searchType != ''">
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>		
+	</select>
+
+	
+	<!--  페이징처리 한 받은 메일목록 (검색 있든, 없든 모두 다 포함)  -->
+ 	<select id="recMailListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
+		select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date
+		from 
+		(
+		select row_number() over(order by pk_mail_num desc) AS rno,
+		       pk_mail_num, fk_senduser_num, sendempname, subject
+		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+		       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi') as reservation_date
+		from tbl_mail
+		where fk_receiveuser_num = #{fk_receiveuser_num} and del_status = 0 and reservation_status = 0 and temp_status = 0
+		<if test="searchType != ''">
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>	
+		) V
+		where rno between #{startRno} and #{endRno}
+	</select> 
 
 
+	<!--  총 보낸메일 개수 구해오기 -->
+	<select id="getTotalCount_send" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_mail
+		where fk_senduser_num = #{fk_senduser_num} and del_status = 0 and reservation_status = 0 and temp_status = 0
+		<if test="searchType != ''">
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>		
+	</select>
+
+	
+	<!-- 페이징처리 한 보낸 메일목록 (검색 있든, 없든 모두 다 포함) -->
+ 	<select id="sendMailListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
+		select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date
+		from 
+		(
+		select row_number() over(order by pk_mail_num desc) AS rno,
+		       pk_mail_num, fk_receiveuser_num, recempname, subject
+		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+		       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi') as reservation_date
+		from tbl_mail
+		where fk_senduser_num = #{fk_senduser_num} and del_status = 0 and reservation_status = 0 and temp_status = 0
+		<if test="searchType != ''">
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>	
+		) V
+		where rno between #{startRno} and #{endRno}
+	</select> 	
+	
+	
+
+	<!-- 페이징처리 / 검색기능 포함 된 받은메일함 목록에서 상세내용 조회하기 (이전글, 다음글 제외) -->
+	<select id="getRecMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">	
+		select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content, reg_date
+			 , filename, orgfilename, filesize
+				from
+				(
+				    select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content
+				         , to_char(reg_date, 'yyyy-mm-dd hh24:mi:ss') as reg_date         
+				         , fileName, orgFilename, fileSize
+				    from tbl_mail
+					<if test='searchType != "" and searchWord != "" '>
+					where lower(${searchType}) like '%'|| lower(#{searchWord}) || '%'
+					</if>	    
+				) V
+		where V.pk_mail_num = #{pk_mail_num}
+	</select>
+
+
+
+	<!-- 페이징처리 / 검색기능 포함 된 받은메일함 목록에서 상세내용 조회하기 (이전글, 다음글 포함) -->
+	<!--
+	<select id="getRecMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">	
+		select prev_seq, prev_subject
+			  , pk_mail_num, fk_senduser_num, fk_receiveuser_num, empname, email, subject, content, reg_date
+			  , next_seq, next_subject
+			  , filename, orgfilename, filesize
+				from
+				(
+				    select lag(pk_mail_num,1) over(order by pk_mail_num desc) AS prev_seq            
+				         , lag(subject,1) over(order by pk_mail_num desc) AS prev_subject
+				         , fk_senduser_num, fk_receiveuser_num, empname, email, subject, content
+				         , to_char(reg_date, 'yyyy-mm-dd hh24:mi:ss') as reg_date				         
+				         , lead(pk_mail_num,1) over(order by pk_mail_num desc) AS next_seq
+				         , lead(subject,1) over(order by pk_mail_num desc) AS next_subject	         
+				         , fileName, orgFilename, fileSize
+				    from tbl_mail
+					<if test='searchType != "" and searchWord != "" '>
+					where and lower(${searchType}) like '%'|| lower(#{searchWord}) || '%'
+					</if>	    
+				) V
+		where V.pk_mail_num = #{pk_mail_num}
+	 </select>
+	-->	
+	
+
+	<!-- 페이징처리 / 검색기능 포함 된 보낸메일함 목록에서 상세내용 조회하기 (이전글, 다음글 제외) -->
+	<select id="getSendMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">	
+		select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content, reg_date
+			 , filename, orgfilename, filesize
+				from
+				(
+				    select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content
+				         , to_char(reg_date, 'yyyy-mm-dd hh24:mi:ss') as reg_date         
+				         , fileName, orgFilename, fileSize
+				    from tbl_mail
+					<if test='searchType != "" and searchWord != "" '>
+					where lower(${searchType}) like '%'|| lower(#{searchWord}) || '%'
+					</if>	    
+				) V
+		where V.pk_mail_num = #{pk_mail_num}
+	</select>
+
+
+	<!-- 메일주소로 사원이름 및 사원번호 알아오기 (resultMap 사용) -->
+	<resultMap type="Map" id="EmpnameAndNum">
+        <result property="emp_name"          column="emp_name"         	javaType="String" />
+        <result property="pk_emp_no"         column="pk_emp_no"         javaType="String" />
+    </resultMap>
+
+	<select id="getEmpnameAndNum" parameterType="String" resultMap="EmpnameAndNum">
+		select emp_name, pk_emp_no
+		from tbl_employees
+		where uq_email = #{uq_email}
+	</select>
+	
+	
+	<!-- 메일쓰기 (파일첨부가 없는 메일쓰기) reservation_date 가 있으면 reservation_status 를 1로 바꿔주고, 없으면 default -->
+	<insert id="add" parameterType="com.spring.bts.minjeong.model.MailVO">
+		insert into tbl_mail(pk_mail_num, fk_senduser_num, fk_receiveuser_num, recempname, sendempname, recemail, sendemail, subject, content, reg_date, importance, reservation_date, reservation_status, read_status) 
+		values(SEQ_MAIL.nextval, to_number(#{fk_senduser_num}), to_number(#{fk_receiveuser_num}), #{recempname}, #{sendempname}, #{recemail}, #{sendemail}, #{subject}, #{content}, default, default, to_date(#{reservation_date}, 'yyyy-mm-dd hh24:mi'), default, default)
+    </insert>
+
+	
+	<!-- 메일쓰기 (파일첨부가 있는 메일쓰기) -->
+	<insert id="add_withFile" parameterType="com.spring.bts.minjeong.model.MailVO">
+		insert into tbl_mail(pk_mail_num, fk_senduser_num, fk_receiveuser_num, recempname, sendempname
+						   , recemail, sendemail, subject, content, reg_date, filename, orgfilename, filesize, importance, reservation_date, reservation_status, read_status) 
+		values(SEQ_MAIL.nextval, to_number(#{fk_senduser_num}), to_number(#{fk_receiveuser_num}), #{recempname}
+			   , #{sendempname}, #{recemail}, #{sendemail}, #{subject}, #{content}, default, #{filename}, #{orgfilename}, #{filesize}, default, to_date(#{reservation_date}, 'yyyy-mm-dd hh24:mi'), #{reservation_status}, default)
+	</insert>
+
+	<!-- 받은메일함 or 보낸메일함에서 선택한 글번호에 해당하는 메일을 삭제 시, 메일 테이블에서 해당 메일번호의 삭제 상태를 1로 변경해주기 --> 
+	<!-- 메일 테이블에서 해당 메일의 삭제 상태(del_status)를 1로 변경해주기 -->
+	<update id="updateFromTblMailDelStatus" parameterType="HashMap">
+		update tbl_mail set del_status = 1
+		where pk_mail_num = #{pk_mail_num}
+	</update>
+
+	<!-- 휴지통 총 메일개수 구해오기 -->
+	<select id="getTotalCount_recyclebin" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_mail
+		where fk_receiveuser_num = #{fk_receiveuser_num} and del_status = 1
+		<if test="searchType != ''">
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>		
+	</select>
+	
+	<!--  페이징처리 한 휴지통목록 (검색 있든, 없든 모두 다 포함)  -->
+	<select id="RecyclebinMailListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
+		select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date
+		from 
+		(
+		select row_number() over(order by pk_mail_num desc) AS rno,
+		       pk_mail_num, fk_senduser_num, sendempname, subject
+		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+		       , filename , to_char(reservation_date, 'yyyy-mm-dd hh24:mi') as reservation_date
+		from tbl_mail
+		where (fk_receiveuser_num = #{fk_receiveuser_num} or fk_senduser_num = #{fk_receiveuser_num} ) and del_status = 1
+		<if test="searchType != ''">
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>	
+		) V
+		where rno between #{startRno} and #{endRno}
+	</select>
+	
+
+	<!-- 페이징처리 / 검색기능 포함 된 휴지통 목록에서 상세내용 조회하기 (이전글, 다음글 제외) -->
+	<select id="getRecyclebinMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">	
+		select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content, reg_date
+			 , filename, orgfilename, filesize
+				from
+				(
+				    select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content
+				         , to_char(reg_date, 'yyyy-mm-dd hh24:mi:ss') as reg_date         
+				         , fileName, orgFilename, fileSize
+				    from tbl_mail
+					<if test='searchType != "" and searchWord != "" '>
+					where lower(${searchType}) like '%'|| lower(#{searchWord}) || '%'
+					</if>	    
+				) V
+		where V.pk_mail_num = #{pk_mail_num}
+	</select>
+	
+	<!-- 휴지통에서 선택한 글들을 mail 테이블에서 삭제하기 -->
+	<delete id="deleteFromTblMail" parameterType="HashMap">
+		delete from tbl_mail
+		where pk_mail_num = #{pk_mail_num}	
+	</delete>
+
+
+	<!-- ===================== 예약메일함 시작 ===================== -->
+	<!-- 총 예약메일 개수 구해오기 -->
+	<select id="getTotalCount_reservation" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_mail
+		where fk_senduser_num = #{fk_senduser_num} and del_status = 0 and temp_status = 0 and reservation_status = 1
+		<if test="searchType != ''">
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>		
+	</select>
+	
+	<!--  페이징처리 한 예약메일함목록 1 (검색 있든, 없든 모두 다 포함)  -->
+ 	<select id="getReservationListWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
+		select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date
+		from 
+		(
+		select row_number() over(order by pk_mail_num desc) AS rno,
+		       pk_mail_num, fk_receiveuser_num, recempname, subject
+		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+		       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi') as reservation_date
+		from tbl_mail
+		where fk_senduser_num = #{fk_senduser_num} and del_status = 0 and temp_status = 0 and reservation_status = 1
+		<if test="searchType != ''">
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>
+		order by reservation_date desc	
+		) V
+		where rno between #{startRno} and #{endRno}
+	</select>
+
+	
+	<!--  페이징처리 한 예약메일함목록 2 / 파라미터 X (검색 있든, 없든 모두 다 포함)  -->
+ 	<select id="reservationListWithPaging" resultType="com.spring.bts.minjeong.model.MailVO">
+		select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recempname, sendempname
+		     , recemail, sendemail, subject, content, importance, reg_date
+		     , filename, orgfilename, filesize, reservation_date, del_status
+		     , reservation_status, read_status
+		from 
+		(
+		select row_number() over(order by pk_mail_num desc) AS rno,
+		       pk_mail_num, fk_senduser_num, fk_receiveuser_num, recempname, sendempname
+		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date, recemail, sendemail, subject, content, importance
+		       , filename, orgfilename, filesize, to_char(reservation_date, 'yyyy-mm-dd hh24:mi') as reservation_date
+		       , del_status, reservation_status, read_status
+		from tbl_mail
+		where del_status = 0 and reservation_status = 1
+		order by reservation_date desc	
+		) V
+	</select> 
+		
+	<!-- 페이징처리 / 검색기능 포함 된 예약메일함 목록에서 상세내용 조회하기 (이전글, 다음글 제외) -->
+	<select id="getReservationMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
+		select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail
+			 , recempname, sendempname, subject, content, reg_date, reservation_date
+			 , filename, orgfilename, filesize
+				from
+				(
+				    select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content
+				         , to_char(reg_date, 'yyyy-mm-dd hh24:mi:ss') as reg_date    
+				         , to_char(reservation_date, 'yyyy-mm-dd hh24:mi') as reservation_date     
+				         , fileName, orgFilename, fileSize
+				    from tbl_mail
+					<if test='searchType != "" and searchWord != "" '>
+					where lower(${searchType}) like '%'|| lower(#{searchWord}) || '%'
+					</if>	    
+				) V
+		where V.pk_mail_num = #{pk_mail_num}	
+	</select>	
+	
+	<!-- 발송예약된 예약메일의 상태값을 1에서 0으로 변경한다. -->
+	<update id="add_updateResStatus" parameterType="com.spring.bts.minjeong.model.MailVO">
+		update tbl_mail set reservation_status = 0
+		where pk_mail_num = #{pk_mail_num}
+	</update>	
+	
+	<!-- ===================== 예약메일함 끝 ===================== -->
+	
+
+	<!--  총 임시보관함 개수 구해오기 (tmp_status == 1) -->
+	<select id="getTotalCount_temporary" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_mail
+		where fk_senduser_num = #{fk_senduser_num} and del_status = 0 and reservation_status = 0 and temp_status = 1
+		<if test="searchType != ''">
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>		
+	</select>
+
+	
+	<!--  페이징처리 한 임시보관함 메일목록 (검색 있든, 없든 모두 다 포함) (tmp_status == 1) -->
+ 	<select id="getTemporaryMailListWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
+		select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename
+		from 
+		(
+		select row_number() over(order by pk_mail_num desc) AS rno,
+		       pk_mail_num, fk_senduser_num, sendempname, subject
+		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+		       , filename
+		from tbl_mail
+		where fk_senduser_num = #{fk_senduser_num} and del_status = 0 and reservation_status = 0 and temp_status = 1
+		<if test="searchType != ''">
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>	
+		) V
+		where rno between #{startRno} and #{endRno}
+	</select> 	
+
+	
+	
 </mapper>

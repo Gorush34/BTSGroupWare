@@ -8,6 +8,8 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.spring.bts.hwanmo.model.EmployeeVO;
+
 //=== #32. DAO 선언 === 
 @Repository
 public class CalendarDAO implements InterCalendarDAO {
@@ -33,19 +35,6 @@ public class CalendarDAO implements InterCalendarDAO {
 	// Type 에 따라 Spring 컨테이너가 알아서 root-context.xml 에 생성된 org.mybatis.spring.SqlSessionTemplate 의  sqlsession bean 을  sqlsession 에 주입시켜준다. 
     // 그러므로 sqlsession 는 null 이 아니다.
 
-	// === 일정 등록 하기 === //
-	@Override
-	public int scheduleRegisterInsert(Map<String, String> paraMap) {
-		int n = sqlsession.insert("jieun.scheduleRegisterInsert", paraMap);
-		return n;
-	}
-
-	// === 서브 캘린더 가져오기 === //
-	@Override
-	public List<CalendarVO> selectCalNo(Map<String, String> paraMap) {
-		List<CalendarVO> calendarvoList = sqlsession.selectList("jieun.selectCalNo", paraMap);
-		return calendarvoList;
-	}
 
 	// === 사내 캘린더에 사내 캘린더 소분류 추가하기 === //
 	@Override
@@ -88,8 +77,92 @@ public class CalendarDAO implements InterCalendarDAO {
 		return myCalList;
 	}
 
-	
+	// === 캘린더 소분류 수정하기 === //
+	@Override
+	public int editCalendar(Map<String, String> paraMap) {
+		int n = sqlsession.update("jieun.editCalendar", paraMap);
+		return n;
+	}
+			// 캘린더에 이름이 있는지 확인
+			@Override
+			public int existsCalendar(Map<String, String> paraMap) {
+				int m = sqlsession.selectOne("jieun.existsCalendar", paraMap);
+				return m;
+			}
 
+	// === 캘린더 소분류 삭제하기 === //
+	@Override
+	public int deleteCalendar(String pk_calno) {
+		int n = sqlsession.delete("jieun.deleteCalendar", pk_calno);
+		return n;
+	}
+
+	// === 서브 캘린더 가져오기 === //
+	@Override
+	public List<CalendarVO> selectCalNo(Map<String, String> paraMap) {
+		List<CalendarVO> calendarvoList = sqlsession.selectList("jieun.selectCalNo", paraMap);
+		return calendarvoList;
+	}
+	
+	// === 참석자 추가하기 : 사원 명단 불러오기 === //
+	@Override
+	public List<EmployeeVO> searchJoinUser(String joinUserName) {
+		List<EmployeeVO> joinUserList = sqlsession.selectList("jieun.searchJoinUser", joinUserName);
+		return joinUserList;
+	}
+	
+	// === 일정 등록 하기 === //
+	@Override
+	public int scheduleRegisterInsert(Map<String, String> paraMap) {
+		int n = sqlsession.insert("jieun.scheduleRegisterInsert", paraMap);
+		return n;
+	}
+	
+	
+	// === 일정 보여주기 === //
+	@Override
+	public List<ScheduleVO> selectSchedule(Map<String, String> paraMap) {
+		List<ScheduleVO> scheduleList = sqlsession.selectList("jieun.selectSchedule", paraMap);
+		return scheduleList;
+	}
+	
+	// === 일정 상세 페이지 === //
+	@Override
+	public Map<String, String> detailSchedule(String pk_schno) {
+		Map<String, String> map = sqlsession.selectOne("jieun.detailSchedule", pk_schno);
+		return map;
+	}
+	
+	// === 일정 삭제 하기 === //
+	@Override
+	public int deleteSchedule(String pk_schno) {
+		int n = sqlsession.delete("jieun.deleteSchedule", pk_schno);
+		return n;
+	}
+	
+	// == 일정 수정하기 == //
+	@Override
+	public int editSchedule_end(ScheduleVO svo) {
+		int n = sqlsession.update("jieun.editSchedule_end", svo);
+		return n;
+	}
+	
+	// == 총 일정 검색 건수(totalCount) == //
+	@Override
+	public int getTotalCount(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("jieun.getTotalCount", paraMap);
+		return n;
+	}
+	
+	// == 페이징 처리한 캘린더 가져오기(검색어가 없다라도 날짜범위 검색은 항시 포함된 것임) == //
+
+	@Override
+	public List<Map<String, String>> scheduleListSearchWithPaging(Map<String, String> paraMap) {
+		 List<Map<String, String>> calendarSearchList = sqlsession.selectList("jieun.scheduleListSearchWithPaging", paraMap);
+		return calendarSearchList;
+	}
+	
+	
 	
 	
 

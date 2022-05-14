@@ -16,6 +16,8 @@
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<mvc:annotation-driven />
 
+
+
 	<!-- ==== #18. 이미지, 동영상, js, css 파일등이 위치하는 경로를 의미한다.
                             그 경로는 /webapp/resources 아래에 위치하거나 또는 /webapp/resources 아래에 폴더를 만들어서 저장시켜야 한다. ==== -->
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
@@ -189,6 +191,8 @@
      <aop:pointcut id="controllerOperation" expression="execution(public * com.spring..*Controller.*(..))" />
    </aop:config>
 	
-	
+
+	<!-- ==== #181. Spring Scheduler(스프링 스케줄러 1) 어노테이션을 사용하여 스프링 스케줄러를 구현하도록 하겠다. -->
+	<task:annotation-driven/>
 	
 </beans:beans>

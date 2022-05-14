@@ -35,6 +35,11 @@ ul#secondHeaderGroup, .secondHeaderList {
 		display: inline-block;
 }
 
+#navbarSupportedContent > ul > li {
+	margin-right: 20px;
+	font-size: 18px;
+}
+
 /* 헤더 스타일  끝 */
 
 
