@@ -127,12 +127,12 @@
 				<col style="width: 16%; background-color: #e8e8e8;" />
 			</colgroup>
 			
+			<!-- <tr> -->		
 			<tr style="width: 16%;">
 				<th class="edmsView_th">제목</th>
 				<td style="width: 75%;">
-					<c:if test="${requestScope.apprvo.emergency == 1}">
-						<span style="color: red; font-weight: bold;">[긴급]</span>&nbsp;
-					</c:if>
+					<!-- if문 -->
+					<span style="color: red; font-weight: bold;">[긴급]</span>&nbsp;
 					<span>${requestScope.apprvo.title}</span>
 				</td>
 			</tr>
@@ -152,8 +152,7 @@
 					<br/>
 				</td>
 			</tr>
-			
-			<c:if test="${requestScope.filename != '' || requestScope.filename != null }"> 
+
 			<tr>
 				<th class="edmsView_th">첨부파일</th>
 				<td>
@@ -176,7 +175,6 @@
 						<fmt:formatNumber value="${requestScope.apprvo.fileSize}" pattern="#,###" />
 					</td>
 			</tr>
-			</c:if>
 		</table>
 	
 		<c:set var="v_gobackURL" value='${ fn:replace(requestScope.gobackURL, "&", " ") }' />

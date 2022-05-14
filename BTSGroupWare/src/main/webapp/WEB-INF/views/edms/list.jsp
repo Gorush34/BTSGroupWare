@@ -150,7 +150,16 @@
 
 <div class="edmslist">
 	<div class="edmsHomeTitle">
-		<span class="edms_maintitle">대기문서함</span>
+		<%-- <c:if test="${requestScope.apprvo.status eq 0}">
+			<span class="edms_maintitle">대기문서함</span>
+		</c:if>
+		<c:if test="${requestScope.apprvo.status eq 1}">
+			<span class="edms_maintitle">승인문서함</span>
+		</c:if>
+		<c:if test="${requestScope.apprvo.status eq 2}">
+			<span class="edms_maintitle">반려문서함</span>
+		</c:if> --%>
+		
 		<p style="margin-bottom: 10px;"></p>
 	</div>
 

@@ -112,7 +112,7 @@ public class EdmsDAO implements InterEdmsDAO {
 	// 총 게시물 건수(totalCount) 구하기 - 검색이 있을 때와 검색이 없을 때로 나뉜다.
 	@Override
 	public int getTotalCount(Map<String, String> paraMap) {
-		int n = sqlsession.selectOne("yuri.getTotalCount");
+		int n = sqlsession.selectOne("yuri.getTotalCount", paraMap);
 		return n;
 	}
 
