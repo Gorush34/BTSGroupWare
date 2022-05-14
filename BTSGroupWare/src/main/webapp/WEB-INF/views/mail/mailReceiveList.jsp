@@ -197,12 +197,19 @@
 									<input type="checkbox" id="${receiveMailList.pk_mail_num}" name="chkBox" class="text-center"/>
 								</td>
 								<td style="width: 40px;">
+								<%-- 별모양 클릭 시 중요 메일함으로 이동 --%>
+									<c:if test="${receiveMailList.importance == '1'}">
+									<span class="fa fa-star" class="text-center"></span>
+									</c:if>									
+									<c:if test="${receiveMailList.importance == '0'}">
 									<span class="fa fa-star-o" class="text-center"></span>
+									</c:if>
 								</td>
 								<td style="width: 40px;">
 									<c:if test="${not empty receiveMailList.filename}">
 										<span class="fa fa-paperclip" class="text-center"></span>
-									</c:if>								</td>							
+									</c:if>								
+								</td>							
 								<td class="text-center">${receiveMailList.sendempname}</td>
 								<td>
 								<%--

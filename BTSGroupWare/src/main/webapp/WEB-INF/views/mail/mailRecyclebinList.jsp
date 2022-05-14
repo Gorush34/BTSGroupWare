@@ -195,12 +195,18 @@
 									<input type="checkbox" id="${RecyclebinMailList.pk_mail_num}" name="chkBox" class="text-center"/>
 								</td>
 								<td style="width: 40px;">
+									<c:if test="${RecyclebinMailList.importance == '1'}">
+									<span class="fa fa-star" class="text-center"></span>
+									</c:if>									
+									<c:if test="${RecyclebinMailList.importance == '0'}">
 									<span class="fa fa-star-o" class="text-center"></span>
+									</c:if>
 								</td>
 								<td style="width: 40px;">
 									<c:if test="${not empty RecyclebinMailList.filename}">
 										<span class="fa fa-paperclip" class="text-center"></span>
-									</c:if>								</td>							
+									</c:if>								
+								</td>							
 								<td class="text-center">${RecyclebinMailList.sendempname}</td>
 								<td>
 								<%--

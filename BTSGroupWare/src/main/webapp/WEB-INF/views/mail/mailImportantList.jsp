@@ -43,8 +43,7 @@
 			}
 			
 		});
-		
-		
+				
 	}); // end of $(document).ready(function(){})----------------------------------
 
 	
@@ -68,7 +67,7 @@
 	}
 	
 
-	// 삭제버튼 클릭 시 휴지통으로 이동하기 (ajax)
+	// 삭제버튼 클릭 시 휴지통으로 이동하기 (Ajax)
 	function goMailDelRecyclebin() {
 		
 		// 체크된 갯수 세기
@@ -95,7 +94,7 @@
 				type:"GET",
 				data: {"pk_mail_num":JSON.stringify(arrChk),
 							   "cnt":chkCnt,
-							   "fk_senduser_num":${fk_senduser_num} },
+							   "fk_receiveuser_num":${fk_receiveuser_num} },
 				dataType:"JSON",
 				success:function(json){
 					
@@ -178,12 +177,12 @@
 									<input type="checkbox" id="checkAll" />
 								</th>
 								<th style="width: 2%;">
-									<span class="fa fa-star-o"></span>
+									<span class="fa fa-star"></span>
 								</th>
 									<th style="width: 2%;">
 										<span class="fa fa-paperclip"></span>
 									</th>
-								<th style="width: 10%;" class="text-center">받는이</th>
+								<th style="width: 10%;" class="text-center">보낸이</th>
 								<th style="width: 70%;">제목</th>
 								<th style="width: 20%;" class="text-left">날짜</th>
 							</tr>
@@ -196,14 +195,20 @@
 									<input type="checkbox" id="${ImportantMailList.pk_mail_num}" name="chkBox" class="text-center"/>
 								</td>
 								<td style="width: 40px;">
+								<%-- 별모양 클릭 시 중요 메일함으로 이동 --%>
+									<c:if test="${ImportantMailList.importance == '1'}">
+									<span class="fa fa-star" class="text-center"></span>
+									</c:if>									
+									<c:if test="${ImportantMailList.importance == '0'}">
 									<span class="fa fa-star-o" class="text-center"></span>
+									</c:if>
 								</td>
 								<td style="width: 40px;">
 									<c:if test="${not empty ImportantMailList.filename}">
 										<span class="fa fa-paperclip" class="text-center"></span>
 									</c:if>
 								</td>							
-								<td class="text-center">${ImportantMailList.recempname}</td>
+								<td class="text-center">${ImportantMailList.sendempname}</td>
 								<td>
 								<%--
 								<a href="<%= ctxPath%>/mail/mailImportantDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${ImportantMailList.subject}</a>
@@ -215,13 +220,13 @@
 						</c:forEach>																				
 						</tbody>
 					</table>
-				</div>	
+				</div>
 				
 				<%-- 페이징 처리하기 --%>
 				<div align="center" style="border: solid 0px gray; width: 70%; margin: 20px auto;" >
 					${requestScope.pageBar}
 				</div>							
 			</div>
-		</div>	
+		</div>
 	</div>
 </div>

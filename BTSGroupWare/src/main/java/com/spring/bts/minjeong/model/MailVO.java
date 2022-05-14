@@ -4,7 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class MailVO {
 
-	// 메일 VO (Mapper WHERE 절에 STATUS 추가 잘해놓을 것)
+	// 메일 VO 
 	private String pk_mail_num;             // NOT NULL NUMBER(14)  메일번호    
 	private String fk_senduser_num;         // NUMBER(8)     		보낸사람 사원번호
 	private String fk_receiveuser_num;     	// NUMBER(8)     		받는사람 사원번호
@@ -24,6 +24,7 @@ public class MailVO {
 	private String reservation_status;      // NUMBER(2)     		발송예약여부 (0: 발송예약X , 1: 발송예약O)
 	private String del_status;				// NUMBER(2)  			삭제여부(0: 삭제X , 1:삭제)
 	private String temp_status;				// NUMBER(2) 			임시보관함 저장여부 (0:저장 X , 1:저장O)
+//	private String importance_star;			// NUMBER(2) 			중요보관함 저장여부 (0:저장 X , 1:저장O) 
 	
 	// 메일 상세내용 보기
 	private String prev_seq;		// 이전글번호

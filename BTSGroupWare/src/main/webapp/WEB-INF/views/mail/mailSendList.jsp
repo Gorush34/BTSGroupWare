@@ -180,9 +180,9 @@
 								<th style="width: 2%;">
 									<span class="fa fa-star-o"></span>
 								</th>
-									<th style="width: 2%;">
-										<span class="fa fa-paperclip"></span>
-									</th>
+								<th style="width: 2%;">
+									<span class="fa fa-paperclip"></span>
+								</th>
 								<th style="width: 10%;" class="text-center">받는이</th>
 								<th style="width: 70%;">제목</th>
 								<th style="width: 20%;" class="text-left">날짜</th>
@@ -196,7 +196,12 @@
 									<input type="checkbox" id="${SendMailList.pk_mail_num}" name="chkBox" class="text-center"/>
 								</td>
 								<td style="width: 40px;">
+									<c:if test="${SendMailList.importance == '1'}">
+									<span class="fa fa-star" class="text-center"></span>
+									</c:if>									
+									<c:if test="${SendMailList.importance == '0'}">
 									<span class="fa fa-star-o" class="text-center"></span>
+									</c:if>
 								</td>
 								<td style="width: 40px;">
 									<c:if test="${not empty SendMailList.filename}">
@@ -208,7 +213,11 @@
 								<%--
 								<a href="<%= ctxPath%>/mail/mailSendDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${sendMailList.subject}</a>
 								--%>
-								<span class="subject" onclick="goSendMailView('${SendMailList.pk_mail_num}')">${SendMailList.subject}</span>
+								<span class="subject" onclick="goSendMailView('${SendMailList.pk_mail_num}')">
+								<c:if test="${SendMailList.importance == '1'}">
+									<span class="fa fa-exclamation" style="color: red;" class="text-center"></span>
+								</c:if>	
+								${SendMailList.subject}</span>
 								</td>
 								<td class="text-left">									
 									<c:if test="${not empty SendMailList.reservation_date}">

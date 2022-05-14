@@ -258,7 +258,7 @@
 		      	}
 
 				const frm = document.mailWriteFrm;
-			//	frm.importanceVal.value = importanceVal;
+				frm.importanceVal.value = importanceVal;
 				frm.method = "POST";
 				frm.action = "<%= ctxPath%>/mail/mailTemporaryEnd.bts"
 				frm.submit();
@@ -426,10 +426,7 @@
 			<tr>
 				<th width="14%">
 					<span style="margin-right: 40px;">제목</span>
-					<c:if test="${not empty mailvo && mailvo.importance == 1}">
-						<input type="checkbox" checked="checked" id="importance" name="importance" />&nbsp;&nbsp;중요!
-					</c:if>
-						<input type="checkbox" id="importance" name="importance" />&nbsp;&nbsp;중요!
+						<input type="checkbox" id="importance" name="importance" />&nbsp;중요&nbsp;<span class="fa fa-exclamation" style="color: red;" class="text-center"></span>
 						<input type="hidden" id="importanceVal" name="importanceVal" />
 				</th>
 				<td width="110%" >

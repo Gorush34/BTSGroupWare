@@ -419,6 +419,10 @@ and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
 -- empty 면 그냥 reg_date 보여주기
 select *
 from tbl_mail
+where pk_mail_num = '95';
+
+select *
+from tbl_mail
 order by pk_mail_num desc;
 
 
@@ -435,5 +439,20 @@ and lower('') like '%' || lower('') || '%'
 order by reservation_date desc	
 ) V
 where rno between #{startRno} and #{endRno}
+
+-- 중요메일함 목록 조회
+select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date
+from 
+(
+select row_number() over(order by pk_mail_num desc) AS rno,
+       pk_mail_num, fk_senduser_num, sendempname, subject
+       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+       , filename , to_char(reservation_date, 'yyyy-mm-dd hh24:mi') as reservation_date
+from tbl_mail
+where (fk_receiveuser_num = '' or fk_senduser_num = '' ) and importance = 1
+and lower('') like '%' || lower('') || '%'
+) V
+where rno between 1 and 3	
+
 
 
