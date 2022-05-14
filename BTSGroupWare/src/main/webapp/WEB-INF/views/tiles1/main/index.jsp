@@ -13,8 +13,12 @@
 td.commentContentsClosed:hover {
 	font-weight: bold;
 }
-
-
+td#no{
+    text-align: center;
+    padding-top: 110px;
+    font-weight: bold;
+    font-size: 15pt;
+}
 </style>
 
 <script type="text/javascript">
@@ -76,7 +80,7 @@ td.commentContentsClosed:hover {
 				  }
 				  else {
 					  html += "<tr>";
-					  html += "<td colspan='4' class='board'>게시물이 없습니다.</td>";
+					  html += "<td colspan='4' id='no' class='board'>게시물이 없습니다.</td>";
 					  html += "</tr>";
 				  }
 				  
@@ -110,7 +114,7 @@ td.commentContentsClosed:hover {
 				  }
 				  else {
 					  html += "<tr>";
-					  html += "<td colspan='4' class='board'>게시물이 없습니다.</td>";
+					  html += "<td colspan='4' id='no' class='board'>게시물이 없습니다.</td>";
 					  html += "</tr>";
 				  }
 				  
@@ -134,7 +138,7 @@ td.commentContentsClosed:hover {
 				  if(json.length > 0) {
 					  $.each(json, function(index, item){
 						  html += "<tr>";  
-						  html += "<td class='commentContentsClosed'><span onclick='goView("+item.pk_seq+")' class='subject2' style='color: black; cursor: pointer; padding-left: 30px;'>"+item.subject+"</span></td>";
+						  html += "<td class='commentContentsClosed'><span onclick='goView_board("+item.pk_seq+")' class='subject2' style='color: black; cursor: pointer; padding-left: 30px;'>"+item.subject+"</span></td>";
 						  if(item.user_name == "관리자"){
 							  html += "<td class='board' style='text-align: center;'>"+item.user_name+"</td>";
 						  }
@@ -147,7 +151,7 @@ td.commentContentsClosed:hover {
 				  }
 				  else {
 					  html += "<tr>";
-					  html += "<td colspan='3' class='board'>게시물이 없습니다.</td>";
+					  html += "<td colspan='3' id='no' class='board'>게시물이 없습니다.</td>";
 					  html += "</tr>";
 				  }
 				  
@@ -186,7 +190,7 @@ td.commentContentsClosed:hover {
 				  }
 				  else {
 					  html += "<tr>";
-					  html += "<td colspan='3' class='board'>게시물이 없습니다.</td>";
+					  html += "<td colspan='4' id='no' class='board'>게시물이 없습니다.</td>";
 					  html += "</tr>";
 				  }
 				  

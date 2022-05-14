@@ -170,12 +170,12 @@
 	<insert id="save" parameterType="com.spring.bts.moongil.model.BoardVO">
 		<if test='fk_seq.equals("")'>
 		     insert into tbl_board(pk_seq, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno)
-		     values(boardseq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, 2, #{groupno}, default, default)   
+		     values(temp_boardSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, 2, #{groupno}, default, default)   
 		</if>
 		<!-- 답글 -->
 		 <if test='!fk_seq.equals("")'>
 		     insert into tbl_board(pk_seq, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno)
-		     values(boardSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, 2, #{groupno}, #{fk_seq}, #{depthno}+1)   
+		     values(temp_boardSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, 2, #{groupno}, #{fk_seq}, #{depthno}+1)   
 		</if>     
 	</insert>
 
@@ -183,12 +183,12 @@
 	<insert id="save_withFile" parameterType="com.spring.bts.moongil.model.BoardVO" >
 		<if test='fk_seq.equals("")'>
 		     insert into tbl_board(pk_seq, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno, filename, org_filename, file_size)
-		     values(boardSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, 2, #{groupno}, default, default, #{filename}, #{org_filename}, #{file_size})   
+		     values(temp_boardSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, 2, #{groupno}, default, default, #{filename}, #{org_filename}, #{file_size})   
 	     </if>
 	     <!-- 답글 -->
 	     <if test='!fk_seq.equals("")'>
 		     insert into tbl_board(pk_seq, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno, filename, org_filename, file_size)
-		     values(boardSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, 2, #{groupno}, #{fk_seq}, #{depthno}+1, #{filename}, #{org_filename}, #{file_size})    
+		     values(temp_boardSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, 2, #{groupno}, #{fk_seq}, #{depthno}+1, #{filename}, #{org_filename}, #{file_size})    
 	     </if>
 	</insert>
 
@@ -677,12 +677,12 @@
 	<insert id="add_fileboard" parameterType="com.spring.bts.moongil.model.FileboardVO">
 		<if test='fk_seq.equals("")'>
 		     insert into tbl_fileboard(pk_seq, ko_depname, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno)
-		     values(noticeSeq.nextval, #{ko_depname}, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, default, default)   
+		     values(fileboardSeq.nextval, #{ko_depname}, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, default, default)   
 		</if>
 		<!-- 답글 -->
 		 <if test='!fk_seq.equals("")'>
 		     insert into tbl_fileboard(pk_seq, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno, ko_depname)
-		     values(noticeSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, #{fk_seq}, #{depthno}+1, #{ko_depname})   
+		     values(fileboardSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, #{fk_seq}, #{depthno}+1, #{ko_depname})   
 		</if>     
 	</insert>     
      
@@ -690,12 +690,12 @@
 	<insert id="add_withFile_fileboard" parameterType="com.spring.bts.moongil.model.FileboardVO" >
 		<if test='fk_seq.equals("")'>
 		     insert into tbl_fileboard(pk_seq, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno, ko_depname, filename, org_filename, file_size)
-		     values(noticeSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, default, default, #{ko_depname}, #{filename}, #{org_filename}, #{file_size})   
+		     values(fileboardSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, default, default, #{ko_depname}, #{filename}, #{org_filename}, #{file_size})   
 	     </if>
 	     <!-- 답글 -->
 	     <if test='!fk_seq.equals("")'>
 		     insert into tbl_fileboard(pk_seq, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno, ko_depname, filename, org_filename, file_size)
-		     values(noticeSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, #{fk_seq}, #{depthno}+1, #{ko_depname}, #{filename}, #{org_filename}, #{file_size})    
+		     values(fileboardSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, #{fk_seq}, #{depthno}+1, #{ko_depname}, #{filename}, #{org_filename}, #{file_size})    
 	     </if>
 	</insert>
      
