@@ -213,7 +213,12 @@
 								<%--
 								<a href="<%= ctxPath%>/mail/mailImportantDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${ImportantMailList.subject}</a>
 								--%>
-								<span class="subject" onclick="goImportantMailView('${ImportantMailList.pk_mail_num}')">${ImportantMailList.subject}</span>
+									<span class="subject" onclick="goImportantMailView('${ImportantMailList.pk_mail_num}')">
+											<c:if test="${ImportantMailList.importance == '1'}">
+												<span class="fa fa-exclamation" style="color: red;" class="text-center"></span>
+											</c:if>	
+											${ImportantMailList.subject}
+									</span>
 								</td>
 								<td class="text-left">${ImportantMailList.reg_date}</td>
 							</tr>	

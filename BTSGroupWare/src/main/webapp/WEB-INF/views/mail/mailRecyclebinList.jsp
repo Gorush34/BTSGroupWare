@@ -212,7 +212,12 @@
 								<%--
 								<a href="<%= ctxPath%>/mail/mailReceiveDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${receiveMailList.subject}</a>
 								--%>
-								<span class="subject" onclick="goRecMailView('${RecyclebinMailList.pk_mail_num}')">${RecyclebinMailList.subject}</span>
+									<span class="subject" onclick="goRecMailView('${RecyclebinMailList.pk_mail_num}')">
+										<c:if test="${RecyclebinMailList.importance == '1'}">
+											<span class="fa fa-exclamation" style="color: red;" class="text-center"></span>
+										</c:if>	
+										${RecyclebinMailList.subject}
+									</span>
 								</td>
 								<td class="text-left">
 									<c:if test="${not empty RecyclebinMailList.reservation_date}">

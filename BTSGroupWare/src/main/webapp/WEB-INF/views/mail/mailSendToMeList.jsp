@@ -213,7 +213,12 @@
 								<%--
 								<a href="<%= ctxPath%>/mail/mailSendToMeDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${SendToMeMailList.subject}</a>
 								--%>
-								<span class="subject" onclick="goSendToMeMailView('${SendToMeMailList.pk_mail_num}')">${SendToMeMailList.subject}</span>
+								<span class="subject" onclick="goSendToMeMailView('${SendToMeMailList.pk_mail_num}')">
+										<c:if test="${SendToMeMailList.importance == '1'}">
+											<span class="fa fa-exclamation" style="color: red;" class="text-center"></span>
+										</c:if>	
+										${SendToMeMailList.subject}
+								</span>
 								</td>
 								<td class="text-left">${SendToMeMailList.reg_date}</td>
 							</tr>	

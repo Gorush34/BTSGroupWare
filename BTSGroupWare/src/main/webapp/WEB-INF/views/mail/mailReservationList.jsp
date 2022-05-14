@@ -213,7 +213,12 @@
 								<%--
 								<a href="<%= ctxPath%>/mail/mailReservationDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${ReservationMailList.subject}</a>
 								--%>
-								<span class="subject" onclick="goReservationMailView('${ReservationMailList.pk_mail_num}')">${ReservationMailList.subject}</span>
+									<span class="subject" onclick="goReservationMailView('${ReservationMailList.pk_mail_num}')">
+										<c:if test="${ReservationMailList.importance == '1'}">
+											<span class="fa fa-exclamation" style="color: red;" class="text-center"></span>
+										</c:if>	
+										${ReservationMailList.subject}
+									</span>
 								</td>
 								<td class="text-left">${ReservationMailList.reservation_date}:00</td>
 							</tr>	

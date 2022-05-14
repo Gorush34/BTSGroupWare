@@ -215,7 +215,12 @@
 								<%--
 								<a href="<%= ctxPath%>/mail/mailReceiveDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${receiveMailList.subject}</a>
 								--%>
-								<span class="subject" onclick="goRecMailView('${receiveMailList.pk_mail_num}')">${receiveMailList.subject}</span>
+									<span class="subject" onclick="goRecMailView('${receiveMailList.pk_mail_num}')">
+											<c:if test="${receiveMailList.importance == '1'}">
+												<span class="fa fa-exclamation" style="color: red;" class="text-center"></span>
+											</c:if>	
+											${receiveMailList.subject}
+									</span>
 								</td>
 								<td class="text-left">									
 									<c:if test="${not empty receiveMailList.reservation_date}">

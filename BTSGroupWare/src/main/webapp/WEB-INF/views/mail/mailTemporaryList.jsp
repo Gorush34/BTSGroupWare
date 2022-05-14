@@ -210,7 +210,12 @@
 								</td>							
 								<td class="text-center">${TemporaryMailList.recempname}</td>
 								<td>
-								<span class="subject" onclick="goTemporaryMailView('${TemporaryMailList.pk_mail_num}')">${TemporaryMailList.subject}</span>
+									<span class="subject" onclick="goTemporaryMailView('${TemporaryMailList.pk_mail_num}')">
+										<c:if test="${TemporaryMailList.importance == '1'}">
+											<span class="fa fa-exclamation" style="color: red;" class="text-center"></span>
+										</c:if>	
+										${TemporaryMailList.subject}
+									</span>
 								</td>
 								<td class="text-left">${TemporaryMailList.reg_date}</td>
 							</tr>	
