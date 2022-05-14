@@ -99,7 +99,7 @@ public class CalendarController {
 	
 	// === 캘린더 일정 페이지 === //	
 	@RequestMapping(value="/calendar/calenderMain.bts")
-	public ModelAndView requiredLogin_calenderMain(ModelAndView mav) {
+	public ModelAndView calenderMain(ModelAndView mav) {
 		
 		mav.setViewName("calendarMain.calendar");
 		
@@ -109,7 +109,7 @@ public class CalendarController {
 	
 	// === 일정등록 페이지  === //
 	@RequestMapping(value="/calendar/scheduleRegister.bts", method= {RequestMethod.POST})
-	public ModelAndView requiredLogin_scheduleRegister(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView scheduleRegister(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		// form 에서 받아온 날짜. (+ 일정 등록창으로 넘어가는 기능)
 		String chooseDate = request.getParameter("chooseDate");
@@ -210,7 +210,7 @@ public class CalendarController {
 	// === 캘린더 소분류 수정하기 === //
 	@ResponseBody
 	@RequestMapping(value="/calendar/editCalendar.bts", method= {RequestMethod.POST})
-	public String requiredLogin_editCalendar(HttpServletRequest request) throws Throwable {
+	public String editCalendar(HttpServletRequest request) throws Throwable {
 		
 		String pk_calno = request.getParameter("pk_calno");
 		String calname = request.getParameter("calname");
@@ -392,7 +392,7 @@ public class CalendarController {
 	
 	// === 일정 상세 페이지 === //
 	@RequestMapping(value="/calendar/detailSchedule.bts")
-	public ModelAndView requiredLogin_detailSchedule(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView detailSchedule(ModelAndView mav, HttpServletRequest request) {
 		
 		String pk_schno = request.getParameter("pk_schno");
 		//System.out.println("확인:"+pk_schno);
