@@ -192,6 +192,8 @@ public class MailDAO implements InterMailDAO {
 	// ==== 예약메일함 끝 ==== //
 
 	
+	// ==== 임시보관함 시작 ==== //
+	
 	// 총 임시보관함 메일 건수 구해오기
 	@Override
 	public int getTotalCount_temporary(Map<String, String> paraMap) {
@@ -206,13 +208,23 @@ public class MailDAO implements InterMailDAO {
 		return TemporaryMailList;
 	}
 
-	// 임시보관함에서 제목 클릭했을 때 넘어왔을 경우 받아온 글번호인 pk_mail_num 의 temp_status 를 update
+	/*수정함
+	// 임시보관함에서 제목 클릭했을 때 넘어왔을 경우 받아온 글번호인 pk_mail_num 의 temp_status 를 update (수정함)
 	@Override
 	public int updateFromTbltemp(Map<String, String> paraMap) {
 		int n = sqlsession.update("minjeong.updateFromTbltemp", paraMap);
 		return n;
 	}
+	*/
 
+	// 임시보관함에서 제목 클릭했을 때 넘어왔을 경우 받아온 글번호인 pk_mail_num 를 delete
+	@Override
+	public int deleteFromTbltemp(Map<String, String> paraMap) {
+		int n = sqlsession.delete("minjeong.deleteFromTbltemp", paraMap);
+		return n;
+	}
+
+	// ==== 임시보관함 끝 ==== //
 
 
 

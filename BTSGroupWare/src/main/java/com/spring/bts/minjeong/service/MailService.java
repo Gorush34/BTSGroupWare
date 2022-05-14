@@ -289,6 +289,7 @@ public class MailService implements InterMailService {
 
 	// === 예약메일함 끝 === //
 
+	// === 임시보관함 시작 === //
 	// 총 임시보관함 메일 건수 구해오기 (service 단으로 보내기) 
 	@Override
 	public int getTotalCount_temporary(Map<String, String> paraMap) {
@@ -303,12 +304,19 @@ public class MailService implements InterMailService {
 		return TemporaryMailList;
 	}
 
-	// 임시보관함에서 제목 클릭했을 때 넘어왔을 경우 받아온 글번호인 pk_mail_num 의 temp_status 를 update
+
+	// 임시보관함에서 제목 클릭했을 때 넘어왔을 경우 받아온 글번호인 pk_mail_num 를 delete
 	@Override
-	public int updateFromTbltemp(Map<String, String> paraMap) {
-		int n = dao.updateFromTbltemp(paraMap);
+	public int deleteFromTbltemp(Map<String, String> paraMap) {
+		int n = dao.deleteFromTbltemp(paraMap);
 		return n;
 	}
+	
+	// === 임시보관함 끝 === //
+
+
+	
+	
 
 	
 }

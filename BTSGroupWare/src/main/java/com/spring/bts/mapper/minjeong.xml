@@ -336,10 +336,19 @@
 		where rno between #{startRno} and #{endRno}
 	</select> 	
 
-	<!-- 임시보관함에서 제목 클릭했을 때 넘어왔을 경우 받아온 글번호인 pk_mail_num 의 temp_status 를 update -->
+	<!-- 임시보관함에서 제목 클릭했을 때 넘어왔을 경우 받아온 글번호인 pk_mail_num 의 temp_status 를 update (수정함) -->
+<!-- 
 	<update id="updateFromTbltemp" parameterType="HashMap">
 		update tbl_mail set temp_status = 0
 		where pk_mail_num = #{pk_mail_num}
-	</update>
+	</update> -->
+
+
+	<!-- 임시보관함에서 제목 클릭했을 때 넘어왔을 경우 받아온 글번호인 pk_mail_num 를 delete -->
+	<delete id="deleteFromTbltemp">
+		delete from tbl_mail
+		where pk_mail_num = #{pk_mail_num}
+	</delete>
+	
 	
 </mapper>

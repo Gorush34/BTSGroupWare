@@ -217,7 +217,7 @@ public class MailController {
 			
 			// 임시보관함에서 제목 클릭했을 때 넘어왔을 경우 받아온 글번호인 pk_mail_num 의 temp_status 를 update 한다.
 			String pk_mail_num = mrequest.getParameter("pk_mail_num");
-			System.out.println("임시보관함에서 제목 클릭 후 상세내용 봤을 때 pk_mail_num 여기로 오니?!!"+pk_mail_num);
+		//	System.out.println("임시보관함에서 제목 클릭 후 상세내용 봤을 때 pk_mail_num : "+pk_mail_num);
 		
 			/*
 			 	임시보관함에서 제목 클릭 후 상세내용 봤을 때 pk_mail_num 여기로 오니?!!94
@@ -228,7 +228,8 @@ public class MailController {
 			Map<String, String> paraMap = new HashMap<>();
 			paraMap.put("pk_mail_num", pk_mail_num);
 			
-			// 해당 글의 temp_status 를 1에서 다시 0으로 update 해줘야 한다.
+			// 해당 글의 temp_status 를 1에서 다시 0으로 update 해줘야 한다. (가 아니라 해당 메일번호를 테이블에서 delete 해준다.)
+			/*
 			int m = service.updateFromTbltemp(paraMap);			
 			
 			if(m==1) {
@@ -236,8 +237,19 @@ public class MailController {
 			}
 			else {
 				System.out.println("임시보관함에서 "+pk_mail_num+"의 temp_status 가 1에서 0으로 update 실패했습니다. ");
+			}
+			*/
+			
+			int m = service.deleteFromTbltemp(paraMap);			
+			
+			if(m==1) {
+				System.out.println("임시보관함에서 "+pk_mail_num+"번 글이 delete 되었습니다. ");
+			}
+			else {
+				System.out.println("임시보관함에서 "+pk_mail_num+"번 글이 delete 에 실패했습니다. ");
 
 			}
+			
 			
 			mav.setViewName("redirect:/mail/mailSendList.bts");		
 		}
@@ -691,8 +703,11 @@ public class MailController {
 
 	
 	// =========================== 중요메일함  =========================== //
-	
-	// 중요메일함
+	// 1) 중요 메일함은 메일쓰기에서 체크 후 체크박스 클릭 시, 
+	// 2) 임시보관함에서 상세버튼 클릭 후 중요 체크박스에 체크 후 메일쓰기 클릭 시 importance 값을 1로 만들어준다.
+	// 3) 각 메일함의 목록에서 ★ 표시 클릭 시 중요 메일함으로 보내준다.
+	// 4) 메일함 상세 보기 시, 제목 옆에 ★ 을 누르게 되면 중요 메일함으로 이동한다.
+	// 중요 메일함
 	@RequestMapping(value = "/mail/mailImportantList.bts")	
 	public ModelAndView mailImportant(HttpServletRequest request, ModelAndView mav) {
 		
@@ -1230,8 +1245,10 @@ public class MailController {
 		// === 페이징 처리되어진 후 특정 글제목을 클릭하여 상세내용을 본 이후
 		//     사용자가 목록보기 버튼을 클릭했을때 돌아갈 페이지를 알려주기 위해
 		//     현재 페이지 주소를 뷰단으로 넘겨준다.
-	//	String goBackURL = MyUtil.getCurrnetURL(request);
-	//	System.out.println("*** 확인용 goBackURL : "+goBackURL);
+		
+		//	String goBackURL = MyUtil.getCurrnetURL(request);
+		//	System.out.println("*** 확인용 goBackURL : "+goBackURL);
+		
 		/*
 			*** 확인용 goBackURL : /list.action
 			*** 확인용 goBackURL : /list.action?searchType= searchWord=%20 currentShowPageNo=2
@@ -1474,7 +1491,8 @@ public class MailController {
 			
 			Map<String, String> paraMap = new HashMap<>();
 			paraMap.put("pk_mail_num", pk_mail_num);
-			
+
+			/* 수정함
 			// 해당 글의 temp_status 를 1에서 다시 0으로 update 해줘야 한다.
 			int m = service.updateFromTbltemp(paraMap);			
 			
@@ -1486,6 +1504,19 @@ public class MailController {
 				System.out.println("임시보관함에서 "+pk_mail_num+"의 temp_status 가 1에서 0으로 update 실패했습니다. ");
 
 			}
+			*/
+			
+			int m = service.deleteFromTbltemp(paraMap);			
+			
+			if(m==1) {
+				System.out.println("임시보관함에서 "+pk_mail_num+"번 글이 delete 되었습니다. ");
+			}
+			else {
+				System.out.println("임시보관함에서 "+pk_mail_num+"번 글이 delete 에 실패했습니다. ");
+
+			}
+			
+			
 			
 			mav.setViewName("redirect:/mail/mailReservationList.bts");
 		}
