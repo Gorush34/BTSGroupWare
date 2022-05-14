@@ -219,7 +219,11 @@ margin: 10px;
    	 
 			      </td> 	 
 
-				  <td align="center">${fileboardvo.user_name}</td>
+				  <td align="center">${fileboardvo.user_name} 
+				 	 <c:if test="${fileboardvo.fk_emp_no != 80000001}">
+				 	 ${fileboardvo.ko_rankname}
+				 	 </c:if>	 
+				  </td>
 				  <td align="center">${fileboardvo.write_day}</td>
 				  <td align="center">${fileboardvo.read_count}</td>
 			   </tr>
