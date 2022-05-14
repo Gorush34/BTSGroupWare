@@ -468,7 +468,7 @@
 					<th style="width: 100px;"><p>첨부파일</p></th>
 					<td>
 						<c:if test="${sessionScope.loginuser != null}">
-							<a href="<%= request.getContextPath()%>/file/download.bts?pk_seq=${requestScope.boardvo.pk_seq}">${requestScope.boardvo.org_filename}</a> <p style="font-size: 9pt;">&nbsp;(<fmt:formatNumber value="${requestScope.boardvo.file_size}" pattern="#,###" /> byte)</p>  
+							<a href="<%= request.getContextPath()%>/file/download_board.bts?pk_seq=${requestScope.boardvo.pk_seq}">${requestScope.boardvo.org_filename}</a> <p style="font-size: 9pt;">&nbsp;(<fmt:formatNumber value="${requestScope.boardvo.file_size}" pattern="#,###" /> byte)</p>  
 						</c:if>
 						<c:if test="${sessionScope.loginuser == null}">
 							${requestScope.boardvo.org_filename}
@@ -533,7 +533,7 @@
 				         
 				         <%-- 댓글에 달리는 원게시물 글번호(즉, 댓글의 부모글 글번호) --%>
 				         <input type="hidden" name="fk_seq" id="fk_seq" value="${requestScope.boardvo.pk_seq}" />
-				         <button type="button" class="btn btn-success btn-sm mr-3" onclick="goAddWrite()">댓글쓰기</button>
+				         <button type="button" class="btn btn-light" onclick="goAddWrite()">댓글쓰기</button>
 				      </td>
 				   </tr>
 	   
@@ -568,11 +568,11 @@
 		<c:set var="v_gobackURL" value='${ fn:replace(requestScope.gobackURL, "&", " ") }' />
 
 	 	<c:if test="${not empty requestScope.boardvo.previousseq}">
-	 		<div style="margin-bottom: 1%; font-size: 9pt;">이전글&nbsp;&nbsp;<span class="move" onclick="javascript:location.href='/notice/view_2.bts?pk_seq=${requestScope.boardvo.previousseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.boardvo.previoussubject}</span></div>
+	 		<div style="margin-bottom: 1%; font-size: 9pt;">이전글&nbsp;&nbsp;<span class="move" onclick="javascript:location.href='/bts/board/view_2.bts?pk_seq=${requestScope.boardvo.previousseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.boardvo.previoussubject}</span></div>
 	 	</c:if>
 	
 		<c:if test="${not empty requestScope.boardvo.nextseq}">
-	   		<div style="margin-bottom: 1%; font-size: 9pt;">다음글&nbsp;&nbsp;<span class="move" onclick="javascript:location.href='/notice/view_2.bts?pk_seq=${requestScope.boardvo.nextseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.boardvo.nextsubject}</span></div>
+	   		<div style="margin-bottom: 1%; font-size: 9pt;">다음글&nbsp;&nbsp;<span class="move" onclick="javascript:location.href='/bts/board/view_2.bts?pk_seq=${requestScope.boardvo.nextseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.boardvo.nextsubject}</span></div>
     	</c:if>	
 	</div>
 	

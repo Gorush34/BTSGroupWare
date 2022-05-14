@@ -64,9 +64,9 @@
 		  
          
      	 // 헤더 유효성 검사
-		  const header = $("select#header").val();
-		  if(header == "" || header == null) {
-			  alert("머릿말을 설정하세요.");
+		  const ko_depname = $("select#ko_depname").val();
+		  if(ko_depname == "" || ko_depname == null) {
+			  alert("부서를 설정하세요.");
 			  return;
 		  }
          
@@ -109,12 +109,11 @@
 		  // 폼(form)을 전송(submit)
 		  const frm = document.addFrm;
 		  frm.method = "POST";
-		  frm.action = "<%= ctxPath%>/notice/write_end.bts";
+		  frm.action = "<%= ctxPath%>/fileboard/write_end.bts";
 		  frm.submit();
 	  });
 	  
-
-
+		  
 	  
   });// end of $(document).ready(function(){})-------------------------------
 
@@ -153,16 +152,20 @@
 	<table style="width: 1024px" class="table table-bordered">
 	
 			<tr>
-				<th style="width: 15%; background-color: #DDDDDD; text-align: right;">머릿말</th>
+				<th style="width: 15%; background-color: #DDDDDD; text-align: right;">부서</th>
 					<td>
-						<select id="header" name="header" style="height: 30px;">
-							<option value="" selected disabled>==머릿말 선택==</option>	
-							<option value="알려드립니다">알려드립니다</option>				 								
-							<option value="인사이동">인사이동</option>				 								
-							<option value="부고">부고</option>				 					 
+						<select id="ko_depname" name="ko_depname" style="height: 30px;">
+							<option value="" selected disabled>==부서 선택==</option>	
+							<option value="공통">공통</option>
+							<option value="영업">영업</option>				 								
+							<option value="마케팅">마케팅</option>				 								
+							<option value="기획">기획</option>	
+							<option value="총무">총무</option>	
+							<option value="인사">인사</option>	
+							<option value="회계">회계</option>				 					 
 						</select>
 						<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
-						<input type="hidden" name="user_name" value="관리자" readonly />
+						<input type="hidden" name="user_name" value="${sessionScope.loginuser.emp_name}" readonly />
 						
 					</td>						
 			</tr>

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.spring.bts.moongil.model.BoardVO;
 import com.spring.bts.moongil.model.CommentVO;
+import com.spring.bts.moongil.model.FileboardVO;
 import com.spring.bts.moongil.model.LikeVO;
 import com.spring.bts.moongil.model.NoticeVO;
 
@@ -76,7 +77,40 @@ public interface InterBoardService {
 
 	List<LikeVO> get_heart(Map<String, String> paraMap);
 
-	List<String> wordSearchShow(Map<String, String> paraMap);
+	List<BoardVO> getIntegratedBoard();
+
+	int getTotalCount_total(Map<String, String> paraMap);
+
+	List<BoardVO> boardListSearchWithPaging_total(Map<String, String> paraMap);
+
+	List<Map<String, String>> getBestboard();
+
+	int edit_notice(NoticeVO noticevo);
+
+	int del_notice(Map<String, String> paraMap);
+
+	int getTotalCount_fileboard(Map<String, String> paraMap);
+
+	List<FileboardVO> ListSearchWithPaging_fileboard(Map<String, String> paraMap);
+
+	int add_fileboard(FileboardVO fileboardvo);
+
+	int add_withFile_fileboard(FileboardVO fileboardvo);
+
+	FileboardVO getView_fileboard(Map<String, String> paraMap);
+
+	FileboardVO getViewWithNoAddCount_fileboard(Map<String, String> paraMap);
+
+	int edit_fileboard(FileboardVO fileboardvo);
+
+	int del_fileboard(Map<String, String> paraMap);
+
+	List<Map<String, String>> getNoticeboard();
+
+	List<Map<String, String>> getBoard();
+
+	List<Map<String, String>> getFileboard();
+
 
 
 

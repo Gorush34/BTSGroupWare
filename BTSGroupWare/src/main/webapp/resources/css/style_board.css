@@ -3,12 +3,12 @@
 body {font-family: Arial, Helvetica, sans-serif, 돋움; }
 */
 #mycontainer   { padding:20px; }
-#myheader      { display: flex; min-height:100px; position: relative; top: 60px; }
+#myheader      { display: flex; position: relative; top: 60px; }
    
-#mysideinfo      { min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:white;
+#mysideinfo      { min-height:950px; position: relative; top:60px; padding-top: 40px; background-color:white;
                   float:left; width:12.5%; }   
                   
-#mycontent      { min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:white;
+#mycontent      { min-height:950px; position: relative; top:60px; padding-top: 40px; background-color:white;
                   float:right; width:85.5%; }
                   
 

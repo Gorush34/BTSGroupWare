@@ -6,6 +6,14 @@
 
 <style>
 
+
+#mycontent > div > form > button {
+background-color: white;
+}
+#searchWord {
+margin: 0 6px;
+}
+
 #mycontent > div > form:nth-child(3) > input[type=submit]:nth-child(3):hover {
 	font-weight: bold;
 }
@@ -51,7 +59,6 @@ table#board_table {
 
 th, td {
   text-align: center;
-  padding: 16px;
 }
 
   
@@ -75,7 +82,12 @@ border-radius: 5px; */
 margin: 10px;
 
 }
-         
+
+
+#mycontent > div > div:nth-child(3) > ul > li:nth-child(2) > a{
+	color: black;
+}         
+ 
              
 </style>
 <script type="text/javascript">
@@ -105,82 +117,7 @@ margin: 10px;
 			$("input#searchWord").val("${paraMap.searchWord}");
 		}
 	
-		<%-- === #107. 검색어 입력시 자동글 완성하기 2 === --%>
-		  $("div#displayList").hide();
-		  
-		  $("input#searchWord").keyup(function(){
-			  
-			  const wordLength = $(this).val().trim().length;
-			  // 검색어의 길이를 알아온다.
-			  
-			  if(wordLength == 0) {
-				  $("div#displayList").hide();
-				  // 검색어가 공백이거나 검색어 입력후 백스페이스키를 눌러서 검색어를 모두 지우면 검색된 내용이 안 나오도록 해야 한다. 
-			  }
-			  else {
-				  $.ajax({
-					  url:"<%= ctxPath%>/board/wordSearchShow.bts",
-					  type:"GET",
-					  data:{"searchType":$("select#searchType").val()
-						   ,"searchWord":$("input#searchWord").val()},
-					  dataType:"JSON",
-					  success:function(json){
-						 // json ==> [{"word":"Korea VS Japan 라이벌 축구대결"},{"word":"JSP 가 뭔가요?"},{"word":"프로그램은 JAVA 가 쉬운가요?"},{"word":"java가 재미 있나요?"}]  
-						 
-						 <%-- === #112. 검색어 입력시 자동글 완성하기 7 === --%>
-						 if(json.length > 0) {
-							 // 검색된 데이터가 있는 경우임
-							 
-							 let html = "";
-							 
-							 $.each(json, function(index, item){
-								 const word = item.word;
-								 // word ==> 프로그램은 JAVA 가 쉬운가요? 
-								 
-								 const idx = word.toLowerCase().indexOf($("input#searchWord").val().toLowerCase());	 
-								 //          word ==> 프로그램은 java 가 쉬운가요?	
-								 // 검색어(JaVa)가 나오는 idx 는 6 이 된다.
-								 
-								 const len = $("input#searchWord").val().length;
-								 // 검색어(JaVa)의 길이 len 은 4 가 된다.
-								 
-								/* 
-								 console.log("~~~~~~~~ 시작 ~~~~~~~~~~~~");
-								 console.log(word.substring(0, idx));       // 검색어(JaVa) 앞까지의 글자 => "프로그램은 "
-								 console.log(word.substring(idx, idx+len)); // 검색어(JaVa) 글자 => "JAVA"
-								 console.log(word.substring(idx+len));      // 검색어(JaVa) 뒤부터 끝까지 글자 => " 가 쉬운가요?"
-								 console.log("~~~~~~~~ 끝 ~~~~~~~~~~~~");		 
-								*/ 
-								 
-								 const result = word.substring(0, idx) + "<span style='color:blue;'>"+word.substring(idx, idx+len)+"</span>" + word.substring(idx+len); 
-								
-								 html += "<span style='cursor:pointer;' class='result'>"+result+"</span><br>";
-							 });
-							 
-							 const input_width = $("input#searchWord").css("width"); // 검색어 input 태그 width 알아오기
-							 
-							 $("div#displayList").css({"width":input_width}); // 검색결과 div 의 width 크기를 검색어 입력 input 태그 width 와 일치시키기  
-							 
-							 $("div#displayList").html(html);
-							 $("div#displayList").show();
-						 }
-					  },
-					  error: function(request, status, error){
-							alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-					  }
-				  });
-			  }
-			  
-		  }); // end of $("input#searchWord").keyup -----------------------
-		  
-		  <%-- == #113. 검색어 입력시 자동글 완성하기 8 === --%>
-		  $(document).on("click", "span.result", function(){
-			  const word = $(this).text();
-			  $("input#searchWord").val(word); // 텍스트박스에 검색된 결과의 문자열을 입력해준다.
-			  $("div#displayList").hide();
-			  goSearch();
-		  });	
-		
+
 		
 	});//end of $(document).ready(function(){}
 
@@ -219,25 +156,9 @@ margin: 10px;
     </div>
   </div>
 
-	<div style="text-align: center;">
-		<a id="brd_category" href="<%= request.getContextPath()%>/notice/list.bts">공지사항</a> 
-		<a id="brd_category" href="<%= request.getContextPath()%>/fileboard/list.bts">자료실</a> 
-		<a id="brd_category" href="<%= request.getContextPath()%>/board/list.bts" style="font-weight: bold; text-decoration: underline;">자유게시판</a> 
-		<br></br>
-	</div>
-	<c:if test="${sessionScope.loginuser.pk_emp_no >= 0}">
-		<form action="<%= ctxPath%>/board/write.bts" method="post" style="padding-left: 9%; margin-bottom: 10px;">
-			<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
-			<img style="width: 15px;"  src="<%= ctxPath%>/resources/images/board/write.png" /><input style="border:none; background-color: white; font-size: 10pt;" type="submit" value="게시물작성" />
-		</form>
-	</c:if>
-	<%-- 	<span id = "write" onclick="javascript:location.href='<%= request.getContextPath()%>/board/write.bts'">게시물작성
-			<i class= "fa  fa-edit" aria-hidden="true"></i>
-		</span> --%>
-			
 
 		
-		<table class="table table-hover" style="width: 85%; margin-left: auto; margin-right: auto;">
+		<table class="table table-hover" style="width: 85%; margin-left: auto; margin-right: auto; margin-top: 30px;">
 		<thead>
 			<tr>
 				<th scope="col" class="text-center" style="width: 40px;">번호</th>	

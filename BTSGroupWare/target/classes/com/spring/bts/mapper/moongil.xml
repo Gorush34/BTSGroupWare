@@ -406,6 +406,21 @@
 		where V.pk_seq = #{pk_seq}
     </select>
     
+    <!-- ==== #75. 1개글 수정하기 ==== -->
+    <update id="edit_notice" parameterType="com.spring.bts.moongil.model.NoticeVO">
+	    update tbl_notice set subject = #{subject}
+		                   , content = #{content}
+		                   , header = #{header}
+		where pk_seq = #{pk_seq} and pw = #{pw}
+    </update>
+   
+   <update id="del_notice" parameterType="HashMap">
+    	update tbl_notice set status = 0
+    	where pk_seq = #{pk_seq}
+    </update>
+    
+ <!--    /////////////////////////////////////////////////////////////////////////////// -->
+    
     
     <!-- 게시글 추천수 -->
 	<update id="updateLike" parameterType="int">
@@ -454,31 +469,364 @@
     </select>
     
     
-    <!-- === #111. 검색어 입력시 자동글 완성하기 6 === -->
-    <select id="wordSearchShow" parameterType="HashMap" resultType="String">
-    	<choose>
-    		<when test="searchType eq 'name'">
-    			select distinct ${searchType}
-    		</when>
-    		<otherwise>
-    			select ${searchType}
-    		</otherwise>
-    	</choose>
-    	from tbl_board
-    	where status = 1 
-    	and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%' 
-    	<!-- select 문에서 distinct 와 order by 절을 함께 사용할때는 조심해야 한다.
-		     order by 절에는 select 문에서 사용된 컬럼만 들어올 수가 있다.
-		         또는 order by 절을 사용하지 않아야 한다.
-		 -->
-		 <choose>
-    		<when test="searchType neq 'subject'">
-    			order by ${searchType} asc
-    		</when>
-    		<otherwise>
-    			order by pk_seq desc
-    		</otherwise>
-    	</choose>
-    </select>
+       <!-- 인기 글 목록 불러오기 -->
+   <select id="getIntegratedBoard" resultType="com.spring.bts.moongil.model.BoardVO">
+
+      select pk_seq, subject, user_name, write_day, tblname
+      from
+      (
+           select row_number() over(order by write_day desc) AS rno
+                 , pk_seq, subject, write_day, tblname, user_name
+           from
+         (
+             select pk_seq, subject, to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') AS write_day, user_name , '일반게시판' AS tblname
+             from tbl_board B
+             UNION
+             select pk_seq, subject, to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') AS write_day, user_name , '전사 공지' AS tblname
+             from tbl_notice N
+             UNION
+             select pk_seq, subject, to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') AS write_day, user_name , '자료실' AS tblname
+             from tbl_fileboard F
+         ) A
+     ) B
+      where rno between 1 and 5
+   </select>   
     
+    
+	<select id="getTotalCount_total" parameterType="HashMap" resultType="int">
+	        select count(*)
+			from
+	         (
+	             select pk_seq, status, subject
+	             from tbl_board B
+	             UNION
+	             select pk_seq, status, subject
+	             from tbl_notice N
+	             UNION
+	             select pk_seq, status, subject
+	             from tbl_fileboard F
+	         )
+			where status = 1
+			<if test='searchType != ""'>
+			and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+			</if>
+	</select>
+
+	<select id="boardListSearchWithPaging_total" parameterType="HashMap" resultType="com.spring.bts.moongil.model.BoardVO">
+	 	 select rno,
+			            fk_emp_no, pk_seq, KO_RANKNAME ,subject, write_day, user_name, 
+	                    comment_count, filename, read_count, content, depthno, status, tblname
+			from
+			(
+			    select rownum AS rno,
+			            fk_emp_no, pk_seq, KO_RANKNAME ,subject, write_day, user_name, 
+	                    comment_count, filename, read_count, content, depthno, status, tblname
+			        from
+	                     (
+	                     select fk_emp_no, pk_seq, KO_RANKNAME , subject, to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') AS write_day, user_name , comment_count, filename, read_count, content, depthno, status, '자유게시판' AS tblname
+	                     from tbl_board B join tbl_employees E
+	                    ON fk_emp_no = E.pk_emp_no
+	                    join tbl_rank_sort S
+	                    ON E.FK_RANK_ID = S.PK_RANK_NO 
+	                     UNION   
+	                     select fk_emp_no, pk_seq, KO_RANKNAME, subject, to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') AS write_day, user_name , comment_count, filename, read_count, content, depthno, status, '공지사항' AS tblname
+	                     from tbl_notice N join tbl_employees E
+	                    ON fk_emp_no = E.pk_emp_no
+	                    join tbl_rank_sort S
+	                    ON E.FK_RANK_ID = S.PK_RANK_NO    
+	                     UNION
+	                     select fk_emp_no, pk_seq, KO_RANKNAME, subject, to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') AS write_day, user_name , comment_count, filename, read_count, content, depthno, status, '자료실' AS tblname
+	                     from tbl_fileboard F join tbl_employees E
+	                    ON fk_emp_no = E.pk_emp_no
+	                    join tbl_rank_sort S
+	                    ON E.FK_RANK_ID = S.PK_RANK_NO
+	                     order by write_day desc 
+	                  ) A        
+			            where status = 1 and depthno = 0
+			            <if test='searchType !="" and searchWord != "" '>
+					    and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+					    </if>
+
+			        ) V
+		 where rno between #{startRno} and #{endRno}
+           
+	</select>    
+
+<!--      
+<select id="getBestboard" parameterType="HashMap" resultType="com.spring.board.model.BoardVO"> 
+  select rno, fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, write_day
+			from
+			(
+			    select rownum AS rno,
+			            fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, write_day
+			        from
+	                     (
+	                     select fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, to_char(write_day, 'yyyy-mm-dd') AS write_day, '일반게시판' AS tblname
+	                     from tbl_board B join tbl_employees E
+	                    ON fk_emp_no = E.pk_emp_no
+	                    join tbl_rank_sort S
+	                    ON E.FK_RANK_ID = S.PK_RANK_NO 
+	                     UNION   
+	                     select fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, to_char(write_day, 'yyyy-mm-dd') AS write_day, '전사 공지' AS tblname
+	                     from tbl_notice N join tbl_employees E
+	                    ON fk_emp_no = E.pk_emp_no
+	                    join tbl_rank_sort S
+	                    ON E.FK_RANK_ID = S.PK_RANK_NO    
+	                     UNION
+	                     select fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, to_char(write_day, 'yyyy-mm-dd') AS write_day, '자료실' AS tblname
+	                     from tbl_fileboard F join tbl_employees E
+	                    ON fk_emp_no = E.pk_emp_no
+	                    join tbl_rank_sort S
+	                    ON E.FK_RANK_ID = S.PK_RANK_NO
+	                  ) A        
+			            where write_day = '2022-05-12'
+			        ) V
+		 where rno between 1 and 5
+         order by read_count desc ;
+   </select>
+  -->
+   <resultMap type="HashMap" id="getBestboardMap">
+      <result property="pk_seq" column="pk_seq" javaType="String" />
+      <result property="subject" column="subject" javaType="String" />
+      <result property="read_count" column="read_count" javaType="String" />
+      <result property="user_name" column="user_name" javaType="String" />
+   </resultMap>
+   <select id="getBestboard" resultMap="getBestboardMap">
+	select rno, fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, write_day, tblname
+			from
+			(
+			    select rownum AS rno,
+			            fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, write_day, tblname
+			        from
+	                     (
+	                     select fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, to_char(write_day, 'yyyy-mm-dd') AS write_day, '자유게시판' AS tblname
+	                     from tbl_board B join tbl_employees E
+	                    ON fk_emp_no = E.pk_emp_no
+	                    join tbl_rank_sort S
+	                    ON E.FK_RANK_ID = S.PK_RANK_NO 
+                        where status = 1 
+                      order by read_count desc 
+	                  ) A        
+			        ) V
+		 where rno between 1 and 5
+   </select> 
+    
+<!--     ////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<!-- 자료게시판 -->
+	 <select id="ListSearchWithPaging_fileboard" parameterType="HashMap" resultType="com.spring.bts.moongil.model.FileboardVO">
+		select pk_seq, fk_emp_no, user_name, subject, read_count, write_day, content,
+		       groupno, fk_seq, depthno, filename, ko_depname, ko_rankname
+		from
+		(
+		    select rownum AS rno,
+		           pk_seq, fk_emp_no, user_name, subject, read_count, write_day, content,
+		           groupno, fk_seq, depthno,filename, ko_depname, ko_rankname
+		        from
+		        (
+		            select pk_seq, fk_emp_no, user_name, subject, read_count, content,
+		                   to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') AS write_day,
+		                   groupno, fk_seq, depthno, filename, ko_depname, ko_rankname
+		            from tbl_fileboard B join tbl_employees E
+                    ON B.user_name = E.emp_name
+                    join tbl_rank_sort S
+                    ON E.FK_RANK_ID = S.PK_RANK_NO
+		            where status = 1
+		            <if test='searchType !="" and searchWord != "" '>
+		            and lower(${searchType}) like '%'||lower(#{searchWord}) ||'%'
+		            </if>
+		            <if test='ko_depname != "" and ko_depname != null'>
+		            and ko_depname = '${ko_depname}'
+		            </if>
+		            start with fk_seq = 0
+		            connect by prior pk_seq = fk_seq
+		            order siblings by groupno desc, pk_seq desc 
+		        ) V
+	     )T
+		 where rno between #{startRno} and #{endRno}
+		 
+	</select>
+	 
+	
+<!-- 	=== 총게시물 건수. === -->
+    <select id="getTotalCount_fileboard" parameterType="HashMap" resultType="int">
+	    select count(*)
+		from tbl_fileboard
+		where status = 1
+		<if test='searchType != ""'>
+		and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+		</if>
+    </select> 
+
+ <!--  ==== #147. 원글쓰기 또는 답변글쓰기(파일첨부가 없는 글쓰기) ==== -->
+	<insert id="add_fileboard" parameterType="com.spring.bts.moongil.model.FileboardVO">
+		<if test='fk_seq.equals("")'>
+		     insert into tbl_fileboard(pk_seq, ko_depname, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno)
+		     values(noticeSeq.nextval, #{ko_depname}, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, default, default)   
+		</if>
+		<!-- 답글 -->
+		 <if test='!fk_seq.equals("")'>
+		     insert into tbl_fileboard(pk_seq, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno, ko_depname)
+		     values(noticeSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, #{fk_seq}, #{depthno}+1, #{ko_depname})   
+		</if>     
+	</insert>     
+     
+      <!-- === #158. 글쓰기(첨부파일이 있는 경우) ===  -->
+	<insert id="add_withFile_fileboard" parameterType="com.spring.bts.moongil.model.FileboardVO" >
+		<if test='fk_seq.equals("")'>
+		     insert into tbl_fileboard(pk_seq, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno, ko_depname, filename, org_filename, file_size)
+		     values(noticeSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, default, default, #{ko_depname}, #{filename}, #{org_filename}, #{file_size})   
+	     </if>
+	     <!-- 답글 -->
+	     <if test='!fk_seq.equals("")'>
+		     insert into tbl_fileboard(pk_seq, fk_emp_no, user_name, subject, content, pw, read_count, write_day, status, groupno, fk_seq, depthno, ko_depname, filename, org_filename, file_size)
+		     values(noticeSeq.nextval, #{fk_emp_no}, #{user_name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, #{fk_seq}, #{depthno}+1, #{ko_depname}, #{filename}, #{org_filename}, #{file_size})    
+	     </if>
+	</insert>
+     
+     
+     <!-- 글 조회 -->
+    <select id="getView_fileboard" parameterType="HashMap" resultType="com.spring.bts.moongil.model.FileboardVO">
+		select previousseq, previoussubject
+		     , pk_seq, fk_emp_no, user_name, subject, content, read_count, write_day, pw, ko_depname, ko_rankname
+		     , nextseq, nextsubject 
+		     , groupno, fk_seq, depthno
+		     , filename, org_Filename, file_size
+		from 
+		(
+		    select lag(pk_seq,1) over(order by pk_seq desc) AS previousseq 
+		         , lag(subject,1) over(order by pk_seq desc) AS previoussubject 
+		         
+		         , pk_seq, fk_emp_no, user_name, subject, content, read_count
+		         , to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') as write_day
+		         , pw, ko_depname, ko_rankname
+		         
+		         , lead(pk_seq,1) over(order by pk_seq desc) AS nextseq
+		         , lead(subject,1) over(order by pk_seq desc) AS nextsubject
+		         
+		         , groupno, fk_seq, depthno
+		         
+		         , filename, org_Filename, file_size
+		    from tbl_fileboard B join tbl_employees E
+             ON B.user_name = E.emp_name
+             join tbl_rank_sort S
+             ON E.FK_RANK_ID = S.PK_RANK_NO
+		    where status = 1
+		    <if test='searchType != "" and searchWord != "" '>
+		    and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+		    </if>
+		) V
+		where V.pk_seq = #{pk_seq}
+    </select> 
+     
+     
+     <!-- 조회수 증가 -->
+    <update id="setAddReadCount_fileboard" parameterType="String">
+    	update tbl_fileboard set read_count = read_count + 1
+    	where pk_seq = #{pk_seq}
+    </update>
+    
+  <!-- ==== 1개글 수정하기 ==== -->
+    <update id="edit_fileboard" parameterType="com.spring.bts.moongil.model.FileboardVO">
+	    update tbl_fileboard set subject = #{subject}
+		                   , content = #{content}
+		                   , ko_depname = #{ko_depname}
+		where pk_seq = #{pk_seq} and pw = #{pw}
+    </update>
+   
+   <!-- ==== 1개글 삭제하기 ==== -->
+   <update id="del_fileboard" parameterType="HashMap">
+    	update tbl_fileboard set status = 0
+    	where pk_seq = #{pk_seq}
+    </update>    
+    
+<!-- //////////////////////////////////////////////////////////////////////// -->
+
+
+     
+      <resultMap type="HashMap" id="getNoticeboard">
+      <result property="pk_seq" column="pk_seq" javaType="String" />
+      <result property="subject" column="subject" javaType="String" />
+      <result property="user_name" column="user_name" javaType="String" />
+      <result property="write_day" column="write_day" javaType="String" />
+      <result property="header" column="header" javaType="String" />
+  	  </resultMap>
+   <select id="getNoticeboard" resultMap="getNoticeboard">
+	select rno, fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, write_day, header
+			from
+			(
+			    select rownum AS rno,
+			            fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, write_day, header
+			        from
+	                     (
+	                     select fk_emp_no, pk_seq, KO_RANKNAME, header, subject, user_name, comment_count, read_count, status, to_char(write_day, 'yyyy-mm-dd') AS write_day
+	                     from tbl_notice B join tbl_employees E
+	                    ON fk_emp_no = E.pk_emp_no
+	                    join tbl_rank_sort S
+	                    ON E.FK_RANK_ID = S.PK_RANK_NO 
+                        where status = 1 
+                      order by pk_seq desc
+	                  ) A        
+			        ) V
+		 where rno between 1 and 5
+   </select>  
+   
+   
+   
+   <resultMap type="HashMap" id="getBoard">
+      <result property="pk_seq" column="pk_seq" javaType="String" />
+      <result property="subject" column="subject" javaType="String" />
+      <result property="user_name" column="user_name" javaType="String" />
+      <result property="write_day" column="write_day" javaType="String" />
+      <result property="ko_rankname" column="ko_rankname" javaType="String" />
+  </resultMap>
+   <select id="getBoard" resultMap="getBoard">
+	select rno, fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, write_day
+			from
+			(
+			    select rownum AS rno,
+			            fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, write_day
+			        from
+	                     (
+	                     select fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, to_char(write_day, 'yyyy-mm-dd') AS write_day
+	                     from tbl_board B join tbl_employees E
+	                    ON fk_emp_no = E.pk_emp_no
+	                    join tbl_rank_sort S
+	                    ON E.FK_RANK_ID = S.PK_RANK_NO 
+                        where status = 1 
+                      order by pk_seq desc
+	                  ) A        
+			        ) V
+		 where rno between 1 and 5
+   </select> 
+   
+   
+   
+   <resultMap type="HashMap" id="getFileboard">
+      <result property="pk_seq" column="pk_seq" javaType="String" />
+      <result property="subject" column="subject" javaType="String" />
+      <result property="user_name" column="user_name" javaType="String" />
+      <result property="write_day" column="write_day" javaType="String" />
+      <result property="ko_rankname" column="ko_rankname" javaType="String" />
+      <result property="ko_depname" column="ko_depname" javaType="String" />
+  	  </resultMap>
+   <select id="getFileboard" resultMap="getFileboard">
+		select rno, fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, write_day, ko_depname
+			from
+			(
+			    select rownum AS rno,
+			            fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, write_day, ko_depname
+			        from
+	                     (
+	                     select fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, to_char(write_day, 'yyyy-mm-dd') AS write_day, ko_depname
+	                     from tbl_fileboard B join tbl_employees E
+	                    ON fk_emp_no = E.pk_emp_no
+	                    join tbl_rank_sort S
+	                    ON E.FK_RANK_ID = S.PK_RANK_NO 
+                        where status = 1 
+                      order by pk_seq desc
+	                  ) A        
+			        ) V
+		 where rno between 1 and 5
+   </select> 
+     
 </mapper>

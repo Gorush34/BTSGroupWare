@@ -1,5 +1,6 @@
 package com.spring.bts.moongil.model;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -259,10 +260,107 @@ public class BoardDAO implements InterBoardDAO {
 	}
 
 	@Override
-	public List<String> wordSearchShow(Map<String, String> paraMap) {
-		List<String> wordList = sqlsession.selectList("moongil.wordSearchShow", paraMap);
-		return wordList;
+	public List<BoardVO> getIntegratedBoard() {
+		List<BoardVO> boardList = sqlsession.selectList("moongil.getIntegratedBoard");
+		return boardList;
 	}
+
+	@Override
+	public int getTotalCount_total(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("moongil.getTotalCount_total", paraMap);
+		return n;
+	}
+
+	@Override
+	public List<BoardVO> boardListSearchWithPaging_total(Map<String, String> paraMap) {
+		List<BoardVO> boardList = sqlsession.selectList("moongil.boardListSearchWithPaging_total", paraMap);
+		return boardList;
+	}
+
+	@Override
+	public List<Map<String, String>> getBestboard() {
+		List<Map<String, String>> boardMap = sqlsession.selectList("moongil.getBestboard");
+		return boardMap;
+	}
+
+	@Override
+	public int edit_notice(NoticeVO noticevo) {
+		int n = sqlsession.update("moongil.edit_notice", noticevo);
+		return n;
+	}
+
+	@Override
+	public int del_notice(Map<String, String> paraMap) {
+		int n = sqlsession.delete("moongil.del_notice", paraMap);
+		return n;
+	}
+
+	@Override
+	public int getTotalCount_fileboard(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("moongil.getTotalCount_fileboard", paraMap);
+		return n;
+	}
+
+	@Override
+	public List<FileboardVO> ListSearchWithPaging_fileboard(Map<String, String> paraMap) {
+		List<FileboardVO> fileboardlist = sqlsession.selectList("moongil.ListSearchWithPaging_fileboard", paraMap);
+		return fileboardlist;
+	}
+
+	@Override
+	public int add_withFile_fileboard(FileboardVO fileboardvo) {
+		int n = sqlsession.insert("moongil.add_withFile_fileboard", fileboardvo);
+		return n;
+	}
+
+	@Override
+	public int add_fileboard(FileboardVO fileboardvo) {
+		int n = sqlsession.insert("moongil.add_fileboard", fileboardvo);
+		return n;
+	}
+
+	@Override
+	public FileboardVO getView_fileboard(Map<String, String> paraMap) {
+		FileboardVO fileboardvo = sqlsession.selectOne("moongil.getView_fileboard", paraMap);
+		return fileboardvo;
+	}
+
+	@Override
+	public void setAddReadCount_fileboard(String pk_seq) {
+		sqlsession.update("moongil.setAddReadCount_fileboard", pk_seq);
+	}
+
+	@Override
+	public int edit_fileboard(FileboardVO fileboardvo) {
+		int n = sqlsession.update("moongil.edit_fileboard", fileboardvo);
+		return n;
+	}
+
+	@Override
+	public int del_fileboard(Map<String, String> paraMap) {
+		int n = sqlsession.delete("moongil.del_fileboard", paraMap);
+		return n;
+	}
+
+	@Override
+	public List<Map<String, String>> getNoticeboard() {
+		List<Map<String, String>> boardMap = sqlsession.selectList("moongil.getNoticeboard");
+		return boardMap;
+	}
+
+	@Override
+	public List<Map<String, String>> getBoard() {
+		List<Map<String, String>> boardMap = sqlsession.selectList("moongil.getBoard");
+		return boardMap;
+	}
+
+	@Override
+	public List<Map<String, String>> getFileboard() {
+		List<Map<String, String>> boardMap = sqlsession.selectList("moongil.getFileboard");
+		return boardMap;
+	}
+
+
 
 	
 }

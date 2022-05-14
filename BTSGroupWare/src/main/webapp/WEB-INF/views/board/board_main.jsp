@@ -1,142 +1,305 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+ <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+ <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %> 
+<% String ctxPath = request.getContextPath(); %>
 
-<%
-	String ctxPath = request.getContextPath();
-%>   
- <!-- Bootstrap core CSS -->
-<link href="/docs/5.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-
-    <!-- Favicons -->
-<link rel="apple-touch-icon" href="/docs/5.1/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
-<link rel="icon" href="/docs/5.1/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
-<link rel="icon" href="/docs/5.1/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
-<link rel="manifest" href="/docs/5.1/assets/img/favicons/manifest.json">
-<link rel="mask-icon" href="/docs/5.1/assets/img/favicons/safari-pinned-tab.svg" color="#7952b3">
-<link rel="icon" href="/docs/5.1/assets/img/favicons/favicon.ico">
-<meta name="theme-color" content="#7952b3">
+<style>
 
 
-    <style>
-    a:hover{
+#mycontent > div > form > button {
+background-color: white;
+}
+#searchWord {
+margin: 0 6px;
+}
+#mycontent > div > form:nth-child(3) > input[type=submit]:nth-child(3):hover {
 	font-weight: bold;
+}
+
+    .subjectStyle {font-weight: bold;
+    			   color: navy;
+    			   cursor: pointer;}
+	
+	#mycontent > div > div:nth-child(5) > ul > li > a {
+		color: black;
+	}
+
+a#brd_category{
 	color: black;
-	}
-    
-    .small, small {
-    margin-left: 15px;
-	}
-    
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-      }
+	margin: 10px;
+	text-decoration: none;
+	font-size: 15px;
+}
 
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-      
-      a{color: black; text-decoration: none !important; cursor: pointer;}
-    </style>
+a#brd_category:hover{
+font-weight: bold;
+}
 
-    
-    <!-- Custom styles for this template -->
-    <link href="offcanvas.css" rel="stylesheet">
-  </head>
-  <body class="bg-light">
-    
+option{
+color:black;
+}
+div#searchDiv{
+    text-align: center;
+    margin-bottom: 25px;
+    margin-top: 10px;
+}
 
-<main class="container">
-  <div class="d-flex align-items-center p-3 my-3 text-white bg-purple rounded shadow-sm" style="background-color: darkblue; ">
-    <div class="lh-1" style="text-align: center;">
-      <h1 class="h6 mb-0 text-white lh-1" style="font-size:22px; font-weight: bold; margin-left: 30px; ">게시판</h1>
+form#searchFrm{
+ margin-bottom: 25px;
+    margin-top: 10px;
+}
+table#board_table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #cce4ff;
+}
+
+th, td {
+  text-align: center;
+}
+
+  
+.titleStyle {font-weight: bold;
+             color: gray;
+             cursor: pointer;} 
+             
+span#head{
+color:blue;
+margin-right: 20px;
+}             
+
+span#write:hover{
+font-weight: bold;
+cursor: pointer;
+
+}
+span#write{
+/* border: solid 1px #BDBDBD;
+border-radius: 5px; */
+margin: 10px;
+
+}
+         
+             
+</style>
+<script type="text/javascript">
+	$(document).ready(function(){
+		
+		
+		$("span.subject").bind("mouseover", function(event){
+			var $target = $(event.target);
+			$target.addClass("subjectStyle");
+		});
+		
+		$("span.subject").bind("mouseout", function(event){
+			var $target = $(event.target);
+			$target.removeClass("subjectStyle");
+		});
+		
+		$("input#searchWord").keyup(function(event){
+			if(event.keyCode == 13) {
+				// 엔터를 했을 경우 
+				goSearch();
+			}
+		});
+		
+		//검색시 검색조건 및 검색어 값 유지시키기
+		if( ${not empty paraMap} ) {  // 또는 if( ${paraMap != null} ) { 
+			$("select#searchType").val("${paraMap.searchType}");
+			$("input#searchWord").val("${paraMap.searchWord}");
+		}
+	
+
+		
+	});//end of $(document).ready(function(){}
+	
+	function goView(pk_seq) {
+		
+		  const gobackURL = "${requestScope.gobackURL}"; 
+		  
+		  const searchType = $("select#searchType").val();
+		  const searchWord = $("input#searchWord").val();
+		
+		  location.href="<%= ctxPath%>/board/view.bts?pk_seq="+pk_seq+"&gobackURL="+gobackURL+"&searchType="+searchType+"&searchWord="+searchWord; 
+		}// end of function goView(seq){}----------------------------------------------
+		
+	function goView_notice(pk_seq) {
+		
+		  const gobackURL = "${requestScope.gobackURL}"; 
+		  
+		  const searchType = $("select#searchType").val();
+		  const searchWord = $("input#searchWord").val();
+		
+		  location.href="<%= ctxPath%>/notice/view.bts?pk_seq="+pk_seq+"&gobackURL="+gobackURL+"&searchType="+searchType+"&searchWord="+searchWord; 
+		}// end of function goView(seq){}----------------------------------------------
+	
+	function goView_fileboard(pk_seq) {
+		
+		  const gobackURL = "${requestScope.gobackURL}"; 
+		  
+		  const searchType = $("select#searchType").val();
+		  const searchWord = $("input#searchWord").val();
+		
+		  location.href="<%= ctxPath%>/fileboard/view.bts?pk_seq="+pk_seq+"&gobackURL="+gobackURL+"&searchType="+searchType+"&searchWord="+searchWord; 
+		}// end of function goView(seq){}----------------------------------------------
+		
+		
+
+		
+		function goSearch() {
+			
+			const frm = document.searchFrm;
+			  frm.method = "GET";
+			  frm.action = "<%= ctxPath%>/board/main.bts";
+			  frm.submit();
+			
+		}// end of function goSearch() {}-----------------------
+	
+</script>
+
+<div style="padding: 0 15px !important; margin-right: auto !important; margin-left: auto !important;">
+
+	<div class="d-flex align-items-center p-3 my-3 text-white bg-purple rounded shadow-sm" style="background-color: #6F42C1; ">
+    <div class="lh-1" style="text-align: center; width: 100%;">
+      <h1 class="h6 mb-0 text-white lh-1" style="font-size:22px; font-weight: bold; ">전체글보기</h1>
     </div>
   </div>
+			
 
-	<div class="my-3 p-3 bg-body rounded shadow-sm">
-    <h6 class="border-bottom pb-2 mb-0">목록</h6>
-    <div class="d-flex text-muted pt-3">
-      <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
+		
+		<table class="table table-hover" style="width: 85%; margin-left: auto; margin-right: auto; margin-top: 30px;">
+		<thead>
+			<tr>
+				<th scope="col" class="text-center" style="width: 30px;">번호</th>	
+				<th scope="col" class="text-center" style="width: 11px;"></th>	
+				<th scope="col" class="text-center" style="width: 11px;"></th>	
+				<th scope="col" class="text-center" style="width: 65px;"></th>
+				<th scope="col" class="text-center" style="width: 200px;">제목</th>
+				<th scope="col" class="text-center" style="width: 70px;">글쓴이</th>
+				<th scope="col" class="text-center" style="width: 100px;">작성일</th>
+				<th scope="col" class="text-center" style="width: 50px;">조회수</th>
+			</tr>
+		</thead>
+		<tbody>
+			<c:forEach var="boardvo" items="${requestScope.boardList}" varStatus="status">
+			   <tr>
+			      <td align="center">
+			          ${boardvo.pk_seq}
+			      </td>
+		
+				  <td style="padding: 12px 0;">
+			         <c:if test="${not empty boardvo.filename}">
+			         <img src="<%= ctxPath%>/resources/images/disk.gif" />	
+			         </c:if>          
+			      </td>
+		
+				  <td style="padding: 12px 0;">
+				  <c:set var="text" value="${boardvo.content}"/>
 
-      <a class="pb-3 mb-0 small lh-sm border-bottom" href="<%= request.getContextPath()%>/notice/list.bts">
-        <strong class="d-block text-gray-dark">공지사항</strong>
-        	우리 회사의 소식이나 정보 및 공지사항 입니다. <span style="font-weight: bold;">필히 확인 부탁드립니다.</span>
-      </a>
-    </div>
-    <div class="d-flex text-muted pt-3">
-      <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e83e8c"/><text x="50%" y="50%" fill="#e83e8c" dy=".3em">32x32</text></svg>
-      <a class="pb-3 mb-0 small lh-sm border-bottom" href="<%= request.getContextPath()%>/fileboard/list.bts">
-        <strong class="d-block text-gray-dark">자료실</strong>
-        	우리 회사의 자료실 입니다. 각 부서별로 필요한 자료를 올리거나 받아주십시오.
-      </a>
-    </div>
-    <div class="d-flex text-muted pt-3">
-      <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#6f42c1"/><text x="50%" y="50%" fill="#6f42c1" dy=".3em">32x32</text></svg>
+				  <c:if test="${fn:contains(text, 'img src')}">
+						<img src="<%= ctxPath%>/resources/images/board/img.PNG" />
+				  </c:if>
+				  </td>
+		
+					<td align="center">
+						<span style="font-size: 9pt; color: gray;">[${boardvo.tblname}]</span>
+					</td>
+		
+		
+					<td style="text-align: left;">
+					
+					
+					<c:if test="${boardvo.tblname eq '공지사항'}">
+						<span class="subject" onclick="goView_notice('${boardvo.pk_seq}')">${boardvo.subject}</span>
+					</c:if>
+					
+					
+					<c:if test="${boardvo.tblname eq '자유게시판'}">
+						 <c:if test="${boardvo.read_count > 10}">
+						      	 <c:if test="${boardvo.comment_count > 0}">
+						      	 	<span style="color:red; font-size: 9pt;">HIT&nbsp;&nbsp;</span><span class="subject" onclick="goView('${boardvo.pk_seq}')">${boardvo.subject} <span style="vertical-align: super;">[<span style="color: red; font-size: 9pt; font-style: italic; font-weight: bold;">${boardvo.comment_count}</span>]</span></span>  
+						      	 </c:if>
+						      	 
+						      	 <c:if test="${boardvo.comment_count == 0}">
+						      	 	<span style="color:red; font-size: 9pt;">HIT&nbsp;&nbsp;</span><span class="subject" onclick="goView('${boardvo.pk_seq}')">${boardvo.subject}</span>
+						      	 </c:if> 	      	 
+				      	 </c:if>
+				      	 
+				      	 
+				      	 <c:if test="${boardvo.read_count <= 10}">
+						      	 <c:if test="${boardvo.comment_count > 0}">
+						      	 	<span class="subject" onclick="goView('${boardvo.pk_seq}')">${boardvo.subject} <span style="vertical-align: super;">[<span style="color: red; font-size: 9pt; font-style: italic; font-weight: bold;">${boardvo.comment_count}</span>]</span></span>  
+						      	 </c:if>
+						      	 
+						      	 <c:if test="${boardvo.comment_count == 0}">
+						      	 	<span class="subject" onclick="goView('${boardvo.pk_seq}')">${boardvo.subject}</span>
+						      	 </c:if> 	      	 
+				      	 </c:if>
+			      	 </c:if>
+			      	 
+			      	 
+			      <c:if test="${boardvo.tblname eq '자료실'}">
+						 <c:if test="${boardvo.read_count > 10}">
+						      	 <c:if test="${boardvo.comment_count > 0}">
+						      	 	<span style="color:red; font-size: 9pt;">HIT&nbsp;&nbsp;</span><span class="subject" onclick="goView_fileboard('${boardvo.pk_seq}')">${boardvo.subject} <span style="vertical-align: super;">[<span style="color: red; font-size: 9pt; font-style: italic; font-weight: bold;">${boardvo.comment_count}</span>]</span></span>  
+						      	 </c:if>
+						      	 
+						      	 <c:if test="${boardvo.comment_count == 0}">
+						      	 	<span style="color:red; font-size: 9pt;">HIT&nbsp;&nbsp;</span><span class="subject" onclick="goView_fileboard('${boardvo.pk_seq}')">${boardvo.subject}</span>
+						      	 </c:if> 	      	 
+				      	 </c:if>
+				      	 
+				      	 
+				      	 <c:if test="${boardvo.read_count <= 10}">
+						      	 <c:if test="${boardvo.comment_count > 0}">
+						      	 	<span class="subject" onclick="goView_fileboard('${boardvo.pk_seq}')">${boardvo.subject} <span style="vertical-align: super;">[<span style="color: red; font-size: 9pt; font-style: italic; font-weight: bold;">${boardvo.comment_count}</span>]</span></span>  
+						      	 </c:if>
+						      	 
+						      	 <c:if test="${boardvo.comment_count == 0}">
+						      	 	<span class="subject" onclick="goView_fileboard('${boardvo.pk_seq}')">${boardvo.subject}</span>
+						      	 </c:if> 	      	 
+				      	 </c:if>
+			      	 </c:if>	 
+			      	 
+			      	 
+			      </td> 	 
 
-      <a class="pb-3 mb-0 small lh-sm border-bottom" href="<%= request.getContextPath()%>/board/list.bts">
-        <strong class="d-block text-gray-dark">자유게시판</strong>
-        	누구나 이용가능한 자유게시판 입니다. 자유롭게 이용해주십시오.
-      </a>
-    </div>
-  </div>
 
-  <div class="my-3 p-3 bg-body rounded shadow-sm">
-    <h6 class="border-bottom pb-2 mb-0">최신글</h6>
-    <div class="d-flex text-muted pt-3">
-      <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
+				  <td align="center">${boardvo.user_name} 
+				 	 <c:if test="${boardvo.fk_emp_no != 80000001}">
+					 	 <c:if test="${boardvo.tblname ne '공지사항'}">
+					 		 ${boardvo.ko_rankname}
+					 	 </c:if>
+				 	 </c:if>	 
+				  </td>
+				  
+				  <td align="center">${boardvo.write_day}</td>
+				  <td align="center">${boardvo.read_count}</td>
+			   </tr>
+			</c:forEach>
+		</tbody>
+	</table>
 
-      <a class="pb-3 mb-0 small lh-sm border-bottom">
-        <strong class="d-block text-gray-dark">관리자</strong>
-        	공지사항공지사항공지사항공지사항공지사항공지사항공지사항공지사항공지사항공지사항공지사항공지사항공지사항공지사항공지사항공지사항
-      </a>
-    </div>
-    <div class="d-flex text-muted pt-3">
-      <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e83e8c"/><text x="50%" y="50%" fill="#e83e8c" dy=".3em">32x32</text></svg>
+	<%-- === #122. 페이지바 보여주기 === --%>
+	<div align="center" style="border: solid 0px gray; width: 70%; margin: 20px auto;">
+		${requestScope.pageBar}
+	</div>
+ 
+    <%-- === #101. 글검색 폼 추가하기 : 글제목, 글쓴이로 검색을 하도록 한다. === --%>
+    <form name="searchFrm" style="margin-top: 20px; text-align: center;">
+		<select name="searchType" id="searchType" style="height: 26px;">
+			<option value="subject">글제목</option>
+			<option value="user_name">글쓴이</option>
+		</select>
+		<input type="text" name="searchWord" id="searchWord" size="40" autocomplete="off" /> 
+		<input type="text" style="display: none;"/> <%-- form 태그내에 input 태그가 오로지 1개 뿐일경우에는 엔터를 했을 경우 검색이 되어지므로 이것을 방지하고자 만든것이다. --%> 
+		<button type="button" style="width: 30px" onclick="goSearch()">
+		<i class="fa fa-search fa-fw" aria-hidden="true"></i>
+		</button>
+	</form>
+	
 
-      <a class="pb-3 mb-0 small lh-sm border-bottom">
-        <strong class="d-block text-gray-dark">총무팀</strong>
-        	자료입니다.자료입니다.자료입니다.자료입니다.자료입니다.자료입니다.자료입니다.자료입니다.자료입니다.자료입니다.자료입니다.자료입니다.
-      </a>
-    </div>
-    <div class="d-flex text-muted pt-3">
-      <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#6f42c1"/><text x="50%" y="50%" fill="#6f42c1" dy=".3em">32x32</text></svg>
-
-      <a class="pb-3 mb-0 small lh-sm border-bottom">
-        <strong class="d-block text-gray-dark">사원</strong>
-        	잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.
-      </a>
-    </div>
-    <div class="d-flex text-muted pt-3">
-      <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#6f42c1"/><text x="50%" y="50%" fill="#6f42c1" dy=".3em">32x32</text></svg>
-
-      <a class="pb-3 mb-0 small lh-sm border-bottom">
-        <strong class="d-block text-gray-dark">사원</strong>
-        	잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.
-      </a>
-    </div>
-    <div class="d-flex text-muted pt-3">
-      <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#6f42c1"/><text x="50%" y="50%" fill="#6f42c1" dy=".3em">32x32</text></svg>
-
-      <a class="pb-3 mb-0 small lh-sm border-bottom">
-        <strong class="d-block text-gray-dark">사원</strong>
-        	잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.잘부탁드립니다.?
-      </a>
-    </div>
-  </div>
-
-
-</main>
-
-
-    <script src="/docs/5.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-
-      <script src="offcanvas.js"></script>
-      
-      </body>
-      
+	
+</div>

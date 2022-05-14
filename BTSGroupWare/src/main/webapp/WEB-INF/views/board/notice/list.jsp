@@ -6,6 +6,14 @@
 
 <style>
 
+#mycontent > div > form > button {
+background-color: white;
+}
+#searchWord {
+margin: 0 6px;
+}
+
+
 #mycontent > div > form:nth-child(3) > input[type=submit]:nth-child(3):hover {
 	font-weight: bold;
 }
@@ -51,7 +59,6 @@ table#board_table {
 
 th, td {
   text-align: center;
-  padding: 16px;
 }
 
   
@@ -149,20 +156,8 @@ margin: 10px;
       <h1 class="h6 mb-0 text-white lh-1" style="font-size:22px; font-weight: bold; ">공지사항</h1>
     </div>
   </div>
-	<div style="text-align: center;">
-		<a id="brd_category" href="<%= request.getContextPath()%>/notice/list.bts" style="font-weight: bold; text-decoration: underline;">공지사항</a> 
-		<a id="brd_category" href="<%= request.getContextPath()%>/fileboard/list.bts">자료실</a> 
-		<a id="brd_category" href="<%= request.getContextPath()%>/board/list.bts">자유게시판</a> 
-		<br></br>
-	</div>
-	<c:if test="${sessionScope.loginuser.fk_rank_id >= 50}">
-		<form action="<%= ctxPath%>/notice/write.bts" method="post" style="padding-left: 10%; margin-bottom: 10px; float: left;">
-				<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
-				<img style="width: 15px;"  src="<%= ctxPath%>/resources/images/board/write.png" /><input style="border:none; background-color: white; font-size: 10pt;" type="submit" value="공지작성" />
-		</form>
-	</c:if>
 
-	<form name="headerCategory" style="float: right; margin-right: 8%;">
+	<form name="headerCategory" style="float: right; margin-right: 8%; margin-bottom: 10px; margin-top: 10px;">
 		<select name="headerCategory" id="headerCategory"  onchange="formChange(this.form)" style="height: 26px;">
 				<option value="" selected disabled>==머릿말 선택==</option>	
 				<option value="">전체보기</option>	

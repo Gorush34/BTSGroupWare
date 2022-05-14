@@ -149,9 +149,9 @@
 	  <div class="header">
 		<div id="smallHeader">	
 		<c:if test="${sessionScope.loginuser.fk_rank_id >= 50}">
-			<span onclick="javascript:location.href='<%= request.getContextPath()%>/notice/write.bts?fk_seq=${requestScope.noticevo.pk_seq}&groupno=${requestScope.noticevo.groupno}&depthno=${requestScope.noticevo.depthno}&subject=${requestScope.noticevo.subject}'"><button type="button" class="btn btn-outline-primary">답글쓰기</button></span>
-			<span onclick="javascript:location.href='<%= request.getContextPath()%>/notice/del.bts?pk_seq=${requestScope.noticevo.pk_seq}'"><button type="button" class="btn btn-outline-danger">삭제하기</button></span>
-			<span onclick="javascript:location.href='<%= request.getContextPath()%>/notice/edit.bts?pk_seq=${requestScope.noticevo.pk_seq}'"><button type="button" class="btn btn-outline-warning">수정하기</button></span>
+			<span onclick="javascript:location.href='<%= request.getContextPath()%>/fileboard/write.bts?fk_seq=${requestScope.fileboardvo.pk_seq}&groupno=${requestScope.fileboardvo.groupno}&depthno=${requestScope.fileboardvo.depthno}&subject=${requestScope.fileboardvo.subject}'"><button type="button" class="btn btn-outline-primary">답글쓰기</button></span>
+			<span onclick="javascript:location.href='<%= request.getContextPath()%>/fileboard/del.bts?pk_seq=${requestScope.fileboardvo.pk_seq}'"><button type="button" class="btn btn-outline-danger">삭제하기</button></span>
+			<span onclick="javascript:location.href='<%= request.getContextPath()%>/fileboard/edit.bts?pk_seq=${requestScope.fileboardvo.pk_seq}'"><button type="button" class="btn btn-outline-warning">수정하기</button></span>
 		</c:if>	
 			
 		</div>
@@ -166,8 +166,8 @@
 	 
 	 <!-- 게시글 내용 시작-------------------------------------------- -->
 	 <div>
-	<%-- 	 <span style="font-size: 12pt; margin-left: 10pt;">${noticevo.header}</span> --%>
-	 	<h2 style="margin:10px;">${noticevo.subject}</h2>
+	<%-- 	 <span style="font-size: 12pt; margin-left: 10pt;">${fileboardvo.header}</span> --%>
+	 	<h2 style="margin:10px;">${fileboardvo.subject}</h2>
 	 </div>
 	 		
 	 <div id="boardContentAll">		
@@ -175,10 +175,10 @@
 	 	<table>
 	 		<thead style="font-size: 12pt;">
 	 			 <tr >
-	 			  	<th>${noticevo.user_name}</th>
+	 			  	<th>${fileboardvo.user_name}</th>
 	 			</tr>
 	 			<tr>
-	 				<th style="font-size:9pt;color:#BDBDBD; font-weight:lighter;">${noticevo.write_day}</th>
+	 				<th style="font-size:9pt;color:#BDBDBD; font-weight:lighter;">${fileboardvo.write_day}</th>
 	 			</tr>
 	 			
 	
@@ -188,7 +188,7 @@
 	 		<tbody id="content">
 	 			<tr >
 	 				<td style="padding-bottom:40px; padding-top:40px; padding-right: 50px;">
-						<p  style="word-break: break-all;">${noticevo.content}</p>
+						<p  style="word-break: break-all;">${fileboardvo.content}</p>
 					</td>
 	 			</tr>	 
 	 		</tbody>
@@ -196,15 +196,15 @@
 	 		</table>
 	 		
 	 		<table>
-	 		<c:if test="${requestScope.noticevo.org_filename != null}">
+	 		<c:if test="${requestScope.fileboardvo.org_filename != null}">
 		 		<tr>
 					<th style="width: 100px;"><p>첨부파일</p></th>
 					<td>
 						<c:if test="${sessionScope.loginuser != null}">
-							<a href="<%= request.getContextPath()%>/file/download_notice.bts?pk_seq=${requestScope.noticevo.pk_seq}">${requestScope.noticevo.org_filename}</a> <p style="font-size: 9pt;">&nbsp;(<fmt:formatNumber value="${requestScope.noticevo.file_size}" pattern="#,###" /> byte)</p>  
+							<a href="<%= request.getContextPath()%>/file/download_fileboard.bts?pk_seq=${requestScope.fileboardvo.pk_seq}">${requestScope.fileboardvo.org_filename}</a> <p style="font-size: 9pt;">&nbsp;(<fmt:formatNumber value="${requestScope.fileboardvo.file_size}" pattern="#,###" /> byte)</p>  
 						</c:if>
 						<c:if test="${sessionScope.loginuser == null}">
-							${requestScope.noticevo.org_filename}
+							${requestScope.fileboardvo.org_filename}
 						</c:if>
 					</td>
 				</tr>
@@ -218,7 +218,7 @@
 
 	 
 	 <div style="font-size: 9pt; margin-left: 10px;">
-		 <span>조회수 ${noticevo.read_count} 회 </span>
+		 <span>조회수 ${fileboardvo.read_count} 회 </span>
 	 </div>
 	 
 	 <hr style="1px solid; margin-bottom: 15px;">
@@ -226,12 +226,12 @@
 	 
 	 <c:set var="v_gobackURL" value='${ fn:replace(requestScope.gobackURL, "&", " ") }' />
 	 
-	 <c:if test="${not empty requestScope.noticevo.previousseq}">
-	 		<div style="margin-bottom: 1%; font-size: 9pt;">이전글&nbsp;&nbsp;<span class="move" onclick="javascript:location.href='view_2.bts?pk_seq=${requestScope.noticevo.previousseq}&headerCategory=${requestScope.paraMap.headerCategory}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.noticevo.previoussubject}</span></div>
+	 <c:if test="${not empty requestScope.fileboardvo.previousseq}">
+	 		<div style="margin-bottom: 1%; font-size: 9pt;">이전글&nbsp;&nbsp;<span class="move" onclick="javascript:location.href='view_2.bts?pk_seq=${requestScope.fileboardvo.previousseq}&ko_depname=${requestScope.paraMap.ko_depname}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.fileboardvo.previoussubject}</span></div>
  	 </c:if>
 
-	 <c:if test="${not empty requestScope.noticevo.nextseq}">
-   		<div style="margin-bottom: 1%; font-size: 9pt;">다음글&nbsp;&nbsp;<span class="move" onclick="javascript:location.href='view_2.bts?pk_seq=${requestScope.noticevo.nextseq}&headerCategory=${requestScope.paraMap.headerCategory}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.noticevo.nextsubject}</span></div>
+	 <c:if test="${not empty requestScope.fileboardvo.nextseq}">
+   		<div style="margin-bottom: 1%; font-size: 9pt;">다음글&nbsp;&nbsp;<span class="move" onclick="javascript:location.href='view_2.bts?pk_seq=${requestScope.fileboardvo.nextseq}&ko_depname=${requestScope.paraMap.ko_depname}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.fileboardvo.nextsubject}</span></div>
     	</c:if>	
 	 
 </div>

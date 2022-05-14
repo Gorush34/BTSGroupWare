@@ -4,7 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 //=== #52. vo 생성하기
 //  먼저, 오라클에서 tbl_board 테이블을 생성해야 한다.
-public class BoardVO {
+public class FileboardVO {
 
 
 	private String pk_seq;
@@ -27,6 +27,7 @@ public class BoardVO {
 	private String ko_rankname;
 	private String like_cnt;
 	private String tblname;
+	private String ko_depname;
 	
 	private String previousseq;      // 이전글번호
 	private String previoussubject;  // 이전글제목
@@ -36,13 +37,13 @@ public class BoardVO {
 	
 	private MultipartFile attach;
 	
-	public BoardVO() {}
+	public FileboardVO() {}
 
 
-	public BoardVO(String pk_seq, String like_cnt, String fk_emp_no, String subject, String content, String user_name, String write_day,
+	public FileboardVO(String pk_seq, String like_cnt, String fk_emp_no, String subject, String content, String user_name, String write_day,
 			String ip, String read_count, String pw, String status, String comment_count, String org_filename,
 			String filename, String file_size, String groupno, String fk_seq, String depthno, String previousseq,
-			String previoussubject, String nextseq, String nextsubject, MultipartFile attach, String ko_rankname, String tblname) {
+			String previoussubject, String nextseq, String nextsubject, MultipartFile attach, String ko_rankname, String tblname, String ko_depname) {
 		this.pk_seq = pk_seq;
 		this.like_cnt = like_cnt;
 		this.fk_emp_no = fk_emp_no;
@@ -68,6 +69,7 @@ public class BoardVO {
 		this.attach = attach;
 		this.ko_rankname = ko_rankname;
 		this.tblname = tblname;
+		this.ko_depname = ko_depname;
 	}
 
 
@@ -320,6 +322,16 @@ public class BoardVO {
 
 	public void setLike_cnt(String like_cnt) {
 		this.like_cnt = like_cnt;
+	}
+
+
+	public String getKo_depname() {
+		return ko_depname;
+	}
+
+
+	public void setKo_depname(String ko_depname) {
+		this.ko_depname = ko_depname;
 	}
 	
 	
