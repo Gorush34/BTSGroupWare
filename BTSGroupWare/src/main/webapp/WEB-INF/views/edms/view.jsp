@@ -181,11 +181,11 @@
 		
 		<div style="margin-bottom: 1%;">
 				이전글제목&nbsp;&nbsp;
-				<span class="move" onclick="javascript:location.href='/bts/edms/view_2.bts?pk_appr_no=${requestScope.apprvo.previousseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.apprvo.previoussubject}</span>
+				<span class="move" style="cursor: pointer;" onclick="javascript:location.href='/bts/edms/view.bts?pk_appr_no=${requestScope.apprvo.previousseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.apprvo.previoussubject}</span>
 			</div>
 			<div style="margin-bottom: 1%;">
 				다음글제목&nbsp;&nbsp;
-				<span class="move" onclick="javascript:location.href='/bts/edms/view_2.bts?pk_appr_no=${requestScope.apprvo.nextseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.apprvo.nextsubject}</span>
+				<span class="move" style="cursor: pointer;" onclick="javascript:location.href='/bts/edms/view.bts?pk_appr_no=${requestScope.apprvo.nextseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.apprvo.nextsubject}</span>
 			</div>
 			
 			<br />
@@ -197,13 +197,14 @@
 							현재 페이지 주소를 뷰단으로 넘겨준다.
 			--%>
 			
-			<%-- [오류]! 슬래쉬 들어가서 틀림
-			<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/${requestScope.goBackURL}'">검색된결과목록보기</button> 
-			--%>
-			
+			<!-- loginuser != null && 글쓴 사람인 경우-->
 			<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>${requestScope.gobackURL}'">검색된결과목록보기</button>
 			<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edit.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">글수정하기</button>
 			<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/del.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">글삭제하기</button>
+			<!-- loginuser != null && 글쓴 사람이 아닌 경우 1 (승인자인 경우) -->
+			
+			<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">승인</button>
+			<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">반려</button>
 			
 <%--
 	 <div style="margin: 20px;">

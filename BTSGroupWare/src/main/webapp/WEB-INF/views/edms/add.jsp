@@ -74,14 +74,6 @@
 
 
 
-
-
-
-
-
-
-
-
 <script type="text/javascript">
 	
 	$(document).ready(function(){
@@ -178,16 +170,32 @@
 				
 		      });//end of $("select#docform").on("change", function()  */
 			
-			// 긴급버튼 체크 시 값 전달(긴급이면 1을, 아니면 0을 전달, default값은 0이다.)
-			let flag = $('input[name=emergency]').is(":checked");
-		    let emergency;
-		    
-			if (flag == true) {
-				emergency = $('input[name=emergency]').val(1);
-			} else {
-				emergency = $('input[name=emergency]').val(0);
-			}
 			
+		    /* $("input#emg").click(function () {
+		    	
+		    	// 긴급버튼 체크 시 값 전달(긴급이면 1을, 아니면 0을 전달, default값은 0이다.) 
+				let flag = $('input:checkbox[name="emg"]').is(':checked');
+				
+			    let emergency = "";
+			    // 여기서 값이 넘어가지 않음 - 
+			    
+				if (flag == true) { // 체크된 경우
+					console.log("true");
+					emergency = "1";
+				} else {			// 안된 경우
+					console.log("false");
+					emergency = "0";
+				}
+				
+				$("input#emergency").val(emergency);
+			    console.log($("input#emergency").val());
+		    }) */
+		    
+		    
+/* 		    <input type="checkbox" name="emg" id="emg">&nbsp;긴급
+			<input type="hidden" name="emergency" id="emergency"> */
+		    
+		    
 			// 제목 유효성 검사
 			const title = $("input#title").val().trim();
 			if(title == "") {
@@ -241,7 +249,25 @@
 			<%-- === 스마트에디터 구현 끝 === --%>			
 			
 			
+			// 긴급버튼 체크 시 값 전달(긴급이면 1을, 아니면 0을 전달, default값은 0이다.) ////////////// 
+			let flag = $('input:checkbox[name="emg"]').is(':checked');
 			
+			let emergency = "";
+			// 여기서 값이 넘어가지 않음 - 
+			   
+			if (flag == true) { // 체크된 경우
+				console.log("true");
+				emergency = "1";
+			} else {			// 안된 경우
+				console.log("false");
+				emergency = "0";
+			}
+			
+			$("input#emergency").val(emergency);
+			   console.log($("input#emergency").val());
+					    
+		    
+		    
 			
 			// 폼(form)을 전송(submit)
 			const frm = document.addFrm;
@@ -250,6 +276,9 @@
 			frm.submit();
 			
 		}); // end of $("button#btnWrite").click(function(){}) --------------------
+		
+		
+		
 		
 		
 		// 긴급버튼
@@ -453,8 +482,8 @@
 			<th class="edmsView_th">긴급</th>
 			<td colspan="4">
 				<label class="switch-button">
-					<input type="checkbox" name="emergency">&nbsp;긴급
-					<input type="hidden" name="emergency">
+					<input type="checkbox" name="emg" id="emg">&nbsp;긴급
+					<input type="text" name="emergency" id="emergency">
 					<%-- name 전달할 값의 이름, value 전달될 값 --%>
 				</label>
 			</td>

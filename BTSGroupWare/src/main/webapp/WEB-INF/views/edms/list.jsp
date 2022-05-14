@@ -103,7 +103,7 @@
 		
 		
 		// [중요] on을 쓰면 id와 클래스가? 100% 잡힌다! (jQeury 참조!) 별 200개!!!
-		// on 을 사용하면 변경 이후의 이벤트가 변경 ㅎ
+		// on 을 사용하면 변경 이후의 이벤트가 변경된다.
 		$(document).on("click", "span.result", function() {
 			const word = $(this).text();
 			$("input#searchWord").val(word);	// 텍스트 박스에 검색된 결과의 문자열을 입력해준다.
@@ -261,9 +261,9 @@
 		<form name="searchFrm" style="margin-top: 20px;">
 			<select name="searchType" id="searchType" style="height: 26px;">
 				<option value="title">글제목</option>
-				<option value="name">글쓴이</option>
+				<option value="emp_name">글쓴이</option>
 			</select>
-			<input type="text" name="searchWord" id="searchWord" size="40" autocomplete="off" />
+			<input type="text" name="searchWord" id="searchWord" class="form-controll" size="40" autocomplete="off" />
 			<input type="text" style="display: none;" />
 			<%-- form 태그내에 input 태그가 오로지 1개일 경우에는 엔터를 했을 경우 검색이 되어지므로 이것을 방지하고자 만든것이다. hidden으로 해도 바로 submit되어버리므로 안된다! --%>
 			<button type="button" class="btn btn-secondary btn-sm" onclick="goSearch()">검색</button>

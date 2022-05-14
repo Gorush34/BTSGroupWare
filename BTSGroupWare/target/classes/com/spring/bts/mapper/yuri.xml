@@ -81,6 +81,7 @@
 
 
 	<!-- 이전글/다음글이 있는, 파일첨부가 있는 대기문서 1개 조회하기 -->
+	<!--  이렇게 하면 검색할 때 안되지 않나? -->
 	<select id="getView" parameterType="HashMap" resultType="com.spring.bts.yuri.model.ApprVO">
 		SELECT  previousseq, previoussubject
 	            , pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno, fk_fin_empno, emergency
@@ -92,7 +93,7 @@
 		(
 		    select  lag(pk_appr_no,1) over(order by pk_appr_no desc)  as previousseq
 		          , lag(title,1) over(order by pk_appr_no desc) as previoussubject
-		          , pk_appr_no, fk_appr_sortno, fk_emp_no, NVL(fk_mid_empno, -1) AS fk_mid_empno, fk_fin_empno, emergency
+		          , pk_appr_no, fk_appr_sortno, A.fk_emp_no AS fk_emp_no, NVL(fk_mid_empno, -1) AS fk_mid_empno, fk_fin_empno, emergency
 		          , title, contents, filename, orgfilename, fileSize, status, NVL(mid_accept, -1) AS mid_accept, fin_accept
 		          , NVL(mid_opinion, '중간결재자의견없음') AS mid_opinion, fin_opinion, to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') as writeday, viewcnt
 		          , lead(pk_appr_no,1) over(order by pk_appr_no desc) as nextseq
@@ -125,7 +126,7 @@
 	<!-- 1개글 수정하기 -->
 	<update id="edit" parameterType="com.spring.bts.yuri.model.ApprVO">
 		update tbl_appr set title = #{title}, contents = #{contents}
-		where pk_appr_vo = #{pk_appr_vo} and fk_emp_no = #{fk_emp_no}
+		where pk_appr_vo = #{pk_appr_vo}
 	</update>
 	
 	<!-- 1개글 삭제하기 -->
@@ -135,32 +136,56 @@
 	</delete>
 	
 	<!-- 검색어 입력 시 자동글 완성하기 -->
-	<select id="wordSearchShow" parameterType="HashMap" resultType="String">
+	<!-- select distinct title, pk_appr_no
+	FROM tbl_appr
+	where status in (0, 1, 2)
+	and lower(title)
+	like '%'|| lower('휴가') ||'%'
+	order by title asc, pk_appr_no desc;
+	
+	select distinct E.emp_name, A.pk_appr_no
+	FROM tbl_appr A LEFT JOIN tbl_employees E
+	ON A.fk_emp_no = E.pk_emp_no
+	where status in (0, 1, 2)
+	and lower(E.emp_name)
+	like '%'|| lower('인부장') ||'%'
+	order by emp_name asc, pk_appr_no desc;	 -->
+	
+	<!-- 검색어 입력 시 자동글 완성하기 -->
+	<select id="wordSearchShow" parameterType="HashMap" resultType="String">	
 		<choose>
-			<when test="searchType eq 'name'">
-				select distinct ${searchType}
+			<when test="searchType eq 'emp_name'">
+				SELECT DISTINCT ${searchType}
 			</when>
 			<otherwise>
-				select ${searchType}
+				SELECT ${searchType}
 			</otherwise>
 		</choose>
-		from tbl_appr
-		where status in (0, 1, 2)
-		and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
-		<!--select 문에서 distinct 와 order by 절을 함께 사용할때는 조심해야 한다.
+		FROM tbl_appr A LEFT JOIN tbl_employees E
+		ON A.fk_emp_no = E.pk_emp_no
+		WHERE 1=1
+		AND lower(${searchType}) LIKE '%'|| lower(#{searchWord}) ||'%'
+		<!--
+			select 문에서 distinct 와 order by 절을 함께 사용할때는 조심해야 한다.
 			order by 절에는 select 문에서 사용된 컬럼만 들어올 수가 있다.
 			또는 order by 절을 사용하지 않아야 한다.
 		-->
 		<choose>
-			<when test="searchType neq 'title'">
+			<when test="searchType neq 'subject'">
 			<!-- JSTL은 ne 지만 여기서는 neq 이다! -->
-				order by ${searchType} asc
+				ORDER BY ${searchType} ASC
 			</when>
 			<otherwise>
-				order by pk_appr_no desc
+				ORDER BY pk_appr_no DESC
 			</otherwise>
 		</choose>
 	</select>
+	<!--
+		select 문에서 distinct 와 order by 절을 함께 사용할때는 조심해야 한다.
+		order by 절에는 select 문에서 사용된 컬럼만 들어올 수가 있다.
+		또는 order by 절을 사용하지 않아야 한다.
+	-->
+
 
 	<!-- 총 게시물 건수 구하기 -->
 	<select id="getTotalCount" parameterType="HashMap" resultType="int">
@@ -181,22 +206,28 @@
 		        fk_fin_empno, emergency, title, contents, filename,
 		        orgfilename, fileSize, status, mid_accept, fin_accept,
 		        mid_opinion, fin_opinion,
-		        writeday, viewcnt
+		        writeday, viewcnt,
+		        emp_name
 		from 
 		(
 			select  rownum as rno, 
 			        pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno,
 			        fk_fin_empno, emergency, title, contents, filename,
 			        orgfilename, fileSize, status, mid_accept, fin_accept,
-			       NVL(mid_opinion, '중간결재자의견없음') AS mid_opinion, fin_opinion,
-			        to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') AS writeday, viewcnt
-			from tbl_appr
-			where status in (0, 1, 2)
+			        NVL(mid_opinion, '중간결재자의견없음') AS mid_opinion, fin_opinion,
+			        to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') AS writeday, viewcnt,
+			        E.emp_name AS emp_name
+			from tbl_appr A
+			left join tbl_employees E
+			on A.fk_emp_no = E.pk_emp_no
+			where 1=1
 			<if test=' searchType != "" and searchWord != "" '>
 			and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
 			</if>
+			order by pk_appr_no desc
 		)
 		where rno between #{startRno} and #{endRno}
+		order by pk_appr_no desc
 	</select>
 	
 
@@ -207,7 +238,7 @@
 	<!-- 상세부서정보 페이지 사원목록 불러오기 -->
    <select id="addBook_depInfo_select" resultType="com.spring.bts.hwanmo.model.EmployeeVO">
       select E.pk_emp_no, E.emp_name , R.ko_rankname , D.ko_depname , R.pk_rank_no
-      from tbl_EMPLOYEES E
+      from tbl_employees E
       join tbl_rank_sort R
       on E.fk_rank_id = R.pk_rank_no
       join tbl_dep_sort D
