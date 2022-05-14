@@ -522,6 +522,12 @@ public class BoardService implements InterBoardService {
 		return boardMap;
 	}
 
+	@Override
+	public List<Map<String, String>> getAll() {
+		List<Map<String, String>> boardMap = dao.getAll();
+		return boardMap;
+	}
+
 
 
 

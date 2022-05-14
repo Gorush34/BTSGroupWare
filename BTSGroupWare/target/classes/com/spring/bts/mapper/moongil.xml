@@ -590,6 +590,7 @@
       <result property="subject" column="subject" javaType="String" />
       <result property="read_count" column="read_count" javaType="String" />
       <result property="user_name" column="user_name" javaType="String" />
+      <result property="tblname" column="tblname" javaType="String" />
    </resultMap>
    <select id="getBestboard" resultMap="getBestboardMap">
 	select rno, fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, write_day, tblname
@@ -599,16 +600,31 @@
 			            fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, write_day, tblname
 			        from
 	                     (
-	                     select fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, to_char(write_day, 'yyyy-mm-dd') AS write_day, '자유게시판' AS tblname
+	                     select fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, write_day, '자유게시판' AS tblname
 	                     from tbl_board B join tbl_employees E
 	                    ON fk_emp_no = E.pk_emp_no
 	                    join tbl_rank_sort S
 	                    ON E.FK_RANK_ID = S.PK_RANK_NO 
-                        where status = 1 
-                      order by read_count desc 
+	                    where status = 1 and write_day like '%'|| sysdate ||'%'
+	                    UNION   
+	                     select fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, write_day, '공지사항' AS tblname
+	                     from tbl_notice N join tbl_employees E
+	                    ON fk_emp_no = E.pk_emp_no
+	                    join tbl_rank_sort S
+	                    ON E.FK_RANK_ID = S.PK_RANK_NO   
+	                    where status = 1 and write_day like '%'|| sysdate ||'%' 
+	                     UNION
+	                     select fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, write_day, '자료실' AS tblname
+	                     from tbl_fileboard F join tbl_employees E
+	                    ON fk_emp_no = E.pk_emp_no
+	                    join tbl_rank_sort S
+	                    ON E.FK_RANK_ID = S.PK_RANK_NO
+                        where status = 1 and write_day like '%'|| sysdate ||'%'
+                        order by read_count desc 
 	                  ) A        
 			        ) V
 		 where rno between 1 and 5
+		 order by read_count desc 
    </select> 
     
 <!--     ////////////////////////////////////////////////////////////////////////////////////////////////// -->
@@ -827,6 +843,50 @@
 	                  ) A        
 			        ) V
 		 where rno between 1 and 5
+   </select> 
+   
+   <resultMap type="HashMap" id="getAll">
+      <result property="pk_seq" column="pk_seq" javaType="String" />
+      <result property="subject" column="subject" javaType="String" />
+      <result property="user_name" column="user_name" javaType="String" />
+      <result property="write_day" column="write_day" javaType="String" />
+      <result property="ko_rankname" column="ko_rankname" javaType="String" />
+      <result property="ko_depname" column="ko_depname" javaType="String" />
+      <result property="tblname" column="tblname" javaType="String" />
+  	  </resultMap>
+   <select id="getAll" resultMap="getAll">
+	select rno, fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, write_day, tblname
+			from
+			(
+			    select rownum AS rno,
+			            fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, to_char(write_day, 'yyyy-mm-dd') AS write_day, tblname
+			        from
+	                     (
+	                     select fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, write_day, '자유게시판' AS tblname
+	                     from tbl_board B join tbl_employees E
+	                    ON fk_emp_no = E.pk_emp_no
+	                    join tbl_rank_sort S
+	                    ON E.FK_RANK_ID = S.PK_RANK_NO 
+	                    where status = 1
+	                    UNION   
+	                     select fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, write_day, '공지사항' AS tblname
+	                     from tbl_notice N join tbl_employees E
+	                    ON fk_emp_no = E.pk_emp_no
+	                    join tbl_rank_sort S
+	                    ON E.FK_RANK_ID = S.PK_RANK_NO   
+	                    where status = 1
+	                     UNION
+	                     select fk_emp_no, pk_seq, KO_RANKNAME , subject, user_name, comment_count, read_count, status, write_day, '자료실' AS tblname
+	                     from tbl_fileboard F join tbl_employees E
+	                    ON fk_emp_no = E.pk_emp_no
+	                    join tbl_rank_sort S
+	                    ON E.FK_RANK_ID = S.PK_RANK_NO
+                        where status = 1
+                        order by write_day desc  
+	                  ) A        
+			        ) V
+		 where rno between 1 and 5
+		 order by write_day desc  
    </select> 
      
 </mapper>

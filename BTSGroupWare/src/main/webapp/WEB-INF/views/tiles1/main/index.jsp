@@ -9,16 +9,86 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+<style>
+td.commentContentsClosed:hover {
+	font-weight: bold;
+}
+
+
+</style>
 
 <script type="text/javascript">
 
 	$(document).ready(function(){
+		goReadAll();	
 		goReadNotice();	
 		goReadBoard();	
 		goReadFileboard();	
 	});// end of $(document).ready(function(){})----------------------
 
 // Function
+	
+	function goReadAll() {
+		  
+		  $.ajax({
+			  url:"<%= request.getContextPath()%>/board/readAll.bts",
+			  dataType:"JSON",
+			  success:function(json){
+				  
+				  let html = "";
+				  if(json.length > 0) {
+					  $.each(json, function(index, item){
+						  if(item.tblname == "자유게시판"){
+							  html += "<tr>";  
+							  html += "<td class='board' style='width: 11%; text-align: center; font-size: 9pt; color: gray; padding-left: 30px;'>"+item.tblname+"</td>";	
+							  html += "<td class='commentContentsClosed'><span onclick='goView_board("+item.pk_seq+")' class='subject2' style='color: black; cursor: pointer; '>"+item.subject+"</span></td>";
+							  if(item.user_name == "관리자"){
+								  html += "<td class='board' style='text-align: center;'>"+item.user_name+"</td>";
+							  }
+							  if(item.user_name != "관리자"){
+								  html += "<td class='board' style='text-align: center;'>"+item.user_name+" "+item.ko_rankname+"</td>";
+							  }
+							  html += "<td class='board' style='text-align: center;'>"+item.write_day+"</td>";	
+							  html += "</tr>";
+						  }
+						  if(item.tblname == "공지사항"){
+							  html += "<tr>";  
+							  html += "<td class='board' style='width: 11%; text-align: center; font-size: 9pt; color: gray; padding-left: 30px;'>"+item.tblname+"</td>";	
+							  html += "<td class='commentContentsClosed'><span onclick='goView_notice("+item.pk_seq+")' class='subject2' style='color: black; cursor: pointer; '>"+item.subject+"</span></td>";
+							  html += "<td class='board' style='text-align: center;'>"+item.user_name+"</td>";
+							  html += "<td class='board' style='text-align: center;'>"+item.write_day+"</td>";	
+							  html += "</tr>";
+						  }
+						  if(item.tblname == "자료실"){
+							  html += "<tr>";  
+							  html += "<td class='board' style='width: 11%; text-align: center; font-size: 9pt; color: gray; padding-left: 30px;'>"+item.tblname+"</td>";	
+							  html += "<td class='commentContentsClosed'><span onclick='goView_fileboard("+item.pk_seq+")' class='subject2' style='color: black; cursor: pointer; '>"+item.subject+"</span></td>";
+							  if(item.user_name == "관리자"){
+								  html += "<td class='board' style='text-align: center;'>"+item.user_name+"</td>";
+							  }
+							  if(item.user_name != "관리자"){
+								  html += "<td class='board' style='text-align: center;'>"+item.user_name+" "+item.ko_rankname+"</td>";
+							  }
+							  html += "<td class='board' style='text-align: center;'>"+item.write_day+"</td>";	
+							  html += "</tr>";
+						  }
+					  });
+				  }
+				  else {
+					  html += "<tr>";
+					  html += "<td colspan='4' class='board'>게시물이 없습니다.</td>";
+					  html += "</tr>";
+				  }
+				  
+				  $("tbody#allDisplay").html(html);
+			  },
+			  error: function(request, status, error){
+					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			  }
+		  });
+		  
+	  }// end of function goReadComment(){}--------------------------
+	
 	
 	function goReadNotice() {
 		  
@@ -65,7 +135,12 @@
 					  $.each(json, function(index, item){
 						  html += "<tr>";  
 						  html += "<td class='commentContentsClosed'><span onclick='goView("+item.pk_seq+")' class='subject2' style='color: black; cursor: pointer; padding-left: 30px;'>"+item.subject+"</span></td>";
-						  html += "<td class='board' style='text-align: center;'>"+item.user_name+" "+item.ko_rankname+"</td>";
+						  if(item.user_name == "관리자"){
+							  html += "<td class='board' style='text-align: center;'>"+item.user_name+"</td>";
+						  }
+						  if(item.user_name != "관리자"){
+							  html += "<td class='board' style='text-align: center;'>"+item.user_name+" "+item.ko_rankname+"</td>";
+						  }
 						  html += "<td class='board' style='text-align: center;'>"+item.write_day+"</td>";	
 						  html += "</tr>";
 					  });
@@ -99,7 +174,12 @@
 						  html += "<tr>";  
 						  html += "<td class='board' style='width: 11%; text-align: center; font-size: 9pt; color: gray; padding-left: 30px;'>"+item.ko_depname+"</td>";	
 						  html += "<td class='commentContentsClosed'><span onclick='goView_fileboard("+item.pk_seq+")' class='subject2' style='color: black; cursor: pointer;'>"+item.subject+"</span></td>";
-						  html += "<td class='board' style='text-align: center;'>"+item.user_name+" "+item.ko_rankname+"</td>";
+						  if(item.user_name == "관리자"){
+							  html += "<td class='board' style='text-align: center;'>"+item.user_name+"</td>";
+						  }
+						  if(item.user_name != "관리자"){
+							  html += "<td class='board' style='text-align: center;'>"+item.user_name+" "+item.ko_rankname+"</td>";
+						  }
 						  html += "<td class='board' style='text-align: center;'>"+item.write_day+"</td>";	
 						  html += "</tr>";
 					  });
@@ -119,7 +199,7 @@
 		  
 	  }// end of function goReadComment(){}--------------------------	
 	  
-	  function goView(pk_seq) {
+	  function goView_board(pk_seq) {
 			
 		  const gobackURL = "${requestScope.gobackURL}"; 
 		  
@@ -344,11 +424,13 @@
 	                    <ul class="nav nav-tabs board-tab">
 						<!-- Tab 아이템이다. 태그는 li과 li > a이다. li태그에 active는 현재 선택되어 있는 탭 메뉴이다. -->
 						<!-- a 태그의 href는 아래의 tab-content 영역의 id를 설정하고 data-toggle 속성을 tab으로 설정한다. -->
+						<li class="active"><a href="#all" data-toggle="tab">전체게시판</a></li>
+						<li><span>|</span></li>
 						<li class="active"><a href="#notice" data-toggle="tab">공지게시판</a></li>
 						<li><span>|</span></li>
-						<li><a href="#board" data-toggle="tab">일반게시판</a></li>
+						<li><a href="#board" data-toggle="tab">자유게시판</a></li>
 						<li><span>|</span></li>
-						<li><a href="#archive" data-toggle="tab">자료게시판</a></li>
+						<li><a href="#archive" data-toggle="tab">자료실</a></li>
 					</ul>
                 </div>
                 <!-- Card Body -->
@@ -360,7 +442,25 @@
 						<!-- 각 탭이 선택되면 보여지는 내용이다. 태그는 div이고 클래스는 tab-pane이다. -->
 						<!-- active 클래스는 현재 선택되어 있는 탭 영역이다. -->
 						<!-- id는 고유한 이름으로 설정하고 tab의 href와 연결되어야 한다. -->
-						<div class="tab-pane in active" id="notice">
+						<div class="tab-pane in active" id="all">
+							<div class="board-area">
+	                    	<table class="table" id="tbl_notice">
+									<thead class="thead-light th_all" id="all_head">
+									    <tr style="text-align: center;">
+									      <th colspan='2' style="width:60%; text-align: center;">제목</th>
+									      <th style="width:20%; text-align: center;">작성자</th>
+									      <th style="width:20%; text-align: center;">작성일자</th>
+									    </tr>
+									  </thead>
+					
+									<tbody id="allDisplay"></tbody>
+									
+							</table>	
+	                    	</div>
+						</div>
+						<!-- fade 클래스는 선택적인 사항으로 트랜지션(transition)효과가 있다.
+						<!-- in 클래스는 fade 클래스를 선언하여 트랜지션효과를 사용할 때 in은 active와 선택되어 있는 탭 영역의 설정이다. -->
+						<div class="tab-pane" id="notice">
 							<div class="board-area">
 	                    	<table class="table" id="tbl_notice">
 									<thead class="thead-light th_all" id="all_head">
@@ -376,8 +476,6 @@
 							</table>	
 	                    	</div>
 						</div>
-						<!-- fade 클래스는 선택적인 사항으로 트랜지션(transition)효과가 있다.
-						<!-- in 클래스는 fade 클래스를 선언하여 트랜지션효과를 사용할 때 in은 active와 선택되어 있는 탭 영역의 설정이다. -->
 						<div class="tab-pane" id="board">
 							<div class="board-area">
 	                    	<table class="table" id="tbl_notice">

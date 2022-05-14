@@ -111,6 +111,8 @@ public interface InterBoardService {
 
 	List<Map<String, String>> getFileboard();
 
+	List<Map<String, String>> getAll();
+
 
 
 

@@ -341,16 +341,27 @@
 	        $("input#emp_rank").val("");
 	        $("input#emp_dept").val("");
 	        
+	        $("input#emp_no2").val("");
+	        $("input#emp_name2").val("");
+	        $("input#emp_rank2").val("");
+	        $("input#emp_dept2").val("");
+	        
 	        var employee_no =  $(this).val();
 	           $("input#emp_no").val(employee_no);
-	           $("input#fk_mid_empno").val(employee_no);	////////////////////////////////////////////////////////////////		
+	   //        $("input#fk_mid_empno").val(employee_no);	////////////////////////////////////////////////////////////////		
+	        
+	           $("input#emp_no2").val(employee_no);
+	   //        $("input#fk_fin_empno").val(employee_no);   
 	           
 	        var employee_name =  $(this).next().val();
 	           $("input#emp_name").val(employee_name);
+	           $("input#emp_name2").val(employee_name);
 	           var employee_rank =  $(this).next().next().val();
 	           $("input#emp_rank").val(employee_rank);
+	           $("input#emp_rank2").val(employee_rank);
 	           var employee_dept =  $(this).next().next().next().val();
 	           $("input#emp_dept").val(employee_dept);
+	           $("input#emp_dept2").val(employee_dept);
 	           
 	     });
 	     <%-- 결재선 지정하기 종료 --%>
@@ -388,15 +399,15 @@
 	    
 	function last_approve(){
 	      
-	      var emp_no = $("input#emp_no").val();
-	      var emp_name = $("input#emp_name").val();
-	      var emp_rank = $("input#emp_rank").val();
-	      var emp_dept = $("input#emp_dept").val();
+	      var emp_no2 = $("input#emp_no2").val();
+	      var emp_name2 = $("input#emp_name2").val();
+	      var emp_rank2 = $("input#emp_rank2").val();
+	      var emp_dept2 = $("input#emp_dept2").val();
 	      
-	       $("input#last_empno").val(emp_no);
-	       $("input#last_name").val(emp_name);
-	       $("input#last_rank").val(emp_rank);
-	       $("input#last_dept").val(emp_dept);
+	       $("input#last_empno").val(emp_no2);
+	       $("input#last_name").val(emp_name2);
+	       $("input#last_rank").val(emp_rank2);
+	       $("input#last_dept").val(emp_dept2);
 	   }
 	 
 	
@@ -419,19 +430,45 @@
 	}
 	
 	
-	$(document).on("click", "#insert_customer_btn", function(event){
-	   if( $("#last_name").val() == ""){
-	        alert("최종승인자 값이 없습니다");
-	        return false;
-	   }
-	   else if ( $("#last_empno").val() != "" ) {
-	      const frm = document.submitFrm;
-	       frm.action = "<%=ctxPath%>/edms/edmsAddEnd.bts"
-	       frm.method = "post"
-	       frm.submit();
-	    }
-	});
-		
+	function getAppr() {
+		$(document).on("click", "#insert_customer_btn", function(event){
+		   if( $("#last_name").val() == ""){
+		        alert("최종승인자 값이 없습니다");
+		        return false;
+		   }
+		   else if ( $("#last_empno").val() != "" ) {
+			   var emp_no = $("input#middle_empno").val();
+			   var emp_name = $("input#middle_name").val();
+			   var emp_rank = $("input#middle_rank").val();
+			   var emp_dept = $("input#middle_dept").val();
+
+			   $("input#emp_no").val(emp_no);
+			   $("input#emp_name").val(emp_name);
+			   $("input#emp_rank").val(emp_rank);
+			   $("input#emp_dept").val(emp_dept);
+			   
+			   // 중간결재
+			   
+ 			   var emp_no2 = $("input#last_empno").val();
+			   var emp_name2 = $("input#last_name").val();
+			   var emp_rank2 = $("input#last_rank").val();
+			   var emp_dept2 = $("input#last_dept").val();
+			    
+			   $("input#emp_no2").val(emp_no2);
+		       $("input#emp_name2").val(emp_name2);
+			   $("input#emp_rank2").val(emp_rank2);
+			   $("input#emp_dept2").val(emp_dept2);
+				 
+			   // 최종결재
+
+			   $("input#fk_mid_empno").val(emp_name+"("+emp_no+")");
+			   $("input#fk_fin_empno").val(emp_name2+"("+emp_no2+")");
+			   
+			    // 값 input
+			    
+		    }
+		});
+	}	
 </script>
 
 
@@ -704,10 +741,18 @@
             </c:if>
                </c:forEach>
            </table>
+           	<!-- 	중간 결재자 부분 전송 -->
               <input type="hidden" id="emp_no" name="emp_no" />
               <input type="hidden" id="emp_name" name="emp_name" />
-               <input type="hidden" id="emp_rank" name="emp_rank" />
-               <input type="hidden" id="emp_dept" name="emp_dept" />
+              <input type="hidden" id="emp_rank" name="emp_rank" />
+              <input type="hidden" id="emp_dept" name="emp_dept" />
+              
+              <!-- 	최종 결재자 부분 전송 -->
+              <input type="hidden" id="emp_no2" name="emp_no2" />
+              <input type="hidden" id="emp_name2" name="emp_name2" />
+              <input type="hidden" id="emp_rank2" name="emp_rank2" />
+              <input type="hidden" id="emp_dept2" name="emp_dept2" />
+              
         </div>
         
         <div id="tbl_two" style="float:left; width:18%;">
@@ -758,7 +803,7 @@
    </div><!-- modal-body -->
    
    <div class="modal-footer">
-   <input type="button" class="btn btn-primary" id="insert_customer_btn" onclick="getAppr()" value="등록">
+   <input type="button" class="btn btn-primary" id="insert_customer_btn" onclick="getAppr()" data-dismiss="modal" value="등록">
    <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
    </div>
    </div>
