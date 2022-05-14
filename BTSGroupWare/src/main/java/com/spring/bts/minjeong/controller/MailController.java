@@ -27,6 +27,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.bts.common.AES256;
 import com.spring.bts.common.FileManager;
+import com.spring.bts.common.MyUtil;
 import com.spring.bts.hwanmo.model.EmployeeVO;
 import com.spring.bts.minjeong.model.MailVO;
 import com.spring.bts.minjeong.service.InterMailService;
@@ -2190,5 +2191,15 @@ public class MailController {
 		}
 				
 	}	
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////
+		
+	// === 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 생성 === //
+	public void getCurrentURL(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		session.setAttribute("goBackURL", MyUtil.getCurrentURL(request));
+	}
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////
 	
 }

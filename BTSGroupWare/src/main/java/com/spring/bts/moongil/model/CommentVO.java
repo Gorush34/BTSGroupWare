@@ -9,9 +9,9 @@ public class CommentVO {
 
 	private String pk_seq;          // 댓글번호
 	private String fk_emp_no;    // 사용자ID
-	private String user_name;         // 성명
+	private String name;         // 성명
 	private String content;      // 댓글내용
-	private String write_day;      // 작성일자
+	private String regDate;      // 작성일자
 	private String fk_seq;    // 원게시물 글번호
 	private String status;       // 글삭제여부
 	
@@ -25,13 +25,13 @@ public class CommentVO {
 	
 	public CommentVO() {}
 
-	public CommentVO(String pk_seq, String fk_emp_no, String user_name, String content, String write_day, String fk_seq,
+	public CommentVO(String pk_seq, String fk_emp_no, String name, String content, String regDate, String fk_seq,
 			String status, MultipartFile attach, String filename, String orgfilename, String filesize) {
 		this.pk_seq = pk_seq;
 		this.fk_emp_no = fk_emp_no;
-		this.user_name = user_name;
+		this.name = name;
 		this.content = content;
-		this.write_day = write_day;
+		this.regDate = regDate;
 		this.fk_seq = fk_seq;
 		this.status = status;
 		this.attach = attach;
@@ -58,12 +58,12 @@ public class CommentVO {
 		this.fk_emp_no = fk_emp_no;
 	}
 
-	public String getUser_name() {
-		return user_name;
+	public String getName() {
+		return name;
 	}
 
-	public void setUser_name(String user_name) {
-		this.user_name = user_name;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getContent() {
@@ -74,12 +74,12 @@ public class CommentVO {
 		this.content = content;
 	}
 
-	public String getWrite_day() {
-		return write_day;
+	public String getRegDate() {
+		return regDate;
 	}
 
-	public void setWrite_day(String write_day) {
-		this.write_day = write_day;
+	public void setRegDate(String regDate) {
+		this.regDate = regDate;
 	}
 
 	public String getFk_seq() {

@@ -11,7 +11,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>게시판</title>
+<title>BTS::전자결재</title>
   <!-- Required meta tags -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> 
@@ -23,7 +23,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   
   <!-- 직접 만든 CSS 1 -->
-  <link rel="stylesheet" type="text/css" href="<%=ctxPath %>/resources/css/style_edms.css" />
+  <link rel="stylesheet" type="text/css" href="<%=ctxPath %>/resources/css/style_edms.css?after" />
   
   
 	<!-- 구글 폰트를 쓰기 위한 링크 -->

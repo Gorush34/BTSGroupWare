@@ -21,10 +21,52 @@
 
 <script type="text/javascript">
 
+    var calendar;
+	// 처음 초기값은 1 => 회의실1 정보를 불러옴
+	var pk_rno = 1;
+	//전체 모달 닫기(전역함수인듯)
+	window.closeModal = function(){
+	    $('.modal').modal('hide');
+	    //javascript:history.go(0);
+	};
+	
 	$(document).ready(function(){
 		
 		
-	
+		// 서브캘린더 select로 가져오기 //
+		$("select.calpk_classno").change(function(){
+			var pk_classno = $("select.calpk_classno").val();
+			
+			if(pk_classno != "") { // 선택하세요 가 아니라면
+				$.ajax({
+						url: "<%= ctxPath%>/resource/resourceSelect.bts",
+						data: {"pk_classno":pk_classno},
+						dataType: "json",
+						success:function(json){
+							var html ="";
+							if(json.length>0){
+								
+								$.each(json, function(index, item){
+									html+="<option name='pk_rno' value='"+item.pk_rno+"'>"+item.rname+"</option>"
+								});
+								$("select.calpk_rno").html(html);
+								$("select.calpk_rno").show();
+							}
+						},
+						error: function(request, status, error){
+				            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+						}
+				});
+			}
+			
+			else {
+				// 선택하세요 이라면
+				$("select.calNo").hide();
+			}
+			
+		});
+		
+	 });// end of $(document).ready(function(){}------------------------------------
 		
 		// 모든 datepicker에 대한 공통 옵션 설정
 	    $.datepicker.setDefaults({
@@ -39,16 +81,48 @@
 	        ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트             
 	    });
 		
+	 // === *** 달력(type="date") 관련 시작 *** === //
+		// 시작시간, 종료시간		
+		var html="";
+		for(var i=0; i<24; i++){
+			if(i<10){
+				html+="<option value='0"+i+"'>0"+i+"</option>";
+			}
+			else{
+				html+="<option value="+i+">"+i+"</option>";
+			}
+		}// end of for----------------------
+		
+		$("select#startHour").html(html);
+		$("select#endHour").html(html);
+		
+		// 시작분, 종료분 
+		html="";
+		for(var i=0; i<60; i=i+5){
+			if(i<10){
+				html+="<option value='0"+i+"'>0"+i+"</option>";
+			}
+			else {
+				html+="<option value="+i+">"+i+"</option>";
+			}
+		}// end of for--------------------
+		html+="<option value="+59+">"+59+"</option>"
+		
+		$("select#startMinute").html(html);
+		$("select#endMinute").html(html);
+		// === *** 달력(type="date") 관련 끝 *** === //
+		
+		
 	    // input 을 datepicker로 선언
-	    $("input#fromDate").datepicker();                    
-	    $("input#toDate").datepicker();
+	    $("input#starts-at").datepicker();                    
+	    $("input#ends-at").datepicker();
 	    	    
 	    
-		
+	    document.addEventListener('DOMContentLoaded', function() {	
 		// === 캘린더 보여주기 (기본 틀) === //
 	    var calendarEl = document.getElementById('calendar');
 
-	    var calendar = new FullCalendar.Calendar(calendarEl, {
+	    calendar = new FullCalendar.Calendar(calendarEl, {
 	      timeZone: 'UTC',
 	      initialView: 'timeGridWeek',
 	      headerToolbar: {
@@ -58,43 +132,30 @@
 	      },
 	      events: function(info, successCallback, failureCallback){
 	    	     $.ajax({
-	                 url: '<%= ctxPath%>/resource/reservationView.bts',
-	                 data:{"pk_rno":$('pk_rno').val()},
+	                 url: '<%= ctxPath%>/reservation/resourceSpecialReservation.bts',
+	                 data:{"pk_rno":pk_rno},
 	                 dataType: "json",
 	                 success:function(json) {
 	                	 var events = [];
-	                     if(json.length > 0){
-	                         
-	                             $.each(json, function(index, item) {
-	                                    var startdate = moment(item.startdate).format('YYYY-MM-DD HH:mm:ss');
-	                                    var enddate = moment(item.enddate).format('YYYY-MM-DD HH:mm:ss');
-	                                    var emp_name = item.emp_name ;
-	                                   // console.log("캘린더 소분류 번호 : " + $("input:checkbox[name=com_smcatgono]:checked").length);
-	                                   // 사내 캘린더로 등록된 일정을 풀캘린더 달력에 보여주기 
-	                                   // 일정등록시 사내 캘린더에서 선택한 소분류에 등록된 일정을 풀캘린더 달력 날짜에 나타내어지게 한다.
-	                                   if( $("input:checkbox[name=com_smcatgono]:checked").length <= $("input:checkbox[name=com_smcatgono]").length ){
-		                                   
-		                                   for(var i=0; i<$("input:checkbox[name=com_smcatgono]:checked").length; i++){
-		                                	  
-		                                		   if($("input:checkbox[name=com_smcatgono]:checked").eq(i).val() == item.fk_smcatgono){
-		   			                               //  alert("캘린더 소분류 번호 : " + $("input:checkbox[name=com_smcatgono]:checked").eq(i).val());
-		                                			   events.push({
-		   			                                	            id: item.scheduleno,
-		   			                                                title: item.subject,
-		   			                                                start: startdate,
-		   			                                                end: enddate,
-		   			                                        	    url: "<%= ctxPath%>/schedule/detailSchedule.action?scheduleno="+item.scheduleno,
-		   			                                                color: item.color,
-		   			                                                cid: item.fk_smcatgono  // 사내캘린더 내의 서브캘린더 체크박스의 value값과 일치하도록 만들어야 한다. 그래야만 서브캘린더의 체크박스와 cid 값이 연결되어 체크시 풀캘린더에서 일정이 보여지고 체크해제시 풀캘린더에서 일정이 숨겨져 안보이게 된다. 
-		   			                                   }); // end of events.push({})---------
-		   		                                   }
-		                                	   
-		                                   }// end of for-------------------------------------
-		                                 
-	                                 }// end of if-------------------------------------------
-	                             });
+	                	 
+	                	 if(json.length > 0){
+		                	 $.each(json, function(index, item){
+		                		 
+		                            events.push({
+		                            	title: item.EMP_NAME,
+		                            	start: item.RSERSTARTDATE,
+		                            	end: item.RSERENDDATE,
+		                            	color: "#00ace6;",
+		                            	id: item.PK_RSERNO
+		                            });
+		                	 });      
+		       
 	                     }
-	                                                             
+	                     else{
+	                    	 // 검색된 결과가 없을 때
+	                     }
+	                	// console.log(events); 
+	                     successCallback(events);                                        
 	                 },
 					  error: function(request, status, error){
 				            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -104,14 +165,45 @@
 	         
 	                	 
 	      },
+	      dateClick: function(info) {
+	           
+	            // 이전날짜에 예약 불가
+	            var sysdate = new Date();
+	            sysdate = moment(sysdate).format("YYYY-MM-DD HH:mm:ss");
+	            
+	            var date = moment(info.dateStr).format("YYYY-MM-DD");
+	            var dateHour = moment(info.dateStr).format("YYYY-MM-DD HH:mm:ss");
+	            
+	            // 오늘만 시간이 지났어도 예약 가능하게 함
+	            if (sysdate > date + 1) {
+	            alert("지난 시간은 예약할 수 없습니다.");
+	            }else{
+	            addRs();   // 모달을 초기화하고 자원명을 불러오는 함수
+	            
+	            // 클릭한 시각으로 모달의 datepicker를 변경시킴
+	              $("input[name=startdate]").val(date);   
+	              $("input[name=enddate]").val(date);
+	              
+	             var hh = moment(info.dateStr).format("HH");
+	              $("select#startHour").val(hh).change();
+	              $("select#endHour").val(hh).change();
+	              
+	              var mm = moment(info.dateStr).format("mm");
+	              $("select#startMinute").val(mm).change();
+	              $("select#endMinute").val(mm).change();
+	         }
+	            
+	         
+	      },
+	      eventClick: function(info) {
+	              reservationDetail(info.event.id); // 예약상세보기 모달창 함수 
+	      },
 	      selectable: true,
-	        selectHelper: true,
-	        select: function(start, end) {
-	            // Display the modal.
-	            // You could fill in the start and end fields based on the parameters
-	            $('.modal').modal('show');
-
-	        },
+	      navLinks: false,             // 달력의 날짜 텍스트를 선택할 수 있는지 유무
+	      editable: false,
+	      eventLimit: true,            // 셀에 너무 많은 일정이 들어갔을 시 more로 처리
+	      allDaySlot: false
+	   <%--
 	        eventClick: function(event, element) {
 	            // Display the modal and set the values to the event values.
 	            $('.modal').modal('show');
@@ -119,13 +211,13 @@
 	            $('.modal').find('#starts-at').val(event.start);
 	            $('.modal').find('#ends-at').val(event.end);
 
-	        }<%--,
+	        },
 	      dateClick: function(info) {
 		      	//  alert('클릭한 Date: ' + info.dateStr); 
 		      	    $(".fc-day").css('background','none'); // 현재 날짜 배경색 없애기
 		      	    info.dayEl.style.backgroundColor = '#b1b8cd'; // 클릭한 날짜의 배경색 지정하기
-		      	  $("#reservateModal").modal('show');
-		      	    // $("form > input[name=chooseDate]").val(info.dateStr);
+		      	    $("#reservateModal").modal('show');
+		      	    $("form > input[name=chooseDate]").val(info.dateStr);
 		      	    
 		      	   // var frm = document.dateFrm;
 		      	   // frm.method="POST";
@@ -136,21 +228,196 @@
 
 	    calendar.render();
 	    
-	  });// end of $(document).ready(function(){}------------------------------------
+	 });
+	 
 
+			  
+	// 자원을 변경했을 시 자원 변수값을 변경해주는 함수	  
+	  function goResourceReservation(pk_rno) {
+		  //alert("pk_rno :" + pk_rno);
+		  	 pk_rno = pk_rno;
+		  	 calendar.refetchEvents(); // calendar가 $(document).ready 안에만 있으면 지역변수 문제로 오류가 뜰 수 있음! 참고할 것!
+	}
 			
-	function goResourceReservation(pk_rno){
-		location.href="<%= ctxPath%>/reservation/reservationMain.bts?pk_rno="+pk_rno;
-	  }
 		
 	
-
+	// 예약하기 모달 보이기
+	  function addRs(){
+	     
+	     // 모달 form에 입력돼있는 정보를 모두 삭제하고 모달을 보이게 함(모달 초기화)
+	     $('#reservateModal').find('form')[0].reset();
+	     $('#reservateModal').modal('show');
+	       
+	}    
+	    
+	   
+	// 예약하기 버튼
+	function goReservation(){
+		
+		// 일자 유효성 검사 (시작일자 > 종료일자 X)	
+		var startDate = $("input#startdate").val();
+		var endDate = $("input#enddate").val();
+		var startHour= $("select#startHour").val();
+     	var endHour = $("select#endHour").val();
+     	var startMinute= $("select#startMinute").val();
+     	var endMinute= $("select#endMinute").val();
+     	
+     	// 시작일자 > 종료일자 : 경고
+     	if(Number(endDate) - Number(startDate) <0){
+     		alert("종료일이 시작일 보다 빠릅니다.")
+     		return;
+     	}
+     	else if(Number(endDate) == Number(startDate)){
+     		
+     		if(Number(startHour) > Number(endHour)){
+     			alert("종료일이 시작일 보다 빠릅니다.")
+	     		return;
+     		}
+     		else if(Number(startHour) == Number(endHour)){
+     			if(Number(startMinute) > Number(endMinute)){
+	     			alert("종료일이 시작일 보다 빠릅니다.")
+		     		return;
+	     		}
+     			else if(Number(startMinute) == Number(endMinute)){
+        			alert("시작일과 종료일이 동일합니다."); 
+        			return;
+        		}
+     		}
+     	}// end of else if----------------------------------------
+     	
+		
+		// 시작일과 종료일, 오라클에 들어갈 date 형식으로  변경
+     	var sdate = startDate+$("select#startHour").val()+$("select#startMinute").val()+"00";
+     	var edate = endDate+$("select#endHour").val()+$("select#endMinute").val()+"00";
+     	
+     	$("input[name=startdate]").val(sdate);
+     	$("input[name=enddate]").val(edate);
+    
+     	
+     	var calpk_rno = $("select[name=pk_rno]").val();
+        if (calpk_rno.trim() == "") {
+           alert("자원을 선택해주세요.");
+           return false;
+        }
+     	
+        // db에 넣기
+        $.ajax({
+           url:"<%= request.getContextPath() %>/reservation/addReservation.bts",
+           data:{"rserstartdate":$('input[name=startdate]').val(),
+        	   	 "rserenddate":$('input[name=enddate]').val(), 
+        	   	 "fk_emp_no":$('input#fk_emp_no').val(),
+        	   	 "pk_classno":$('select.calpk_classno').val(),
+        	   	 "rserusecase":$('textarea#rserusecase').val(),
+        	   	 "pk_rno":calpk_rno},
+           type:"POST",
+           dataType:"JSON",
+           success:function(json){
+              
+              // 예약일로 입력한 값이 db에서 중복되는지 안되는지로 나눔
+              if (json.n == 1) {
+                 // 에약이 정상적으로 등록됐을 때
+                 window.closeModal();
+                 calendar.refetchEvents();
+                 
+              }else if (json.n == -1) {
+                 // 중복된 예약(시간)으로 예약에 실패했을 때
+                 alert("해당 시간에는 이미 예약이 되어있어 예약할 수 없습니다.");
+              }
+              else{
+                 // db오류
+                 alert("DB 오류");
+              }
+              
+           },
+           error: function(request, status, error){
+              alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            }
+	  
+        });
+   
+     	
+	}
 	
-	// == 상세 검색 모달창 띄우기 == //
-	function goSearchDetailModal(){
-		$("#reservateModal").modal('show');
-	}// end of function goSearchDetailModal(){
+	// == 예약 상세보기
+	function reservationDetail(PK_RSERNO){
+		  $.ajax({
+		         url:"<%= request.getContextPath() %>/reservation/reservationDetail.bts",
+		         type:"get",
+		         data: {"pk_rserno":PK_RSERNO},
+		         dataType:"JSON",
+		         success:function(json){
+		            var html = "";
+		        //    alert(PK_RSERNO);
+		            if(json.length > 0){
+	                	 $.each(json, function(index, item){
+	                		 
+				            html += "<tr>";
+				               html += "<th>자원명</th>";
+				               html += "<td>" + item.RNAME + "<input type='hidden' class='pk_rserno' value='"+PK_RSERNO+"' ></td>";
+				            html += "</tr>";
+				            html += "<tr>";
+				               html += "<th>자원정보</th>";
+				               html += "<td>" + item.RINFO + "</td>";
+				            html += "</tr>";
+				            html += "<tr>";
+				               html += "<th>시작시간</th>";
+				               html += "<td>" + item.RSERSTARTDATE + "</td>";
+				            html += "</tr>";
+				            html += "<tr>";
+				               html += "<th>종료시간</th>";
+				               html += "<td>" + item.RSERENDDATE + "</td>";
+				            html += "</tr>";
+				            html += "<tr>";
+				               html += "<th>등록자</th>";
+				               html += "<td>" + item.EMP_NAME + "</td>";
+				            html += "</tr>";
+				            html += "<tr>";
+				               html += "<th>사용용도</th>";
+				               html += "<td>" + item.RSERUSECASE+ "</td>";
+				            html += "</tr>";
+			                	 
+				            
+				            $(".cancelBtn").hide();
+				            if (item.FK_EMP_NO == "${sessionScope.loginuser.pk_emp_no}") {
+				               $(".cancelBtn").show();
+				            }
+	                	 });
+	                	 
+	                	 $("tbody.detailTbody").html(html);
+		            }
+		         },
+		         error: function(request, status, error){
+		            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		          }
+		      });
+		     
+		     $("#reservationDetailModal").modal('show');
+	}
 	
+	 // 예약취소 버튼 클릭시 예약 취소하는 함수
+	  function cancelReservation() {
+	     var pk_rserno = $("input.pk_rserno").val();
+	      
+	      $.ajax({
+	         url:"<%= request.getContextPath() %>/reservation/cancelReservation.bts",
+	         type:"get",
+	         data: {pk_rserno:pk_rserno},
+	         dataType:"JSON",
+	         success:function(json){
+	            
+	            if (json.n == 1) {
+	               window.closeModal();
+	               calendar.refetchEvents(); // 모든 소스의 이벤트를 다시 가져와 화면에 다시 표시합니다.
+	            }else{
+	               alert("DB오류");
+	            }
+	            
+	         },
+	         error: function(request, status, error){
+	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	          }
+	      });
+	  }
 	
 </script>
 
@@ -188,6 +455,7 @@
 	
 	<%-- 캘린더를 보여주는 곳 --%>
 	<input type="hidden" value="${sessionScope.loginuser.pk_emp_no}" id="fk_emp_no"/>
+	
 	<input type="hidden" value="${sessionScope.loginuser.emp_name}" id="emp_name"/>
 	<div id="calendar" style="margin: 60px 30px 50px 60px;"></div>
 
@@ -211,13 +479,48 @@
        	<table style="width: 100%;" class="table  ">
      			<tr>
      				<td style="text-align: left; ">예약일</td>
-     				<td><input type="datetime-local" id="fromDate" name="startdate" >&nbsp;&nbsp; 
-	            ~&nbsp;&nbsp; <input type="datetime-local" id="toDate" name="enddate" >&nbsp;&nbsp;</td>
+     				<td>
+     					 <input type="date" class="datepicker" id="startdate" name="startDate">
+	                      <select id="startHour" class="schedule"></select> 시
+							<select id="startMinute" class="schedule"></select> 분
+					
+                  ~
+                  <input type="date" class="datepicker" id="enddate" name="endDate">
+                      <select id="endHour" class="schedule"></select> 시
+					<select id="endMinute" class="schedule"></select> 분&nbsp;
+						<input type="hidden" name="startdate"/>
+						<input type="hidden" name="enddate"/>
+     				</td>
      			</tr>
      			<tr>
      				<td style="text-align: left;">예약자</td>
      				<td>${sessionScope.loginuser.emp_name}</td>
      			</tr>
+     			<tr>
+                   <th>자원선택</th>
+                   <td>
+	                   <select class="calpk_classno" name="calpk_classno"> 
+	                   	 <option value="">선택하세요</option>
+						 <option value="1">3층 회의실</option>
+						 <option value="2">자동차</option>
+						 <option value="3">빔프로젝터</option>
+					   </select>
+					   <%--
+					   <select class="calpk_classno" name="calpk_classno">
+	                   <c:if test="${not empty requestScope.classList}">
+						 <c:forEach var="map" items="${requestScope.classList}">
+						 <option class="pk_classno" value="${map.PK_CLASSNO}">${map.CLASSNAME}</option>
+						 </c:forEach>
+						 </c:if>
+						 </select>
+						 <select class="calpk_rno"></select> --%>
+						 <select class="calpk_rno" name="pk_rno"></select>
+                   </td>
+                 </tr>
+                 <tr>
+                   <th>사용용도</th>
+                   <td><textarea rows="4" cols="100" style="height: 200px;" name="rserusecase" id="rserusecase"  class="form-control"></textarea></td>
+                 </tr>
      		</table>
      		<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}"/>
        	</form>
@@ -233,7 +536,34 @@
   </div>
 </div>
 
-
+<%-- 예약 상세정보 보여주기 모달 --%>
+   <div id="reservationDetailModal" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+       <!-- Modal header -->
+      <div class="modal-header">
+        <h5 class="modal-title">예약정보</h5>
+        <button type="button" class="close modal_close" data-dismiss="modal">&times;</button>
+      </div>
+        <div class="modal-body">
+          <div class="container">
+               <form>
+             <table class="table table-borderless">
+               <tbody class="detailTbody">
+                 
+               </tbody>
+             </table>
+         
+            <button class="btn btn-outline-primary btn-sm cancelBtn" style="float: right; margin-left: 5px;" type="button" onclick="cancelReservation()">예약취소</button>
+            <button class="btn btn-primary btn-sm" style="float: right;" type="button" onclick="window.closeModal()">확인</button>
+            </form>
+         </div>
+        </div>
+      </div>
+    </div>
+   </div>
+   
 <%-- === 마우스로 클릭한 날짜의 일정 등록을 위한 폼 ===    
 <form name="dateFrm">
 	<input type="hidden" name="chooseDate" />	

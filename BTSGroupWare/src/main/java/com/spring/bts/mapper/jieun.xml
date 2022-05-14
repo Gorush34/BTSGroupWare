@@ -307,20 +307,55 @@
 		<result property="FK_EMP_NO"       column="fk_emp_no"        javaType="String"/>
 		<result property="EMP_NAME"        column="emp_name"         javaType="String"/>
 		<result property="RNAME"           column="rname"            javaType="String"/>
+		<result property="RINFO"           column="rinfo"            javaType="String"/>
 		<result property="RSERSTARTDATE"   column="rserstartdate"    javaType="String"/>
 		<result property="RSERENDDATE"     column="rserenddate"      javaType="String"/>
 		<result property="RSERUSECASE"     column="rserusecase"      javaType="String"/>
 	</resultMap>
 	<select id="resourceSpecialReservation" parameterType="HashMap" resultMap="resourceSpecialReservation_Map">	
 	select RV.pk_rserno, RV.fk_classno, RV.fk_rno, RV.fk_emp_no, 
-		   E.emp_name, R.rname, 
+		   E.emp_name, R.rname, R.rinfo,
 		   RV.rserstartdate, RV.rserenddate, RV.rserusecase
 	from tbl_resource R
 	join tbl_reservation RV
 	ON R.pk_rno = RV.fk_rno 
 	join tbl_employees E
 	ON RV.fk_emp_no = E.pk_emp_no
-	where R.rname = #{rname}
+	where RV.fk_rno = #{pk_rno}
+	</select>
+	
+	<!--  등록 폼에 자원 select 가져오기 -->
+	<select id="resourceSelect" parameterType="HashMap" resultMap="resourceReservation_Map">
+		select R.pk_rno, RC.pk_classno, RC.classname, R.rname, R.rinfo
+		from tbl_resource R
+		join tbl_resourceclass RC
+		on R.fk_classno = RC.pk_classno
+		where RC.pk_classno = #{pk_classno}
 	</select>
 
+	<!--  예약 등록하기  -->
+	<insert id="addReservation" parameterType="HashMap">
+		insert into tbl_reservation(pk_rserno, fk_classno, fk_rno, fk_emp_no, rserstartdate, rserenddate, rserusecase)
+		values (seq_rserno.nextval, #{fk_classno}, #{fk_rno}, #{fk_emp_no}, to_date(#{rserstartdate}, 'yyyy-mm-ddhh24miss'), to_date(#{rserenddate}, 'yyyy-mm-ddhh24miss'), #{rserusecase})
+	</insert>
+
+	<!--  예약 상세보기 -->
+	<select id="reservationDetail" parameterType="String" resultMap="resourceSpecialReservation_Map">
+		select RV.pk_rserno, RV.fk_classno, RV.fk_rno, RV.fk_emp_no, 
+		   E.emp_name, R.rname, R.rinfo,
+		   RV.rserstartdate, RV.rserenddate, RV.rserusecase
+		from tbl_resource R
+		join tbl_reservation RV
+		ON R.pk_rno = RV.fk_rno 
+		join tbl_employees E
+		ON RV.fk_emp_no = E.pk_emp_no
+		where RV.pk_rserno = #{pk_rserno}
+	</select>
+	
+	<!-- 예약 취소하기 -->
+	<delete id="cancelReservation" parameterType="String">
+		delete from tbl_reservation
+		where pk_rserno = #{pk_rserno}
+	</delete>
+	
 </mapper>
