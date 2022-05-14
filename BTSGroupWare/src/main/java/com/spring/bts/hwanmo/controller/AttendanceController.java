@@ -806,7 +806,7 @@ public class AttendanceController {
 		// out 은 웹브라우저에 기술하는 대상체라고 생각하자.
 
 		try {
-			
+			Integer.parseInt(str_pk_att_num);
 			// 근태신청번호로 공가/경조신청 상세내역 담아오기
 			List<Map<String, Object>> vacReportList = attService.getVacReportList(pk_att_num);
 			
