@@ -2377,7 +2377,7 @@ public class BoardController {
 		         e.printStackTrace();
 		      } 
 			
-		 	mav.setViewName("redirect:/notice/view.bts?pk_seq="+pk_seq+"&ko_depname="+ko_depname+"&searchType="+searchType+"&searchWord="+searchWord+"&gobackURL="+gobackURL);
+		 	mav.setViewName("redirect:/fileboard/view.bts?pk_seq="+pk_seq+"&ko_depname="+ko_depname+"&searchType="+searchType+"&searchWord="+searchWord+"&gobackURL="+gobackURL);
 		 	
 			return mav;
 		}	
