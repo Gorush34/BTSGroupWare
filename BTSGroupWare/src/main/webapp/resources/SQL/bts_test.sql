@@ -145,17 +145,150 @@ values
 ALTER TABLE tbl_employees RENAME COLUMN editid TO edit_id
 -- ALTER TABLE [테이블명] RENAME COLUMN [이전 컬럼명] TO [새로운 컬럼명]
 
-ALTER TABLE tbl_employees MODIFY gradelevel DEFAULT 0;
+select count(*)
+from tbl_commute
+where fk_emp_no = 80000001
+and regdate like '2022'
+|| '05'
+||'%'
 
+
+
+delete from tbl_leave
+where 1=1;
 
 commit;
 
-update tbl_rank_sort set ko_rankname = '대리'
-where pk_rank_no = 30
+select *
+from tbl_employees
+order by pk_emp_no asc
+
+select S.ko_rankname AS ko_rankname
+from tbl_employees E join tbl_rank_sort S
+on E.fk_rank_id = S.PK_RANK_NO
+where E.pk_emp_no = 80000002 
+
+select *
+from TBL_DEP_SORT
+
+select V.ko_depname AS ko_depname, V.manager AS manager, M.emp_name AS manager_name
+from 
+(
+select D.ko_depname AS ko_depname, D.manager AS manager
+from tbl_employees E join TBL_DEP_SORT D
+on E.fk_department_id = D.pk_dep_no
+where E.pk_emp_no = 80000002 
+) V
+join tbl_employees M
+on V.manager = M.pk_emp_no
+
+select total_vac_days, use_vac_days, rest_vac_days, instead_vac_days
+from tbl_leave
+where fk_emp_no = 80000002
+
+select *
+from tbl_leave
+order by fk_emp_no asc
+
+insert into tbl_leave (pk_vac_no, total_vac_days, use_vac_days, rest_vac_days, instead_vac_days, fk_emp_no, regdate)
+						values(leaveSeq.nextval, '15', '0', '15', '0', 88888888, to_char(sysdate, 'yyyy'))
+                        
+commit;
+
+select pk_att_sort_no, att_sort_ename, att_sort_korname, minus_cnt
+from tbl_att_sort
+order by pk_att_sort_no
+
+update tbl_att_sort set minus_cnt = 0
+where pk_att_sort_no = 12
+
+delete from tbl_att_sort
+where 1=1;
+
+insert into tbl_att_sort (pk_att_sort_no, att_sort_ename, att_sort_korname, minus_cnt)
+                  values (103, 'var_family_birthday', '자녀 및 배우자생일(오후반차)', 0.25);
+                  
+commit;
+
+
+create sequence attSeq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+-- Sequence ATTSEQ이(가) 생성되었습니다.
+
+desc tbl_attendance;
+
+
+insert into tbl_attendance (pk_att_num, fk_att_sort_no, fk_vacation_no, vacation_days
+                          , leave_start, leave_end, fk_emp_no, fk_fin_app_no
+                          , att_content, filename, orgfilename, file_path, filesize
+                          , mid_approval_ok, fin_approval_ok, approval_status)
+values (attSeq.nextval, '10', '9', '5'
+      , '2022-05-15', '2022-05-17', 80000002, 80000560
+      , '그냥 보내주세요', '강아지', '12341', '해남', '2904'
+      , default, default, default)  
+
+select *
+from tbl_att_sort
+
+select *
+from tbl_leave
+
+select count(*)
+from tbl_attendance
+where fk_emp_no = '80000002'
+
+select pk_vac_no, total_vac_days, use_vac_days, regdate, rest_vac_days, instead_vac_days, fk_emp_no
+from tbl_leave
+where fk_emp_no = '80000002'
 
 commit;
 
-select * 
-from tbl_rank_sort
+-- 연차최신화 
+select *
+from tbl_leave
+order by fk_emp_no asc
 
-commit;
+desc tbl_leave
+
+update tbl_leave set use_vac_days = 0.5, rest_vac_days = total_vac_days - 0.5, instead_vac_days = 0
+where fk_emp_no = 80000002
+
+
+
+select (select emp_name from tbl_employees where pk_emp_no = 80000560) AS managername
+from tbl_attendance A JOIN tbl_leave L
+ON A.fk_emp_no = L.fk_emp_no
+JOIN tbl_employees E
+ON L.fk_emp_no = E.pk_emp_no
+JOIN tbl_dep_sort D
+ON E.fk_department_id = D.pk_dep_no
+JOIN tbl_att_sort S
+On A.fk_att_sort_no = S.pk_att_sort_no
+where A.fk_emp_no = 80000002
+
+
+select pk_att_num, ko_depname, fk_emp_no, emp_name, att_sort_korname, vacation_days, leave_start, leave_end
+     , managername, manager, approval_status
+from
+(
+select row_number() over(order by pk_att_num desc) AS rno
+     , A.pk_att_num AS pk_att_num, D.ko_depname AS ko_depname, A.fk_emp_no AS fk_emp_no, E.emp_name AS emp_name
+     , S.att_sort_korname AS att_sort_korname, A.vacation_days AS vacation_days, A.leave_start AS leave_start, A.leave_end AS leave_end
+     , (select emp_name from tbl_employees where pk_emp_no = 80000560) AS managername
+     , D.manager AS manager, A.approval_status AS approval_status
+from tbl_attendance A JOIN tbl_leave L
+ON A.fk_emp_no = L.fk_emp_no
+JOIN tbl_employees E
+ON L.fk_emp_no = E.pk_emp_no
+JOIN tbl_dep_sort D
+ON E.fk_department_id = D.pk_dep_no
+JOIN tbl_att_sort S
+On A.fk_att_sort_no = S.pk_att_sort_no
+where A.fk_emp_no = 80000002
+) V
+where rno between 1 and 3

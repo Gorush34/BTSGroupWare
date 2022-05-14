@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #29. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<!-- ==== 대부분은 namespace에 파일이름 사용(유일하니까) ==== -->
+<mapper namespace="hwanmo">
+
+	<!-- 사원등록시 아이디 중복체크 -->
+	<select id="idDuplicateCheck" parameterType="String" resultType="boolean">
+  		select count(*)
+		from tbl_employees
+		where pk_emp_no = #{pk_emp_no}
+	</select>
+	
+	<!-- 사원등록시 이메일 중복체크 -->
+	<select id="emailDuplicateCheck" parameterType="String" resultType="boolean">
+  		select count(*)
+		from tbl_employees
+		where uq_email = #{uq_email}
+	</select>
+	
+	<!-- 사원 등록 -->
+	<insert id="registerMember" parameterType="com.spring.bts.hwanmo.model.EmployeeVO" >
+		insert into tbl_employees 
+		(pk_emp_no, fk_department_id, fk_rank_id, fk_board_authority_no, fk_site_authority_no, emp_name, emp_pwd, com_tel, postal, address, detailaddress, extraaddress
+		, gender, uq_phone, uq_email, img_path, img_name, birthday, gradelevel)
+		values                                  
+		(#{pk_emp_no}, #{fk_department_id}, #{fk_rank_id}, default, default, #{emp_name}, #{emp_pwd}, #{com_tel}, #{postal}, #{address}, #{detailaddress}, #{extraaddress}
+		, #{gender}, #{uq_phone}, #{uq_email}, default, default, #{birthday}, default)
+	</insert>
+	
+	<!-- 사원번호 찾기 -->
+	<select id="findEmpNo" parameterType="HashMap" resultType="String">
+		select pk_emp_no
+		from tbl_employees
+		where ishired = 1
+		and emp_name = #{emp_name} and uq_email = #{uq_email}
+	</select>
+
+	<!-- 사원이 존재하는지 확인하기 -->
+	<select id="isUserExist" parameterType="HashMap" resultType="String">
+		select pk_emp_no
+		from tbl_employees
+		where ishired = 1
+		and pk_emp_no = #{pk_emp_no} and uq_email = #{uq_email}
+	</select>
+	
+	<!-- 사원의 비밀번호 변경하기 -->
+	<update id="pwdUpdate" parameterType="HashMap">
+		update tbl_employees set emp_pwd = #{emp_pwd}, lastpwdchangedate = sysdate
+		where pk_emp_no = #{pk_emp_no}
+	</update>
+	
+	<!-- 왜이러는거야~~ -->
+	
+	<!-- 사원 한명의 연차테이블 생성 -->
+	<insert id="registerLeave" parameterType="int">
+		insert into tbl_leave (pk_vac_no, total_vac_days, use_vac_days, rest_vac_days, instead_vac_days, fk_emp_no, regdate)
+						values(leaveSeq.nextval, '15', '0', '15', '0', #{pk_emp_no}, to_char(sysdate, 'yyyy'))
+	</insert>
+	
+	<!-- 출퇴근 했는지 조회(사이드바 표시 목적) -->
+	<select id="getTodayCommute" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_commute
+		where fk_emp_no = #{fk_emp_no} and regdate = #{regdate}
+	</select>
+	
+	<!-- 당일 출퇴근기록 insert -->
+	<insert id="insertTodayCommute" parameterType="HashMap">
+		insert into tbl_commute (PK_WORKTIME_NO, REGDATE, IN_TIME, FK_EMP_NO)
+		values(seqCommute.nextval, #{regdate}, #{in_time}, #{fk_emp_no})
+	</insert>
+	
+	<!-- 당일 출퇴근기록 알아오기(사이드바 표시 목적) -->
+	<resultMap type="Map" id="workInOutMap">
+		<result property="in_time" 			column="in_time" 		javaType="String" />
+		<result property="out_time" 		column="out_time" 		javaType="String" />
+	</resultMap>
+	
+	<select id="getTodayworkInOutTime" parameterType="HashMap" resultMap="workInOutMap">
+		select nvl(in_time, '미등록') AS in_time, nvl(out_time, '미등록') AS out_time
+		from tbl_commute
+		where fk_emp_no = #{fk_emp_no} and regdate = #{regdate}
+	</select>
+	
+	<!-- 퇴근시간 및 일근무시간 추가 -->
+	<update id="updateTodayOutTime" parameterType="HashMap">
+		update tbl_commute set out_time = #{out_time}, total_workTime = #{total_workTime}
+		where fk_emp_no = #{fk_emp_no} and regdate = #{regdate}
+	</update>
+	
+	<!-- 출/퇴근버튼 초기화를 위한 확인 -->
+	<select id="checkTomorrow" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_commute
+		where fk_emp_no = #{fk_emp_no} and regdate = #{regdate}
+	</select>
+	
+	<!-- 한 사원에 대한 출퇴근기록 건수 조회 -->
+	<select id="getTotalCommuteCount" parameterType="HashMap" resultType="int">
+	    select count(*)
+		from tbl_commute
+		where fk_emp_no = #{fk_emp_no}
+		<if test='year != "" and month =="" '>
+		and regdate like #{year} ||'%'
+		</if>
+		<if test='year != "" and month !="" '>
+		and regdate like #{year} || #{month} ||'%'
+		</if>
+		
+    </select> 
+	
+	<!-- 한 사원에 대한 출퇴근기록 목록 가져오기 -->
+	<select id="getMyCommute" parameterType="HashMap" resultType="com.spring.bts.hwanmo.model.CommuteVO">
+		select regdate, in_time, out_time, total_workTime, fk_emp_no
+		from tbl_commute
+		where fk_emp_no = #{fk_emp_no}
+		<if test='year != "" and month =="" '>
+		and regdate like #{year} ||'%'
+		</if>
+		<if test='year != "" and month !="" '>
+		and regdate like #{year} || #{month} ||'%'
+		</if>
+		order by regdate desc
+	</select>
+	
+	<!-- 직급번호로 직급명 알아오기 -->
+	<select id="getKo_rankname" parameterType="String" resultType="String">
+		select S.ko_rankname AS ko_rankname
+		from tbl_employees E join tbl_rank_sort S
+		on E.fk_rank_id = S.PK_RANK_NO
+		where E.pk_emp_no = #{pk_emp_no}
+	</select>
+	
+	<!-- 사원번호로 부서명, 부서장, 부서장 사번 알아오기 -->
+	<resultMap type="Map" id="getDeptInfoMap">
+		<result property="ko_depname" 			column="ko_depname" 		javaType="String" />
+		<result property="manager" 				column="manager" 			javaType="String" />
+		<result property="manager_name" 		column="manager_name" 		javaType="String" />
+	</resultMap>
+	
+	<select id="getDeptInfo" parameterType="String" resultMap="getDeptInfoMap">
+		select V.ko_depname AS ko_depname, V.manager AS manager, M.emp_name AS manager_name
+		from 
+			(
+			select D.ko_depname AS ko_depname, D.manager AS manager
+			from tbl_employees E join TBL_DEP_SORT D
+			on E.fk_department_id = D.pk_dep_no
+			where E.pk_emp_no = #{pk_emp_no}
+			) V
+		join tbl_employees M
+		on V.manager = M.pk_emp_no
+	</select>
+	
+	
+	<!-- 사원번호로 연차테이블 불러오기 -->
+	<resultMap type="Map" id="getLeaveInfoMap">
+		<result property="pk_vac_no" 					column="pk_vac_no" 				javaType="String" />
+		<result property="total_vac_days" 				column="total_vac_days" 		javaType="String" />
+		<result property="use_vac_days" 				column="use_vac_days" 			javaType="String" />
+		<result property="rest_vac_days" 				column="rest_vac_days" 			javaType="String" />
+		<result property="instead_vac_days" 			column="instead_vac_days" 		javaType="String" />
+	</resultMap>
+	
+	<select id="getLeaveInfo" parameterType="String" resultMap="getLeaveInfoMap">
+		select pk_vac_no, total_vac_days, use_vac_days, rest_vac_days, instead_vac_days
+		from tbl_leave
+		where fk_emp_no = #{pk_emp_no}
+	</select>
+	
+	<!-- // 연차구분테이블 불러오기 -->
+	<resultMap type="Map" id="getAttSortInfoMap">
+		<result property="pk_att_sort_no" 				column="pk_att_sort_no" 	javaType="String" />
+		<result property="att_sort_ename" 				column="att_sort_ename" 	javaType="String" />
+		<result property="att_sort_korname" 			column="att_sort_korname" 	javaType="String" />
+		<result property="minus_cnt" 					column="minus_cnt" 			javaType="float" />
+	</resultMap>
+	
+	<select id="getAttSortInfo" resultMap="getAttSortInfoMap">
+		select pk_att_sort_no, att_sort_ename, att_sort_korname, minus_cnt
+		from tbl_att_sort
+		order by pk_att_sort_no
+	</select>
+	
+	
+	<!-- // 첨부파일이 없는 연차신청 작성 -->
+	<insert id="reportVacation" parameterType="com.spring.bts.hwanmo.model.AttendanceVO" >
+	insert into tbl_attendance (pk_att_num, fk_att_sort_no, fk_vacation_no, vacation_days
+	                          , leave_start, leave_end, fk_emp_no, fk_fin_app_no
+	                          , att_content, mid_approval_ok, fin_approval_ok, approval_status)
+						values (attSeq.nextval, #{fk_att_sort_no}, #{fk_vacation_no}, #{vacation_days}
+						      , #{leave_start}, #{leave_end}, #{fk_emp_no}, #{fk_fin_app_no}
+						      , #{att_content}, default, default, default)
+	</insert>
+	
+	
+	<!-- // 첨부파일이 있는 연차신청 작성 -->
+	<insert id="reportVacation_withFile" parameterType="com.spring.bts.hwanmo.model.AttendanceVO" >
+	insert into tbl_attendance (pk_att_num, fk_att_sort_no, fk_vacation_no, vacation_days
+	                          , leave_start, leave_end, fk_emp_no, fk_fin_app_no
+	                          , att_content, filename, orgfilename, filesize
+	                          , mid_approval_ok, fin_approval_ok, approval_status)
+						values (attSeq.nextval, #{fk_att_sort_no}, #{fk_vacation_no}, #{vacation_days}
+						      , #{leave_start}, #{leave_end}, #{fk_emp_no}, #{fk_fin_app_no}
+						      , #{att_content}, #{filename}, #{orgfilename}, #{filesize}
+						      , default, default, default)
+	</insert>
+	
+	<!-- 연차테이블 변경 -->
+	<update id="updateLeave" parameterType="HashMap">
+	update tbl_leave set use_vac_days = use_vac_days + #{minus_cnt}, rest_vac_days = rest_vac_days - #{minus_cnt}, instead_vac_days = instead_vac_days + #{instead_vac_days}
+	where fk_emp_no = #{report_emp_no}
+	</update>
+	
+	<!-- 로그인 유저의 연차테이블 불러오기 -->
+	<select id="getOneLeave" parameterType="String" resultType="com.spring.bts.hwanmo.model.LeaveVO">
+		select pk_vac_no, total_vac_days, use_vac_days, rest_vac_days, regdate, instead_vac_days, fk_emp_no
+		from tbl_leave
+		where fk_emp_no = #{fk_emp_no}
+	</select>
+	
+	<!-- // 총 올린  연차신청 수 가져오기 -->
+	<select id="getTotalVacReportCount" parameterType="String" resultType="int">
+	select count(*)
+	from tbl_attendance
+	where fk_emp_no = #{fk_emp_no}
+	</select>
+	
+	
+	<!-- // 페이징처리 한 받은 공가/경조신청목록  -->
+	<resultMap type="Map" id="MyAttList_map">
+		<result property="pk_att_num" 				column="pk_att_num" 		javaType="int" />
+		<result property="ko_depname" 				column="ko_depname" 		javaType="String" />
+		<result property="fk_emp_no" 				column="fk_emp_no" 			javaType="int" />
+		<result property="emp_name" 				column="emp_name" 			javaType="String" />
+		<result property="att_sort_korname" 		column="att_sort_korname" 	javaType="String" />
+		<result property="vacation_days" 			column="vacation_days" 		javaType="int" />
+		<result property="leave_start" 				column="leave_start" 		javaType="String" />
+		<result property="leave_end" 				column="leave_end" 			javaType="String" />
+		<result property="managername" 				column="managername" 		javaType="String" />
+		<result property="fin_app_opinion" 			column="fin_app_opinion" 	javaType="String" />
+		<result property="manager" 					column="manager" 			javaType="int" />
+		<result property="approval_status" 			column="approval_status" 	javaType="int" />
+	</resultMap>
+	
+	<select id="getMyAttListWithPaging" resultType="HashMap" resultMap="MyAttList_map">
+		select pk_att_num, ko_depname, fk_emp_no, emp_name, att_sort_korname, vacation_days, leave_start, leave_end
+		     , managername, manager, approval_status, fin_app_opinion
+		from
+		(
+		select row_number() over(order by pk_att_num desc) AS rno, A.fin_app_opinion AS fin_app_opinion
+		     , A.pk_att_num AS pk_att_num, D.ko_depname AS ko_depname, A.fk_emp_no AS fk_emp_no, E.emp_name AS emp_name
+		     , S.att_sort_korname AS att_sort_korname, A.vacation_days AS vacation_days, A.leave_start AS leave_start, A.leave_end AS leave_end
+		     , (select emp_name from tbl_employees where pk_emp_no = D.manager) AS managername
+		     , D.manager AS manager, A.approval_status AS approval_status
+		from tbl_attendance A JOIN tbl_leave L
+		ON A.fk_emp_no = L.fk_emp_no
+		JOIN tbl_employees E
+		ON L.fk_emp_no = E.pk_emp_no
+		JOIN tbl_dep_sort D
+		ON E.fk_department_id = D.pk_dep_no
+		JOIN tbl_att_sort S
+		On A.fk_att_sort_no = S.pk_att_sort_no
+		where A.fk_emp_no = #{fk_emp_no}
+		) V
+		where rno between #{startRno} and #{endRno}
+	</select>
+	
+	
+	<!-- // 근태신청번호로 공가/경조신청 상세내역 담아오기  -->
+	<resultMap type="Map" id="getVacReportList_map">
+		<result property="pk_att_num" 				column="pk_att_num" 		javaType="int" />
+		<result property="fk_emp_no" 				column="fk_emp_no" 			javaType="int" />
+		<result property="emp_name" 				column="emp_name" 			javaType="String" />
+		<result property="ko_depname" 				column="ko_depname" 		javaType="String" />
+		<result property="ko_rankname" 				column="ko_rankname" 		javaType="String" />
+		<result property="att_sort_korname" 		column="att_sort_korname" 	javaType="String" />
+		<result property="vacation_days" 			column="vacation_days" 		javaType="int" />
+		<result property="uq_phone" 				column="uq_phone" 			javaType="String" />
+		<result property="leave_start" 				column="leave_start" 		javaType="String" />
+		<result property="leave_end" 				column="leave_end" 			javaType="String" />
+		<result property="filename" 				column="filename" 			javaType="String" />
+		<result property="orgfilename" 				column="orgfilename" 		javaType="String" />
+		<result property="approval_status" 			column="approval_status" 	javaType="int" />
+		<result property="att_content" 				column="att_content" 		javaType="String" />
+		<result property="managername" 				column="managername" 		javaType="String" />
+		<result property="manager" 					column="manager" 			javaType="int" />
+		<result property="manager_rankname" 		column="manager_rankname" 	javaType="String" />
+		<result property="minus_cnt" 				column="minus_cnt" 			javaType="float" />
+		<result property="fin_app_opinion" 			column="fin_app_opinion" 	javaType="String" />
+		<result property="fk_fin_app_no" 			column="fk_fin_app_no" 		javaType="int" />
+	</resultMap>
+	
+	<!-- // 공가/경조신청서 가져오기  -->
+	<select id="getVacReportList" resultType="int" resultMap="getVacReportList_map">
+		select A.pk_att_num AS pk_att_num, A.fk_emp_no AS fk_emp_no, A.fin_app_opinion AS fin_app_opinion, A.fk_fin_app_no AS fk_fin_app_no
+		     , (select emp_name from tbl_employees where pk_emp_no = A.fk_emp_no) AS emp_name
+		     , D.ko_depname AS ko_depname
+		     , (select ko_rankname from tbl_rank_sort R join tbl_employees E ON R.pk_rank_no = E.fk_rank_id where E.pk_emp_no = A.fk_emp_no) AS ko_rankname
+		     , (select uq_phone from tbl_employees where pk_emp_no = A.fk_emp_no) AS uq_phone
+		     , S.att_sort_korname AS att_sort_korname, A.vacation_days AS vacation_days, A.leave_start AS leave_start, A.leave_end AS leave_end
+		     , A.filename AS filename, A.orgfilename AS orgfilename, A.approval_status AS approval_status
+		     , A.att_content AS att_content
+		     , (select emp_name from tbl_employees where pk_emp_no = D.manager) AS managername
+		     , D.manager AS manager, S.minus_cnt AS minus_cnt
+		     , (select ko_rankname from tbl_rank_sort R join tbl_employees E ON R.pk_rank_no = E.fk_rank_id where E.pk_emp_no = D.manager) AS manager_rankname
+		from tbl_attendance A JOIN tbl_leave L
+		ON A.fk_emp_no = L.fk_emp_no
+		JOIN tbl_employees E
+		ON L.fk_emp_no = E.pk_emp_no
+		JOIN tbl_dep_sort D
+		ON E.fk_department_id = D.pk_dep_no
+		JOIN tbl_att_sort S
+		On A.fk_att_sort_no = S.pk_att_sort_no
+		where A.pk_att_num = #{pk_att_num}
+	</select>
+	
+	<select id="checkManager" parameterType="String" resultType="int">
+		select count(*)
+		from tbl_dep_sort
+		where manager = #{fk_emp_no}
+	</select>
+	
+	<!-- 결재완료 / 반려 처리하기 -->
+	<update id="goSign" parameterType="HashMap"  >
+		update tbl_attendance set fin_app_opinion = #{fin_app_opinion}
+		<if test=" isRejected == 0 ">
+		, approval_status = 2
+		</if>
+		<if test=" isRejected == 1 ">
+		, approval_status = 1
+		</if>
+		where pk_att_num = #{pk_att_num}
+	</update>
+	
+	<!-- // 총 올린  결재대기중인 연차신청 수 가져오기 -->
+	<select id="getTotalVacReportNoSignCount" parameterType="String" resultType="int">
+		select count(*)
+		from tbl_attendance
+		where fk_fin_app_no = #{fk_emp_no} and approval_status = 0
+	</select>
+	
+	<!-- // 페이징처리 한 결재대기중인 공가/경조신청목록   -->
+	<resultMap type="Map" id="MyAttListNoSign_map">
+		<result property="pk_att_num" 				column="pk_att_num" 		javaType="int" />
+		<result property="ko_depname" 				column="ko_depname" 		javaType="String" />
+		<result property="fk_emp_no" 				column="fk_emp_no" 			javaType="int" />
+		<result property="emp_name" 				column="emp_name" 			javaType="String" />
+		<result property="att_sort_korname" 		column="att_sort_korname" 	javaType="String" />
+		<result property="vacation_days" 			column="vacation_days" 		javaType="int" />
+		<result property="leave_start" 				column="leave_start" 		javaType="String" />
+		<result property="leave_end" 				column="leave_end" 			javaType="String" />
+		<result property="managername" 				column="managername" 		javaType="String" />
+		<result property="manager" 					column="manager" 			javaType="int" />
+		<result property="approval_status" 			column="approval_status" 	javaType="int" />
+		<result property="fk_fin_app_no" 			column="fk_fin_app_no" 		javaType="int" />
+		<result property="fin_app_opinion" 			column="fin_app_opinion" 	javaType="String" />
+	</resultMap>
+	
+	<select id="getMyAttListNoSignWithPaging" resultType="HashMap" resultMap="MyAttListNoSign_map">
+		select pk_att_num, ko_depname, fk_emp_no, emp_name, att_sort_korname, vacation_days, leave_start, leave_end
+		     , managername, manager, approval_status
+		from
+		(
+		select row_number() over(order by pk_att_num desc) AS rno, A.fin_app_opinion AS fin_app_opinion, A.fk_fin_app_no AS fk_fin_app_no
+		     , A.pk_att_num AS pk_att_num, D.ko_depname AS ko_depname, A.fk_emp_no AS fk_emp_no, E.emp_name AS emp_name
+		     , S.att_sort_korname AS att_sort_korname, A.vacation_days AS vacation_days, A.leave_start AS leave_start, A.leave_end AS leave_end
+		     , (select emp_name from tbl_employees where pk_emp_no = D.manager) AS managername
+		     , D.manager AS manager, A.approval_status AS approval_status
+		from tbl_attendance A JOIN tbl_leave L
+		ON A.fk_emp_no = L.fk_emp_no
+		JOIN tbl_employees E
+		ON L.fk_emp_no = E.pk_emp_no
+		JOIN tbl_dep_sort D
+		ON E.fk_department_id = D.pk_dep_no
+		JOIN tbl_att_sort S
+		On A.fk_att_sort_no = S.pk_att_sort_no
+		where A.fk_fin_app_no = #{fk_emp_no} and A.approval_status = 0
+		) V
+		where rno between #{startRno} and #{endRno}
+	</select>
+	
+</mapper>

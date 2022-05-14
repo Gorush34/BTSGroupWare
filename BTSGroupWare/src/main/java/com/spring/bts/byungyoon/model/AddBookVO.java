@@ -12,8 +12,8 @@ public class AddBookVO {
 	
 	private int pk_addbook_no;			// 주소록 구분번호
 	private int fk_emp_no;				// 사원 번호
-	private String fk_dept_no;			// 부서 구분번호
-	private String fk_rank_no;			// 직급 구분번호
+	private int fk_dept_no;			// 부서 구분번호
+	private int fk_rank_no;			// 직급 구분번호
 	private String addb_name;			// 이름
 	private String com_tel;				// 회사 전화번호
 	private String postcode;			// 우편번호
@@ -34,7 +34,7 @@ public class AddBookVO {
 	
 	public AddBookVO() {}
 	
-	public AddBookVO(int pk_addbook_no, int fk_emp_no, String fk_dept_no, String fk_rank_no, String addb_name, String com_tel,
+	public AddBookVO(int pk_addbook_no, int fk_emp_no, int fk_dept_no, int fk_rank_no, String addb_name, String com_tel,
 			String postcode, String address, String detailaddress,
 			String referenceaddress, String phone, String email,
 			String photofilepath, String photofilename, String companyname, String memo, String ko_rankname, String ko_depname, String company_address, EmployeeVO evo) {
@@ -60,6 +60,7 @@ public class AddBookVO {
 		this.ko_rankname = ko_rankname;
 		this.ko_depname = ko_depname;
 		this.company_address = company_address;
+		
 	}
 
 	public EmployeeVO getEvo() {
@@ -86,19 +87,19 @@ public class AddBookVO {
 		this.fk_emp_no = fk_emp_no;
 	}
 
-	public String getFk_dept_no() {
+	public int getFk_dept_no() {
 		return fk_dept_no;
 	}
 
-	public void setFk_dept_no(String fk_dept_no) {
+	public void setFk_dept_no(int fk_dept_no) {
 		this.fk_dept_no = fk_dept_no;
 	}
 
-	public String getFk_rank_no() {
+	public int getFk_rank_no() {
 		return fk_rank_no;
 	}
 
-	public void setFk_rank_no(String fk_rank_no) {
+	public void setFk_rank_no(int fk_rank_no) {
 		this.fk_rank_no = fk_rank_no;
 	}
 
@@ -221,6 +222,8 @@ public class AddBookVO {
 	public void setKo_depname(String ko_depname) {
 		this.ko_depname = ko_depname;
 	}
+
+
 	
 	
 		

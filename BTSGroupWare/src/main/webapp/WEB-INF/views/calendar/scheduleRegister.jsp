@@ -351,7 +351,7 @@
 							</c:otherwise >
 						</c:choose>
 						</select> &nbsp;
-						<select class="calNo schedule" name="fk_calNo"></select>
+						<select class="calNo schedule" name="fk_calno"></select>
 					</td>
 				</tr>
 				<tr>

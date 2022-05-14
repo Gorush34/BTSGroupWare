@@ -17,6 +17,31 @@ body {font-family: font-family: 'Noto Sans KR', sans-serif; }
 
 body {font-family: 'Noto Sans KR', sans-serif; }
 
+/* 헤더 스타일  시작 */
+
+li.login_dropdown  { 
+	list-style: none;
+	display: inline-block;
+}
+
+img#memberProfile {
+	max-width: 40px;
+	max-height: 40px;
+	border-radius: 100%;
+}
+
+ul#secondHeaderGroup, .secondHeaderList {
+		list-style-type: none;
+		display: inline-block;
+}
+
+/* 헤더 스타일  끝 */
+
+#navbarSupportedContent > ul > li {
+	margin-right: 20px;
+	font-size: 18px;
+}
+
 /*	myAtt.jsp 서식 시작  */
 
 select {
@@ -28,7 +53,7 @@ select {
   vertical-align: middle;    
 }
 
-button#btn_vacCnt {
+button#btn_vacCnt, button#btn_myCommute {
 	margin-bottom:4px;
 }
 

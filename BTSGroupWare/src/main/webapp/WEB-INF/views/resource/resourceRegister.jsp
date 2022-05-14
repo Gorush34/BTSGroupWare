@@ -10,8 +10,44 @@
 
 	$(document).ready(function(){
 		
-	//	$('#question').tooltip(options)
-
+		// === *** 달력(type="date") 관련 시작 *** === //
+		// 시작시간, 종료시간		
+		var html="";
+		for(var i=0; i<24; i++){
+			if(i<10){
+				html+="<option value='0"+i+"'>0"+i+"&#58;00</option>";
+				html+="<option value='0"+i+"'>0"+i+"&#58;30</option>";
+			}
+			else{
+				html+="<option value="+i+">"+i+"&#58;00</option>";
+				html+="<option value="+i+">"+i+"&#58;30</option>";
+			}
+		}// end of for----------------------
+		
+		$("select#startHour").html(html);
+		$("select#endHour").html(html);
+		
+		// '종일' 체크박스 클릭시
+		$("input#allDay").click(function() {
+			var bool = $('input#allDay').prop("checked");
+			
+			if(bool == true) {
+				$("select#startHour").val("00");
+				$("select#startMinute").val("00");
+				$("select#endHour").val("23");
+				$("select#endMinute").val("59");
+				$("select#startHour").prop("disabled",true);
+				$("select#startMinute").prop("disabled",true);
+				$("select#endHour").prop("disabled",true);
+				$("select#endMinute").prop("disabled",true);
+			} 
+			else {
+				$("select#startHour").prop("disabled",false);
+				$("select#startMinute").prop("disabled",false);
+				$("select#endHour").prop("disabled",false);
+				$("select#endMinute").prop("disabled",false);
+			}
+		});
 	
 		
 	});
@@ -21,15 +57,15 @@
 <div id="resourceRegister">
 <h4 style="margin: 0 80px">자산목록 > 자산추가</h4>
 	<form name="schedualRegister">
-	<h5 style="margin: 0 90px">기본정보</h5>	
+	<h5 style="margin: 50px 90px 0 0;">기본정보</h5>	
 		<div id="resourceFrm" style="margin:50px 100px;">
-			<table id="schedualRegisterContent">
+			<table id="resourceRegisterContent">
 				<tr>
 					<th>자산명</th>
 					<td><input type="text" name="reso_name" class="form-control"/></td>
 				</tr>
 				<tr>
-					<th>날짜</th>
+					<th>사용시간</th>
 					<td>
 						<input type="date" id="startDate" value="${requestScope.chooseDate}" style="height: 30px;"/>&nbsp; 
 						<select id="startHour" class="schedule"></select> 시

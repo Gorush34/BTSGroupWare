@@ -7,6 +7,7 @@ import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.bts.common.AES256;
+import com.spring.bts.common.MyUtil;
 import com.spring.bts.hwanmo.model.EmployeeVO;
 import com.spring.bts.jieun.model.CalendarVO;
 import com.spring.bts.jieun.model.ScheduleVO;
@@ -235,10 +237,10 @@ public class CalendarController {
 	public String deleteCalendar(HttpServletRequest request) throws Throwable  {
 		
 		String pk_calno = request.getParameter("pk_calno");
-		System.out.println("확인용"+ pk_calno);
+	//	System.out.println("확인용"+ pk_calno);
 		
 		int n = service.deleteCalendar(pk_calno);
-		System.out.println("확인용" + n);
+	//	System.out.println("확인용" + n);
 		
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("n", n);
@@ -308,13 +310,13 @@ public class CalendarController {
 		
 		String method = request.getMethod();
 		mav.addObject("method", method);
-		System.out.println("확인용 : "+method);
+	//	System.out.println("확인용 : "+method);
 		
 		String startdate = request.getParameter("startdate");
 		String enddate = request.getParameter("enddate");
 		String subject = request.getParameter("subject");
 		String fk_lgcatgono= request.getParameter("fk_lgcatgono");
-		String fk_calno = request.getParameter("fk_calNo");
+		String fk_calno = request.getParameter("fk_calno");
 		String joinuser = request.getParameter("joinuser");
 		String color = request.getParameter("color");
 		String place = request.getParameter("place");
@@ -352,12 +354,17 @@ public class CalendarController {
 	
 	// === 일정 보여주기 === //
 	@ResponseBody
-	@RequestMapping(value="/calendar/selectSchedule.bts")
+	@RequestMapping(value="/calendar/selectSchedule.bts", produces="text/plain;charset=UTF-8")
 	public String selectSchedule(HttpServletRequest request) {
 		
 		String fk_emp_no = request.getParameter("fk_emp_no");
+		String emp_name = request.getParameter("emp_name");
 		
-		List<ScheduleVO> scheduleList = service.selectSchedule(fk_emp_no);
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("fk_emp_no", fk_emp_no);
+		paraMap.put("emp_name", emp_name);
+		
+		List<ScheduleVO> scheduleList = service.selectSchedule(paraMap);
 		
 		JSONArray jsonArr = new JSONArray();
 		
@@ -383,35 +390,257 @@ public class CalendarController {
 	}
 	
 	
-	
-	// === 예약 메인 페이지 === //	
-	@RequestMapping(value="/reservation/reservationMain.bts")
-	public ModelAndView reservationMain(ModelAndView mav) {
+	// === 일정 상세 페이지 === //
+	@RequestMapping(value="/calendar/detailSchedule.bts")
+	public ModelAndView detailSchedule(ModelAndView mav, HttpServletRequest request) {
 		
-		mav.setViewName("reservationMain.calendar");
+		String pk_schno = request.getParameter("pk_schno");
+		//System.out.println("확인:"+pk_schno);
+		// 검색  취소 버튼 클릭시
+		// String gobackURL_calendar = request.getParameter("gobackURL_calendar");
+		
+		// 일정 상세 보기에서 일정수정하기로 넘어갔을 때 
+		String gobackURL_ds = MyUtil.getCurrentURL(request);
+		mav.addObject("gobackURL_ds", gobackURL_ds);
+		
+		try {
+			Integer.parseInt(pk_schno);
+			Map<String,String> map = service.detailSchedule(pk_schno);
+			mav.addObject("map", map);
+			mav.setViewName("detailSchedule.calendar");
+		} catch (NumberFormatException e) {
+			mav.setViewName("redirect:/calendar/calenderMain.bts");
+		}
 		
 		return mav;
 	}
+	
+	// === 일정 삭제 하기 === //
+	@ResponseBody
+	@RequestMapping(value="/calendar/deleteSchedule.bts", method= {RequestMethod.POST})
+	public String deleteSchedule(HttpServletRequest request) {
+		
+		String pk_schno = request.getParameter("pk_schno");
+		
+		int n = service.deleteSchedule(pk_schno);
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n);
+		
+		return jsonObj.toString();
+	}
+	
+	
+	// == 일정 수정 페이지로 이동 == //
+	@RequestMapping(value="/calendar/editSchedule.bts", method= {RequestMethod.POST})
+	public ModelAndView editSchedule(HttpServletRequest request, ModelAndView mav) {
+		
+		String pk_schno = request.getParameter("pk_schno");
+		
+		try {
+			Integer.parseInt(pk_schno);
+			
+			String gobackURL_ds = MyUtil.getCurrentURL(request);
+			
+			HttpSession session = request.getSession();
+			EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+			
+			Map<String,String> map = service.detailSchedule(pk_schno);
+			
+			if(loginuser.getPk_emp_no() != Integer.parseInt(map.get("FK_EMP_NO"))) {
+				String message = "다른 사용자가 작성한 일정은 수정이 불가합니다.";
+				String loc = "javascript:history.back()";
+				
+				mav.addObject("message", message);
+				mav.addObject("loc", loc);
+				mav.setViewName("msg");
+			}
+			else {
+				mav.addObject("map", map);
+				mav.addObject("gobackURL_ds", gobackURL_ds);
+				
+				mav.setViewName("editSchedule.calendar");
+			}
+			
+		} catch (NumberFormatException e) {
+			mav.setViewName("redirect:/calendar/calenderMain.bts");
+		}
+		return mav;
+	}
+	
+	
+	// == 일정 수정하기 == //
+	@ResponseBody
+	@RequestMapping(value="/calendar/editSchedule_end.bts", method= {RequestMethod.POST})
+	public ModelAndView editSchedule_end(ScheduleVO svo, HttpServletRequest request, ModelAndView mav) {
+		
+		try {
+			
+			int n = service.editSchedule_end(svo);
+			
+			if(n==1) {
+				mav.addObject("message", "일정을 수정하였습니다.");
+				mav.addObject("loc", request.getContextPath()+"/calendar/calenderMain.bts");
+			}
+			else {
+				mav.addObject("message", "일정 수정에 실패하였습니다.");
+				mav.addObject("loc", "javascript:history.back()");
+			}
+			
+			mav.setViewName("msg");
+		} catch (Throwable e) {	
+			e.printStackTrace();
+			mav.setViewName("redirect:/calendar/calenderMain.bts");
+		}
+		
+		return mav;
+	}
+	
+		
+	// == 일정 검색하기 == //
+	@RequestMapping(value="/calendar/calendarSearch.bts", method = {RequestMethod.GET})
+	public ModelAndView calendarSearch(ModelAndView mav, HttpServletRequest request) {
+		
+		List<Map<String, String>> calendarSearchList = null;
+		
+		String startdate = request.getParameter("startdate");
+		String enddate = request.getParameter("enddate");
+		String searchType = request.getParameter("searchType");
+		String searchWord = request.getParameter("searchWord");
+		String searchSubject = request.getParameter("searchSubject");
+		String searchJoinuser = request.getParameter("searchJoinuser");
+		String fk_emp_no = request.getParameter("fk_emp_no");  // 로그인한 사용자고유번호
+		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
+		String str_sizePerPage = request.getParameter("sizePerPage");
+			
+		if(searchType==null || !"calendar".equals(searchType) ) {  
+			searchType="";
+		}
+		
+		if(searchWord==null || "".equals(searchWord) || searchWord.trim().isEmpty()) {  
+			searchWord="";
+		}
+		
+		if(searchSubject==null || "".equals(searchSubject) || searchSubject.trim().isEmpty()) {
+			searchSubject="";
+		}
+		
+		if(searchJoinuser==null || "".equals(searchJoinuser) || searchJoinuser.trim().isEmpty()) {
+			searchJoinuser="";
+		}
+		
+		if(startdate==null || "".equals(startdate)) {
+			startdate="";
+		}
+		
+		if(enddate==null || "".equals(enddate)) {
+			enddate="";
+		}
+			
+		if(str_sizePerPage == null || "".equals(str_sizePerPage) || 
+		   !("10".equals(str_sizePerPage) || "15".equals(str_sizePerPage) || "20".equals(str_sizePerPage))) {
+				str_sizePerPage ="10";
+		}
+		
+		
+		
+		
+		Map<String, String> paraMap = new HashMap<String, String>();
+		paraMap.put("startdate", startdate);
+		paraMap.put("enddate", enddate);
+		paraMap.put("searchType", searchType);
+		paraMap.put("searchWord", searchWord);
+		paraMap.put("fk_emp_no", fk_emp_no);
+		paraMap.put("searchSubject", searchSubject);
+		paraMap.put("searchJoinuser", searchJoinuser);
+		paraMap.put("str_sizePerPage", str_sizePerPage);
 
-	// === 예약 및 자원 관리자 페이지 === //	
-	@RequestMapping(value="/reservation/reservationAdmin.bts")
-	public ModelAndView reservationAdmin(ModelAndView mav) {
 		
-		mav.setViewName("reservationAdmin.calendar");
+		int totalCount=0;          // 총 게시물 건수		
+		int currentShowPageNo=0;   // 현재 보여주는 페이지 번호로서, 초기치로는 1페이지로 설정함.
+		int totalPage=0;           // 총 페이지수(웹브라우저상에서 보여줄 총 페이지 개수, 페이지바)  
+		int sizePerPage = 5;  // 한 페이지당 보여줄 행의 개수
+		int startRno=0;            // 시작 행번호
+	    int endRno=0;              // 끝 행번호 
+	    
+	    // 총 일정 검색 건수(totalCount)
+	    totalCount = service.getTotalCount(paraMap);
+	//  System.out.println("~~~ 확인용 총 일정 검색 건수 totalCount : " + totalCount);
+      
+	    totalPage = (int)Math.ceil((double)totalCount/sizePerPage); 
+
+		if(str_currentShowPageNo == null) {
+			currentShowPageNo = 1;
+		}
+		else {
+			try {
+				currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+				if(currentShowPageNo < 1 || currentShowPageNo > totalPage) {
+					currentShowPageNo = 1;
+				}
+			} catch (NumberFormatException e) {
+				currentShowPageNo=1;
+			}
+		}
+		
+		startRno = ((currentShowPageNo - 1 ) * sizePerPage) + 1;
+	    endRno = startRno + sizePerPage - 1;
+	      
+	    paraMap.put("startRno", String.valueOf(startRno));
+	    paraMap.put("endRno", String.valueOf(endRno));
+	    	   
+	    calendarSearchList = service.scheduleListSearchWithPaging(paraMap);
+	    // 페이징 처리한 캘린더 가져오기(검색어가 없다라도 날짜범위 검색은 항시 포함된 것임)
+		
+		mav.addObject("paraMap", paraMap);
+		// 검색대상 컬럼과 검색어를 유지시키기 위한 것임.
+		
+		// === 페이지바 만들기 === //
+			int blockSize= 5;
+			
+			int loop = 1;
+			
+			int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+		   
+			String pageBar = "<ul style='list-style:none;'>";
+			
+			String url = "calendarSearch.bts";
+			
+			// === [맨처음][이전] 만들기 ===
+			if(pageNo!=1) {
+				pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?startdate="+startdate+"&enddate="+enddate+"&searchType="+searchType+"&searchWord="+searchWord+"&fk_emp_no="+fk_emp_no+"&searchJoinuser="+searchJoinuser+"&searchSubject="+searchSubject+"&currentShowPageNo=1'>[맨처음]</a></li>";
+				pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?startdate="+startdate+"&enddate="+enddate+"&searchType="+searchType+"&searchWord="+searchWord+"&fk_emp_no="+fk_emp_no+"&searchJoinuser="+searchJoinuser+"&searchSubject="+searchSubject+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+			}
+			while(!(loop>blockSize || pageNo>totalPage)) {
+				
+				if(pageNo==currentShowPageNo) {
+					pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";
+				}
+				else {
+					pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?startdate="+startdate+"&enddate="+enddate+"&searchType="+searchType+"&searchWord="+searchWord+"&fk_emp_no="+fk_emp_no+"&searchJoinuser="+searchJoinuser+"&searchSubject="+searchSubject+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";
+				}
+				
+				loop++;
+				pageNo++;
+			}// end of while--------------------
+			
+			// === [다음][마지막] 만들기 === //
+			if(pageNo <= totalPage) {
+				pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?startdate="+startdate+"&enddate="+enddate+"&searchType="+searchType+"&searchWord="+searchWord+"&fk_emp_no="+fk_emp_no+"&searchJoinuser="+searchJoinuser+"&searchSubject="+searchSubject+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+				pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?startdate="+startdate+"&enddate="+enddate+"&searchType="+searchType+"&searchWord="+searchWord+"&fk_emp_no="+fk_emp_no+"&searchJoinuser="+searchJoinuser+"&searchSubject="+searchSubject+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>";
+			}
+			pageBar += "</ul>";
+			
+			mav.addObject("pageBar",pageBar);
+			
+			String listgobackURL_schedule = MyUtil.getCurrentURL(request);
+		//	System.out.println("~~~ 확인용 검색 listgobackURL_schedule : " + listgobackURL_schedule);
+			
+			mav.addObject("listgobackURL_schedule",listgobackURL_schedule);
+			mav.addObject("calendarSearchList", calendarSearchList);
+			mav.setViewName("calendarSearch.calendar");
+	
 		
 		return mav;
 	}
-	
-	// === 자원등록 페이지 === //	
-	@RequestMapping(value="/reservation/resourceRegister.bts")
-	public ModelAndView resourceRegister(ModelAndView mav) {
-		
-		mav.setViewName("resourceRegister.calendar");
-		
-		return mav;
-	}
-	
-	
-		
-		
 }

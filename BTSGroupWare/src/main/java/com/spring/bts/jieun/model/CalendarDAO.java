@@ -121,9 +121,45 @@ public class CalendarDAO implements InterCalendarDAO {
 	
 	// === 일정 보여주기 === //
 	@Override
-	public List<ScheduleVO> selectSchedule(String fk_emp_no) {
-		List<ScheduleVO> scheduleList = sqlsession.selectList("jieun.selectSchedule", fk_emp_no);
+	public List<ScheduleVO> selectSchedule(Map<String, String> paraMap) {
+		List<ScheduleVO> scheduleList = sqlsession.selectList("jieun.selectSchedule", paraMap);
 		return scheduleList;
+	}
+	
+	// === 일정 상세 페이지 === //
+	@Override
+	public Map<String, String> detailSchedule(String pk_schno) {
+		Map<String, String> map = sqlsession.selectOne("jieun.detailSchedule", pk_schno);
+		return map;
+	}
+	
+	// === 일정 삭제 하기 === //
+	@Override
+	public int deleteSchedule(String pk_schno) {
+		int n = sqlsession.delete("jieun.deleteSchedule", pk_schno);
+		return n;
+	}
+	
+	// == 일정 수정하기 == //
+	@Override
+	public int editSchedule_end(ScheduleVO svo) {
+		int n = sqlsession.update("jieun.editSchedule_end", svo);
+		return n;
+	}
+	
+	// == 총 일정 검색 건수(totalCount) == //
+	@Override
+	public int getTotalCount(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("jieun.getTotalCount", paraMap);
+		return n;
+	}
+	
+	// == 페이징 처리한 캘린더 가져오기(검색어가 없다라도 날짜범위 검색은 항시 포함된 것임) == //
+
+	@Override
+	public List<Map<String, String>> scheduleListSearchWithPaging(Map<String, String> paraMap) {
+		 List<Map<String, String>> calendarSearchList = sqlsession.selectList("jieun.scheduleListSearchWithPaging", paraMap);
+		return calendarSearchList;
 	}
 	
 	

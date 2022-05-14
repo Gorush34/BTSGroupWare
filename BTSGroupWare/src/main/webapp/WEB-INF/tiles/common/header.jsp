@@ -78,7 +78,7 @@
 	      </li>
 	      
 	      <li class="nav-item">
-	        <a class="nav-link" href="#" id="navbar" role="button" aria-expanded="false">
+	        <a class="nav-link" href="<%= ctxPath %>/reservation/reservationMain.bts" id="navbar" role="button" aria-expanded="false">
 	          	자원관리
 	        </a>
 	      </li>
@@ -86,7 +86,7 @@
 	      
 	      <%-- 근태관리 시작 --%>
 	      <li class="nav-item">
-	        <a class="nav-link" href="<%= ctxPath %>/att/attMain.bts" id="navbar" role="button" aria-expanded="false">
+	        <a class="nav-link" href="<%= ctxPath %>/att/myAtt.bts" id="navbar" role="button" aria-expanded="false">
 	          	근태관리
 	        </a>
 	      </li>
@@ -100,7 +100,7 @@
 	      </li>
 	      
 	      <li class="nav-item">
-	        <a class="nav-link" href="<%= ctxPath %>/addBook/addBook_orgChart.bts" id="navbar" role="button" aria-expanded="false">
+	        <a class="nav-link" href="<%= ctxPath %>/addBook/addBook_depInfo.bts" id="navbar" role="button" aria-expanded="false">
 	          	조직도
 	        </a>
 	      </li>

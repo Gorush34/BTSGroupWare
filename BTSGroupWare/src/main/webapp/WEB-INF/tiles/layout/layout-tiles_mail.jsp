@@ -14,7 +14,7 @@
 <title>게시판</title>
   <!-- Required meta tags -->
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/bootstrap-4.6.0-dist/css/bootstrap.min.css" > 
@@ -25,6 +25,11 @@
   
   <!-- 직접 만든 CSS 1 -->
   <link rel="stylesheet" type="text/css" href="<%=ctxPath %>/resources/css/style_mail.css" />
+
+  <!-- 구글 폰트를 쓰기 위한 링크 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo&family=Noto+Sans+KR&display=swap" rel="stylesheet">
   
   <!-- Optional JavaScript -->
   <script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery-3.6.0.min.js"></script>
