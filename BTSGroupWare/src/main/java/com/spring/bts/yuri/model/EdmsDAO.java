@@ -61,38 +61,71 @@ public class EdmsDAO implements InterEdmsDAO {
 		return n;
 	}
 	
-	// 파일첨부가 없는 전자결재 문서작성
+	// 파일첨부가 있는 전자결재 문서작성
 	@Override
 	public int edmsAdd_withFile(ApprVO apprvo) {
 		int n = sqlsession.insert("yuri.edmsAdd_withFile", apprvo);
 		return n;
 	}
 
-	// 페이징 처리를 안한 검색어가 없는 전체 대기문서 목록 보여주기
+	// 1개 조회하기
 	@Override
-	public List<ApprVO> waitListNoSearch() {
-		List<ApprVO> waitList = sqlsession.selectList("yuri.waitListNoSearch");
-		return waitList;
+	public ApprVO getView(Map<String, String> paraMap) {
+		ApprVO apprvo = sqlsession.selectOne("yuri.getView", paraMap);
+		return apprvo;
+	}	
+	
+	// 대기문서 글조회수 1 증가하기 메소드
+	@Override
+	public void setAddViewcnt(String pk_appr_no) {
+		sqlsession.update("yuri.setAddReadCount", pk_appr_no);
+	}
+	
+	// 1개글 수정하기
+	@Override
+	public int edit(ApprVO apprvo) {
+		int n = sqlsession.update("yuri.edit", apprvo);
+		return n;
 	}
 
-	// 전자결재 양식선택(업무기안서, 휴가신청서 등..)을 위한 것
-/*
+	// 1개글 삭제하기
 	@Override
-	public List<String> getApprsortList() {
-		sqlsession.selectList("yuri.getApprsortList");
-		return null;
+	public int del(Map<String, String> paraMap) {
+		int n = sqlsession.delete("yuri.del", paraMap);
+		return n;
 	}
-*/
 
+	// 페이징 처리한 글목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함한 것)
+	@Override
+	public List<ApprVO> edmsListSearchWithPaging(Map<String, String> paraMap) {
+		List<ApprVO> edmsList = sqlsession.selectList("yuri.edmsListSearchWithPaging", paraMap);
+		return edmsList;
+	}
+	
+	// 검색어 입력시 자동글 완성하기
+	@Override
+	public List<String> wordSearchShow(Map<String, String> paraMap) {
+		List<String> wordList = sqlsession.selectList("yuri.wordSearchShow", paraMap);
+		return wordList;
+	}
 
+	// 총 게시물 건수(totalCount) 구하기 - 검색이 있을 때와 검색이 없을 때로 나뉜다.
+	@Override
+	public int getTotalCount(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("yuri.getTotalCount");
+		return n;
+	}
 
-	
-	
-	
-	
-	
-	
-	
-	
+	// 상세부서정보 페이지 사원목록 불러오기 
+	@Override
+	public List<EmployeeVO> addBook_depInfo_select() {
+		List<EmployeeVO> empList = sqlsession.selectList("yuri.addBook_depInfo_select");
+		return empList;
+	}
+
+	@Override
+	public int accept(ApprVO apprvo) {
+		int n = sqlsession.update("yuri.accept", apprvo);
+		return n;
+	}
 }
-

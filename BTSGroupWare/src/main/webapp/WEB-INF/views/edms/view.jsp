@@ -190,22 +190,32 @@
 			
 			<br />
 			
-			<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/list.bts'">전체목록보기</button>
-
-			<%-- ====		페이징 처리되어진 후 특정 글제목을 클릭하여 상세내용을 본 이후
-							사용자가 목록보기 버튼을 클릭했을 때 돌아갈 페이지를 알려주기 위해
-							현재 페이지 주소를 뷰단으로 넘겨준다.
-			--%>
 			
-			<!-- loginuser != null && 글쓴 사람인 경우-->
+			<br/><hr>
+			
+			<span>loginuser != null && 글쓴 사람이 아니고 승인자도 아닌 경우</span><br>
+			<%-- 페이징 처리되어진 후 특정 글제목을 클릭하여 상세내용을 본 이후 사용자가 목록보기 버튼을 클릭했을 때 돌아갈 페이지를 알려주기 위해 현재 페이지 주소를 뷰단으로 넘겨준다. --%>
+			<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/list.bts'">전체목록보기</button>
 			<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>${requestScope.gobackURL}'">검색된결과목록보기</button>
+			
+			<br/><hr>
+			
+			<span>loginuser != null && 글쓴 사람인 경우</span><br>			
 			<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edit.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">글수정하기</button>
 			<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/del.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">글삭제하기</button>
-			<!-- loginuser != null && 글쓴 사람이 아닌 경우 1 (승인자인 경우) -->
 			
-			<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">승인</button>
-			<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">반려</button>
+			<br/><hr>
 			
+			<span>
+				1. sqlsession의 empno = 원글의 mid_emp_no인 경우 && mid_accept 0인 경우<br/>
+				2. sqlsession의 empno = 원글의 fin_emp_no인 경우 && mid_accept 1인 경우<br/>
+			</span>
+			
+			<%-- <c:if test="${sessionScope.loginuser.pk_emp_no = ${requestScope.apprvo.fk_mid_empno} }"> --%>
+				<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">승인</button>
+				<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">반려</button>
+			<%-- </c:if> --%>
+			<br/><hr>
 <%--
 	 <div style="margin: 20px;">
 		<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnApprWrite">결재요청</button>

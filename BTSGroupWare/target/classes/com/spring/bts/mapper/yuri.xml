@@ -23,19 +23,33 @@
 		WHERE pk_appr_sortno = 9
 	</select> -->
 
+	<!-- 로그인 멤버 정보 가져오기 -->
+	<select id="getLoginMember" parameterType="com.spring.bts.hwanmo.model.EmployeeVO">
+		SELECT  pk_emp_no, emp_name, 
+		        d.ko_depname, fk_department_id, r.ko_rankname, fk_rank_id, 
+		        emp_pwd, ishired, d.manager
+		FROM tbl_employees E
+		LEFT JOIN tbl_dep_sort D
+		ON E.fk_department_id = D.pk_dep_no
+		LEFT JOIN tbl_rank_sort R
+		ON E.fk_rank_id = R.pk_rank_no
+		WHERE E.ishired = 1 AND pk_emp_no = #{pk_emp_no} AND emp_pwd = #{emp_pwd}
+	</select>
+	
+	
 	<!-- 파일첨부가 없는 전자결재 문서작성 --> 
 	<insert id="edmsAdd" parameterType="com.spring.bts.yuri.model.ApprVO">
 		INSERT INTO
-		tbl_appr(   pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno, fk_fin_empno, emergency,
-		            title, contents,
-		            status, mid_accept, fin_accept,
-		            mid_opinion, fin_opinion, 
-		            writeday, viewcnt)
-		VALUES(     seq_apprno.nextval, #{fk_appr_sortno}, #{fk_emp_no}, #{fk_mid_empno}, #{fk_fin_empno}, #{emergency},
-		            #{title}, #{contents},
-		            default, default, default,
-		            null, null,
-		            default, default)
+		tbl_appr(pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno, fk_fin_empno, emergency,
+		         title, contents,
+		         status, mid_accept, fin_accept,
+		         mid_opinion, fin_opinion, 
+		         writeday, viewcnt)
+		VALUES(seq_apprno.nextval, #{fk_appr_sortno}, #{fk_emp_no}, #{fk_mid_empno}, #{fk_fin_empno}, #{emergency},
+		       #{title}, #{contents},
+		       default, default, default,
+		       null, null,
+		       default, default)
 	</insert>
 
 
@@ -58,16 +72,187 @@
 
 
 	<!-- 페이징 처리를 안한 검색어가 없는 전체 대기문서 목록 보여주기 -->
-	<select id="waitListNoSearch" resultType="com.spring.bts.yuri.model.ApprVO">
-		select A.writeday, S.appr_name, A.emergency, A.title, A.filename, A.pk_appr_no, a.status
+<!-- 	<select id="waitListNoSearch" resultType="com.spring.bts.yuri.model.ApprVO">
+		select A.fk_emp_no, A.writeday, S.appr_name, A.emergency, A.title, NVL(A.filename,'파일없음'), A.pk_appr_no, a.status
 		from tbl_appr A left join tbl_appr_sort S
 		on A.fk_appr_sortno = S.pk_appr_sortno
-		order by pk_appr_no desc
+		order by A.pk_appr_no desc
+	</select> -->
+
+
+	<!-- 이전글/다음글이 있는, 파일첨부가 있는 대기문서 1개 조회하기 -->
+	<!--  이렇게 하면 검색할 때 안되지 않나? -->
+	<select id="getView" parameterType="HashMap" resultType="com.spring.bts.yuri.model.ApprVO">
+		SELECT  previousseq, previoussubject
+	            , pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno, fk_fin_empno, emergency
+	            , title, contents, filename, orgfilename, fileSize, status, mid_accept, fin_accept
+	            , mid_opinion, fin_opinion, writeday, viewcnt
+	            , nextseq, nextsubject
+              , emp_name , ko_rankname , ko_depname
+		from
+		(
+		    select  lag(pk_appr_no,1) over(order by pk_appr_no desc)  as previousseq
+		          , lag(title,1) over(order by pk_appr_no desc) as previoussubject
+		          , pk_appr_no, fk_appr_sortno, A.fk_emp_no AS fk_emp_no, NVL(fk_mid_empno, -1) AS fk_mid_empno, fk_fin_empno, emergency
+		          , title, contents, filename, orgfilename, fileSize, status, NVL(mid_accept, -1) AS mid_accept, fin_accept
+		          , NVL(mid_opinion, '중간결재자의견없음') AS mid_opinion, fin_opinion, to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') as writeday, viewcnt
+		          , lead(pk_appr_no,1) over(order by pk_appr_no desc) as nextseq
+		          , lead(title,1) over(order by pk_appr_no desc) as nextsubject
+		          , E.EMP_NAME AS emp_name
+		          , R.ko_rankname AS ko_rankname
+		          , D.ko_depname AS ko_depname
+		    from tbl_appr A
+		     join tbl_employees E 
+		    on A.FK_EMP_NO = E.pk_emp_no
+		    join tbl_rank_sort R
+		    on E.FK_RANK_ID = R.PK_RANK_NO
+		    join tbl_dep_sort D
+		    on E.FK_DEPARTMENT_ID = D.PK_DEP_NO
+		) V
+		where pk_appr_no = #{pk_appr_no}
 	</select>
+	<!-- where status = 0 -->
+	
+	
+	
+	
+	<!-- 글조회수 1개 증가시키기 메소드 -->
+	<update id="setAddReadCount" parameterType="String">
+		update tbl_appr set viewcnt = 1
+		where pk_appr_no = #{pk_appr_no}
+	</update>
+	
+	
+	<!-- 1개글 수정하기 -->
+	<update id="edit" parameterType="com.spring.bts.yuri.model.ApprVO">
+		update tbl_appr set title = #{title}, contents = #{contents}
+		where pk_appr_vo = #{pk_appr_vo}
+	</update>
+	
+	<!-- 1개글 삭제하기 -->
+	<delete id="del" parameterType="HashMap">
+		delete from tbl_appr
+		where pk_appr_no = #{pk_appr_no}
+	</delete>
+	
+	<!-- 검색어 입력 시 자동글 완성하기 -->
+	<!-- select distinct title, pk_appr_no
+	FROM tbl_appr
+	where status in (0, 1, 2)
+	and lower(title)
+	like '%'|| lower('휴가') ||'%'
+	order by title asc, pk_appr_no desc;
+	
+	select distinct E.emp_name, A.pk_appr_no
+	FROM tbl_appr A LEFT JOIN tbl_employees E
+	ON A.fk_emp_no = E.pk_emp_no
+	where status in (0, 1, 2)
+	and lower(E.emp_name)
+	like '%'|| lower('인부장') ||'%'
+	order by emp_name asc, pk_appr_no desc;	 -->
+	
+	<!-- 검색어 입력 시 자동글 완성하기 -->
+	<select id="wordSearchShow" parameterType="HashMap" resultType="String">	
+		<choose>
+			<when test="searchType eq 'emp_name'">
+				SELECT DISTINCT ${searchType}
+			</when>
+			<otherwise>
+				SELECT ${searchType}
+			</otherwise>
+		</choose>
+		FROM tbl_appr A LEFT JOIN tbl_employees E
+		ON A.fk_emp_no = E.pk_emp_no
+		WHERE 1=1
+		AND lower(${searchType}) LIKE '%'|| lower(#{searchWord}) ||'%'
+		<!--
+			select 문에서 distinct 와 order by 절을 함께 사용할때는 조심해야 한다.
+			order by 절에는 select 문에서 사용된 컬럼만 들어올 수가 있다.
+			또는 order by 절을 사용하지 않아야 한다.
+		-->
+		<choose>
+			<when test="searchType neq 'subject'">
+			<!-- JSTL은 ne 지만 여기서는 neq 이다! -->
+				ORDER BY ${searchType} ASC
+			</when>
+			<otherwise>
+				ORDER BY pk_appr_no DESC
+			</otherwise>
+		</choose>
+	</select>
+	<!--
+		select 문에서 distinct 와 order by 절을 함께 사용할때는 조심해야 한다.
+		order by 절에는 select 문에서 사용된 컬럼만 들어올 수가 있다.
+		또는 order by 절을 사용하지 않아야 한다.
+	-->
+
+
+	<!-- 총 게시물 건수 구하기 -->
+	<select id="getTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_appr
+		where status in(0, 1, 2)
+	</select>	
+	
+	<!-- 
+	<if test='searchType != ""'>
+		and lower(${searchType}) like '%'||lower(#{searchWord})||'%'
+	</if>
+	 -->
+
+	<!-- // ==== 파일첨부가 있는 게시판의 페이징 처리한 글목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함한 것) ==== // -->		
+	<select id="edmsListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.yuri.model.ApprVO">
+		select  pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno,
+		        fk_fin_empno, emergency, title, contents, filename,
+		        orgfilename, fileSize, status, mid_accept, fin_accept,
+		        mid_opinion, fin_opinion,
+		        writeday, viewcnt,
+		        emp_name
+		from 
+		(
+			select  rownum as rno, 
+			        pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno,
+			        fk_fin_empno, emergency, title, contents, filename,
+			        orgfilename, fileSize, status, mid_accept, fin_accept,
+			        NVL(mid_opinion, '중간결재자의견없음') AS mid_opinion, fin_opinion,
+			        to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') AS writeday, viewcnt,
+			        E.emp_name AS emp_name
+			from tbl_appr A
+			left join tbl_employees E
+			on A.fk_emp_no = E.pk_emp_no
+			where 1=1
+			
+			<if test=' searchType != "" and searchWord != "" '>
+			and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+			</if>
+			order by pk_appr_no desc
+		)
+		where rno between #{startRno} and #{endRno}
+	</select>
+	<!-- order by pk_appr_no desc -->
 
 
 
 
+
+	<!-- 상세부서정보 페이지 사원목록 불러오기 -->
+   <select id="addBook_depInfo_select" resultType="com.spring.bts.hwanmo.model.EmployeeVO">
+      select E.pk_emp_no, E.emp_name , R.ko_rankname , D.ko_depname , R.pk_rank_no
+      from tbl_employees E
+      join tbl_rank_sort R
+      on E.fk_rank_id = R.pk_rank_no
+      join tbl_dep_sort D
+      on E.fk_department_id = D.pk_dep_no
+      order by R.pk_rank_no
+   </select>
+
+
+	
+	<!-- 1개글 수정하기 -->
+	<update id="accept" parameterType="com.spring.bts.yuri.model.ApprVO">
+		update tbl_appr set status = 1
+		where pk_appr_vo = #{pk_appr_vo}
+	</update>
 
 
 

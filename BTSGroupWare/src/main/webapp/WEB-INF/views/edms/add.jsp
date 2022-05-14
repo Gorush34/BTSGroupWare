@@ -343,6 +343,8 @@
 	        
 	        var employee_no =  $(this).val();
 	           $("input#emp_no").val(employee_no);
+	           $("input#fk_mid_empno").val(employee_no);	////////////////////////////////////////////////////////////////		
+	           
 	        var employee_name =  $(this).next().val();
 	           $("input#emp_name").val(employee_name);
 	           var employee_rank =  $(this).next().next().val();
@@ -424,7 +426,7 @@
 	   }
 	   else if ( $("#last_empno").val() != "" ) {
 	      const frm = document.submitFrm;
-	       frm.action = "<%=ctxPath%>/edms/modal.bts"
+	       frm.action = "<%=ctxPath%>/edms/edmsAddEnd.bts"
 	       frm.method = "post"
 	       frm.submit();
 	    }
@@ -490,42 +492,14 @@
 		</tr>
 		
 		<tr>
-			<th class="edmsView_th" rowspan="2">
-				<!-- <button type="button" class="btn btn-secondary btn-sm mr-3" id="btnApprSelect" onclick="getAppr()">결재선 지정</button> -->
-				결재정보
-			</th>
-			<td style="width: 10%;">중간결재자</td>
-			<td colspan="2" style="width: 70%;">
-				<input type="text" name="fk_mid_empno" class="form-control" placeholder="중간결재자 사번을 입력하세요" value="80000330" />
-			</td>
-			
-<!-- 			<td style="width: 30%;">부서1 : 
-				<input type="text" name="fk_mid_empno" class="form-control" placeholder="중간결재자 사번을 입력하세요" />
-				<input type="text" name="apprMidEmpDep" class="form-control" placeholder="중간결재자 부서를 입력하세요" />
-			</td>
-			<td style="width: 30%;">이름1 :
-				<input type="text" name="apprMidEmpName" class="form-control" placeholder="중간결재자 이름을 입력하세요" />
-			</td>
-			<td style="width: 30%;">직급1 : 
-				<input type="text" name="apprMidEmpRank" class="form-control" placeholder="중간결재자 직급을 입력하세요" />
-			</td> -->
-			
+			<th class="edmsView_th" rowspan="2">결재정보</th>
+			<td style="width: 20%;">중간결재자</td>
+			<td><input type="text" name="fk_mid_empno" id="fk_mid_empno" class="form-control" placeholder="중간결재자 정보" value="" readonly /></td>
 		</tr>
 		
 		<tr>
-			<td>최종결재자</td>
-			<td colspan="2" style="width: 70%;">
-				<input type="text" name="fk_fin_empno" class="form-control" placeholder="최종결재자 사번을 입력하세요" value="80000360" />
-			</td>
-<!-- 			<td style="width: 30%;">부서2 : 
-				<input type="text" name="apprFinEmpDep" class="form-control" placeholder="최종결재자 부서를 입력하세요"/>
-			</td>
-			<td style="width: 30%;">이름2 :
-				<input type="text" name="apprFinEmpName" class="form-control" placeholder="최종결재자 이름을 입력하세요"/>
-			</td>
-			<td style="width: 30%;">직급2 : 
-				<input type="text" name="apprFinEmpRank" class="form-control" placeholder="최종결재자 직급을 입력하세요"/>
-			</td> -->
+			<td style="width: 20%;">최종결재자</td>
+			<td><input type="text" name="fk_fin_empno" id="fk_fin_empno" class="form-control" placeholder="최종결재자 정보" value="" readonly /></td>
 		</tr>
 	
 
@@ -606,9 +580,8 @@
    
    <div class="modal-body">
       <div id="tbl_one" style="float:left; width:22%;">
-         <table style="text-align:center;">
+         <table style="text-align:center; max-width: 100%;">
             <tr>
-               <td><input type="hidden" name="hiddenEmpno" id="hiddenEmpno" value="" /></td>
                <td><button class="btn btn-default" id="y_team" style="width:150px; border: solid darkgray 2px;">영업팀</button></td>
             </tr>
             <c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
@@ -689,6 +662,7 @@
             </tr>
             </c:if>
                </c:forEach>
+               
             <tr>
                <td><button class="btn btn-default" id="i_team" style="width:150px; border: solid darkgray 2px;">인사팀</button></td>
             </tr>
@@ -736,33 +710,35 @@
                <input type="hidden" id="emp_dept" name="emp_dept" />
         </div>
         
-        <div id="tbl_two" style="float:left; width:20%;">
+        <div id="tbl_two" style="float:left; width:18%;">
            <table>
               <tr><td><button class="arrow-next_1" onclick="middle_approve();" ></button></td></tr>
               <tr><td><button class="arrow-next_2" onclick="last_approve();" style="margin-top:115%;"></button></td></tr>
            </table>
         </div>
         
-        <div id="tbl_three" style="float:left; width:50%;">
+        <div id="tbl_three" style="float:left; width:60%;">
            <form name="submitFrm">
-           <table style="text-align:center;">
-              <tr><td colspan="7">중간 결재&nbsp;<input type="reset" value="삭제" onclick="middle_reset()"/></td></tr>
-            <tr style="border: solid darkgray 2px; margin-left:2%">
-               <td style="width:0%;"><input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly /></td>
-               <td style="width:13%;"><strong>이름</strong></td>
-               <td style="width:13%;"><strong>직급</strong></td>
-               <td style="width:13%;"><strong>부서</strong></td>
-            </tr>
-            <tr style="border-bottom: solid darkgray 2px;">
-               <td style="width:0%;"><input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly />
-               <input type="hidden" id="middle_empno" name="middle_empno"  style="border:none; text-align:center; " ></td>
-               <td><input type="text" id="middle_name" name="middle_name"  style="border:none; text-align:center; " ><br></td>
-               <td><input type="text" id="middle_rank" name="middle_rank"  style="border:none; text-align:center;" ><br></td>
-               <td><input type="text" id="middle_dept" name="middle_dept"  style="border:none; text-align:center;"  ><br></td>
-            </tr>
+           <table style="text-align:center; max-width: 100%;">
+              <tr>
+              	<td colspan="4">중간 결재&nbsp;<input type="reset" value="삭제" onclick="middle_reset()"/></td>
+              </tr>
+              <tr style="border: solid darkgray 2px; margin-left:2%">
+	              <td style="width:0%;"><input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly /></td>
+	              <td style="width:13%;"><strong>이름</strong></td>
+	              <td style="width:13%;"><strong>직급</strong></td>
+	              <td style="width:13%;"><strong>부서</strong></td>
+	            </tr>
+	            <tr style="border-bottom: solid darkgray 2px;">
+	               <td style="width:0%;"><input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly />
+	               <input type="hidden" id="middle_empno" name="middle_empno"  style="border:none; text-align:center; " ></td>
+	               <td><input type="text" id="middle_name" name="middle_name"  style="border:none; text-align:center; " ><br></td>
+	               <td><input type="text" id="middle_rank" name="middle_rank"  style="border:none; text-align:center;" ><br></td>
+	               <td><input type="text" id="middle_dept" name="middle_dept"  style="border:none; text-align:center;"  ><br></td>
+	            </tr>
          </table>
          <table style="text-align:center; margin-top:30%;">
-            <tr><td colspan="7">최종 결재&nbsp;<input type="reset" value="삭제" onclick="last_reset()" /></td></tr>
+            <tr><td colspan="4">최종 결재&nbsp;<input type="reset" value="삭제" onclick="last_reset()" /></td></tr>
             <tr style="border: solid darkgray 2px; margin-left:2%">
                <td style="width:0%;"><input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly /></td>
                <td style="width:13%;"><strong>이름</strong></td>
@@ -782,7 +758,7 @@
    </div><!-- modal-body -->
    
    <div class="modal-footer">
-   <input type="button" class="btn btn-primary" id="insert_customer_btn" onclick="" value="등록">
+   <input type="button" class="btn btn-primary" id="insert_customer_btn" onclick="getAppr()" value="등록">
    <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
    </div>
    </div>
