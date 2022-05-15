@@ -177,7 +177,6 @@
 	      	    $("form > input[name=chooseDate]").val(info.dateStr);
 	      	    
 	      	    var frm = document.dateFrm;
-	      	    frm.method="POST";
 	      	    frm.action="<%= ctxPath%>/calendar/scheduleRegister.bts";
 	      	    frm.submit();
 	      	  }, 
@@ -224,7 +223,7 @@
 		  
 		  arr_calendar_checkbox.forEach(function(item) {
 			  item.addEventListener("change", function () {
-		       console.log(item);
+		      // console.log(item);
 				 calendar.refetchEvents(); // 모든 소스의 이벤트를 다시 가져와 화면에 다시 표시합니다.
 		    });
 		  });

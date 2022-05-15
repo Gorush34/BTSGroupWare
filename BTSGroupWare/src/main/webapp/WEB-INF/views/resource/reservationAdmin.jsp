@@ -18,6 +18,16 @@
 	}); // end of $(document).ready(function(){}--------------------------------
 			
 			
+	// 자원 수정하기
+	function editResource(pk_rno){
+		var frm = document.editResourceFrm;
+		frm.pk_rno.value = pk_rno;
+		
+		frm.action = "<%= ctxPath%>/resource/resourceEdit.bts";
+		frm.method = "post";
+		frm.submit();
+	}			
+			
 </script>
 
 <div id="reservationAdmin">
@@ -29,36 +39,28 @@
 			<table class="table table-striped" style="width:90%; margin:50px auto; text-align: center;">
 				<thead class="table-primary" style="color:white;">
 					<tr>
-						<th>자산명</th>
-						<th>보유 수</th>
-						<th>권한</th>
-						<th>상태</th>
+						<th>자원명</th>
+						<th>분류명</th>
+						<th>자원정보</th>
 						<th>설정</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>차량 예약</td>
-						<td>5</td>
-						<td>전체 허용</td>
-						<td>사용 가능</td>
-						<td><button type="button" class="btn btn-secondary btn-sm" onclick="">설정</button></td>
-					</tr>
-					<tr>
-						<td>차량 예약</td>
-						<td>5</td>
-						<td>전체 허용</td>
-						<td>사용 가능</td>
-						<td><button type="button" class="btn btn-secondary btn-sm" onclick=""></button></td>
-					</tr>
-					<tr>
-						<td>차량 예약</td>
-						<td>5</td>
-						<td>전체 허용</td>
-						<td>사용 가능</td>
-						<td><button type="button" class="btn btn-secondary btn-sm" onclick=""></button></td>
-					</tr>
+				<c:if test="${not empty requestScope.resourceList}">
+					<c:forEach var="map" items="${requestScope.resourceList}">						
+						<tr>
+							<td>${map.RNAME}<input type="hidden" name="pk_rno" value="${map.PK_RNO}"></td>
+							<td>${map.CLASSNAME}</td>
+							<td>${map.RINFO}</td>
+							<td><button type="button" class="btn btn-secondary btn-sm" onclick="editResource('${map.PK_RNO}')">설정</button></td>
+						</tr>
+					</c:forEach>
+				</c:if>	
 				</tbody>
 			</table>
 		</div>
 </div>
+
+<form name="editResourceFrm">
+<input type="hidden" name="pk_rno"/>
+</form>

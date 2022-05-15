@@ -5,10 +5,13 @@
 %>    
  <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
  <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
- 
+ <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %> 
  <style>
- 
- 
+
+	#pageBar > ul > li > a {
+		color: black;
+	}
+
  	button#btnDislike{
  		border:none;
  		background-color: white;
@@ -93,12 +96,38 @@
 
 	}
 	td.comment{
-	display: block;
-	width:200px;
+	    padding-left: 400px;
+	}
+	
+	td.comment_index{
+	color: gray;
+    font-size: 10pt;
+	width: 50px;
+	text-align: center;
+	padding: 25px 0 ;
 	}	 
+	
+	td.comment_content{
+	min-width:740px;
+	max-width:740px;
+	word-break:break-all;
+	padding-right: 25px;
+	}	 
+	
+	td.comment_name{
+	color: gray;
+    font-size: 10pt;
+    padding-right: 18px;
+	}	 
+	
+	td.comment_regDate{
+	color: gray;
+    font-size: 10pt;
+	}
 	
 	tbody#commentDisplay{
 	display: block;
+	padding-left: 20px;
 	}
 	
 	tr#comment{
@@ -110,6 +139,11 @@
 	td#commentContent{
 	display: flex;
 	
+	}
+	
+	#mycontent > div > div:nth-child(9) > span{
+		font-size: 12pt;
+		cursor: pointer;
 	}
 	
 	#mycontent > div > div:nth-child(11) > span{
@@ -127,6 +161,18 @@
 		font-size: 12pt;
 	}
 	
+	#mycontent > div > div:nth-child(10) > span{
+		cursor: pointer;
+		font-size: 12pt;
+	}
+	
+	#mycontent > div > div:nth-child(10) > span:hover{
+		font-weight: bold;
+	}
+	
+	#mycontent > div > div:nth-child(9) > span:hover{
+		font-weight: bold;
+	}
 	
 	#mycontent > div > div:nth-child(11) > span:hover {
 		font-weight: bold;
@@ -157,6 +203,8 @@
 	}); // end of $(document).ready(function(){})----------------
 	
 	
+
+	
 	// Function Declaration
 	  
 	  // == 댓글쓰기 == 
@@ -171,7 +219,7 @@
 		  $.ajax({
 			  url:"<%= request.getContextPath()%>/board/addComment.bts",
 			  data:{"fk_emp_no":$("input#fk_emp_no").val() 
-				   ,"user_name":$("input#user_name").val() 
+				   ,"name":$("input#name").val() 
 				   ,"content":$("input#commentContent").val() 
 				   ,"fk_seq":$("input#fk_seq").val()},
    
@@ -184,6 +232,7 @@
 					 alert("댓글 작성 실패");
 				 }
 				 else {
+					 
 				     goViewComment(1); // 페이징 처리한 댓글 읽어오기
 				 }
 				 
@@ -196,44 +245,36 @@
 		  
 	  }// end of function goAddWrite() {}--------------------
 	
-	
-	  
 
-	  // === 페이징 처리 안한 댓글 읽어오기  === //
-	  function goReadComment() {
-		  
-		  $.ajax({
-			  url:"<%= request.getContextPath()%>/board/readComment.bts",
-			  data:{"fk_seq":"${requestScope.boardvo.pk_seq}"},
-			  dataType:"JSON",
-			  success:function(json){
-	
-				  
-				  let html = "";
-				  if(json.length > 0) {
-					  $.each(json, function(index, item){
-						  html += "<tr>";
-						  html += "<td class='comment'>"+(index+1)+"</td>";
-						  html += "<td>"+item.content+"</td>";
-						  html += "<td class='comment'>"+item.name+"</td>";
-						  html += "<td class='comment'>"+item.regDate+"</td>";
-						  html += "</tr>";
-					  });
-				  }
-				  else {
-					  html += "<tr>";
-					  html += "<td colspan='4' class='comment'>댓글이 없습니다</td>";
-					  html += "</tr>";
-				  }
-				  
-				  $("tbody#commentDisplay").html(html);
-			  },
-			  error: function(request, status, error){
-					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-			  }
-		  });
-		  
-	  }// end of function goReadComment(){}--------------------------
+	  
+	  function goDelComment(pk_seq){
+		   
+	      
+	          if(confirm("정말 삭제하시겠습니까?") == true) {
+	             $.ajax({
+	                  url:"<%=ctxPath%>/board/delComment.bts",
+	                  data:{"pk_seq":pk_seq,
+	                	    "fk_seq":"${requestScope.boardvo.pk_seq}"},
+	                  dataType:"JSON",
+	                  success:function(json){
+	                     alert("댓글이 삭제되었습니다.")
+                  
+	                  },
+	                  error: function(request, status, error){
+	                     alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	                  }
+	               });     
+	            }
+	            else {
+	               return;
+	            }                 
+	       
+	    
+	      
+	      goViewComment("1");
+	      
+	   }
+	  
 	  
 	  
 	  
@@ -246,15 +287,25 @@
 				    "currentShowPageNo":currentShowPageNo},
 			  dataType:"JSON",
 			  success:function(json){
-				  
+				/*   
+				  let writeuserid = item.fk_emp_no;
+	              let loginuserid = "${sessionScope.loginuser.pk_emp_no}";
+				   */
 				  let html = "";
 				  if(json.length > 0) {
+
 					  $.each(json, function(index, item){
+						  var writeuser = item.fk_emp_no;
+						  var loginuser = "${sessionScope.loginuser.pk_emp_no}";
+						  
 						  html += "<tr>";
-						  html += "<td class='comment'>"+(index+1)+"</td>";
-						  html += "<td>"+item.content+"</td>";
-						  html += "<td class='comment'>"+item.user_name+"</td>";
-						  html += "<td class='comment'>"+item.write_day+"</td>";
+						  html += "<td class='comment_index'>"+(index+1)+"</td>";
+						  html += "<td class='comment_content'>"+item.content+"</td>";
+						  html += "<td class='comment_name'>"+item.name+"</td>";
+						  html += "<td class='comment_regDate'>"+item.regDate+"</td>";
+						  if( writeuser == loginuser ) {
+							  html += "<td style='text-align: center;' onclick='goDelComment(\""+item.pk_seq+"\")'><span style='cursor: pointer; color: gray;border: 1px solid gray; margin-left: 10px;'>X</span></td>";
+						    } 
 						  html += "</tr>";
 					  });
 				  }
@@ -268,6 +319,7 @@
 				  
 				  // 페이지바 함수 호출
 				  makeCommentPageBar(currentShowPageNo);
+				  
 			  },
 			  error: function(request, status, error){
 					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -276,7 +328,7 @@
 		  
 	  }// end of function goViewComment(currentShowPageNo) {}-------------------------
 	  
-	// ==== 댓글내용 페이지바 Ajax로 만들기 ==== //
+	  // ==== 댓글내용 페이지바 Ajax로 만들기 ==== //
 	  function makeCommentPageBar(currentShowPageNo) {
 		  
 		  <%-- === 원글에 대한 댓글의 totalPage 수를 알아오려고 한다. ===  --%>
@@ -297,6 +349,18 @@
 					 let pageBarHTML = "<ul style='list-style: none;'>";
 					 
 					 const blockSize = 10;
+
+					 let loop = 1;
+
+				    
+
+				     if(typeof currentShowPageNo == "string") {
+				    	 currentShowPageNo = Number(currentShowPageNo);
+				     }
+				     
+
+				     let pageNo = Math.floor( (currentShowPageNo - 1)/blockSize ) * blockSize + 1;
+
 				     
 					// === [맨처음][이전] 만들기 === //
 					if(pageNo != 1) {
@@ -328,6 +392,7 @@
 					pageBarHTML += "</ul>";
 					 
 					$("div#pageBar").html(pageBarHTML);
+					
 				 }// end of if(json.totalPage > 0){}-------------------------------
 				  
 			  },
@@ -338,6 +403,10 @@
 		  
 	  }// end of function makeCommentPageBar(currentShowPageNo) {}--------------------
 	
+	  
+	  
+	  
+	  
  </script>
  
  <div style="padding-left: 5%;">
@@ -368,10 +437,15 @@
 	 	<table>
 	 		<thead style="font-size: 12pt;">
 	 			 <tr >
-	 			  	<th>${boardvo.user_name}</th>
+	 			  	<th>${boardvo.user_name} 
+	 			  	<c:if test="${boardvo.fk_emp_no != 80000001}">
+				 		 ${boardvo.ko_rankname}
+				 	 </c:if>
+				 	 </th>
 	 			</tr>
 	 			<tr>
-	 				<th style="font-size:9pt;color:#BDBDBD; font-weight:lighter;">${boardvo.write_day}</th>
+	 				<th style="font-size:9pt;color:#BDBDBD; font-weight:lighter;">${boardvo.write_day} &nbsp;&nbsp;|&nbsp;&nbsp; 조회수 ${boardvo.read_count} 회 </th>
+
 	 			</tr>
 	 			
 	
@@ -385,27 +459,97 @@
 					</td>
 	 			</tr>	 
 	 		</tbody>
+	 		
+	 		</table>
+	 		
+	 		<table>
+	 		<c:if test="${requestScope.boardvo.org_filename != null}">
+		 		<tr>
+					<th style="width: 100px;"><p>첨부파일</p></th>
+					<td>
+						<c:if test="${sessionScope.loginuser != null}">
+							<a href="<%= request.getContextPath()%>/file/download_board.bts?pk_seq=${requestScope.boardvo.pk_seq}">${requestScope.boardvo.org_filename}</a> <p style="font-size: 9pt;">&nbsp;(<fmt:formatNumber value="${requestScope.boardvo.file_size}" pattern="#,###" /> byte)</p>  
+						</c:if>
+						<c:if test="${sessionScope.loginuser == null}">
+							${requestScope.boardvo.org_filename}
+						</c:if>
+					</td>
+				</tr>
+			</c:if>
+			
 	 	</table>
+
+	<%-- <button style="border:none; background-color: white; font-weight: bold;" type="button" id="like_btn" onclick="updateLike(); return false;">좋아요</button>
+	<span style="color: white;
+    font-size: 15pt;
+    font-weight: bold;
+    background-color: gray;
+    padding: 10pt;
+    border-radius: 100%;
+    width: 20px !important;
+    height: 20px !important;">${boardvo.like_cnt}</span> --%>
+    
+    <button type="button" class="btn btn-outline-secondary" id="like_btn" onclick="updateLike(); return false;">추천 ${boardvo.like_cnt}</button>
+	<span style="width: 800px; margin-left: 5px;">
+		<c:forEach var="likevo" items="${requestScope.likeList}" varStatus="status">
+				   <tr>
+				      <td align="center">
+				          <a data-toggle="tooltip" title="${likevo.emp_name}&nbsp;${likevo.ko_ranknam}"><img src="<%= ctxPath%>/resources/images/board/heart2.png" style="width:20px;"></a> 
+				      	  
+				      </td>  
+				</tr>
+		</c:forEach>
+	</span>
+	
+	
+<%--  	 <span>${likevo.pk_seq}</span>
+	 <span>${likevo.fk_seq}</span> 
+	 <span>${likevo.fk_emp_no}</span> --%>
+
 	 </div>
 	 <!-- 게시글 내용 시작끝-------------------------------------------- -->
-	 <div style="padding-left: 41%">
+<%-- 	 <div style="padding-left: 41%">
 		 <form>
 			 <button id="btnLike" type="button"><img src="<%= ctxPath%>/resources/images/board/like.png" style="width:50px;"></button>
 			 <button style="margin-left: 30px;" id="btnDislike" type="button"><img src="<%= ctxPath%>/resources/images/board/dislike.png" style="width:50px; "></button>
 		 </form>
-	 </div>
+	 </div> --%>
 	 
-	 <div style="font-size: 9pt; margin-left: 10px;">
-		 <span>댓글 ${boardvo.comment_count} 개   | </span>
-		 <span>조회수 ${boardvo.read_count} 회 </span>
-	 </div >
 	 
-	 <hr>
+	
 	 <!-- 아래부터 댓글------------------------------->
 	 
+	 <%-- === #83. 댓글쓰기 폼 추가 === --%>
+    	<c:if test="${not empty sessionScope.loginuser}">
+    	   <form name="addWriteFrm" id="addWriteFrm" style="margin-top: 20px;">
+    	      <table class="table" style="width: 1024px">
+				
+				   <tr style="height: 30px;">
+					      <th style="padding-left: 50px;">댓글</th>
+				      <td style="width: 90%;">
+				        <input type="hidden" name="fk_emp_no" id="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />  
+				         <input type="hidden" name="name" id="name" value="${sessionScope.loginuser.emp_name}" readonly />
+				         <input type="text" name="content" id="commentContent" size="100" />
+				         
+				         <%-- 댓글에 달리는 원게시물 글번호(즉, 댓글의 부모글 글번호) --%>
+				         <input type="hidden" name="fk_seq" id="fk_seq" value="${requestScope.boardvo.pk_seq}" />
+				         <button type="button" class="btn btn-light" onclick="goAddWrite()">댓글쓰기</button>
+				      </td>
+				   </tr>
+	   
+				   <tr>
+				      	
+
+				   </tr>
+			  </table>	      
+    	   </form>
+    	</c:if>
+	 
+	 
+
 	 
 	 <!-- =====  댓글 내용 보여주기 ===== -->
-	<table id="table2" style="margin-top: 2%; margin-bottom: 3%;">
+	<table id="table2" style="border-bottom: 1px solid #dee2e6; width: 1024px; margin-bottom: 20px">
 		<thead>
 		<tr>
 		    
@@ -415,47 +559,65 @@
 	</table>
 	 <!-- ===== 댓글 내용 보여주기 끝===== -->
 	
-	<%-- === #83. 댓글쓰기 폼 추가 === --%>
-    	<c:if test="${not empty sessionScope.loginuser}">
-    	   <form name="addWriteFrm" id="addWriteFrm" style="margin-top: 20px;">
-    	      <table class="table" style="width: 1024px">
-				   <tr style="height: 30px;">
-				      <th width="10%">성명</th>
-				      <td>
-				         <input type="text" name="fk_emp_no" id="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />  
-				         <input type="text" name="user_name" id="user_name" value="${sessionScope.loginuser.emp_name}" readonly />
-				      </td>
-				   </tr>
-				   <tr style="height: 30px;">
-					      <th>댓글내용</th>
-				      <td>
-				         <input type="text" name="content" id="commentContent" size="100" />
-				         
-				         <%-- 댓글에 달리는 원게시물 글번호(즉, 댓글의 부모글 글번호) --%>
-				         <input type="text" name="fk_seq" id="fk_seq" value="${requestScope.boardvo.pk_seq}" />
-				      </td>
-				   </tr>
-	   
-				   <tr>
-				      <th colspan="2">
-				      	<button type="button" class="btn btn-success btn-sm mr-3" onclick="goAddWrite()">댓글쓰기 확인</button>
-				      	<button type="reset" class="btn btn-success btn-sm">댓글쓰기 취소</button>
-				      </th>
-				   </tr>
-			  </table>	      
-    	   </form>
-    	</c:if>
+	
+    	<%-- ==== 댓글 페이지바 ==== --%>
+    	<div style="display: flex; margin-bottom: 50px;">
+    	   <div id="pageBar" style="width:1024px; text-align: center;"></div>
+    	</div>
     	
-    	
- 		
-
- 	
+		<c:set var="v_gobackURL" value='${ fn:replace(requestScope.gobackURL, "&", " ") }' />
 
 	 	<c:if test="${not empty requestScope.boardvo.previousseq}">
-	 		<div style="margin-bottom: 1%; font-size: 9pt;">이전글&nbsp;&nbsp;<span class="move" onclick="javascript:location.href='view_2.bts?pk_seq=${requestScope.boardvo.previousseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.boardvo.previoussubject}</span></div>
+	 		<div style="margin-bottom: 1%; font-size: 9pt;">이전글&nbsp;&nbsp;<span class="move" onclick="javascript:location.href='/bts/board/view_2.bts?pk_seq=${requestScope.boardvo.previousseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.boardvo.previoussubject}</span></div>
 	 	</c:if>
 	
 		<c:if test="${not empty requestScope.boardvo.nextseq}">
-	   		<div style="margin-bottom: 1%; font-size: 9pt;">다음글&nbsp;&nbsp;<span class="move" onclick="javascript:location.href='view_2.bts?pk_seq=${requestScope.boardvo.nextseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.boardvo.nextsubject}</span></div>
+	   		<div style="margin-bottom: 1%; font-size: 9pt;">다음글&nbsp;&nbsp;<span class="move" onclick="javascript:location.href='/bts/board/view_2.bts?pk_seq=${requestScope.boardvo.nextseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.boardvo.nextsubject}</span></div>
     	</c:if>	
 	</div>
+	
+	
+	<script>
+	// 좋아요 기능 //
+	 function updateLike(){ 
+			if(${sessionScope.loginuser.pk_emp_no >= 1} ){
+				 $.ajax({
+					  url:"<%= request.getContextPath()%>/board/updateLike.bts",
+					  data:{"fk_emp_no":$("input#fk_emp_no").val() 
+						   ,"fk_seq":$("input#fk_seq").val()},
+					  type:"POST",
+					  dataType:"JSON",
+					  success:function(likeCheck){
+						 
+						  if(likeCheck == 0){
+		                  	alert("추천완료.");
+		                  	location.reload();
+		                  }
+		                  else {
+		                   alert("추천취소");
+		                  	location.reload();
+		                  }
+					  },
+					  error: function(request, status, error){
+							alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+					  }
+				  });
+			}
+			else {
+				alert("로그인을 해주세요.")
+			}
+			
+	 }
+	
+	
+
+
+	  $(document).ready(function(){
+
+	    $('[data-toggle="tooltip"]').tooltip();   
+
+	  });
+
+
+	
+	</script>

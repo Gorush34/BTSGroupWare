@@ -9,6 +9,14 @@
 
 <style type="text/css">
 
+	a#temp {
+		cursor: pointer;
+	}
+
+	a#temp:hover {
+		font-weight: bold;
+	}
+
 </style>
 
 <script type="text/javascript">
@@ -65,13 +73,7 @@
 		  <%-- === 스마트에디터 구현 시작 === --%>
 	         //스마트에디터 사용시 무의미하게 생기는 p태그 제거
 	          var contentval = $("textarea#content").val();
-	              
-	           // === 확인용 ===
-	           // alert(contentval); // content에 내용을 아무것도 입력치 않고 쓰기할 경우 알아보는것.
-	           // "<p>&nbsp;</p>" 이라고 나온다.
-	           
-	           // 스마트에디터 사용시 무의미하게 생기는 p태그 제거하기전에 먼저 유효성 검사를 하도록 한다.
-	           // 글내용 유효성 검사 
+
 	           if(contentval == "" || contentval == "<p>&nbsp;</p>") {
 	              alert("글내용을 입력하세요!!");
 	              return;
@@ -155,19 +157,28 @@
 </script>
 
 <div style="display: flex;">
-<div style="margin: auto; padding-left: 3%;">
+<div style="margin: auto; padding-left: 3%; min-height: 1200px;
+    position: relative;
+    padding-top: 40px;
+    background-color: #F2F2F2;
+    float: right;
+    padding: 20px;">
+<div style="border-bottom: solid 3px #000060;
+    margin-bottom: 20px;">
 <%--
 	<h2 style="margin-bottom: 30px;">글쓰기</h2>
  --%>
  <%-- == 원글쓰기 인 경우 == --%>
 	<c:if test="${requestScope.fk_seq eq ''}">
-		<h2 style="margin-bottom: 30px;">글쓰기</h2>
+		<h2 id="add">글쓰기</h2>
+		<a id="temp" data-toggle="modal" data-target="#myModal" style="color:gray; float: right; padding-right: 20px; padding-top: 10px;">임시저장글</a>
 	</c:if>
 <%-- == 답글쓰기 인 경우 == --%>
 	<c:if test="${requestScope.fk_seq ne ''}">
-		<h2 style="margin-bottom: 30px;">답변글쓰기</h2>
+		<h2 id="add" style="margin-bottom: 30px;">답변글쓰기</h2>
 	</c:if>
-	<a data-toggle="modal" data-target="#myModal">임시저장글</a>
+</div>	
+	
 
 <%-- 	
 	<form action="<%= ctxPath%>/board/temp_list.bts" method="post" style="text-align: right;">
@@ -179,7 +190,7 @@
 <form name="addFrm" enctype="multipart/form-data">
 	<table style="width: 1024px" class="table table-bordered">
 		<tr>
-			<th style="width: 15%; background-color: #DDDDDD;">성명</th>
+			<th style="width: 15%; background-color: #DDDDDD; text-align: right;">성명</th>
 			<td>
 				<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
 				<input type="text" name="user_name" value="${sessionScope.loginuser.emp_name}" readonly />
@@ -187,7 +198,7 @@
 		</tr>
 		
 		<tr>
-			<th style="width: 15%; background-color: #DDDDDD;">제목</th>
+			<th style="width: 15%; background-color: #DDDDDD; text-align: right;">제목</th>
 			<td>
 			 <%-- == 원글쓰기 인 경우 == --%>
 			<c:if test="${requestScope.fk_seq eq ''}">
@@ -203,7 +214,7 @@
 		</tr>
 		
 		<tr>
-			<th style="width: 15%; background-color: #DDDDDD;">내용</th>
+			<th style="width: 15%; background-color: #DDDDDD; text-align: right;">내용</th>
 			<td>
 				<textarea style="width: 100%; height: 612px;" name="content" id="content"></textarea>
 			</td>
@@ -211,7 +222,7 @@
 		
 		<%-- === #149. 파일첨부 타입 추가하기 ===  --%>
 		<tr>
-			<th style="width: 15%; background-color: #DDDDDD;">파일첨부</th>
+			<th style="width: 15%; background-color: #DDDDDD; text-align: right;">파일첨부</th>
 			<td>
 				<input type="file" name="attach" /> 
 			</td>
@@ -219,7 +230,7 @@
 		
 		
 		<tr>
-			<th style="width: 15%; background-color: #DDDDDD;">글암호</th>
+			<th style="width: 15%; background-color: #DDDDDD; text-align: right;">글암호</th>
 			<td>
 				<input type="password" name="pw" id="pw" /> 
 			</td>
@@ -275,7 +286,7 @@
 					<td align="center">  	
 				      	<form action="<%= request.getContextPath()%>/board/tmp_write.bts?pk_seq=${requestScope.boardvo.pk_seq}">
 							<input type="hidden" name="pk_seq" value="${boardvo.pk_seq}" />
-							<input style="color: gray; border:none; background-color: white;" type="submit" value="${boardvo.subject}" />
+							<input style="color: gray; border:none; background-color: transparent;" type="submit" value="${boardvo.subject}" />
 						</form>			      	
 			    	</td> 	 
 

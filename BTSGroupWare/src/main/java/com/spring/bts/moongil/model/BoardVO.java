@@ -24,6 +24,9 @@ public class BoardVO {
 	private String groupno;
 	private String fk_seq;
 	private String depthno;
+	private String ko_rankname;
+	private String like_cnt;
+	private String tblname;
 	
 	private String previousseq;      // 이전글번호
 	private String previoussubject;  // 이전글제목
@@ -36,11 +39,12 @@ public class BoardVO {
 	public BoardVO() {}
 
 
-	public BoardVO(String pk_seq, String fk_emp_no, String subject, String content, String user_name, String write_day,
+	public BoardVO(String pk_seq, String like_cnt, String fk_emp_no, String subject, String content, String user_name, String write_day,
 			String ip, String read_count, String pw, String status, String comment_count, String org_filename,
 			String filename, String file_size, String groupno, String fk_seq, String depthno, String previousseq,
-			String previoussubject, String nextseq, String nextsubject, MultipartFile attach) {
+			String previoussubject, String nextseq, String nextsubject, MultipartFile attach, String ko_rankname, String tblname) {
 		this.pk_seq = pk_seq;
+		this.like_cnt = like_cnt;
 		this.fk_emp_no = fk_emp_no;
 		this.subject = subject;
 		this.content = content;
@@ -62,10 +66,22 @@ public class BoardVO {
 		this.nextseq = nextseq;
 		this.nextsubject = nextsubject;
 		this.attach = attach;
+		this.ko_rankname = ko_rankname;
+		this.tblname = tblname;
 	}
 
 
 
+
+
+	public String getTblname() {
+		return tblname;
+	}
+
+
+	public void setTblname(String tblname) {
+		this.tblname = tblname;
+	}
 
 
 	public String getPk_seq() {
@@ -284,6 +300,26 @@ public class BoardVO {
 
 	public void setAttach(MultipartFile attach) {
 		this.attach = attach;
+	}
+
+
+	public String getKo_rankname() {
+		return ko_rankname;
+	}
+
+
+	public void setKo_rankname(String ko_rankname) {
+		this.ko_rankname = ko_rankname;
+	}
+
+
+	public String getLike_cnt() {
+		return like_cnt;
+	}
+
+
+	public void setLike_cnt(String like_cnt) {
+		this.like_cnt = like_cnt;
 	}
 	
 	

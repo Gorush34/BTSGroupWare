@@ -89,7 +89,7 @@
 		  // 폼(form)을 전송(submit)
 		  const frm = document.editFrm;
 		  frm.method = "POST";
-		  frm.action = "<%= ctxPath%>/bts/editEnd.bts";
+		  frm.action = "<%= ctxPath%>/board/editEnd.bts";
 		  frm.submit();
 	  });
 	  

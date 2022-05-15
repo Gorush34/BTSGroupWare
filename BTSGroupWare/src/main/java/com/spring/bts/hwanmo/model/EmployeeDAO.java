@@ -84,6 +84,27 @@ public class EmployeeDAO implements InterEmployeeDAO {
 		int n = sqlsession.update("hwanmo.pwdUpdate", paraMap);
 		return n;
 	}
+
+	// 원시인(생일구하기)
+	@Override
+	public Map<String, String> getBirthday(int pk_emp_no) {
+		Map<String, String> paraMap = sqlsession.selectOne("hwanmo.getBirthday", pk_emp_no);
+		return paraMap;
+	}
+
+	// 프로필 사진 업데이트
+	@Override
+	public int updateEmpImg(EmployeeVO empVO) {
+		int n = sqlsession.update("hwanmo.updateEmpImg", empVO);
+		return n;
+	}
+
+	// 회원정보 수정
+	@Override
+	public int updateMember(EmployeeVO empvo) {
+		int n = sqlsession.update("hwanmo.updateMember", empvo);
+		return n;
+	}
 	
 	
 	

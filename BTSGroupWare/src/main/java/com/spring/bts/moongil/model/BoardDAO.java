@@ -1,5 +1,7 @@
 package com.spring.bts.moongil.model;
 
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -59,16 +61,11 @@ public class BoardDAO implements InterBoardDAO {
 	}
 
 	@Override
-	public void setAddReadCount(String seq) {
-		sqlsession.update("moongil.setAddReadCount", seq);
+	public void setAddReadCount(String pk_seq) {
+		sqlsession.update("moongil.setAddReadCount", pk_seq);
 		
 	}
 
-	@Override
-	public List<String> wordSearchShow(Map<String, String> paraMap) {
-		List<String> wordList = sqlsession.selectList("moongil.wordSearchShow", paraMap);
-		return wordList;
-	}
 
 	@Override
 	public int getGroupnoMax() {
@@ -166,8 +163,210 @@ public class BoardDAO implements InterBoardDAO {
 		return commentList;
 	}
 
+	@Override
+	public int delComment(String pk_seq) {
+		int n = sqlsession.update("moongil.delComment", pk_seq);
+		return n;
+	}
+
+	@Override
+	public int minusCommentCount(String fk_seq) {
+		int m = sqlsession.update("moongil.minusCommentCount", fk_seq);
+		return m;
+	}
+
+	@Override
+	public List<NoticeVO> noticeListSearchWithPaging(Map<String, String> paraMap) {
+		List<NoticeVO> noticeList = sqlsession.selectList("moongil.noticeListSearchWithPaging", paraMap);
+		return noticeList;
+	}
+
+	@Override
+	public int getTotalCount_notice(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("moongil.getTotalCount_notice", paraMap);
+		return n;
+	}
+
+	@Override
+	public List<NoticeVO> temp_list_notice(Map<String, String> paraMap) {
+		List<NoticeVO> temp_list_notice = sqlsession.selectList("moongil.temp_list_notice", paraMap);
+		return temp_list_notice;
+	}
+
+	@Override
+	public int add_notice(NoticeVO noticevo) {
+		int n = sqlsession.insert("moongil.add_notice", noticevo);
+		return n;
+	}
+
+	@Override
+	public int add_withFile_notice(NoticeVO noticevo) {
+		int n = sqlsession.insert("moongil.add_withFile_notice", noticevo);
+		return n;
+	}
+
+	@Override
+	public NoticeVO getView_notice(Map<String, String> paraMap) {
+		NoticeVO noticevo = sqlsession.selectOne("moongil.getView_notice", paraMap);
+		return noticevo;
+	}
+
+	@Override
+	public void setAddReadCount_notice(String pk_seq) {
+		sqlsession.update("moongil.setAddReadCount_notice", pk_seq);
+	}
+
+	@Override
+	public int likeCheck(int fk_seq, int fk_emp_no) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("fk_emp_no", fk_emp_no);
+		map.put("fk_seq", fk_seq);
+		return sqlsession.selectOne("moongil.likeCheck", map);
+	}
+
+	@Override
+	public void insertLike(int fk_seq, int fk_emp_no) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("fk_emp_no", fk_emp_no);
+		map.put("fk_seq", fk_seq);
+		sqlsession.insert("moongil.insertLike", map);
+	}
+
+	@Override
+	public void updateLike(int fk_seq) {
+		sqlsession.update("moongil.updateLike", fk_seq);
+		
+	}
+
+
+	@Override
+	public void deleteLike(int fk_seq, int fk_emp_no) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("fk_emp_no", fk_emp_no);
+		map.put("fk_seq", fk_seq);
+		sqlsession.delete("moongil.deleteLike", map);
+	}
+
+	@Override
+	public void updateLikeCancel(int fk_seq) {
+		sqlsession.update("moongil.updateLikeCancel", fk_seq);
+		
+	}
+
+	@Override
+	public List<LikeVO> get_heart(Map<String, String> paraMap) {
+		List<LikeVO> likeList = sqlsession.selectList("moongil.get_heart", paraMap);
+		return likeList;
+	}
+
+	@Override
+	public List<BoardVO> getIntegratedBoard() {
+		List<BoardVO> boardList = sqlsession.selectList("moongil.getIntegratedBoard");
+		return boardList;
+	}
+
+	@Override
+	public int getTotalCount_total(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("moongil.getTotalCount_total", paraMap);
+		return n;
+	}
+
+	@Override
+	public List<BoardVO> boardListSearchWithPaging_total(Map<String, String> paraMap) {
+		List<BoardVO> boardList = sqlsession.selectList("moongil.boardListSearchWithPaging_total", paraMap);
+		return boardList;
+	}
+
+	@Override
+	public List<Map<String, String>> getBestboard() {
+		List<Map<String, String>> boardMap = sqlsession.selectList("moongil.getBestboard");
+		return boardMap;
+	}
+
+	@Override
+	public int edit_notice(NoticeVO noticevo) {
+		int n = sqlsession.update("moongil.edit_notice", noticevo);
+		return n;
+	}
+
+	@Override
+	public int del_notice(Map<String, String> paraMap) {
+		int n = sqlsession.delete("moongil.del_notice", paraMap);
+		return n;
+	}
+
+	@Override
+	public int getTotalCount_fileboard(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("moongil.getTotalCount_fileboard", paraMap);
+		return n;
+	}
+
+	@Override
+	public List<FileboardVO> ListSearchWithPaging_fileboard(Map<String, String> paraMap) {
+		List<FileboardVO> fileboardlist = sqlsession.selectList("moongil.ListSearchWithPaging_fileboard", paraMap);
+		return fileboardlist;
+	}
+
+	@Override
+	public int add_withFile_fileboard(FileboardVO fileboardvo) {
+		int n = sqlsession.insert("moongil.add_withFile_fileboard", fileboardvo);
+		return n;
+	}
+
+	@Override
+	public int add_fileboard(FileboardVO fileboardvo) {
+		int n = sqlsession.insert("moongil.add_fileboard", fileboardvo);
+		return n;
+	}
+
+	@Override
+	public FileboardVO getView_fileboard(Map<String, String> paraMap) {
+		FileboardVO fileboardvo = sqlsession.selectOne("moongil.getView_fileboard", paraMap);
+		return fileboardvo;
+	}
+
+	@Override
+	public void setAddReadCount_fileboard(String pk_seq) {
+		sqlsession.update("moongil.setAddReadCount_fileboard", pk_seq);
+	}
+
+	@Override
+	public int edit_fileboard(FileboardVO fileboardvo) {
+		int n = sqlsession.update("moongil.edit_fileboard", fileboardvo);
+		return n;
+	}
+
+	@Override
+	public int del_fileboard(Map<String, String> paraMap) {
+		int n = sqlsession.delete("moongil.del_fileboard", paraMap);
+		return n;
+	}
+
+	@Override
+	public List<Map<String, String>> getNoticeboard() {
+		List<Map<String, String>> boardMap = sqlsession.selectList("moongil.getNoticeboard");
+		return boardMap;
+	}
+
+	@Override
+	public List<Map<String, String>> getBoard() {
+		List<Map<String, String>> boardMap = sqlsession.selectList("moongil.getBoard");
+		return boardMap;
+	}
+
+	@Override
+	public List<Map<String, String>> getFileboard() {
+		List<Map<String, String>> boardMap = sqlsession.selectList("moongil.getFileboard");
+		return boardMap;
+	}
+
+	@Override
+	public List<Map<String, String>> getAll() {
+		List<Map<String, String>> boardMap = sqlsession.selectList("moongil.getAll");
+		return boardMap;
+	}
+
+
 
 	
-
-
 }

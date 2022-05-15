@@ -246,7 +246,7 @@
 		<result property="approval_status" 			column="approval_status" 	javaType="int" />
 	</resultMap>
 	
-	<select id="getMyAttListWithPaging" resultType="HashMap" resultMap="MyAttList_map">
+	<select id="getMyAttListWithPaging" parameterType="HashMap" resultMap="MyAttList_map">
 		select pk_att_num, ko_depname, fk_emp_no, emp_name, att_sort_korname, vacation_days, leave_start, leave_end
 		     , managername, manager, approval_status, fin_app_opinion
 		from
@@ -383,4 +383,30 @@
 		where rno between #{startRno} and #{endRno}
 	</select>
 	
+	<!-- 원시인 -->
+	<resultMap type="Map" id="birthgender">
+		<result property="birthday" 			column="birthday" 		javaType="String" />
+		<result property="gender" 				column="gender" 		javaType="String" />
+	</resultMap>
+	
+	<select id="getBirthday" resultMap="birthgender" parameterType="int">
+		select birthday, gender
+		from tbl_employees
+		where pk_emp_no = #{pk_emp_no}
+	</select>
+	
+	<!-- 사진 업데이트 -->
+	<update id="updateEmpImg" parameterType="com.spring.bts.hwanmo.model.EmployeeVO" >
+		update tbl_employees set img_name = #{img_name}
+		where pk_emp_no = #{pk_emp_no}
+	</update>
+	
+	<!-- 회원 업데이트 -->
+	<update id="updateMember" parameterType="com.spring.bts.hwanmo.model.EmployeeVO" >
+		update tbl_employees set fk_department_id = #{fk_department_id}, fk_rank_id = #{fk_rank_id}
+			 , fk_board_authority_no = #{fk_board_authority_no}, fk_site_authority_no = #{fk_site_authority_no}, emp_name = #{emp_name}
+			 , emp_pwd = #{emp_pwd}, com_tel = #{com_tel}, postal = #{postal}, address = #{address}, detailaddress = #{detailaddress}, extraaddress = #{extraaddress}
+			 , uq_phone = #{uq_phone}, uq_email = #{uq_email}, img_name = #{img_name}
+		where pk_emp_no = #{pk_emp_no}
+	</update>
 </mapper>

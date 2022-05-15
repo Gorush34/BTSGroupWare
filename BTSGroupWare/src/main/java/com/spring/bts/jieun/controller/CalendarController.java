@@ -305,7 +305,7 @@ public class CalendarController {
 
 //	
 	// === 일정 등록 하기 === //
-	@RequestMapping(value="/calendar/scheduleRegisterInsert.bts", method={RequestMethod.POST})
+	@RequestMapping(value="/calendar/scheduleRegisterInsert.bts")
 	public ModelAndView scheduleRegisterInsert(ModelAndView mav, HttpServletRequest request) throws Throwable {
 		
 		String method = request.getMethod();
@@ -543,8 +543,6 @@ public class CalendarController {
 		}
 		
 		
-		
-		
 		Map<String, String> paraMap = new HashMap<String, String>();
 		paraMap.put("startdate", startdate);
 		paraMap.put("enddate", enddate);
@@ -642,5 +640,26 @@ public class CalendarController {
 	
 		
 		return mav;
+	}
+	
+	// == 메인 페이지 오늘의 일정 수 불러오기 == //
+	@ResponseBody
+	@RequestMapping(value="/calendar/scheduleCount.bts")
+	public String scheduleCount(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+		
+		
+		int pk_emp_no = loginuser.getPk_emp_no();
+		System.out.println("pk_emp_no" +pk_emp_no);
+		int n = service.scheduleCount(pk_emp_no);
+		System.out.println(n);
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n);
+		
+		
+		return jsonObj.toString();
 	}
 }

@@ -1,5 +1,6 @@
 package com.spring.bts.moongil.service;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.spring.bts.common.FileManager;
 import com.spring.bts.moongil.model.BoardVO;
 import com.spring.bts.moongil.model.CommentVO;
+import com.spring.bts.moongil.model.FileboardVO;
 import com.spring.bts.moongil.model.InterBoardDAO;
+import com.spring.bts.moongil.model.LikeVO;
+import com.spring.bts.moongil.model.NoticeVO;
 
 
 
@@ -71,11 +75,6 @@ public class BoardService implements InterBoardService {
 		return boardvo;
 	}
 
-	@Override
-	public List<String> wordSearchShow(Map<String, String> paraMap) {
-		List<String> wordList = dao.wordSearchShow(paraMap);
-		return wordList;
-	}
 
 	@Override
 	public int add(BoardVO boardvo) {
@@ -109,17 +108,6 @@ public class BoardService implements InterBoardService {
 		return n;
 	}
 
-	@Override
-	public int totalBoardCnt(Map<String, String> paraMap) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public List<BoardVO> boardListSearchP(Map<String, String> paraMap) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 
 	// === #78. 1개글 삭제하기 === // 
@@ -242,7 +230,308 @@ public class BoardService implements InterBoardService {
 		List<CommentVO> commentList = dao.getCommentListPaging(paraMap);
 		return commentList;
 	}
-	
+
+	@Override
+	public int delComment(String pk_seq) {
+		int n = dao.delComment(pk_seq);
+		return n;
+	}
+
+	@Override
+	public int minusCommentCount(String fk_seq) {
+		int m = dao.minusCommentCount(fk_seq);
+		return m;
+	}
+
+	@Override
+	public List<NoticeVO> noticeListSearchWithPaging(Map<String, String> paraMap) {
+		List<NoticeVO> noticeList = dao.noticeListSearchWithPaging(paraMap);
+		return noticeList;
+	}
+
+	@Override
+	public int getTotalCount_notice(Map<String, String> paraMap) {
+		int n = dao.getTotalCount_notice(paraMap);
+		return n;
+	}
+
+	@Override
+	public List<NoticeVO> temp_list_notice(Map<String, String> paraMap) {
+		List<NoticeVO> temp_list_notice = dao.temp_list_notice(paraMap);
+		return temp_list_notice;
+	}
+
+	@Override
+	public int add_notice(NoticeVO noticevo) {
+		 // == 원글쓰기인지, 답변글쓰기 인지 구분하기 시작 == //
+		if("".contentEquals(noticevo.getFk_seq())) {
+			// 원글쓰기인 경우
+			// groupno 컬럼의 값은 groupno 컬럼의 최대값(max)+1 로 해야한다.
+			int groupno = dao.getGroupnoMax() + 1;
+			noticevo.setGroupno(String.valueOf(groupno));
+		}
+	  // == 원글쓰기인지, 답변글쓰기 인지 구분하기 끝 == //	
+		
+		
+		int n = dao.add_notice(noticevo);
+		return n;
+	}
+
+	@Override
+	public int add_withFile_notice(NoticeVO noticevo) {
+		if("".contentEquals(noticevo.getFk_seq())) {
+			// 원글쓰기인 경우
+			// groupno 컬럼의 값은 groupno 컬럼의 최대값(max)+1 로 해야한다.
+			int groupno = dao.getGroupnoMax() + 1;
+			noticevo.setGroupno(String.valueOf(groupno));
+		}
+ 	    // == 원글쓰기인지, 답변글쓰기 인지 구분하기 끝 == //
+		
+		int n = dao.add_withFile_notice(noticevo); // 첨부파일이 있는 경우
+		
+		return n;
+	}
+
+	@Override
+	public NoticeVO getView_notice(Map<String, String> paraMap) {
+		NoticeVO noticevo = dao.getView_notice(paraMap); // 글1개 조회하기
+		
+		String login_userid = paraMap.get("login_userid");  
+		
+		int login_userid1 = Integer.parseInt(login_userid);
+
+		
+		if(login_userid1 != 0 &&
+				noticevo != null &&
+		  !login_userid.equals(noticevo.getFk_emp_no())) {
+			
+			dao.setAddReadCount_notice(noticevo.getPk_seq());  
+			noticevo = dao.getView_notice(paraMap); 
+		}
+		
+		return noticevo;
+	}
+
+	@Override
+	public NoticeVO getViewWithNoAddCount_notice(Map<String, String> paraMap) {
+		NoticeVO noticevo = dao.getView_notice(paraMap); // 글1개 조회하기
+		return noticevo;
+	}
+
+
+
+	@Override
+	public void insertLike(int fk_seq, int fk_emp_no) throws Exception {
+		dao.insertLike(fk_seq, fk_emp_no);
+		
+	}
+
+	@Override
+	public void updateLike(int fk_seq) throws Exception {
+		dao.updateLike(fk_seq);
+		
+	}
+
+
+	@Override
+	public void updateLikeCancel(int fk_seq) throws Exception {
+		dao.updateLikeCancel(fk_seq);
+		
+	}
+
+	@Override
+	public void deleteLike(int fk_seq, int fk_emp_no) throws Exception {
+		dao.deleteLike(fk_seq, fk_emp_no);
+		
+	}
+
+	@Override
+	public int likeCheck(int fk_seq, int fk_emp_no) throws Exception {
+		return dao.likeCheck(fk_seq, fk_emp_no);
+	}
+
+	@Override
+	public List<LikeVO> get_heart(Map<String, String> paraMap) {
+		List<LikeVO> likeList = dao.get_heart(paraMap); // 글1개 조회하기
+		return likeList;
+	}
+
+
+	@Override
+	public List<BoardVO> getIntegratedBoard() {
+		List<BoardVO> boardList = dao.getIntegratedBoard();
+		return boardList;
+	}
+
+	@Override
+	public int getTotalCount_total(Map<String, String> paraMap) {
+		int n = dao.getTotalCount_total(paraMap);
+		return n;
+	}
+
+	@Override
+	public List<BoardVO> boardListSearchWithPaging_total(Map<String, String> paraMap) {
+		List<BoardVO> boardList = dao.boardListSearchWithPaging_total(paraMap);
+		return boardList;
+	}
+
+	@Override
+	public List<Map<String, String>> getBestboard() {
+		List<Map<String, String>> boardMap = dao.getBestboard();
+		return boardMap;
+	}
+
+	@Override
+	public int edit_notice(NoticeVO noticevo) {
+		int n = dao.edit_notice(noticevo);
+		return n;
+	}
+
+	@Override
+	public int del_notice(Map<String, String> paraMap) {
+		int n = dao.del_notice(paraMap);
+
+		if(n==1) {
+			String path = paraMap.get("path");
+			String filename = paraMap.get("filename");
+			
+			if( filename != null && !"".equals(filename)) {
+				try {
+					fileManager.doFileDelete(filename, path);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+		}
+		
+		return n;
+	}
+
+	@Override
+	public int getTotalCount_fileboard(Map<String, String> paraMap) {
+		int n = dao.getTotalCount_fileboard(paraMap);
+		return n;
+	}
+
+	@Override
+	public List<FileboardVO> ListSearchWithPaging_fileboard(Map<String, String> paraMap) {
+		List<FileboardVO> fileboardlist = dao.ListSearchWithPaging_fileboard(paraMap);
+		return fileboardlist;
+	}
+
+	@Override
+	public int add_fileboard(FileboardVO fileboardvo) {
+			if("".contentEquals(fileboardvo.getFk_seq())) {
+				int groupno = dao.getGroupnoMax() + 1;
+				fileboardvo.setGroupno(String.valueOf(groupno));
+			}
+			
+			int n = dao.add_fileboard(fileboardvo);
+			return n;
+	}
+
+	@Override
+	public int add_withFile_fileboard(FileboardVO fileboardvo) {
+		if("".contentEquals(fileboardvo.getFk_seq())) {
+			// 원글쓰기인 경우
+			// groupno 컬럼의 값은 groupno 컬럼의 최대값(max)+1 로 해야한다.
+			int groupno = dao.getGroupnoMax() + 1;
+			fileboardvo.setGroupno(String.valueOf(groupno));
+		}
+ 	    // == 원글쓰기인지, 답변글쓰기 인지 구분하기 끝 == //
+		
+		int n = dao.add_withFile_fileboard(fileboardvo); // 첨부파일이 있는 경우
+		
+		return n;
+	}
+
+	@Override
+	public FileboardVO getView_fileboard(Map<String, String> paraMap) {
+		FileboardVO fileboardvo = dao.getView_fileboard(paraMap); // 글1개 조회하기
+		
+		String login_userid = paraMap.get("login_userid");  
+		// paraMap.get("login_userid") 은 로그인을 한 상태이라면 로그인한 사용자의 userid 이고,
+		// 로그인을 하지 않은 상태이라면  paraMap.get("login_userid") 은 null 이다.
+
+	//	System.out.println("login_userid =>" + login_userid);
+		
+		int login_userid1 = Integer.parseInt(login_userid);
+
+		
+		if(login_userid1 != 0 &&
+			fileboardvo != null &&
+		  !login_userid.equals(fileboardvo.getFk_emp_no())) {
+			// 글조회수 증가는 로그인을 한 상태에서 다른 사람의 글을 읽을때만 증가하도록 한다. 
+			
+			dao.setAddReadCount_fileboard(fileboardvo.getPk_seq());  // 글조회수 1증가 하기 
+			fileboardvo = dao.getView_fileboard(paraMap); 
+		}
+		
+		return fileboardvo;
+	}
+
+	@Override
+	public FileboardVO getViewWithNoAddCount_fileboard(Map<String, String> paraMap) {
+		FileboardVO fileboardvo = dao.getView_fileboard(paraMap); // 글1개 조회하기
+		return fileboardvo;
+	}
+
+	@Override
+	public int edit_fileboard(FileboardVO fileboardvo) {
+		int n = dao.edit_fileboard(fileboardvo);
+		return n;
+	}
+
+	@Override
+	public int del_fileboard(Map<String, String> paraMap) {
+		int n = dao.del_fileboard(paraMap);
+
+		if(n==1) {
+			String path = paraMap.get("path");
+			String filename = paraMap.get("filename");
+			
+			if( filename != null && !"".equals(filename)) {
+				try {
+					fileManager.doFileDelete(filename, path);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+		}
+		
+		return n;
+	}
+
+	@Override
+	public List<Map<String, String>> getNoticeboard() {
+		List<Map<String, String>> boardMap = dao.getNoticeboard();
+		return boardMap;
+	}
+
+	@Override
+	public List<Map<String, String>> getBoard() {
+		List<Map<String, String>> boardMap = dao.getBoard();
+		return boardMap;
+	}
+
+	@Override
+	public List<Map<String, String>> getFileboard() {
+		List<Map<String, String>> boardMap = dao.getFileboard();
+		return boardMap;
+	}
+
+	@Override
+	public List<Map<String, String>> getAll() {
+		List<Map<String, String>> boardMap = dao.getAll();
+		return boardMap;
+	}
+
+
+
+
+
 
 
 }

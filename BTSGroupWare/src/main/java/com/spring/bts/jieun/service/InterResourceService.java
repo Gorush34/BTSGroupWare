@@ -13,4 +13,31 @@ public interface InterResourceService {
 
 	List<Map<String, String>> classSelect();
 
+	// == 예약 등록하기 == //
+	int addReservation(Map<String, String> paraMap);
+	
+	// 자원 등록 모달에 select 자원 가져오기//
+	List<Map<String, String>> resourceSelect(Map<String, String> paraMap);
+
+	// === 예약상세보기 === //
+	List<Map<String, String>> reservationDetail(String pk_rserno);
+
+	// === 예약취소 === //
+	int cancelReservation(String pk_rserno);
+
+	// === 자원 등록 하기 : 관리자 === //
+	int resourceRegister_end(Map<String, String> paraMap);
+
+	// == 자원 수정 페이지 == //
+	List<Map<String, String>> resourceEdit(String pk_rno);
+
+	// == 자원 수정 == //
+	int resourceEditEnd(Map<String, String> paraMap);
+
+	// == 자원 삭제 == //
+	int deleteResource(String pk_rno);
+
+	// == 메인 페이지 예약 수 불러오기 == //
+	int reservationCount(int pk_emp_no);
+
 }

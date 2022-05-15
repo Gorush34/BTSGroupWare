@@ -145,14 +145,19 @@
 </script>
 
 <div style="display: flex;">
-<div style="margin: auto; padding-left: 3%;">
+<div style="margin: auto; padding-left: 3%; min-height: 1200px;
+    position: relative;
+    padding-top: 40px;
+    background-color: #F2F2F2;
+    float: right;
+    padding: 20px;">
+<div style="border-bottom: solid 3px #000060;
+    margin-bottom: 20px;">
 <%--
 	<h2 style="margin-bottom: 30px;">글쓰기</h2>
  --%>
-		<h2 style="margin-bottom: 30px;">글쓰기</h2>
-
-	<a data-toggle="modal" data-target="#myModal">임시저장글</a>
-
+		<h2 id="add" style="margin-bottom: 30px;">글쓰기</h2>
+</div>		
 <%-- 	
 	<form action="<%= ctxPath%>/board/temp_list.bts" method="post" style="text-align: right;">
 			<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
