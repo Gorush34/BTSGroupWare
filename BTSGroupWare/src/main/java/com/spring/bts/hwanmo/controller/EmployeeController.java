@@ -270,7 +270,7 @@ public class EmployeeController {
 	
 	// 비밀번호 찾기 버튼 클릭시
 	@RequestMapping(value="/pwdFindEnd.bts", method = {RequestMethod.POST})
-	public ModelAndView fwdFindEnd(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView pwdFindEnd(ModelAndView mav, HttpServletRequest request) {
 		
 		String method = request.getMethod();
 		
@@ -441,10 +441,25 @@ public class EmployeeController {
 		return mav;
 	}
 	*/
+	
+	// 내 정보수정 버튼 클릭시
+	@RequestMapping(value="/emp/updateEmp.bts", produces="text/plain;charset=UTF-8")
+	public ModelAndView requiredLogin_updateEmp(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	
+		// 세션 불러오기
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+		
+		mav.addObject("loginuser", loginuser);
+		
+		mav.setViewName("updateEmp.emp");
+		
+		return mav;
+	}
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	
 	// === 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 생성 === //
-	public void getCurrentURL(HttpServletRequest request) {
+	public void getCurrentURL(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 	HttpSession session = request.getSession();
 	session.setAttribute("goBackURL", MyUtil.getCurrentURL(request));
 	}
