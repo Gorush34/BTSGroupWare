@@ -126,19 +126,26 @@
 </script>
 
 <div style="display: flex;">
-<div style="margin: auto; padding-left: 3%;">
+<div style="margin: auto; padding-left: 3%; min-height: 1200px;
+    position: relative;
+    padding-top: 40px;
+    background-color: #F2F2F2;
+    float: right;
+    padding: 20px;">
+<div style="border-bottom: solid 3px #000060;
+    margin-bottom: 20px;">
 <%--
 	<h2 style="margin-bottom: 30px;">글쓰기</h2>
  --%>
  <%-- == 원글쓰기 인 경우 == --%>
 	<c:if test="${requestScope.fk_seq eq ''}">
-		<h2>글쓰기</h2>
+		<h2 id="add">글쓰기</h2>
 	</c:if>
 <%-- == 답글쓰기 인 경우 == --%>
 	<c:if test="${requestScope.fk_seq ne ''}">
-		<h2 style="margin-bottom: 30px;">답변글쓰기</h2>
+		<h2 id="add" style="margin-bottom: 30px;">답변글쓰기</h2>
 	</c:if>
-	
+</div>	
 	
 
 <%-- 	
