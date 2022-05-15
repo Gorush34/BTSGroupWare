@@ -54,6 +54,9 @@ public class ResourceController {
 	@RequestMapping(value="/reservation/reservationAdmin.bts")
 	public ModelAndView reservationAdmin(ModelAndView mav) {
 		
+		List<Map<String, String>> resourceList = service.resourceReservation();
+		
+		mav.addObject("resourceList",resourceList);
 		mav.setViewName("reservationAdmin.resource");
 		
 		return mav;
@@ -219,6 +222,35 @@ public class ResourceController {
 		
 		return jsonObj.toString();
 		
+	}
+	
+	// === 자원 등록 하기 : 관리자 === //
+	@RequestMapping(value="/resource/resourceRegister_end.bts", method= {RequestMethod.POST})
+	public ModelAndView resourceRegister_end(ModelAndView mav, HttpServletRequest request) throws Throwable {
+		
+		String rname = request.getParameter("rname");
+		String pk_classno = request.getParameter("calpk_classno");
+		String rinfo = request.getParameter("rinfo");
+		
+		Map<String,String> paraMap = new HashMap<String, String>();
+		paraMap.put("rname", rname);
+		paraMap.put("pk_classno", pk_classno);
+		paraMap.put("rinfo", rinfo);
+		
+		int n = service.resourceRegister_end(paraMap);
+
+		if(n == 0) {
+			mav.addObject("message", "자원 등록에 실패하였습니다.");
+		}
+		else {
+			mav.addObject("message", "자원 등록에 성공하였습니다.");
+		}
+		
+		mav.addObject("loc", request.getContextPath()+"/reservation/reservationMain.bts");
+		
+		mav.setViewName("msg");
+		
+		return mav;
 	}
 		
 }

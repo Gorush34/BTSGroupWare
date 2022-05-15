@@ -64,4 +64,11 @@ public class ResourceDAO implements InterResourceDAO {
 		return n;
 	}
 
+	// === 자원 등록 하기 : 관리자 === //
+	@Override
+	public int resourceRegister_end(Map<String, String> paraMap) {
+		int n = sqlsession.insert("jieun.resourceRegister_end", paraMap);
+		return n;
+	}
+
 }

@@ -29,35 +29,21 @@
 			<table class="table table-striped" style="width:90%; margin:50px auto; text-align: center;">
 				<thead class="table-primary" style="color:white;">
 					<tr>
-						<th>자산명</th>
-						<th>보유 수</th>
-						<th>권한</th>
-						<th>상태</th>
+						<th>자원명</th>
+						<th>분류명</th>
 						<th>설정</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>차량 예약</td>
-						<td>5</td>
-						<td>전체 허용</td>
-						<td>사용 가능</td>
-						<td><button type="button" class="btn btn-secondary btn-sm" onclick="">설정</button></td>
-					</tr>
-					<tr>
-						<td>차량 예약</td>
-						<td>5</td>
-						<td>전체 허용</td>
-						<td>사용 가능</td>
-						<td><button type="button" class="btn btn-secondary btn-sm" onclick=""></button></td>
-					</tr>
-					<tr>
-						<td>차량 예약</td>
-						<td>5</td>
-						<td>전체 허용</td>
-						<td>사용 가능</td>
-						<td><button type="button" class="btn btn-secondary btn-sm" onclick=""></button></td>
-					</tr>
+				<c:if test="${not empty requestScope.resourceList}">
+					<c:forEach var="map" items="${requestScope.resourceList}">
+						<tr>
+							<td>${map.RNAME}</td>
+							<td>${map.CLASSNAME}</td>
+							<td><button type="button" class="btn btn-secondary btn-sm" onclick="resourceEdit()">설정</button></td>
+						</tr>
+					</c:forEach>
+				</c:if>	
 				</tbody>
 			</table>
 		</div>

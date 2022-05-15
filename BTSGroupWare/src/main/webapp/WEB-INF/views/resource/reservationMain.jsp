@@ -32,6 +32,10 @@
 	
 	$(document).ready(function(){
 		
+		$("#resRegisterbtn").hide();
+		if(${sessionScope.loginuser.gradelevel} =='1'){
+			$("#resRegisterbtn").show();
+		}
 		
 	  // 사이드바의 자원명을 선택했을 시 선택한 텍스트의 색을 변경
 	    $(".pk_rnoT").click(function() {
@@ -432,7 +436,8 @@
 </script>
 
 <div id="resourceSide" style=" min-height:1200px; position: fixed; top:60px; padding-top: 40px; float:left; width:250px;">
-	<h4>자원관리</h4>
+	<h4 style="margin-top: 50px;">자원관리</h4>
+	<button type="button" class="btn btn-outline-primary btn-lg"  id="resRegisterbtn" style="margin: 15px auto; width:200px; display:block;" onclick="javascript:location.href='<%= ctxPath%>/reservation/reservationAdmin.bts'">자원등록</button>
 	<ul style="list-style-type: none; padding: 10px;">
 	 <c:if test="${not empty requestScope.classList}">
 	 <c:forEach var="map" items="${requestScope.classList}" varStatus="status">

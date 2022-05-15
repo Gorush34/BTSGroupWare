@@ -25,4 +25,7 @@ public interface InterResourceDAO {
 	// === 예약취소 === //
 	int cancelReservation(String pk_rserno);
 
+	// === 자원 등록 하기 : 관리자 === //
+	int resourceRegister_end(Map<String, String> paraMap);
+
 }

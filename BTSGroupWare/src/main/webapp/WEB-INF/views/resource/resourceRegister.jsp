@@ -10,19 +10,34 @@
 
 	$(document).ready(function(){
 		
-		// === *** 달력(type="date") 관련 시작 *** === //
-		// 시작시간, 종료시간		
 		var html="";
 		for(var i=0; i<24; i++){
 			if(i<10){
-				html+="<option value='0"+i+"'>0"+i+"&#58;00</option>";
-				html+="<option value='0"+i+"'>0"+i+"&#58;30</option>";
+				html+="<option value='0"+i+"'>0"+i+"</option>";
 			}
 			else{
-				html+="<option value="+i+">"+i+"&#58;00</option>";
-				html+="<option value="+i+">"+i+"&#58;30</option>";
+				html+="<option value="+i+">"+i+"</option>";
 			}
 		}// end of for----------------------
+		
+		$("select#startHour").html(html);
+		$("select#endHour").html(html);
+		
+		// 시작분, 종료분 
+		html="";
+		for(var i=0; i<60; i=i+5){
+			if(i<10){
+				html+="<option value='0"+i+"'>0"+i+"</option>";
+			}
+			else {
+				html+="<option value="+i+">"+i+"</option>";
+			}
+		}// end of for--------------------
+		html+="<option value="+59+">"+59+"</option>"
+		
+		$("select#startMinute").html(html);
+		$("select#endMinute").html(html);
+		// === *** 달력(type="date") 관련 끝 *** === //
 		
 		$("select#startHour").html(html);
 		$("select#endHour").html(html);
@@ -52,49 +67,70 @@
 		
 	});
 
+	// function declaration
+	// 자원 등록하기
+	function addResource(){
+		
+		// 제목 유효성 검사
+		var subject = $("input#rname").val().trim();
+        if(subject==""){
+			alert("자원명을 입력하세요."); 
+			return;
+		}
+        
+        // 분류 선택 유무 검사
+		var calType = $("select.pk_classno").val().trim();
+		if(calType==""){
+			alert("분류를 선택하세요."); 
+			return;
+		}
+		
+		// 내용 유효성 검사
+		var subject = $("textarea#rinfo").val().trim();
+        if(subject==""){
+			alert("자원정보를 입력하세요."); 
+			return;
+		}
+		
+
+		
+		var frm = document.resourceRegisterFrm;
+		frm.action="<%= ctxPath%>/resource/resourceRegister_end.bts";
+		frm.method="post";
+		frm.submit();
+	
+	}
+	
 </script>
 
-<div id="resourceRegister">
+<div id="resourceRegister" >
 <h4 style="margin: 0 80px">자산목록 > 자산추가</h4>
-	<form name="schedualRegister">
-	<h5 style="margin: 50px 90px 0 0;">기본정보</h5>	
-		<div id="resourceFrm" style="margin:50px 100px;">
-			<table id="resourceRegisterContent">
+	<form name="resourceRegisterFrm">
+		<div id="resourceFrm" style="margin:50px auto;">
+			<table id="resourceRegisterContent" style="margin-left:auto; margin-right:auto;">
 				<tr>
 					<th>자산명</th>
-					<td><input type="text" name="reso_name" class="form-control"/></td>
+					<td><input type="text" name="rname" id="rname" class="form-control"/></td>
 				</tr>
-				<tr>
-					<th>사용시간</th>
+				<tr> 
+					<th>분류</th>
 					<td>
-						<input type="date" id="startDate" value="${requestScope.chooseDate}" style="height: 30px;"/>&nbsp; 
-						<select id="startHour" class="schedule"></select> 시
-						<select id="startMinute" class="schedule"></select> 분
-						- <input type="date" id="endDate" value="${requestScope.chooseDate}" style="height: 30px;"/>&nbsp;
-						<select id="endHour" class="schedule"></select> 시
-						<select id="endMinute" class="schedule"></select> 분&nbsp;
-						<input type="checkbox" id="allday" name="allday"/><label for="allday"> &nbsp;종일</label>&nbsp;&nbsp;&nbsp;
-						<input type="checkbox" id="repeat" name="repeat"/><label for="repeat">&nbsp;반복</label>
-						
-						<input type="hidden" name="startdate"/>
-						<input type="hidden" name="enddate"/>
-					</td>
-				</tr>
-				<tr>
-					<th>이용권한</th>
-					<td>
-						<input type="radio" name="allUse"/><label for="allUse">전체 허용</label>
-						<input type="radio" name="partUse"/><label for="partUse">일부만 허용</label>
+						<select class="pk_classno" name="pk_classno"> 
+	                   	 <option value="">선택하세요</option>
+						 <option value="1">3층 회의실</option>
+						 <option value="2">자동차</option>
+						 <option value="3">빔프로젝터</option>
+					    </select>
 					</td>
 				</tr>
 				<tr>
 					<th>내용</th>
-					<td><textarea rows="10" cols="100" style="height: 200px;" name="content" id="content"  class="form-control"></textarea></td>
+					<td><textarea rows="10" cols="100" style="height: 200px;" name="rinfo" id="rinfo"  class="form-control"></textarea></td>
 				</tr>
 			</table>
-			<div style="text-align: center;">
-				<button type="button" class="btn btn-primary btn-sm" >확인</button>
-				<button type="button" class="btn btn-outline-primary btn-sm" onclick="javascript:location.href='<%= ctxPath%>/calendar/reservationAdmin.bts'">취소</button>
+			<div style="text-align: center; margin-top:30px;">
+				<button type="button" class="btn btn-primary btn-sm" onclick="addResource()" >확인</button>
+				<button type="button" class="btn btn-outline-primary btn-sm" onclick="javascript:location.href='<%= ctxPath%>/reservation/reservationMain.bts'">취소</button>
 			</div>
 	  </div>
 	</form>
