@@ -35,7 +35,7 @@ public interface InterAddBookDAO {
 
 
 	// 주소록 메인에서 총 연락처 개수 가져오기
-	public int addBook_main_totalPage();
+	public int addBook_main_totalPage(Map<String, String> paraMap);
 
 
 	// 주소록 삭제하기

@@ -65,8 +65,145 @@
 		     
 	  });
 	  
-	}); // end of $( document ).ready( function()
+/////////////////////////////////////////////////////////////////////////////
+/* 유효성 검사 시작 */
+
+ 		$("span.error").hide();	
+		$("input#addb_name").focus();
+		
+	// 이름 시작
+	  $("input#addb_name").blur(() => { 
+			const $target = $(event.target);
+			
+			const name = $target.val().trim();
+			if(name == ""){
+				// 입력하지 않거나 공백만 입력했을 경우
+				$("table#tbl_telAdd :input").prop("disabled", true);
+				$target.prop("disabled", false);
+			//	$target.next().show();
+			// 	또는
+				$target.parent().find(".error").show();
+			
+				$target.focus();
+				
+			} else {
+				// 공백이 아닌 글자를 입력했을 경우
+				$("table#tbl_telAdd :input").prop("disabled", false);
+				//	$target.next().hide();
+				// 	또는
+				$target.parent().find(".error").hide();
+			}
+		});
+	// 이름 끝
 	
+	// 휴대폰번호 시작
+		
+		$("input#hp2").blur(() => {
+			const $target = $(event.target);
+			
+	        const regExp = new RegExp(/^[1-9][0-9]{3}$/g); 
+	        // 숫자 4자리만 들어오도록 검사해주는 정규표현식 객체 생성(첫글자는 숫자 1~9까지만 가능함)
+		    
+	         const bool = regExp.test($target.val());  
+	        
+			if(!bool){ // !bool == false 국번이 정규표현식에 위배된 경우
+				$("table#tbl_telAdd :input").prop("disabled", true);
+				  $target.prop("disabled", false);
+			
+			//	$target.next().show();
+			// 	또는
+				$target.parent().find(".error").show();
+				
+				$target.focus();
+			} else {
+				// bool == true 국번이 정규표현식에 맞는 경우
+				$("table#tbl_telAdd :input").prop("disabled", false);
+				
+				//	$target.next().hide();
+				// 	또는
+				$target.parent().find(".error").hide();
+			}
+		});  // end of $("input#hp2").blur(() => {})
+		
+		// hp3
+		
+		$("input#hp3").blur(() => {
+			const $target = $(event.target);
+			
+	        const regExp = new RegExp(/^[1-9][0-9]{3}$/g); 
+	        // 숫자 4자리만 들어오도록 검사해주는 정규표현식 객체 생성(첫글자는 숫자 1~9까지만 가능함)
+		    
+	         const bool = regExp.test($target.val());  
+	        
+			if(!bool){ // !bool == false 국번이 정규표현식에 위배된 경우
+				$("table#tbl_telAdd :input").prop("disabled", true);
+				  $target.prop("disabled", false);
+			
+			//	$target.next().show();
+			// 	또는
+				$target.parent().find(".error").show();
+				
+				$target.focus();
+			} else {
+				// bool == true 국번이 정규표현식에 맞는 경우
+				$("table#tbl_telAdd :input").prop("disabled", false);
+				
+				//	$target.next().hide();
+				// 	또는
+				$target.parent().find(".error").hide();
+			}
+		});  // end of $("input#hp3").blur(() => {})
+	// 휴대폰번호 끝
+	
+	// 이메일 시작
+	$("input#email1").blur(() => {
+			const $target = $(event.target);
+	        
+			if(!bool){ // !bool == false 국번이 정규표현식에 위배된 경우
+				$("table#tbl_telAdd :input").prop("disabled", true);
+				  $target.prop("disabled", false);
+			
+			//	$target.next().show();
+			// 	또는
+				$target.parent().find(".error").show();
+				
+				$target.focus();
+			} else {
+				// bool == true 국번이 정규표현식에 맞는 경우
+				$("table#tbl_telAdd :input").prop("disabled", false);
+				
+				//	$target.next().hide();
+				// 	또는
+				$target.parent().find(".error").hide();
+			}
+		});  // end of $("input#hp2").blur(() => {})
+		
+		$("input#email2").blur(() => {
+			const $target = $(event.target);
+	        
+			if(!bool){ // !bool == false 국번이 정규표현식에 위배된 경우
+				$("table#tbl_telAdd :input").prop("disabled", true);
+				  $target.prop("disabled", false);
+			
+			//	$target.next().show();
+			// 	또는
+				$target.parent().find(".error").show();
+				
+				$target.focus();
+			} else {
+				// bool == true 국번이 정규표현식에 맞는 경우
+				$("table#tbl_telAdd :input").prop("disabled", false);
+				
+				//	$target.next().hide();
+				// 	또는
+				$target.parent().find(".error").hide();
+			}
+		});  // end of $("input#hp2").blur(() => {})
+	
+	
+	
+	}); // end of $( document ).ready( function()------------------------------------------
+ 	
 	/* 체크박스 하나만 선택되게 하는 함수 시작 */
 	function checkOnlyOne(element) {
 		  
@@ -148,6 +285,30 @@
 		    frm.method = "post"
 		    frm.submit();
 		}
+	 
+		/* 이메일 선택or직접입력 */
+		function selectEmail(ele){ 
+			var $ele = $(ele); 
+			var $email2 = $('input[name=email2]');
+			
+			// '1'인 경우 직접입력 
+			if($ele.val() == "1"){ 
+				$email2.attr('readonly', false); 
+				$email2.val(''); 
+			} else { 
+				$email2.attr('readonly', true); 
+				$email2.val($ele.val()); 
+			} 
+		}
+		/* 이메일 선택or직접입력 */
+		
+		
+	
+
+	
+		
+	 // end of $("input#emp_name").blur(() => {})-------------------------------------------
+			
 
 </script>
 
@@ -207,7 +368,7 @@
 	<form name="telAddFrm"> 
 	<table id="tbl_telAdd">
 		<tr>
-			<td><h2>연락처 추가<br><br></h2></td>
+			<td><h2>연락처 추가<br><br></h2><input type="hidden" id="registeruser" value="${sessionScope.loginuser.pk_emp_no}"></td>
 		</tr>
 		<tr>
 			<td><strong>사진</strong></td>
@@ -215,13 +376,17 @@
 		</tr>
 		<tr>
 			<td><strong>이름</strong></td>
-			<td><input type="text" class="form-control" id="addb_name" name="addb_name" placeholder="이름"></td>
+			<td>
+				<input type="text" class="form-control" id="addb_name" name="addb_name" placeholder="이름">
+				<span class="error">이름 을 입력해주세요.</span> 
+			</td>
+			
 		</tr>
 		<tr>
 			<td><strong>부서</strong></td>
 			<td>
 				<select id="department" name="department" class="form-control">
-				  <option selected >--</option>
+				  <option value="700" placeholder="없음">&nbsp;</option>
 				  <option value="100">영업</option>
 				  <option value="200">마케팅</option>
 				  <option value="300">기획</option>
@@ -235,7 +400,7 @@
 			<td><strong>직위</strong></td>
 			<td>
 				<select id="rank" name="rank" class="form-control">
-				  <option selected >--</option>
+				  <option value="90" placeholder="없음">&nbsp;</option>
 				  <option value="10">사원</option>
 				  <option value="20">주임</option>
 				  <option value="30">대리</option>
@@ -245,15 +410,32 @@
 				  <option value="70">전무</option>
 				  <option value="80">사장</option>
 				</select>
+				
 			</td>
 		</tr>
 		<tr>
 			<td><strong>이메일</strong></td>
-			<td><input type="text" class="form-control" id="email" name="email" placeholder="이메일"></td>
+			<td>
+			<input class="form-control" id="email1" name="email1" style="width:130px; display:inline;" type="text" maxlength="15">&nbsp;@
+			<input class="form-control" id="email2" name="email2" style="width:130px; display:inline;" type="text" maxlength="15" placeholder="직접입력">&nbsp;
+			<select class="form-control" name="select_email" style="width:130px; display:inline;" onChange="selectEmail(this)">
+				<option value="1">직접입력</option>
+				<option value="gmail.com">gmail.com</option>
+				<option value="naver.com">naver.com</option>
+				<option value="nate.com">nate.com</option>
+				<option value="hanmail.net">hanmail.net</option>
+			</select>
+			</td>
 		</tr>
 		<tr>
 			<td><strong>휴대폰</strong></td>
-			<td><input type="text" class="form-control" id="phone" name="phone" placeholder="휴대폰"></td>
+			<td>
+				<select class="form-control" id="hp1" name="hp1" style="width:130px; display:inline;" >
+					<option value="010">010</option>
+				</select>&nbsp;-&nbsp;
+				<input class="form-control" id="hp2" name="hp2" style="width:130px; display:inline;" type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">&nbsp;-&nbsp; 
+				<input class="form-control" id="hp3" name="hp3" style="width:130px; display:inline;" type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+			</td>
 		</tr>
 		<tr>
 			<td><strong>회사</strong></td>
@@ -261,15 +443,40 @@
 		</tr>
 		<tr>
 			<td><strong>회사전화번호</strong></td>
-			<td><input type="text" class="form-control" id="com_tel" name="com_tel" placeholder="회사전화번호"></td>
+			<td>
+				<select class="form-control" id="num1" name="num1" style="width:130px; display:inline; ">
+						<option value="">선택</option>
+						<option value="02">02</option>
+						<option value="031">031</option>
+						<option value="032">032</option>
+						<option value="033">033</option>
+						<option value="041">041</option>
+						<option value="042">042</option>
+						<option value="043">043</option>
+						<option value="044">044</option>
+						<option value="051">051</option>
+						<option value="052">052</option>
+						<option value="053">053</option>
+						<option value="054">054</option>
+						<option value="055">055</option>
+						<option value="061">061</option>
+						<option value="062">062</option>
+						<option value="063">063</option>
+						<option value="064">064</option>
+						<option value="070">070</option>
+						<option value="010">010</option>
+					</select>&nbsp;-&nbsp;
+				<input class="form-control" id="num2" name="num2" style="width:130px; display:inline; " type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">&nbsp;-&nbsp; 
+				<input class="form-control" id="num3" name="num3" style="width:130px; display:inline; " type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+			</td>
 		</tr>
 		<tr>
 			<td><strong>회사주소</strong></td>
-			<td><input type="text" class="form-control" id="company_address" name="company_address" placeholder="회사주소" style="width: 120%;"></td>
+			<td><input type="text" class="form-control" id="company_address" name="company_address" placeholder="회사주소" style=""></td>
 		</tr>
 		<tr>
 			<td><strong>메모사항</strong></td>
-			<td><input type="text" class="form-control" id="memo" name="memo" placeholder="메모사항" style="width:120%; height: 80px;"></td>
+			<td><input type="text" class="form-control" id="memo" name="memo" placeholder="메모사항" style="height: 80px;"></td>
 		</tr>
 		</table>
 		</form>
@@ -281,10 +488,11 @@
 	</div>
 	
 	
-	<button class="btn btn-default" data-toggle="modal" data-target="#viewModal">유리한테 줄 조직도 틀</button>
+	
+
 	
 	<!-- 모달 -->
-
+<button class="btn btn-default" data-toggle="modal" data-target="#viewModal">유리한테 줄 조직도 틀</button>
 
 <div class="modal fade" data-backdrop="static" id="viewModal">
 	<div class="modal-dialog">
@@ -297,7 +505,6 @@
 		<div id="tbl_one" style="float:left; width:22%;">
 			<table style="text-align:center;">
 				<tr>
-					<input type="hidden" name="hiddenEmpno" id="hiddenEmpno" value="" />
 					<td><button class="btn btn-default" id="y_team" style="width:150px; border: solid darkgray 2px;">영업팀</button></td>
 				</tr>
 				<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">

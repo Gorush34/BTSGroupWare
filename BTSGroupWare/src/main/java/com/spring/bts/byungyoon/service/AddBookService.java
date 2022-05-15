@@ -86,9 +86,9 @@ public class AddBookService implements InterAddBookService  {
 
 	// 주소록 메인에서 총 연락처 개수 가져오기
 	@Override
-	public int addBook_main_totalPage() {
+	public int addBook_main_totalPage(Map<String, String> paraMap) {
 		
-		int n = dao.addBook_main_totalPage();
+		int n = dao.addBook_main_totalPage(paraMap);
 		
 		return n;
 	}
