@@ -87,7 +87,7 @@ public interface InterMailDAO {
 //	int updateFromTbltemp(Map<String, String> paraMap);
 
 	// 임시보관함에서 제목 클릭했을 때 넘어왔을 경우 받아온 글번호인 pk_mail_num 를 delete
-//	int deleteFromTbltemp(Map<String, String> paraMap);
+	int deleteFromTbltemp(Map<String, String> paraMap);
 
 	// ==== 임시보관함 끝 ==== //
 
@@ -99,6 +99,12 @@ public interface InterMailDAO {
 
 	// 중요 메일 1개 상세내용을 읽어오기
 	MailVO getImportantMailView(Map<String, String> paraMap);
+
+	// pk_mail_num 를 통해서 temp_status 조회해오기
+	Map<String, String> getTempStatus(String pk_mail_num);
+
+	// importance_star Update 를 통해 값을 0,1로 변경해주기
+	int updateFromTblMailImportance_star(Map<String, String> paraMap);
 	
 
 }

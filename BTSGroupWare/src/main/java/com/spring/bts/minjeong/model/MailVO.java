@@ -18,13 +18,13 @@ public class MailVO {
 	private String orgfilename;             // VARCHAR2(100) 		파일 원래이름(저장시)
 	private String filesize;                // NUMBER        		파일크기
 	private String reg_date;                // DATE          		메일쓰기 일자
-	private String importance;              // NUMBER(2)     		파일 중요표시 여부(0 : 중요표시안함X , 1:중요표시선택O)
-	private String read_status;             // NUMBER(2)     		받는사람 읽음 여부 (0 : 안읽음X , 1:읽음O)
+	private String importance;              // NUMBER(2)     		파일 중요! 표시 여부		(0 : 중요표시안함X , 1:중요표시선택O)
+	private String read_status;             // NUMBER(2)     		받는사람 읽음 여부 		(0 : 안읽음X , 1:읽음O)
 	private String reservation_date;        // DATE          		발송예약 날짜
-	private String reservation_status;      // NUMBER(2)     		발송예약여부 (0: 발송예약X , 1: 발송예약O)
-	private String del_status;				// NUMBER(2)  			삭제여부(0: 삭제X , 1:삭제)
-	private String temp_status;				// NUMBER(2) 			임시보관함 저장여부 (0:저장 X , 1:저장O)
-//	private String importance_star;			// NUMBER(2) 			중요보관함 저장여부 (0:저장 X , 1:저장O) 
+	private String reservation_status;      // NUMBER(2)     		발송예약여부 			(0: 발송예약X , 1: 발송예약O)
+	private String del_status;				// NUMBER(2)  			삭제여부				(0: 삭제X , 1:삭제)
+	private String temp_status;				// NUMBER(2) 			임시보관함 저장여부 		(0:저장 X , 1:저장O)
+	private String importance_star;			// NUMBER(2) 			중요보관함(★) 저장여부 	(0:저장 X , 1:저장O) 
 	
 	// 메일 상세내용 보기
 	private String prev_seq;		// 이전글번호
@@ -44,34 +44,37 @@ public class MailVO {
 	public MailVO(String pk_mail_num, String fk_senduser_num, String fk_receiveuser_num, String recemail,
 			String sendemail, String recempname, String sendempname, String subject, String content, String filename,
 			String orgfilename, String filesize, String reg_date, String importance, String read_status,
-			String reservation_date, String reservation_status, String del_status, String temp_status, String prev_seq,
-			String prev_subject, String next_seq, String next_subject, MultipartFile attach) {
+			String reservation_date, String reservation_status, String del_status, String temp_status,
+			String importance_star, String prev_seq, String prev_subject, String next_seq, String next_subject,
+			MultipartFile attach) {
 		
-		super();
-		this.pk_mail_num = pk_mail_num;
-		this.fk_senduser_num = fk_senduser_num;
-		this.fk_receiveuser_num = fk_receiveuser_num;
-		this.recemail = recemail;
-		this.sendemail = sendemail;
-		this.recempname = recempname;
-		this.sendempname = sendempname;
-		this.subject = subject;
-		this.content = content;
-		this.filename = filename;
-		this.orgfilename = orgfilename;
-		this.filesize = filesize;
-		this.reg_date = reg_date;
-		this.importance = importance;
-		this.read_status = read_status;
-		this.reservation_date = reservation_date;
-		this.reservation_status = reservation_status;
-		this.del_status = del_status;
-		this.temp_status = temp_status;
-		this.prev_seq = prev_seq;
-		this.prev_subject = prev_subject;
-		this.next_seq = next_seq;
-		this.next_subject = next_subject;
-		this.attach = attach;
+			super();
+			
+			this.pk_mail_num = pk_mail_num;
+			this.fk_senduser_num = fk_senduser_num;
+			this.fk_receiveuser_num = fk_receiveuser_num;
+			this.recemail = recemail;
+			this.sendemail = sendemail;
+			this.recempname = recempname;
+			this.sendempname = sendempname;
+			this.subject = subject;
+			this.content = content;
+			this.filename = filename;
+			this.orgfilename = orgfilename;
+			this.filesize = filesize;
+			this.reg_date = reg_date;
+			this.importance = importance;
+			this.read_status = read_status;
+			this.reservation_date = reservation_date;
+			this.reservation_status = reservation_status;
+			this.del_status = del_status;
+			this.temp_status = temp_status;
+			this.importance_star = importance_star;
+			this.prev_seq = prev_seq;
+			this.prev_subject = prev_subject;
+			this.next_seq = next_seq;
+			this.next_subject = next_subject;
+			this.attach = attach;
 	}
 	
 	
@@ -281,6 +284,16 @@ public class MailVO {
 
 	public void setTemp_status(String temp_status) {
 		this.temp_status = temp_status;
+	}
+
+
+	public String getImportance_star() {
+		return importance_star;
+	}
+
+
+	public void setImportance_star(String importance_star) {
+		this.importance_star = importance_star;
 	}
 
 		

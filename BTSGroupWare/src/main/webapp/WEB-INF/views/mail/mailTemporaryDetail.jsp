@@ -149,10 +149,10 @@
 		      	<%-- === 스마트에디터 구현 끝 === --%>	      	 
 		      	 
 		      	// 중요 체크박스에 체크되어있는지 확인
-		      	var importance = 0;
+		      	var importanceVal = 0;
 		      	if($("input[name=importance]").prop("checked")) {
 		      		// 중요 체크박스에 체크되어 있을 때 중요메일함에 들어가도록 하기
-		      		importance = 1;
+		      		importanceVal = 1;
 		      	}
 		 
 		      	var frm = document.mailWriteFrm;
@@ -250,10 +250,10 @@
 		      	<%-- === 스마트에디터 구현 끝 === --%>	      	 
 		      	 
 		      	// 중요 체크박스에 체크되어있는지 확인
-		      	var importance = 0;
+		      	var importanceVal = 0;
 		      	if($("input[name=importance]").prop("checked")) {
 		      		// 중요 체크박스에 체크되어 있을 때 중요메일함에 들어가도록 하기 (importance = 1)
-		      		importance = 1;			// 1
+		      		importanceVal = 1;			// 1
 		      	//	console.log(importance);
 		      	}
 
@@ -419,18 +419,14 @@
 					<input type="hidden" id="fk_senduser_num" name="fk_senduser_num" value="${sessionScope.loginuser.pk_emp_no}"  style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
 					<input type="hidden" id="sendempname" name="sendempname" value="${sessionScope.loginuser.emp_name}" />
 					<%-- temp_status 및 글번호 보내기 --%>
-               		<input type="hidden" name="temp_status" id="temp_status" value="${requestScope.mailvo.temp_status}"/> 
+               		<input type="hidden" name="temp_status" id="temp_status" value="${temp_status}"/> 
                		<input type="hidden" name="pk_mail_num" id="pk_mail_num" value="${requestScope.mailvo.pk_mail_num}"/> 
-
 					<button type="button" class="btn btn-secondary btn-sm">주소록</button>
 				</td>
 			</tr>
 			<tr>
 				<th width="14%">
 					<span style="margin-right: 40px;">제목</span>
-					<c:if test="${not empty mailvo && mailvo.importance == 1}">
-						<input type="checkbox" checked="checked" id="importance" name="importance" />&nbsp;&nbsp;중요!
-					</c:if>
 						<input type="checkbox" id="importance" name="importance" />&nbsp;&nbsp;중요!
 						<input type="hidden" id="importanceVal" name="importanceVal" />
 				</th>

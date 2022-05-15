@@ -420,6 +420,7 @@
 					<input type="hidden" id="sendempname" name="sendempname" value="${sessionScope.loginuser.emp_name}" />
                		<%-- 임시저장의 경우 --%>
                		<input type="hidden" name="temp_status" id="temp_status" value="${temp_status}"/> 
+               		<input type="hidden" name="pk_mail_num" id="pk_mail_num" value="${requestScope.mailvo.pk_mail_num}"/> 
 					<button type="button" class="btn btn-secondary btn-sm">주소록</button>
 				</td>
 			</tr>

@@ -85,7 +85,7 @@ $(document).ready(function (){
 				<li id="sendDate" class="detailList">
 					<span>보낸 날짜 :</span>
 					<c:if test="${not empty requestScope.mailvo.reservation_date}">
-							${requestScope.mailvo.reservation_date}:00
+							${requestScope.mailvo.reservation_date}
 					</c:if>
 					<c:if test="${empty requestScope.mailvo.reservation_date}">
 							${requestScope.mailvo.reg_date}
@@ -114,5 +114,3 @@ $(document).ready(function (){
 		</div>
 	</div>
 </div>
-
-

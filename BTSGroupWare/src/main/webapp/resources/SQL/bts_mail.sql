@@ -404,7 +404,7 @@ order by reservation_date desc
 -- temp_status 기본값 0 으로 설정하기
 ALTER TABLE tbl_mail MODIFY (temp_status DEFAULT 0);
 
-commit
+commit;
 
 desc tbl_mail;
 
@@ -453,6 +453,89 @@ where (fk_receiveuser_num = '' or fk_senduser_num = '' ) and importance = 1
 and lower('') like '%' || lower('') || '%'
 ) V
 where rno between 1 and 3	
+order by reg_date desc
+
+-- importance_star 기본값 0 으로 설정하기
+ALTER TABLE tbl_mail MODIFY (importance_star DEFAULT 0);
+
+commit;
+
+-- 중요보관함(★) 목록 보여주기
+select *
+from tbl_mail
+where importance_star = 1;
 
 
+select *
+from tbl_mail
+order by pk_mail_num desc;
 
+select temp_status
+from tbl_mail
+
+
+-- 받은메일함 목록 조회
+select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date
+from 
+(
+select row_number() over(order by pk_mail_num desc) AS rno,
+       pk_mail_num, fk_senduser_num, sendempname, subject
+       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+       , filename , to_char(reservation_date, 'yyyy-mm-dd hh24:mi') as reservation_date
+from tbl_mail
+where (fk_receiveuser_num = '' or fk_senduser_num = '' )
+and lower('') like '%' || lower('') || '%'
+) V
+where rno between 1 and 3	
+order by reg_date desc
+
+
+select *
+from tbl_mail
+order by reg_date desc
+
+select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date, importance
+from 
+(
+select row_number() over(order by pk_mail_num desc) AS rno,
+       pk_mail_num, fk_receiveuser_num, recempname, subject
+       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+       , importance
+from tbl_mail
+where fk_senduser_num = '80000010' and del_status = 0 and reservation_status = 0 and temp_status = 0
+) V
+where rno between 1 and 3
+
+
+----------------------------------------------------------------------------
+-- importance_star Update 를 통해 값을 0,1로 변경해주기
+update tbl_mail set importance_star = decode(importance_star, 1, 0, 0, 1)
+where pk_mail_num = 159;
+
+select importance_star
+from tbl_mail
+where pk_mail_num = 159;
+
+
+select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date, importance, importance_star
+from 
+(
+select row_number() over(order by pk_mail_num desc) AS rno,
+       pk_mail_num, fk_senduser_num, sendempname, subject
+       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+       , importance, importance_star
+from tbl_mail
+where fk_receiveuser_num = '80000010' and del_status = 0 and reservation_status = 0 and temp_status = 0
+and lower('') like '%' || lower('') || '%'
+) V
+where rno between #{startRno} and #{endRno}
+
+select *
+from tbl_mail
+where IMPORTANCE_STAR = (null)
+
+update tbl_mail set IMPORTANCE_STAR = 0
+
+commit;

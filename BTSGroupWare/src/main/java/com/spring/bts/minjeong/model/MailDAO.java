@@ -218,13 +218,13 @@ public class MailDAO implements InterMailDAO {
 	*/
 
 	// 임시보관함에서 제목 클릭했을 때 넘어왔을 경우 받아온 글번호인 pk_mail_num 를 delete
-/*
+
 	@Override
 	public int deleteFromTbltemp(Map<String, String> paraMap) {
 		int n = sqlsession.delete("minjeong.deleteFromTbltemp", paraMap);
 		return n;
 	}
-*/
+
 	// ==== 임시보관함 끝 ==== //
 
 	// 총 중요 메일 건수 구해오기
@@ -246,6 +246,20 @@ public class MailDAO implements InterMailDAO {
 	public MailVO getImportantMailView(Map<String, String> paraMap) {
 		MailVO ImportantMailView = sqlsession.selectOne("minjeong.getImportantMailView", paraMap);
 		return ImportantMailView;
+	}
+
+	// pk_mail_num 를 통해서 temp_status 조회해오기
+	@Override
+	public Map<String, String> getTempStatus(String pk_mail_num) {
+		Map<String, String> getTempStatus = sqlsession.selectOne("minjeong.getTempStatus", pk_mail_num);
+		return getTempStatus;
+	}
+
+	// importance_star Update 를 통해 값을 0,1로 변경해주기
+	@Override
+	public int updateFromTblMailImportance_star(Map<String, String> paraMap) {
+		int n = sqlsession.update("minjeong.updateFromTblMailImportance_star", paraMap);
+		return n;
 	}
 
 
