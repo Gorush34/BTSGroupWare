@@ -1,5 +1,7 @@
 package com.spring.bts.hwanmo.model;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class EmployeeVO {
 	/* 사원테이블(정환모) */
 	private int	pk_emp_no; 				/* 사원번호 */
@@ -30,6 +32,16 @@ public class EmployeeVO {
 	
 	private int pwdchangegap;		 // select 용. 지금으로 부터 마지막으로 암호를 변경한지가 몇개월인지 알려주는 개월수(3개월 동안 암호를 변경 안 했을시 암호를 변경하라는 메시지를 보여주기 위함)
 	
+	private MultipartFile attach;
+	
+	// 정보수정용 회사번호, 휴대전화번호
+	private String num1;
+	private String num2;
+	private String num3;
+	
+	private String hp2;
+	private String hp3;
+	
 	/////////////////////////////////////////////////////////////////////
 	
 	private boolean requirePwdChange = false;
@@ -42,7 +54,7 @@ public class EmployeeVO {
 	
 	public EmployeeVO(int pk_emp_no, int fk_department_id, int fk_rank_id, String emp_name, String emp_pwd
 			, String com_tel, String postal, String address, String detailaddress
-			, String extraaddress, String uq_phone, String uq_email, String birthday, String gender) {
+			, String extraaddress, String uq_phone, String uq_email, String birthday, String gender, String img_name, String img_path, int gradelevel) {
 		super();
 		this.pk_emp_no = pk_emp_no;
 		this.fk_department_id = fk_department_id;
@@ -56,10 +68,10 @@ public class EmployeeVO {
 		this.extraaddress = extraaddress;
 		this.uq_phone = uq_phone;
 		this.uq_email = uq_email;
-		// this.img_path = img_path; 나중에 넣어라
-		// this.img_name = img_name;
+		this.img_path = img_path;
+		this.img_name = img_name;
 		this.birthday = birthday;
-		// this.gradelevel = gradelevel;
+		this.gradelevel = gradelevel;
 		this.gender = gender;
 		// this.lastpwdchangedate = lastpwdchangedate;
 		// this.pwdchangegap = pwdchangegap;
@@ -304,6 +316,54 @@ public class EmployeeVO {
 
 	public void setKo_depname(String ko_depname) {
 		this.ko_depname = ko_depname;
+	}
+
+	public String getNum1() {
+		return num1;
+	}
+
+	public void setNum1(String num1) {
+		this.num1 = num1;
+	}
+
+	public String getNum2() {
+		return num2;
+	}
+
+	public void setNum2(String num2) {
+		this.num2 = num2;
+	}
+
+	public String getNum3() {
+		return num3;
+	}
+
+	public void setNum3(String num3) {
+		this.num3 = num3;
+	}
+
+	public String getHp2() {
+		return hp2;
+	}
+
+	public void setHp2(String hp2) {
+		this.hp2 = hp2;
+	}
+
+	public String getHp3() {
+		return hp3;
+	}
+
+	public void setHp3(String hp3) {
+		this.hp3 = hp3;
+	}
+
+	public MultipartFile getAttach() {
+		return attach;
+	}
+
+	public void setAttach(MultipartFile attach) {
+		this.attach = attach;
 	}
 	
 	

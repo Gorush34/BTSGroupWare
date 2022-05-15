@@ -62,5 +62,40 @@ public class ResourceService implements InterResourceService {
 		int n = dao.cancelReservation(pk_rserno);
 		return n;
 	}
+
+	// === 자원 등록 하기 : 관리자 === //
+	@Override
+	public int resourceRegister_end(Map<String, String> paraMap) {
+		int n = dao.resourceRegister_end(paraMap);
+		return n;
+	}
+
+	// == 자원 수정 페이지 == //
+	@Override
+	public List<Map<String, String>> resourceEdit(String pk_rno) {
+		List<Map<String, String>> resourceList = dao.resourceEdit(pk_rno);
+		return resourceList;
+	}
+
+	// == 자원 수정 == //
+	@Override
+	public int resourceEditEnd(Map<String, String> paraMap) {
+		int n = dao.resourceEditEnd(paraMap);
+		return n;
+	}
+
+	// == 자원 삭제 == //
+	@Override
+	public int deleteResource(String pk_rno) {
+		int n = dao.deleteResource(pk_rno);
+		return n;
+	}
+
+	// == 메인 페이지 예약 수 불러오기 == //
+	@Override
+	public int reservationCount(int pk_emp_no) {
+		int n = dao.reservationCount(pk_emp_no);
+		return n;
+	}
 	
 }

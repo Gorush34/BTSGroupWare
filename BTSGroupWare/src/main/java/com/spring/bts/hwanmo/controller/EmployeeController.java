@@ -1,29 +1,42 @@
 package com.spring.bts.hwanmo.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.DefaultNamingPolicy;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.bts.common.AES256;
+import com.spring.bts.common.FileManager;
 import com.spring.bts.common.MyUtil;
 import com.spring.bts.common.Sha256;
 import com.spring.bts.hwanmo.model.EmployeeVO;
@@ -48,6 +61,10 @@ public class EmployeeController {
 	
 	@Autowired
 	private InterAttendanceService attService;
+	
+	// === #155. 파일업로드 및 다운로드를 해주는 FileManager 클래스 의존객체 주입하기(DI : DependencyInjection) ===	  
+	@Autowired // Type에 따라 알아서 Bean 을 주입해준다. 
+	private FileManager fileManager; // type (FileManager) 만 맞으면 다 주입해준다.
 	
 	// 사원등록 페이지 요청
 	@RequestMapping(value="/emp/registerEmp.bts")
@@ -139,6 +156,9 @@ public class EmployeeController {
 		String extraaddress = request.getParameter("extraAddress");								/* 주소참고항목 */	
 		String gender = request.getParameter("gender");											/* 성별 */	
 		String birthday = request.getParameter("birthday");										/* 생년월일 */	
+		String img_name = request.getParameter("img_name");								
+		String img_path = request.getParameter("img_path");												
+		int gradelevel = Integer.parseInt(request.getParameter("gradelevel"));					//회원가입안되면 지워버려라					
 		
 		String com_tel = "";
 		if( num2 == "" && num3 == "") {
@@ -157,7 +177,7 @@ public class EmployeeController {
 		}	
 		
 		EmployeeVO empvo = new EmployeeVO(pk_emp_no, fk_department_id, fk_rank_id, emp_name, emp_pwd, com_tel, postal, address, detailaddress
-										  , extraaddress, uq_phone, uq_email, birthday, gender);
+										  , extraaddress, uq_phone, uq_email, birthday, gender, img_name, img_path, gradelevel);
 		
 		String message = "";
 		String loc = "";
@@ -270,7 +290,7 @@ public class EmployeeController {
 	
 	// 비밀번호 찾기 버튼 클릭시
 	@RequestMapping(value="/pwdFindEnd.bts", method = {RequestMethod.POST})
-	public ModelAndView fwdFindEnd(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView pwdFindEnd(ModelAndView mav, HttpServletRequest request) {
 		
 		String method = request.getMethod();
 		
@@ -441,10 +461,167 @@ public class EmployeeController {
 		return mav;
 	}
 	*/
+	
+	// 내 정보수정 버튼 클릭시
+	@RequestMapping(value="/emp/updateEmp.bts", produces="text/plain;charset=UTF-8")
+	public ModelAndView requiredLogin_updateEmp(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	
+		// 세션 불러오기
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+		int pk_emp_no = loginuser.getPk_emp_no();
+		
+		// 복호화 및 분리
+		String uq_email = loginuser.getUq_email().replaceAll(" ", "+");
+		String uq_phone = loginuser.getUq_phone().replaceAll(" ", "+");
+		
+		try {
+			uq_email = aes.decrypt(uq_email);	 /* 이메일 */
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			uq_phone = aes.decrypt(uq_phone);	 /* 이메일 */
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		
+		// 복호화된 이메일 삽입
+		loginuser.setUq_email(uq_email);
+		// 복호화된 폰번호 삽입
+		loginuser.setHp2( uq_phone.substring( (uq_phone.indexOf("-")+1), uq_phone.lastIndexOf("-") ) );
+		loginuser.setHp3( uq_phone.substring( (uq_phone.lastIndexOf("-")+1) ) );
+		
+		if(loginuser.getCom_tel() != null ) { // 회사번호 있으면 회사번호 넣어라.
+			loginuser.setNum1( loginuser.getCom_tel().substring( 0, uq_phone.indexOf("-") ) );
+			loginuser.setNum2( loginuser.getCom_tel().substring( (loginuser.getCom_tel().indexOf("-")+1), loginuser.getCom_tel().lastIndexOf("-") ) );
+			loginuser.setNum3( loginuser.getCom_tel().substring( (loginuser.getCom_tel().lastIndexOf("-")+1) ) );
+		}
+		//원시인
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap = empService.getBirthday(pk_emp_no);
+		loginuser.setBirthday(paraMap.get("birthday"));
+		loginuser.setGender(paraMap.get("gender"));
+		// System.out.println("생년월일 : " + loginuser.getBirthday());
+		// System.out.println("성별 : " + loginuser.getGender());
+		
+		
+		mav.addObject("loginuser", loginuser);
+		
+		mav.setViewName("updateEmp.emp");
+		
+		return mav;
+	}
+	
+	// 프로필 사진 업데이트
+	@ResponseBody
+	@RequestMapping(value="/emp/updateImg.bts", method= {RequestMethod.POST}, produces="text/plain;charset=UTF-8")
+	public String updateImg(MultipartHttpServletRequest mrequest, HttpServletResponse response, EmployeeVO empVO)throws Exception {
+		
+
+		/////////////////// 첨부파일 있는 경우 시작 (스마트에디터 X) ///////////////////////
+		MultipartFile attach = empVO.getAttach();		// 실제 첨부된 파일
+		HttpSession session = mrequest.getSession();
+		String path = "";
+		
+		if( !attach.isEmpty() ) {	// 첨부파일 존재시 true, 존재X시 false
+			// 첨부파일이 존재한다면 (true) 업로드 해야한다.
+			// 1. 사용자가 보낸 첨부파일을 WAS(톰캣)의 특정 폴더에 저장해준다.
+			// WAS 의 절대경로를 알아와야 한다.
+			
+			String root = session.getServletContext().getRealPath("/");
+			EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+			empVO.setPk_emp_no(loginuser.getPk_emp_no()); 
+			
+			// System.out.println("값 들어감? : " + empVO.getPk_emp_no());
+			
+			path = root+"resources"+File.separator+"files";
+			// path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다. --> path 에 파일을 업로드 한다.
+			// System.out.println("경로 : " + path);
+			
+			// 2. 파일첨부를 위한 변수 설정 및 값을 초기화 한 후 파일 업로드 하기
+			String newFileName = "";
+			// WAS(톰캣)의 디스크에 저장될 파일명
+		
+			// 내용물을 읽어온다.
+			byte[] bytes = null;	// bytes 가 null 이라면 내용물이 없다는 것이다.
+			// 첨부파일의 내용물을 담는 것, return 타입은 byte 의 배열
+			
+			long fileSize = 0;		// 첨부파일의 크기
+		
+			try {
+				bytes = attach.getBytes();	// 파일에서 내용물을 꺼내오자. 파일을 올렸을 때 깨진파일이 있다면 (입출력이 안된다!!) 그때 Exception 을 thorws 한다.
+				// 첨부파일의 내용물을 읽어오는 것. 그 다음, 첨부한 파일의 파일명을 알아와야 DB 에 넣을 수가 있다. 그러므로 파일명을 알아오도록 하자.
+				// 즉 파일을 올리고 성공해야 - 내용물을 읽어올 수 있고 - 파일명을 알아와서 DB 에 넣을 수가 있다.
+				
+				String originalFilename = attach.getOriginalFilename();
+				// attach.getOriginalFilename() 이 첨부파일의 파일명(예: 강아지.png) 이다.
+		
+				// 의존객체인 FileManager 를 불러온다. (String 타입으로 return 함.)
+				// 리턴값 : 서버에 저장된 새로운 파일명(예: 2022042912181535243254235235234.png)
+				newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
+				// 첨부된 파일을 업로드 한다.
+				
+				// 파일을 받아와야만 service 에 보낼 수 있다. (DB 에 보내도록 한다.)
+				fileSize = attach.getSize();					// 첨부파일의 크기
+				empVO.setImg_name(newFileName);			// 톰캣(WAS)에 저장될 파일명
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}	
+		/////////////////// 첨부파일 있는 경우 끝 (스마트에디터 X) ///////////////////////
+		
+		// 메일 data 를 DB 로 보낸다. (첨부파일 있을 때 / 첨부파일 없을 때)
+		int n = 0;
+		
+		if(attach.isEmpty()) {
+			// 첨부파일이 없을 때
+			System.out.println(" 첨부파일 없음!");
+		}
+		else {
+			// 프로필 사진 업데이트
+			n = empService.updateEmpImg(empVO);
+		}
+		
+		
+		////////////////////////////////////////////////////////////////////////////////////////////////
+		/*	
+		
+		// 1. 첨부되어진 파일을 디스크의 어느경로에 업로드 할 것인지 그 경로를 설정해야 한다. 
+		ServletContext svlCtx = session.getServletContext();
+		String uploadFileDir = svlCtx.getRealPath("/files/");
+		System.out.println("=== 첨부되어지는 이미지 파일이 올라가는 절대경로 uploadFileDir ==> " + uploadFileDir);
+		// 가급적이면 하나의 폴더에 넣자!
+		
+		// ==== 파일의 이름 경로를 알아와서 원하는 위치로 이동시킨다. ==== //
+		
+		try {
+		Path filePath = Paths.get(uploadFileDir+empVO.getImg_name());
+		Path filePathToMove2 = Paths.get("C:/NCS/workspace(spring)/BTSGroupWare/BTSGroupWare/src/main/webapp/resources/files/"+empVO.getImg_name());
+		Files.move(filePathToMove2, filePath, StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+		e.printStackTrace();
+		}
+		// ==== 파일의 이름 경로를 알아와서 원하는 위치로 이동시킨다. 끝==== //
+		*/
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n);
+		jsonObj.put("img_name", empVO.getImg_name());
+		jsonObj.put("path", path);
+		
+		return jsonObj.toString();
+		
+
+			
+	} // end of --------------------------------
+	
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	
 	// === 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 생성 === //
-	public void getCurrentURL(HttpServletRequest request) {
+	public void getCurrentURL(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 	HttpSession session = request.getSession();
 	session.setAttribute("goBackURL", MyUtil.getCurrentURL(request));
 	}

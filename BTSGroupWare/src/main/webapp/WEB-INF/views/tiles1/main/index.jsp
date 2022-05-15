@@ -28,6 +28,8 @@ td#no{
 		goReadNotice();	
 		goReadBoard();	
 		goReadFileboard();	
+		scheduleCount();
+		reservationCount();
 	});// end of $(document).ready(function(){})----------------------
 
 // Function
@@ -233,6 +235,60 @@ td#no{
 		  location.href="<%= ctxPath%>/fileboard/view.bts?pk_seq="+pk_seq+"&gobackURL="+gobackURL; 
 		}// end of function goView(seq){}----------------------------------------------
 	  
+		
+	// ==== 일정 및 자원 예약 관련 함수 ==== //	
+	// 오늘의 일정 수 
+	function scheduleCount(){
+			
+			$.ajax({
+				url:"<%= ctxPath%>/calendar/scheduleCount.bts",
+				dataType:"JSON",
+				success:function(json){
+					//console.log("json.n"+json.n);
+					let html = "";
+					//scheCount
+					if(json.n == 0){
+						html += 0;
+					}
+					else if(json.n > 0){
+						html += json.n;
+					}
+					
+					$("span#scheCount").html(html);
+				},
+				error: function(request, status, error){
+						alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+				}
+			});
+			
+		}// end of function scheduleCount(){}-------------------------------------------------
+		
+	// 나의 예정 대여 현황	
+	function reservationCount(){
+			
+			$.ajax({
+				url:"<%= ctxPath%>/reservation/reservationCount.bts",
+				dataType:"JSON",
+				success:function(json){
+					//console.log("json.n"+json.n);
+					let html = "";
+					
+					if(json.n == 0){
+						html += 0;
+					}
+					else if(json.n > 0){
+						html += json.n;
+					}
+					
+					$("span#rserCount").html(html);
+				},
+				error: function(request, status, error){
+						alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+				}
+			});
+			
+		}// end of function reservationCount(){}-------------------------------------------------
+		
 </script>
 
 
@@ -282,7 +338,7 @@ td#no{
 		        				<span class="ic_dashboard2 ic_type_calendar" title="calendar"></span>
 		        			</span>
 		        			<span class="text">오늘의 일정</span>
-		        			<span class="badge">0</span>
+		        			<span class="badge" id="scheCount"></span>
 		        		</a>
 		        	</li>
 		        	<li class="summary-community">
@@ -300,7 +356,7 @@ td#no{
 		        				<span class="ic_dashboard2 ic_type_asset" title="asset"></span>
 		        			</span>
 		        			<span class="text">내 예약/대여 현황</span>
-		        			<span class="badge">0</span>
+		        			<span class="badge" id="rserCount"></span>
 		        		</a>
 		        	</li>
 		        	<li class="summary-report">
@@ -345,7 +401,7 @@ td#no{
 							</a>
 						</li>
 						<li class="odd btn_list_li" style="border-bottom-left-radius: 5px;">
-							<a href="" id="btn_a">
+							<a href="<%= ctxPath%>/calendar/calenderMain.bts" id="btn_a">
 								<span class="type">
 									<i class="far fa-calendar-check fa-2x" id="idx-icon"></i>
 								</span>

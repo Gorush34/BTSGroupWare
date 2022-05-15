@@ -292,3 +292,7 @@ On A.fk_att_sort_no = S.pk_att_sort_no
 where A.fk_emp_no = 80000002
 ) V
 where rno between 1 and 3
+
+
+select *
+from tbl_employees
