@@ -10,60 +10,7 @@
 
 	$(document).ready(function(){
 		
-		var html="";
-		for(var i=0; i<24; i++){
-			if(i<10){
-				html+="<option value='0"+i+"'>0"+i+"</option>";
-			}
-			else{
-				html+="<option value="+i+">"+i+"</option>";
-			}
-		}// end of for----------------------
 		
-		$("select#startHour").html(html);
-		$("select#endHour").html(html);
-		
-		// 시작분, 종료분 
-		html="";
-		for(var i=0; i<60; i=i+5){
-			if(i<10){
-				html+="<option value='0"+i+"'>0"+i+"</option>";
-			}
-			else {
-				html+="<option value="+i+">"+i+"</option>";
-			}
-		}// end of for--------------------
-		html+="<option value="+59+">"+59+"</option>"
-		
-		$("select#startMinute").html(html);
-		$("select#endMinute").html(html);
-		// === *** 달력(type="date") 관련 끝 *** === //
-		
-		$("select#startHour").html(html);
-		$("select#endHour").html(html);
-		
-		// '종일' 체크박스 클릭시
-		$("input#allDay").click(function() {
-			var bool = $('input#allDay').prop("checked");
-			
-			if(bool == true) {
-				$("select#startHour").val("00");
-				$("select#startMinute").val("00");
-				$("select#endHour").val("23");
-				$("select#endMinute").val("59");
-				$("select#startHour").prop("disabled",true);
-				$("select#startMinute").prop("disabled",true);
-				$("select#endHour").prop("disabled",true);
-				$("select#endMinute").prop("disabled",true);
-			} 
-			else {
-				$("select#startHour").prop("disabled",false);
-				$("select#startMinute").prop("disabled",false);
-				$("select#endHour").prop("disabled",false);
-				$("select#endMinute").prop("disabled",false);
-			}
-		});
-	
 		
 	});
 
@@ -72,22 +19,22 @@
 	function addResource(){
 		
 		// 제목 유효성 검사
-		var subject = $("input#rname").val().trim();
-        if(subject==""){
+		var rname = $("input#rname").val().trim();
+        if(rname==""){
 			alert("자원명을 입력하세요."); 
 			return;
 		}
         
         // 분류 선택 유무 검사
-		var calType = $("select.pk_classno").val().trim();
-		if(calType==""){
+		var fk_classno = $("select.fk_classno").val().trim();
+		if(fk_classno==""){
 			alert("분류를 선택하세요."); 
 			return;
 		}
 		
 		// 내용 유효성 검사
-		var subject = $("textarea#rinfo").val().trim();
-        if(subject==""){
+		var rinfo = $("textarea#rinfo").val().trim();
+        if(rinfo==""){
 			alert("자원정보를 입력하세요."); 
 			return;
 		}
@@ -115,7 +62,7 @@
 				<tr> 
 					<th>분류</th>
 					<td>
-						<select class="pk_classno" name="pk_classno"> 
+						<select class="fk_classno" name="fk_classno" id="fk_classno"> 
 	                   	 <option value="">선택하세요</option>
 						 <option value="1">3층 회의실</option>
 						 <option value="2">자동차</option>

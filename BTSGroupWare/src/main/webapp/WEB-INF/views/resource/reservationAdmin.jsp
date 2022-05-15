@@ -18,6 +18,16 @@
 	}); // end of $(document).ready(function(){}--------------------------------
 			
 			
+	// 자원 수정하기
+	function editResource(pk_rno){
+		var frm = document.editResourceFrm;
+		frm.pk_rno.value = pk_rno;
+		
+		frm.action = "<%= ctxPath%>/resource/resourceEdit.bts";
+		frm.method = "post";
+		frm.submit();
+	}			
+			
 </script>
 
 <div id="reservationAdmin">
@@ -31,16 +41,18 @@
 					<tr>
 						<th>자원명</th>
 						<th>분류명</th>
+						<th>자원정보</th>
 						<th>설정</th>
 					</tr>
 				</thead>
 				<tbody>
 				<c:if test="${not empty requestScope.resourceList}">
-					<c:forEach var="map" items="${requestScope.resourceList}">
+					<c:forEach var="map" items="${requestScope.resourceList}">						
 						<tr>
-							<td>${map.RNAME}</td>
+							<td>${map.RNAME}<input type="hidden" name="pk_rno" value="${map.PK_RNO}"></td>
 							<td>${map.CLASSNAME}</td>
-							<td><button type="button" class="btn btn-secondary btn-sm" onclick="resourceEdit()">설정</button></td>
+							<td>${map.RINFO}</td>
+							<td><button type="button" class="btn btn-secondary btn-sm" onclick="editResource('${map.PK_RNO}')">설정</button></td>
 						</tr>
 					</c:forEach>
 				</c:if>	
@@ -48,3 +60,7 @@
 			</table>
 		</div>
 </div>
+
+<form name="editResourceFrm">
+<input type="hidden" name="pk_rno"/>
+</form>
