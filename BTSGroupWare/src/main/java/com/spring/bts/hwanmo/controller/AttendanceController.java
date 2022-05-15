@@ -55,7 +55,7 @@ public class AttendanceController {
 	// === #155. 파일업로드 및 다운로드를 해주는 FileManager 클래스 의존객체 주입하기(DI : DependencyInjection) ===	  
 	@Autowired // Type에 따라 알아서 Bean 을 주입해준다. 
 	private FileManager fileManager; // type (FileManager) 만 맞으면 다 주입해준다.
-	
+	/*
 	// === 근태관리 시작 페이지 ===
 	@RequestMapping(value="/att/attMain.bts")
 	public ModelAndView attMain(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
@@ -64,10 +64,11 @@ public class AttendanceController {
 
 		return mav;
 	}
+	*/
 	
 	// === 연차내역 페이지 ===
 	@RequestMapping(value="/att/myAtt.bts")
-	public ModelAndView myAtt(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
+	public ModelAndView requiredLogin_myAtt(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
 		
 		HttpSession session = request.getSession();
 		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
@@ -181,7 +182,7 @@ public class AttendanceController {
 		mav.setViewName("myAtt.att");
 
 		return mav;
-	} // end of public ModelAndView myAtt(HttpServletRequest request, HttpServletResponse response, ModelAndView mav)------
+	} // end of public ModelAndView requiredLogin_myAtt(HttpServletRequest request, HttpServletResponse response, ModelAndView mav)------
 	
 	// 연차신청 페이지
 	@RequestMapping(value="/att/reportVacation.bts")
@@ -647,7 +648,7 @@ public class AttendanceController {
 	
 	// 결재페이지 보기
 	@RequestMapping(value="/att/viewReport.bts")
-	public ModelAndView view(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView requiredLogin_view(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		String str_pk_att_num = request.getParameter("pk_att_num");
 		int pk_att_num = 0;
@@ -873,7 +874,7 @@ public class AttendanceController {
 	
 	// === 연차내역 페이지 ===
 	@RequestMapping(value="/att/waitingSign.bts")
-	public ModelAndView waitingSign(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
+	public ModelAndView requiredLogin_waitingSign(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
 		
 		HttpSession session = request.getSession();
 		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
