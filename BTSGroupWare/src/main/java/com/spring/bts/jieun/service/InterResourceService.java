@@ -25,4 +25,16 @@ public interface InterResourceService {
 	// === 예약취소 === //
 	int cancelReservation(String pk_rserno);
 
+	// === 자원 등록 하기 : 관리자 === //
+	int resourceRegister_end(Map<String, String> paraMap);
+
+	// == 자원 수정 페이지 == //
+	List<Map<String, String>> resourceEdit(String pk_rno);
+
+	// == 자원 수정 == //
+	int resourceEditEnd(Map<String, String> paraMap);
+
+	// == 자원 삭제 == //
+	int deleteResource(String pk_rno);
+
 }

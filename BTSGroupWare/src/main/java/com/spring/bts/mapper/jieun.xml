@@ -288,6 +288,7 @@
 		from tbl_resource R
 		join tbl_resourceclass RC
 		on R.fk_classno = RC.pk_classno
+		order by RC.pk_classno asc
 	</select>
 	
 	<select id="classSelect" resultMap="resourceReservation_Map">
@@ -358,4 +359,33 @@
 		where pk_rserno = #{pk_rserno}
 	</delete>
 	
+	
+	
+	<!-- 자원 등록하기 : 관리자 -->
+	<insert id="resourceRegister_end" parameterType="HashMap">
+		insert into tbl_resource(PK_RNO, fk_classno, rname, rinfo)
+		values (seq_rno.nextval, #{fk_classno}, #{rname}, #{rinfo})
+	</insert>
+	
+	
+	<!-- 자원 수정 페이지 -->
+	<select id="resourceEdit" parameterType="String" resultMap="resourceReservation_Map">
+	 	select pk_rno, fk_classno, rname, rinfo
+	 	from tbl_resource
+	 	where pk_rno = #{pk_rno}
+	</select>
+	
+	<!-- 자원 수정 -->
+	<update id="resourceEditEnd" parameterType="HashMap">
+		update tbl_resource set fk_classno = #{pk_classno}
+							  , rname = #{rname}
+							  , rinfo = #{rinfo}
+		where pk_rno = #{pk_rno}
+	</update>
+	
+	<!-- 자원 삭제 -->
+	<delete id="deleteResource">
+		delete from tbl_resource
+		where pk_rno = #{pk_rno}
+	</delete>
 </mapper>

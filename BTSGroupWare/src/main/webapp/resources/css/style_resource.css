@@ -62,5 +62,10 @@ table#resourceRegisterContent > tbody  table#reservationTable{
 
 table#resourceListContentTable th, td{
 	 	
-	 	vertical-align: middle;
-	}
+ 	vertical-align: middle;
+}
+
+.clickside{
+      font-weight: bold;
+      color: #97b8e0;
+   }
