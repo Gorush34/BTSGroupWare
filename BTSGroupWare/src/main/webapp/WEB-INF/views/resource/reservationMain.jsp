@@ -23,7 +23,7 @@
 
     var calendar;
 	// 처음 초기값은 1 => 회의실1 정보를 불러옴
-	var pk_rno = 1;
+	var do_pk_rno = 1;
 	//전체 모달 닫기(전역함수인듯)
 	window.closeModal = function(){
 	    $('.modal').modal('hide');
@@ -32,6 +32,13 @@
 	
 	$(document).ready(function(){
 		
+		
+	  // 사이드바의 자원명을 선택했을 시 선택한 텍스트의 색을 변경
+	    $(".pk_rnoT").click(function() {
+	       $(".pk_rnoT").removeClass("clickside");
+	       $(this).addClass("clickside");
+	    });
+
 		
 		// 서브캘린더 select로 가져오기 //
 		$("select.calpk_classno").change(function(){
@@ -65,8 +72,6 @@
 			}
 			
 		});
-		
-	 });// end of $(document).ready(function(){}------------------------------------
 		
 		// 모든 datepicker에 대한 공통 옵션 설정
 	    $.datepicker.setDefaults({
@@ -114,16 +119,20 @@
 		
 		
 	    // input 을 datepicker로 선언
-	    $("input#starts-at").datepicker();                    
-	    $("input#ends-at").datepicker();
+	 //   $("input#startdate").datepicker();                    
+	 //   $("input#enddate").datepicker();
 	    	    
+		
+	 });// end of $(document).ready(function(){}------------------------------------
+		
+	
 	    
 	    document.addEventListener('DOMContentLoaded', function() {	
 		// === 캘린더 보여주기 (기본 틀) === //
 	    var calendarEl = document.getElementById('calendar');
 
 	    calendar = new FullCalendar.Calendar(calendarEl, {
-	      timeZone: 'UTC',
+	      timeZone: 'local',
 	      initialView: 'timeGridWeek',
 	      headerToolbar: {
 	        left: 'prev,next today',
@@ -133,9 +142,10 @@
 	      events: function(info, successCallback, failureCallback){
 	    	     $.ajax({
 	                 url: '<%= ctxPath%>/reservation/resourceSpecialReservation.bts',
-	                 data:{"pk_rno":pk_rno},
+	                 data:{"pk_rno":do_pk_rno},
 	                 dataType: "json",
 	                 success:function(json) {
+	                	// alert("달력pk_rno:"+do_pk_rno);
 	                	 var events = [];
 	                	 
 	                	 if(json.length > 0){
@@ -181,8 +191,8 @@
 	            addRs();   // 모달을 초기화하고 자원명을 불러오는 함수
 	            
 	            // 클릭한 시각으로 모달의 datepicker를 변경시킴
-	              $("input[name=startdate]").val(date);   
-	              $("input[name=enddate]").val(date);
+	              $("input[name=startDate]").val(date);   
+	              $("input[name=endDate]").val(date);
 	              
 	             var hh = moment(info.dateStr).format("HH");
 	              $("select#startHour").val(hh).change();
@@ -231,13 +241,13 @@
 	 });
 	 
 
-			  
-	// 자원을 변경했을 시 자원 변수값을 변경해주는 함수	  
+	 // 자원을 변경했을 시 자원 변수값을 변경해주는 함수	  
 	  function goResourceReservation(pk_rno) {
-		  //alert("pk_rno :" + pk_rno);
-		  	 pk_rno = pk_rno;
-		  	 calendar.refetchEvents(); // calendar가 $(document).ready 안에만 있으면 지역변수 문제로 오류가 뜰 수 있음! 참고할 것!
-	}
+		  do_pk_rno = pk_rno;
+		//  alert("클릭pk_rno :" + do_pk_rno);
+		  calendar.refetchEvents(); // calendar가 $(document).ready 안에만 있으면 지역변수 문제로 오류가 뜰 수 있음! 참고할 것!
+	}				  
+	
 			
 		
 	
@@ -434,7 +444,7 @@
 							<c:forEach var="map2" items="${requestScope.resourceList}">
 							<c:if test="${map.PK_CLASSNO eq map2.PK_CLASSNO}">
 							<tr>
-								<td style="padding: 3px; cursor: pointer;" onclick="goResourceReservation('${map2.PK_RNO}')"><input type="hidden" id="resource" name="pk_rno" value="${map2.PK_RNO}">${map2.RNAME}</td>
+								<td class="pk_rnoT" id="resource_T'+${map2.PK_RNO}+'" style="padding: 3px; cursor: pointer;" onclick="goResourceReservation('${map2.PK_RNO}')"><input type="hidden" id="resource_'+${map2.PK_RNO}+'" name="pk_rno" value="${map2.PK_RNO}">${map2.RNAME}</td>
 							</tr>
 							</c:if>
 							</c:forEach>
