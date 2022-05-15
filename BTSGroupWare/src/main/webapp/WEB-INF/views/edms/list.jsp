@@ -167,7 +167,7 @@
 	<!-- 문서목록 시작 -->
 	<div id="edmsList">
 		<span class="edms_title">문서목록보기</span>
-
+		<!--
 		<div class="dropdown">
 			<button class="btn btn-primart-outline dropdown-toggle" type="button" data-toggle="dropdown"
 					aria-haspopup="true" aria-expanded="false">10개 보기</button>
@@ -177,7 +177,8 @@
 				<a class="dropdown-item" href="#">50개 보기</a>
 			</div>
 		</div>
-				
+		-->
+			
 		<div class="divClear"></div>
 
 		<%-- 결재대기 목록이 없을 때 시작 --%>
@@ -222,7 +223,7 @@
 					
 					<td>
 					<c:if test="${apprvo.emergency == 1}">
-						<button id="btn_emergency" class="btn btn-outline-danger" style="height: 100%; line-height: 9pt; font-size: 9pt;">긴급</button>
+						<button id="btn_emergency" class="btn btn-outline-danger disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">긴급</button>
 					</c:if>
 					<c:if test="${apprvo.emergency == 0}">
 						&nbsp;
@@ -245,9 +246,20 @@
 					
 					<td>${apprvo.pk_appr_no}</td>
 					<td>
-						<c:if test="${apprvo.status == 0}">대기중 ${apprvo.status}</c:if>
-						<c:if test="${apprvo.status == 1}">승인됨 ${apprvo.status}</c:if>
-						<c:if test="${apprvo.status == 2}">반려됨 ${apprvo.status}</c:if>
+						<c:choose>
+							<c:when test="${apprvo.status == 0}">
+							<button class="btn btn-outline-secondary disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">대기중</button>
+							</c:when>
+							<c:when test="${apprvo.status == 1}">
+							<button class="btn btn-outline-info disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">진행중</button>
+							</c:when>
+							<c:when test="${apprvo.status == 2}">
+							<button class="btn btn-info disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">승인됨</button>
+							</c:when>
+							<c:when test="${apprvo.status == 3}">
+							<button class="btn btn-secondary disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">반려됨</button>
+							</c:when>
+						</c:choose>
 					</td>
 				</tr>
 				</c:forEach>
@@ -270,7 +282,7 @@
 		<form name="searchFrm" style="margin-top: 20px;">
 			<select name="searchType" id="searchType" style="height: 26px;">
 				<option value="title">글제목</option>
-				<option value="emp_name">글쓴이</option>
+				<!-- <option value="emp_name">글쓴이</option> -->
 			</select>
 			<input type="text" name="searchWord" id="searchWord" class="form-controll" size="40" autocomplete="off" />
 			<input type="text" style="display: none;" />

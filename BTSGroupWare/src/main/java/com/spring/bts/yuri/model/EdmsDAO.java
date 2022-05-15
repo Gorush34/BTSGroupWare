@@ -122,10 +122,18 @@ public class EdmsDAO implements InterEdmsDAO {
 		List<EmployeeVO> empList = sqlsession.selectList("yuri.addBook_depInfo_select");
 		return empList;
 	}
-
+	
+	// 승인하기
 	@Override
 	public int accept(ApprVO apprvo) {
 		int n = sqlsession.update("yuri.accept", apprvo);
+		return n;
+	}
+
+	// 반력하기
+	@Override
+	public int reject(ApprVO apprvo) {
+		int n = sqlsession.update("yuri.reject", apprvo);
 		return n;
 	}
 }

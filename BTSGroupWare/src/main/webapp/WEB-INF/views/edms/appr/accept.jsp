@@ -19,8 +19,8 @@
 		
 		$("button#btnAccpet").click(function() {
 		
-			console.log(abc);
-			console.log($("input#fk_emp_no").val());
+			console.log("abc = " + abc);
+			console.log('$("input#fk_emp_no").val() = ' + $("input#fk_emp_no").val());
 			
 			
 		//	alert("${requestScope.pw}");
@@ -53,17 +53,17 @@
 	<h2 style="margin-bottom: 30px;">문서승인하기</h2>
 
 <form name="acceptFrm">
-	<table style="width: 1024px" class="table table-bordered">
+	<table style="width: 100%;" class="table table-bordered">
 		<tr>
-			<th style="width: 15%; background-color: #DDDDDD">
-				<input type="text" class="form-control" value="승인하시겠습니가?">
+			<th style="width: 80%; background-color: #DDDDDD">
+				<input type="text" class="form-control" value="승인하시겠습니까?">
 			</th>
 			<td>
 				<input type="text" name="fk_emp_no" id="fk_emp_no" />
 				<input type="text" name="pk_appr_no" class="form-control" value="${requestScope.apprvo.pk_appr_no}" readonly />
 				<input type="text" name="fk_emp_no2" class="form-control" value="${requestScope.apprvo.fk_emp_no}" readonly>
-				<input type="hidden" name="emp_no" id="emp_no" value="${requestScope.apprvo.fk_emp_no}"/>
-				
+				<input type="hidden" name="emp_no" id="mid_emp_no" value="${requestScope.apprvo.fk_fin_empno}"/>
+				<input type="hidden" name="emp_no" id="fin_emp_no" value="${requestScope.apprvo.fk_mid_empno}"/>
 			</td>
 		</tr>		
 	</table>

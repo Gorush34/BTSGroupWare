@@ -163,9 +163,17 @@ public class EdmsService implements InterEdmsService {
 		return empList;
 	}
 
+	// 승인하기
 	@Override
 	public int accept(ApprVO apprvo) {
 		int n = dao.accept(apprvo);
+		return n;
+	}
+
+	// 반려하기
+	@Override
+	public int reject(ApprVO apprvo) {
+		int n = dao.reject(apprvo);
 		return n;
 	}
 	

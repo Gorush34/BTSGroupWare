@@ -50,5 +50,8 @@ public interface InterEdmsService {
 	// 승인하기
 	int accept(ApprVO apprvo);
 	
+	// 반려하기
+	int reject(ApprVO apprvo);
+	
 	
 }

@@ -171,10 +171,7 @@
             });//end of $("select#docform").on("change", function()  */
          
          
-          /* 
-          	오류 잘못된 코드
-          	
-          	$("input#emg").click(function () {
+          /* $("input#emg").click(function () {
              
              // 긴급버튼 체크 시 값 전달(긴급이면 1을, 아니면 0을 전달, default값은 0이다.) 
             let flag = $('input:checkbox[name="emg"]').is(':checked');
@@ -195,7 +192,7 @@
           }) */
           
           
-           <input type="checkbox" name="emg" id="emg">&nbsp;긴급
+/*           <input type="checkbox" name="emg" id="emg">&nbsp;긴급
          <input type="hidden" name="emergency" id="emergency"> */
           
           
@@ -234,9 +231,9 @@
          contentval = $("textarea#contents").val().replace(/<p><br><\/p>/gi, "<br>"); //<p><br></p> -> <br>로 변환
          
          /*    
-		            대상문자열.replace(/찾을 문자열/gi, "변경할 문자열");
-		            ==> 여기서 꼭 알아야 될 점은 나누기(/)표시안에 넣는 찾을 문자열의 따옴표는 없어야 한다는 점입니다. 
-		            그리고 뒤의 gi는 다음을 의미합니다.
+            대상문자열.replace(/찾을 문자열/gi, "변경할 문자열");
+            ==> 여기서 꼭 알아야 될 점은 나누기(/)표시안에 넣는 찾을 문자열의 따옴표는 없어야 한다는 점입니다. 
+            그리고 뒤의 gi는 다음을 의미합니다.
             
             g : 전체 모든 문자열을 변경 global
             i : 영문 대소문자를 무시, 모두 일치하는 패턴 검색 ignore
@@ -305,8 +302,6 @@
       
       
       <%-- 결재선 지정하기 시작 --%>
-
-      
       $( "div#y_teamwon" ).slideToggle().hide();
         $( "button#y_team" ).click( function() {
             $( "div#y_teamwon" ).slideToggle();
@@ -353,12 +348,10 @@
            
            var employee_no =  $(this).val();
               $("input#emp_no").val(employee_no);
+      //        $("input#fk_mid_empno").val(employee_no);   ////////////////////////////////////////////////////////////////      
            
-      //      $("input#fk_mid_empno").val(employee_no);   ////////////////////////////////////////////////////////////////      
-
-      
               $("input#emp_no2").val(employee_no);
-      //      $("input#fk_fin_empno").val(employee_no);   
+      //        $("input#fk_fin_empno").val(employee_no);   
               
            var employee_name =  $(this).next().val();
               $("input#emp_name").val(employee_name);
@@ -370,15 +363,14 @@
               $("input#emp_dept").val(employee_dept);
               $("input#emp_dept2").val(employee_dept);
               
-        });       
+        });
         <%-- 결재선 지정하기 종료 --%>
       
       
       
    }); // end of $(document).ready(function(){}) --------------------
    
-   // 체크박스 하나만 선택되게 하는 함수 시작
-
+   /* 체크박스 하나만 선택되게 하는 함수 시작 */
    function checkOnlyOne(element) {
      
      const checkboxes 
@@ -390,7 +382,7 @@
      
      element.checked = true;
    }      
-   // 체크박스 하나만 선택되게 하는 함수 끝
+   /* 체크박스 하나만 선택되게 하는 함수 끝 */
    
    function middle_approve(){
       
@@ -437,15 +429,16 @@
    
    }
    
-   
+   // 결재라인을 지정해서 담아주는 메소드
    function getAppr() {
       $(document).on("click", "#insert_customer_btn", function(event){
          if( $("#last_name").val() == ""){
               alert("최종승인자 값이 없습니다");
               return false;
-         } // end of if
+         }
          else if ( $("#last_empno").val() != "" ) {
-            var emp_no = $("input#middle_empno").val();
+        	
+        	var emp_no = $("input#middle_empno").val();
             var emp_name = $("input#middle_name").val();
             var emp_rank = $("input#middle_rank").val();
             var emp_dept = $("input#middle_dept").val();
@@ -457,28 +450,33 @@
             
             // 중간결재
             
-             var emp_no2 = $("input#last_empno").val();
+            var emp_no2 = $("input#last_empno").val();
             var emp_name2 = $("input#last_name").val();
             var emp_rank2 = $("input#last_rank").val();
             var emp_dept2 = $("input#last_dept").val();
              
             $("input#emp_no2").val(emp_no2);
-             $("input#emp_name2").val(emp_name2);
+            $("input#emp_name2").val(emp_name2);
             $("input#emp_rank2").val(emp_rank2);
             $("input#emp_dept2").val(emp_dept2);
              
             // 최종결재
-
-            $("input#fk_mid_empno").val(emp_name+"("+emp_no+")");
-            $("input#fk_fin_empno").val(emp_name2+"("+emp_no2+")");
             
-             // 값 input
+            
+            // 보여주기 위해서 담아주는 곳
+            $("input#fk_mid_empno2").val(emp_name+"("+emp_no+")");
+            $("input#fk_fin_empno2").val(emp_name2+"("+emp_no2+")");
+            
+            // 오류 / 실제로 컨트롤러로 넘어가는 곳 <<<< 위와 같이 "(" ~ 넘기면 fk_mid_empno에 "(" ~ 가 담기는데, 그러면 컨트롤러에서 값을 못 받아서 자꾸 작성이 안되는 것이다!
+            $("input#fk_mid_empno").val(emp_no);
+            $("input#fk_fin_empno").val(emp_no2);
+            
+            // 값 input
              
-          } // end of else if
-      }); // $(document).on("click", "#insert_customer_btn", function(event)
-   } // end of getAppr()
+          }
+      });
+   }   // end of getAppr()
    
-
 </script>
 
 
@@ -541,12 +539,14 @@
       <tr>
          <th class="edmsView_th" rowspan="2">결재정보</th>
          <td style="width: 20%;">중간결재자</td>
-         <td><input type="text" name="fk_mid_empno" id="fk_mid_empno" class="form-control" placeholder="중간결재자 정보" value="" readonly /></td>
+         <td><input type="hidden" name="fk_mid_empno" id="fk_mid_empno" class="form-control" placeholder="중간결재자 정보" value="" readonly /></td>
+         <td><input type="text" name="fk_mid_empno2" id="fk_mid_empno2" class="form-control" placeholder="중간결재자 정보" value="" readonly /></td>
       </tr>
       
       <tr>
          <td style="width: 20%;">최종결재자</td>
-         <td><input type="text" name="fk_fin_empno" id="fk_fin_empno" class="form-control" placeholder="최종결재자 정보" value="" readonly /></td>
+         <td><input type="hidden" name="fk_fin_empno" id="fk_fin_empno" class="form-control" placeholder="최종결재자 정보" value="" readonly /></td>
+         <td><input type="text" name="fk_fin_empno2" id="fk_fin_empno2" class="form-control" placeholder="최종결재자 정보" value="" readonly /></td>
       </tr>
    
 
@@ -614,7 +614,7 @@
    <div class="modal-dialog" style="max-width: 100%; width: auto; display: table;">
    <div class="modal-content" style= "height:90%;">
    <div class="modal-header">
-   	<h4 class="modal-title" id="exampleModalLabel">결재 참조</h4>
+   <h4 class="modal-title" id="exampleModalLabel">결재 참조</h4>
    </div>
    
    <div class="modal-body">
