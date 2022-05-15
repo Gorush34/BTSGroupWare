@@ -255,10 +255,18 @@ public class MailDAO implements InterMailDAO {
 		return getTempStatus;
 	}
 
-	// importance_star Update 를 통해 값을 0,1로 변경해주기
+
+	// updateImportance_star_rec Update 를 통해 값을 0,1로 변경해주기
 	@Override
-	public int updateFromTblMailImportance_star(Map<String, String> paraMap) {
-		int n = sqlsession.update("minjeong.updateFromTblMailImportance_star", paraMap);
+	public int updateImportance_star_rec(Map<String, String> paraMap) {
+		int n = sqlsession.update("minjeong.updateImportance_star_rec", paraMap);
+		return n;
+	}
+
+	// updateImportance_star_send Update 를 통해 값을 0,1로 변경해주기
+	@Override
+	public int updateImportance_star_send(Map<String, String> paraMap) {
+		int n = sqlsession.update("minjeong.updateImportance_star_send", paraMap);
 		return n;
 	}
 

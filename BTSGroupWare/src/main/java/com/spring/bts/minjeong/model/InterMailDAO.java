@@ -103,8 +103,11 @@ public interface InterMailDAO {
 	// pk_mail_num 를 통해서 temp_status 조회해오기
 	Map<String, String> getTempStatus(String pk_mail_num);
 
-	// importance_star Update 를 통해 값을 0,1로 변경해주기
-	int updateFromTblMailImportance_star(Map<String, String> paraMap);
+	// updateImportance_star_rec Update 를 통해 값을 0,1로 변경해주기
+	int updateImportance_star_rec(Map<String, String> paraMap);
+
+	// updateImportance_star_send Update 를 통해 값을 0,1로 변경해주기
+	int updateImportance_star_send(Map<String, String> paraMap);
 	
 
 }

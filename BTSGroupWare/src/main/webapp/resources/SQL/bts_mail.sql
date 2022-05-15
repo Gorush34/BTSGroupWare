@@ -534,8 +534,13 @@ where rno between #{startRno} and #{endRno}
 
 select *
 from tbl_mail
-where IMPORTANCE_STAR = (null)
 
 update tbl_mail set IMPORTANCE_STAR = 0
 
 commit;
+
+
+
+
+
+

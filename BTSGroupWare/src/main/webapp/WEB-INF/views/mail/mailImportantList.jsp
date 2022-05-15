@@ -129,6 +129,7 @@
 	//	$("span#importance_star").click(function () {
 			// 별모양을 클릭했을 때, importance_star 에 1 값을 준다.
 		//	var pk_mail_num = $(this).next().val();
+			// 중요메일함은 목록에서 제외하기 위해 isRec 값을 보내지 않는다.
 			console.log(pk_mail_num);
 				
 			$.ajax({				
@@ -240,10 +241,7 @@
 								</td>
 								<td style="width: 40px;">
 									<%-- 별모양(☆) 클릭 시 importance_star를 1(★)로 바꾼다. (중요메일함 = importance_star=1인 목록) --%>
-									<c:if test="${ImportantMailList.importance_star == '0'}">
-										<span class="fa fa-star-o" id="importance_star" style="cursor: pointer;" onclick="goImportantList('${ImportantMailList.pk_mail_num}')"></span>
-									</c:if>
-									<c:if test="${ImportantMailList.importance_star == '1'}">
+									<c:if test="${ImportantMailList.importance_star_send == '1'}">
 										<span class="fa fa-star" id="importance_star" style="cursor: pointer;" onclick="goImportantList('${ImportantMailList.pk_mail_num}')"></span>
 									</c:if>
 								</td>

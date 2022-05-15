@@ -967,30 +967,47 @@ public class MailController {
 	@ResponseBody
 	@RequestMapping(value = "/mail/MailMoveToImportantList.bts", produces = "text/plain; charset=UTF-8")	
 	public String MailMoveToImportantList(HttpServletRequest request, MailVO mailvo) {
-	
+
+
+		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
+		
+		//	System.out.println("보낸메일함 페이지에서 로그인한 사용자 id (사원번호) 받아오기 " + loginuser.getPk_emp_no());
+		
+		String fk_emp_num = String.valueOf(loginuser.getPk_emp_no());		
 		// 중요체크 표시한 pk_mail_num , Ajax로 보낸 데이터를 잘 받아오나 확인하자
 		String pk_mail_num = request.getParameter("pk_mail_num");
 	//	System.out.println("확인용 pk_mail_num : "+ pk_mail_num);
+		String isRec = request.getParameter("isRec");
+	//	System.out.println("확인용 isRec :" + isRec );	// 확인용 isRec :1
 		
+		// isRec : 1 이면 받은메일함 / 0이면 보낸메일함
 		// 삭제버튼을 누른 값
-	//	String importance_star = request.getParameter("importance_star");
-	//	System.out.println("확인용 importance_star : "+ importance_star);
+		// String importance_star = request.getParameter("importance_star");
+		// System.out.println("확인용 importance_star : "+ importance_star);
 
-		/*
-
-		*/
 		
 		int n = 0;
 		int result = 0;
 		
 		Map<String, String> paraMap = new HashMap<>();			
 		paraMap.put("pk_mail_num",pk_mail_num);
+		paraMap.put("fk_emp_num", fk_emp_num);
+		
 	//	paraMap.put("importance_star", importance_star);
 		
 		// importance_star Update 를 통해 값을 0,1로 변경해주기
-		n = service.updateFromTblMailImportance_star(paraMap);
-		String importance_star = paraMap.get("importance_star");
-		mailvo.setImportance_star(importance_star);
+		if("1".equals(isRec)) {
+			// isRec : 1 이면 받은메일함 
+		n = service.updateImportance_star_rec(paraMap);
+		}
+		else {
+			// isRec : 0 이면 보낸메일함 
+			n = service.updateImportance_star_send(paraMap);
+		}
+	//	String importance_star = paraMap.get("importance_star");
+	//	mailvo.setImportance_star(importance_star);
 		
 		JSONObject jsonObj = new JSONObject();
 		

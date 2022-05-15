@@ -136,7 +136,8 @@
 			$.ajax({				
 		 	    url:"<%= ctxPath%>/mail/MailMoveToImportantList.bts", 
 				type:"GET",
-				data: {"pk_mail_num":pk_mail_num},
+				data: {"pk_mail_num":pk_mail_num,
+					   "isRec":1},
 				dataType:"JSON",
 				success:function(json){
 					
@@ -241,10 +242,10 @@
 								</td>
 								<td style="width: 40px;">
 									<%-- 별모양(☆) 클릭 시 importance_star를 1(★)로 바꾼다. (중요메일함 = importance_star=1인 목록) --%>
-									<c:if test="${receiveMailList.importance_star == '0'}">
+									<c:if test="${receiveMailList.importance_star_rec == '0'}">
 										<span class="fa fa-star-o" id="importance_star" style="cursor: pointer;" onclick="goImportantList('${receiveMailList.pk_mail_num}')"></span>
 									</c:if>
-									<c:if test="${receiveMailList.importance_star == '1'}">
+									<c:if test="${receiveMailList.importance_star_rec == '1'}">
 										<span class="fa fa-star" id="importance_star" style="cursor: pointer;" onclick="goImportantList('${receiveMailList.pk_mail_num}')"></span>
 									</c:if>									
 								</td>

@@ -32,14 +32,14 @@
 	
 	<!--  페이징처리 한 받은 메일목록 (검색 있든, 없든 모두 다 포함)  -->
  	<select id="recMailListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
-		select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date, importance, importance_star
+		select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date, importance, importance_star_rec
 		from 
 		(
 		select row_number() over(order by pk_mail_num desc) AS rno,
 		       pk_mail_num, fk_senduser_num, sendempname, subject
 		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
 		       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
-		       , importance, importance_star
+		       , importance, importance_star_rec
 		from tbl_mail
 		where fk_receiveuser_num = #{fk_receiveuser_num} and del_status = 0 and reservation_status = 0 and temp_status = 0
 		<if test="searchType != ''">
@@ -111,14 +111,14 @@
 	
 	<!-- 페이징처리 한 보낸 메일목록 (검색 있든, 없든 모두 다 포함) -->
  	<select id="sendMailListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
-		select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date, importance, importance_star
-		from 
+		select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date, importance, importance_star_send
+		from
 		(
 		select row_number() over(order by pk_mail_num desc) AS rno,
 		       pk_mail_num, fk_receiveuser_num, recempname, subject
 		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
 		       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
-		       , importance, importance_star
+		       , importance, importance_star_send
 		from tbl_mail
 		where fk_senduser_num = #{fk_senduser_num} and del_status = 0 and reservation_status = 0 and temp_status = 0
 		<if test="searchType != ''">
@@ -204,14 +204,14 @@
 	
 	<!--  페이징처리 한 휴지통목록 (검색 있든, 없든 모두 다 포함)  -->
 	<select id="RecyclebinMailListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
-		select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date, importance, importance_star
+		select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date, importance, importance_star_send, importance_star_rec
 		from 
 		(
 		select row_number() over(order by pk_mail_num desc) AS rno,
 		       pk_mail_num, fk_senduser_num, sendempname, subject
 		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
 		       , filename , to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
-		       , importance, importance_star
+		       , importance, importance_star_send, importance_star_rec
 		from tbl_mail
 		where (fk_receiveuser_num = #{fk_receiveuser_num} or fk_senduser_num = #{fk_receiveuser_num} ) and del_status = 1
 		<if test="searchType != ''">
@@ -262,14 +262,14 @@
 	
 	<!--  페이징처리 한 예약메일함목록 1 (검색 있든, 없든 모두 다 포함)  -->
  	<select id="getReservationListWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
-		select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date, importance, importance_star
+		select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date, importance, importance_star_send, importance_star_rec
 		from 
 		(
 		select row_number() over(order by pk_mail_num desc) AS rno,
 		       pk_mail_num, fk_receiveuser_num, recempname, subject
 		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
 		       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
-		       , importance, importance_star
+		       , importance, importance_star_send, importance_star_rec
 		from tbl_mail
 		where fk_senduser_num = #{fk_senduser_num} and del_status = 0 and temp_status = 0 and reservation_status = 1
 		<if test="searchType != ''">
@@ -286,14 +286,14 @@
 		select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recempname, sendempname
 		     , recemail, sendemail, subject, content, importance, reg_date
 		     , filename, orgfilename, filesize, reservation_date, del_status
-		     , reservation_status, read_status, importance_star
+		     , reservation_status, read_status, importance_star_send, importance_star_rec
 		from 
 		(
 		select row_number() over(order by pk_mail_num desc) AS rno,
 		       pk_mail_num, fk_senduser_num, fk_receiveuser_num, recempname, sendempname
 		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date, recemail, sendemail, subject, content, importance
 		       , filename, orgfilename, filesize, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
-		       , del_status, reservation_status, read_status, importance_star
+		       , del_status, reservation_status, read_status, importance_star_send, importance_star_rec
 		from tbl_mail
 		where del_status = 0 and reservation_status = 1
 		order by reservation_date desc	
@@ -343,13 +343,13 @@
 	
 	<!--  페이징처리 한 임시보관함 메일목록 (검색 있든, 없든 모두 다 포함) (tmp_status == 1) -->
  	<select id="getTemporaryMailListWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
-		select pk_mail_num, fk_senduser_num, recempname, sendempname, subject, reg_date, filename, importance, importance_star
+		select pk_mail_num, fk_senduser_num, recempname, sendempname, subject, reg_date, filename, importance, importance_star_send, importance_star_rec
 		from 
 		(
 		select row_number() over(order by pk_mail_num desc) AS rno,
 		       pk_mail_num, fk_senduser_num, recempname, sendempname, subject
 		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
-		       , filename, importance, importance_star
+		       , filename, importance, importance_star_send, importance_star_rec
 		from tbl_mail
 		where fk_senduser_num = #{fk_senduser_num} and del_status = 0 and reservation_status = 0 and temp_status = 1
 		<if test="searchType != ''">
@@ -389,7 +389,7 @@
 	<select id="getTotalCount_important" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_mail
-		where (fk_receiveuser_num = #{fk_receiveuser_num} or fk_senduser_num = #{fk_receiveuser_num} ) and importance_star = 1
+		where (fk_receiveuser_num = #{fk_receiveuser_num} or fk_senduser_num = #{fk_receiveuser_num} ) and importance_star_send = 1 and importance_star_rec = 1
 		<if test="searchType != ''">
 		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
 		</if>		
@@ -398,16 +398,16 @@
 	<!-- 페이징처리 한 중요메일함 목록 (검색 있든, 없든 모두 다 포함) -->
 
 	<select id="ImportantMailListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
-		select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date, importance, importance_star
+		select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date, importance, importance_star_send, importance_star_rec
 		from 
 		(
 		select row_number() over(order by pk_mail_num desc) AS rno,
 		       pk_mail_num, fk_senduser_num, sendempname, subject
 		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
 		       , filename , to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
-		       , importance, importance_star
+		       , importance, importance_star_send, importance_star_rec
 		from tbl_mail
-		where (fk_receiveuser_num = #{fk_receiveuser_num} or fk_senduser_num = #{fk_receiveuser_num} ) and importance_star = 1
+		where (fk_receiveuser_num = #{fk_receiveuser_num} or fk_senduser_num = #{fk_receiveuser_num} ) and importance_star_send = 1 and importance_star_rec = 1
 		<if test="searchType != ''">
 		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
 		</if>	
@@ -432,12 +432,21 @@
 		where V.pk_mail_num = #{pk_mail_num}	
 	</select>
 
-	<!-- importance_star Update 를 통해 값을 0,1로 변경해주기 -->
-	<update id="updateFromTblMailImportance_star" parameterType="HashMap">
-		update tbl_mail set importance_star = decode(importance_star, 1, 0, 0, 1)
+
+	<!--  updateImportance_star_rec Update 를 통해 값을 0,1로 변경해주기 -->
+	<update id="updateImportance_star_rec" parameterType="HashMap">
+		update tbl_mail set
+		importance_star_rec = decode(importance_star_rec, 1, 0, 0, 1)
 		where pk_mail_num = #{pk_mail_num}
 	</update>
 
+	<!--  updateImportance_star_send Update 를 통해 값을 0,1로 변경해주기 -->
+	<update id="updateImportance_star_send" parameterType="HashMap">
+		update tbl_mail set
+		importance_star_send = decode(importance_star_send, 1, 0, 0, 1)	
+		where pk_mail_num = #{pk_mail_num}
+	</update>
+	
 	<!-- ===== 중요메일함 끝 ===== -->
 
 	

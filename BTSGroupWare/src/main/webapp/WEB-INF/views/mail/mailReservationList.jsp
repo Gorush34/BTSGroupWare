@@ -135,7 +135,8 @@
 			$.ajax({				
 		 	    url:"<%= ctxPath%>/mail/MailMoveToImportantList.bts", 
 				type:"GET",
-				data: {"pk_mail_num":pk_mail_num},
+				data: {"pk_mail_num":pk_mail_num,
+					   "isRec":0},
 				dataType:"JSON",
 				success:function(json){
 					
