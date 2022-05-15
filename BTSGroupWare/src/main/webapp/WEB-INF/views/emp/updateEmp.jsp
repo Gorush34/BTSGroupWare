@@ -19,6 +19,27 @@
 
 	$(document).ready(function() {
 		
+		// select 된 곳의 값들 넣어주기 시작
+		$("select[name=fk_department_id]").val((("${requestScope.loginuser.fk_department_id}" == '') ? "" : "${requestScope.loginuser.fk_department_id}")).prop("selected", true); 
+		$("select[name=fk_rank_id]").val((("${requestScope.loginuser.fk_rank_id}" == '') ? "" : "${requestScope.loginuser.fk_rank_id}")).prop("selected", true); 
+
+		$("input#postcode").val("${requestScope.loginuser.postal}");
+		
+		$("select[name=num1]").val((("${requestScope.loginuser.num1}" == '') ? "" : "${requestScope.loginuser.num1}")).prop("selected", true); 
+		$("input[name=num2]").val( ("${requestScope.loginuser.num2}" == '') ? "" : "${requestScope.loginuser.num2}" ); 
+		$("input[name=num3]").val( ("${requestScope.loginuser.num3}" == '') ? "" : "${requestScope.loginuser.num3}" ); 
+		
+		$("input[name=hp2]").val( ("${requestScope.loginuser.hp2}" == '') ? "" : "${requestScope.loginuser.hp2}" ); 
+		$("input[name=hp3]").val( ("${requestScope.loginuser.hp3}" == '') ? "" : "${requestScope.loginuser.hp3}" ); 
+		
+		if( $("input#gen").val() == "1") {
+			$("input#male").prop("checked", true);
+		}
+		else {
+			$("input#female").prop("checked", true);
+		}
+		
+		// select 된 곳의 값들 넣어주기 끝
 		
 		$("span.error").hide();	
 		$("input#emp_name").focus();
@@ -30,7 +51,7 @@
 			const name = $target.val().trim();
 			if(name == "" ){
 				// 입력하지 않거나 공백만 입력했을 경우
-			    $("table#tblEmpRegister :input").prop("disabled", true);
+			    $("table#tblEmpUpdate :input").prop("disabled", true);
 			    $target.prop("disabled", false);
 			//	$target.next().show();
 			// 	또는
@@ -41,7 +62,7 @@
 				
 			} else {
 				// 공백이 아닌 글자를 입력했을 경우
-				$("table#tblEmpRegister :input").prop("disabled", false);
+				$("table#tblEmpUpdate :input").prop("disabled", false);
 				//	$target.next().hide();
 				// 	또는
 				$target.parent().find(".error").hide();
@@ -59,7 +80,7 @@
 			
 			if(!bool){ // !bool == false 암호가 정규표현식에 위배된 경우
 				// 암호가 정규표현식에 위배된 경우 
-				  $("table#tblEmpRegister :input").prop("disabled", true);
+				  $("table#tblEmpUpdate :input").prop("disabled", true);
 				  $target.prop("disabled", false);
 				  
 			   // $target.next().show();
@@ -71,7 +92,7 @@
 				
 			} else {
 				// bool == true 암호가 정규표현식에 맞는 경우
-				$("table#tblEmpRegister :input").prop("disabled", false);
+				$("table#tblEmpUpdate :input").prop("disabled", false);
 				
 				$target.parent().find(".error").hide();
 			}
@@ -86,7 +107,7 @@
 			const pwdcheck = $target.val();
 			
 			if(pwd != pwdcheck){ // 암호와 암호확인값이 다른 경우 
-				$("table#tblEmpRegister :input").prop("disabled", true);
+				$("table#tblEmpUpdate :input").prop("disabled", true);
 				$target.prop("disabled", false);
 				$("input#emp_pwd").prop("disabled", false);
 				
@@ -97,7 +118,7 @@
 				
 			} else {
 				// 암호와 암호확인값이 같은 경우
-				$("table#tblEmpRegister :input").prop("disabled", false);
+				$("table#tblEmpUpdate :input").prop("disabled", false);
 				//	$target.next().hide();
 				// 	또는
 				$target.parent().find(".error").hide();
@@ -111,7 +132,7 @@
 			const name = $target.val().trim();
 			if(name == ""){
 				// 입력하지 않거나 공백만 입력했을 경우
-				$("table#tblEmpRegister :input").prop("disabled", true);
+				$("table#tblEmpUpdate :input").prop("disabled", true);
 				$target.prop("disabled", false);
 			//	$target.next().show();
 			// 	또는
@@ -122,7 +143,7 @@
 				
 			} else {
 				// 공백이 아닌 글자를 입력했을 경우
-				$("table#tblEmpRegister :input").prop("disabled", false);
+				$("table#tblEmpUpdate :input").prop("disabled", false);
 				//	$target.next().hide();
 				// 	또는
 				$target.parent().find(".error").hide();
@@ -140,7 +161,7 @@
 	        
 			if(!bool){ // !bool == false 이메일이 정규표현식에 위배된 경우
 				// 이메일이 정규표현식에 위배된 경우 
-				$("table#tblEmpRegister :input").prop("disabled", true);
+				$("table#tblEmpUpdate :input").prop("disabled", true);
 				$target.prop("disabled", false);
 				
 			//	$target.next().show();
@@ -151,7 +172,7 @@
 				
 			} else {
 				// bool == true 이메일이 정규표현식에 맞는 경우
-				$("table#tblEmpRegister :input").prop("disabled", false);
+				$("table#tblEmpUpdate :input").prop("disabled", false);
 				
 				//	$target.next().hide();
 				// 	또는
@@ -170,7 +191,7 @@
 	         const bool = regExp.test($target.val());  
 	        
 			if(!bool){ // !bool == false 국번이 정규표현식에 위배된 경우
-				$("table#tblEmpRegister :input").prop("disabled", true);
+				$("table#tblEmpUpdate :input").prop("disabled", true);
 				  $target.prop("disabled", false);
 			
 			//	$target.next().show();
@@ -180,7 +201,7 @@
 				$target.focus();
 			} else {
 				// bool == true 국번이 정규표현식에 맞는 경우
-				$("table#tblEmpRegister :input").prop("disabled", false);
+				$("table#tblEmpUpdate :input").prop("disabled", false);
 				
 				//	$target.next().hide();
 				// 	또는
@@ -199,7 +220,7 @@
 	         const bool = regExp.test($target.val());  
 	        
 			if(!bool){ // !bool == false 국번이 정규표현식에 위배된 경우
-				$("table#tblEmpRegister :input").prop("disabled", true);
+				$("table#tblEmpUpdate :input").prop("disabled", true);
 				  $target.prop("disabled", false);
 			
 			//	$target.next().show();
@@ -209,7 +230,7 @@
 				$target.focus();
 			} else {
 				// bool == true 국번이 정규표현식에 맞는 경우
-				$("table#tblEmpRegister :input").prop("disabled", false);
+				$("table#tblEmpUpdate :input").prop("disabled", false);
 				
 				//	$target.next().hide();
 				// 	또는
@@ -288,6 +309,37 @@
 	 		}
 	 	});
 		
+	 	// 사진변경버튼 클릭시
+	 	$("button#updateImage").on("click", function (event) {
+	 		/// event.preventDefault(); 
+	 		var url = $("#updateImgFrm").attr("action"); 
+	 		var form = $('#updateImgFrm')[0]; 
+	 		var formData = new FormData(form); 
+	 		$.ajax({ 
+	 			url: url
+	 		  , type: 'POST'
+	 		  , data: formData
+	 		  , dataType: "json"
+	 		  
+	 		  , success: function (json) { 
+	 			  alert(json.img_name );
+	 			 $("#empProfile").attr("src", "<%= ctxPath%>/resources/files/${json.img_name}");
+	 			 
+	 			 <%-- $("#empProfile").attr("src", json.path +"\\"+json.img_name);  --%>
+	 		  }, error: function (json) { 
+	 			  alert("실패!");
+	 		  }, 
+	 		    cache: false
+	 		  , contentType: false
+	 		  , processData: false 
+	 		  });
+	 	
+	 	}); // end of $("button#updateImage").on("click", function (event) {}---------------------------
+
+
+	 
+	 
+	 
 	
 	}); // end of $(document).ready(function() {})---------------
 	
@@ -427,7 +479,7 @@
 		}
 		
 		
-		const frm = document.registerFrm;
+		const frm = document.updateFrm;
 		frm.action = "<%= ctxPath%>/emp/registerEmpSubmit.bts";
 		frm.method = "POST";
 		frm.submit();
@@ -438,26 +490,25 @@
 </script>
 
 <div id="tbl_regEmp">
-	<!-- 
-	<div class="settingItem">
-		<div id="settingItemTitle">배경화면</div>	
-		<form id="fileForm" name="fileForm" method="post"  enctype="multipart/form-data" onsubmit="return false;">
-			<label class="fileBtn" for="file">이미지 업로드</label>
-			<input type="file" name="file" id="file">
-			<span class="fileBtn" onclick="resetImage();">초기화</span>
-		</form>
-	</div>
-	 -->
-	<form name="registerFrm" enctype="multipart/form-data">
-	<c:set var="emp" value="${requestScope.loginuser}"/>
-	<table id="tblEmpRegister">
+<c:set var="emp" value="${requestScope.loginuser}"/>
+	<form name="updateImgFrm" id="updateImgFrm" action="<%= ctxPath%>/emp/updateImg.bts" method="post" enctype="multipart/form-data" role="form">
+		<table id="tblEmpUpdate">
 		<tr>
-			<td><h2>사원 등록<br><br></h2></td>
+			<td><h2>내 정보수정<br><br></h2></td>
 		</tr>
-		
 		<tr>
 			<td><strong>사진</strong></td>
-			<td style="align:center;"><img id="empProfile" src="<%=ctxPath %>/resources/images/ques.png" alt="..." ><button class="btn btn-default" id="telAdd_mini_btn">삭제</button></td>
+			<td><input type="hidden" name="emp_no" id="emp_no" value="${emp.pk_emp_no}" /></td>
+			<td style="align:center;"><img id="empProfile" src="<%=ctxPath %>/resources/images/ques.png" alt="..." ></td>
+			<td style="padding-left: 20px;"><input type="file" name="attach" id="attach" />
+			<br><button type="button" style="margin-top: 30px;" id="updateImage" class="btn btn-primary">사진변경</button></td>
+		</tr>
+		</table>
+	</form>
+	<form name="updateFrm" enctype="multipart/form-data">
+	<table id="tblEmpUpdate">
+		<tr>
+			<td><input type="hidden" id="img_name" name="img_name" /></td>
 		</tr>
 		
 		<tr>
@@ -467,11 +518,7 @@
 		<tr>
 			<th><label for="pk_emp_no">사번&nbsp;<span id="star">*</span></label></th>
 			<td>
-				<input required type="text" class="requiredInfo" id="pk_emp_no" name="pk_emp_no" size="20"  maxlength='16' value="${emp.pk_emp_no}" />
-				<span id="isExistIdCheck" class="duplicateCheck" onclick="isExistIdCheck();">&nbsp;사번중복확인&nbsp;&nbsp;<i class="fas fa-angle-right"></i>&nbsp;</span>
-				<br>
-				<span class="error">사번을 입력해주세요.</span> 
-				<span id="idcheckResult"></span>
+				<input required type="text" class="requiredInfo" id="pk_emp_no" name="pk_emp_no" size="20"  maxlength='16' value="${emp.pk_emp_no}" readonly/>
 			</td>    
 		</tr>
 		<tr>
@@ -571,7 +618,7 @@
 		<tr>
 			<th>이메일 &nbsp;<span id="star">*</span></th>
 			<td>
-				<input type="email" class="requiredInfo" id="uq_email" name="uq_email" size="20" maxlength="20" required placeholder="example@gmail.com" />
+				<input type="email" class="requiredInfo" id="uq_email" name="uq_email" size="20" maxlength="20" required placeholder="example@gmail.com" value="${emp.uq_email }"/>
 				<span id="isExistIdCheck" class="duplicateCheck" onclick="isExistEmailCheck();">&nbsp;이메일중복확인&nbsp;&nbsp;<i class="fas fa-angle-right"></i>&nbsp;</span>
 				<br>
 				<span class="error">올바른 이메일 양식이 아닙니다.</span>
@@ -581,7 +628,7 @@
 		 <tr>
 	        <th>생년월일&nbsp;<span id="star">*</span></th> 
 	        <td>
-	           <input class="requiredInfo" type="text" id="datepicker" name="birthday">
+	           <input class="requiredInfo" type="text" id=birthday name="birthday" value="${emp.birthday}" readonly/>
 	        </td>
 	      </tr>
 		<tr>
@@ -589,6 +636,7 @@
 	        <td>
 	           <input type="radio" id="male" name="gender" value="1" /><label for="male" style="margin-left: 2%;">남자</label>
 	           <input type="radio" id="female" name="gender" value="2" style="margin-left: 10%;" /><label for="female" style="margin-left: 2%;">여자</label>
+	           <input type="hidden" id="gen" value="${emp.gender}" />
 	        </td>
 	    </tr>
 		

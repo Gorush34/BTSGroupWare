@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.spring.bts.hwanmo.model.AttendanceVO;
 import com.spring.bts.hwanmo.model.CommuteVO;
+import com.spring.bts.hwanmo.model.EmployeeVO;
 import com.spring.bts.hwanmo.model.LeaveVO;
 
 public interface InterAttendanceService {
@@ -77,5 +78,6 @@ public interface InterAttendanceService {
 
 	// 페이징처리 한 결재대기중인 공가/경조신청목록 
 	List<Map<String, Object>> getMyAttListNoSignWithPaging(Map<String, String> paraMap);
+
 
 }

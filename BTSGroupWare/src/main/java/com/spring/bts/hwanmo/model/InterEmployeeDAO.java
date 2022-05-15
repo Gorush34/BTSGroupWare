@@ -23,4 +23,10 @@ public interface InterEmployeeDAO {
 	// 비밀번호 변경
 	int pwdUpdate(Map<String, String> paraMap);
 
+	// 원시인(생일구하기)
+	Map<String, String> getBirthday(int pk_emp_no);
+
+	// 프로필 사진 업데이트
+	int updateEmpImg(EmployeeVO empVO);
+
 }
