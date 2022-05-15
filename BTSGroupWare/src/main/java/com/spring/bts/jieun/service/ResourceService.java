@@ -35,4 +35,32 @@ public class ResourceService implements InterResourceService {
 		return classList;
 	}
 	
+	// == 예약 등록하기 == //
+	@Override
+	public int addReservation(Map<String, String> paraMap) {
+		int n = dao.addReservation(paraMap);
+		return n;
+	}
+
+	// 자원 등록 모달에 select 자원 가져오기//
+	@Override
+	public List<Map<String, String>> resourceSelect(Map<String, String> paraMap) {
+		List<Map<String, String>> resourceSelctList = dao.resourceSelect(paraMap);
+		return resourceSelctList;
+	}
+
+	// === 예약상세보기 === //
+	@Override
+	public List<Map<String, String>> reservationDetail(String pk_rserno) {
+		List<Map<String, String>> reservationDetail = dao.reservationDetail(pk_rserno);
+		return reservationDetail;
+	}
+
+	// === 예약취소 === //
+	@Override
+	public int cancelReservation(String pk_rserno) {
+		int n = dao.cancelReservation(pk_rserno);
+		return n;
+	}
+	
 }

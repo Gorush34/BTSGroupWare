@@ -10,6 +10,13 @@
 
 <style type="text/css">
 
+td#no{
+	text-align: center;
+	font-weight: bold;
+	color: black !important;
+	padding: 20px 0 !important;
+	font-size: 13pt;
+}
 
 #boardContentAll > table:nth-child(2) > tbody > tr > td > a{
 color:black !important;
@@ -71,10 +78,7 @@ color: red;
 	//Function Declaration
 
 
-	
-	
-	
-	
+
 	
 function goReadBest() {
 	  
@@ -86,16 +90,32 @@ function goReadBest() {
 			  let html = "";
 			  if(json.length > 0) {
 				  $.each(json, function(index, item){
-					  html += "<tr>";  
-					  html += "<td class='board' style='width: 30px; height:30px;'>"+(index+1)+"</td>";
-					  html += "<td class='commentContentsClosed'><span onclick='goView_board("+item.pk_seq+")' class='subject2' style='color: black; cursor: pointer;'>"+item.subject+"</span></td>";
-					  html += "<td class='board' style='width: 70px;'>"+item.user_name+"</td>";		  
-					  html += "</tr>";
+					  if(item.tblname == "자유게시판"){
+						  html += "<tr>";  
+						  html += "<td class='board' style='width: 30px; height:30px;'>"+(index+1)+"</td>";
+						  html += "<td class='commentContentsClosed'><span onclick='goView_board("+item.pk_seq+")' class='subject2' style='color: black; cursor: pointer;'>"+item.subject+"</span></td>";	 
+						  html += "<td class='board' style='width: 70px;'>"+item.user_name+"</td>";		  
+						  html += "</tr>";
+					  }
+					  if(item.tblname == "공지사항"){
+						  html += "<tr>";  
+						  html += "<td class='board' style='width: 30px; height:30px;'>"+(index+1)+"</td>";
+						  html += "<td class='commentContentsClosed'><span onclick='goView_notice("+item.pk_seq+")' class='subject2' style='color: black; cursor: pointer;'>"+item.subject+"</span></td>";				 
+						  html += "<td class='board' style='width: 70px;'>"+item.user_name+"</td>";		  
+						  html += "</tr>";
+						  }
+					  if(item.tblname == "자료실"){
+						  html += "<tr>";  
+						  html += "<td class='board' style='width: 30px; height:30px;'>"+(index+1)+"</td>";
+						  html += "<td class='commentContentsClosed'><span onclick='goView_fileboard("+item.pk_seq+")' class='subject2' style='color: black; cursor: pointer;'>"+item.subject+"</span></td>";
+						  html += "<td class='board' style='width: 70px;'>"+item.user_name+"</td>";		  
+						  html += "</tr>";
+						  }
 				  });
 			  }
 			  else {
 				  html += "<tr>";
-				  html += "<td colspan='3' class='board'>게시물이 없습니다.</td>";
+				  html += "<td colspan='3' class='board' id='no'>게시물이 없습니다.</td>";
 				  html += "</tr>";
 			  }
 			  
@@ -120,7 +140,21 @@ function goReadBest() {
 		}// end of function goView(seq){}----------------------------------------------
 		
   
-  
+	function goView_notice(pk_seq) {
+
+		const gobackURL = "${requestScope.gobackURL}"; 
+	  
+	  location.href="<%= ctxPath%>/notice/view.bts?pk_seq="+pk_seq+"&gobackURL="+gobackURL; 
+	}// end of function goView(seq){}----------------------------------------------
+	
+	
+	function goView_fileboard(pk_seq) {
+
+		const gobackURL = "${requestScope.gobackURL}"; 
+	  
+	  location.href="<%= ctxPath%>/fileboard/view.bts?pk_seq="+pk_seq+"&gobackURL="+gobackURL; 
+	}// end of function goView(seq){}----------------------------------------------	
+ 
 </script>
 
 
@@ -179,7 +213,7 @@ function goReadBest() {
 			
 			<hr style="margin-bottom: 30px;">
 			
-			<div id="best" class="btn btn-info" style="cursor: unset; margin: 15px auto 10px auto; width: 200px; display: block; font-size: 14pt;  font-weight: bold;">인기글</div>
+			<div id="best" class="btn btn-info" style="cursor: unset; margin: 15px auto 10px auto; width: 200px; display: block; font-size: 14pt;  font-weight: bold;">오늘의 인기글</div>
 			<table id="table2" style="border-bottom: 1px solid #dee2e6; width: 200px; margin-bottom: 10px; margin-left: 20px;">
 				<thead>
 				<tr>

@@ -63,11 +63,6 @@
 	          	게시판
 	        </a>
 	      </li>
-	      <li class="nav-item ">
-	        <a class="nav-link " href="#" id="navbar" role="button" aria-expanded="false">
-	          	자료실
-	        </a>
-	      </li>
 	      <%-- 게시판 / 자료실 끝 --%>
 	      
 	      <%-- 일정관리 / 자원관리 시작 --%>

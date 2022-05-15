@@ -79,6 +79,35 @@ public class BoardController {
 		
 		// === 메인페이지 === //
 		@ResponseBody
+		@RequestMapping(value = "/board/readAll.bts", produces = "text/plain;charset=UTF-8")
+		public String ajax_getAll(HttpServletRequest request, HttpServletResponse response) {
+			
+
+			List<Map<String, String>> boardList = service.getAll();
+			
+			JSONArray jsonArr = new JSONArray();
+			
+			if(boardList != null && boardList.size() > 0) {
+				
+				for(Map<String, String> boardMap : boardList) {
+					JSONObject jsonObj = new JSONObject();
+					jsonObj.put("pk_seq", boardMap.get("pk_seq"));
+					jsonObj.put("tblname", boardMap.get("tblname"));
+					jsonObj.put("subject", boardMap.get("subject"));
+					jsonObj.put("user_name", boardMap.get("user_name"));
+					jsonObj.put("write_day", boardMap.get("write_day"));
+					jsonObj.put("ko_rankname", boardMap.get("ko_rankname"));
+					jsonArr.put(jsonObj);
+				}
+				
+			}
+			
+			return jsonArr.toString();
+		}
+		
+		
+		
+		@ResponseBody
 		@RequestMapping(value = "/board/readNotice.bts", produces = "text/plain;charset=UTF-8")
 		public String ajax_getNotice(HttpServletRequest request, HttpServletResponse response) {
 			
@@ -96,6 +125,7 @@ public class BoardController {
 					jsonObj.put("subject", boardMap.get("subject"));
 					jsonObj.put("user_name", boardMap.get("user_name"));
 					jsonObj.put("write_day", boardMap.get("write_day"));
+					jsonObj.put("ko_rankname", boardMap.get("ko_rankname"));
 					jsonArr.put(jsonObj);
 				}
 				
@@ -163,7 +193,9 @@ public class BoardController {
 		public String ajax_getBestboard(HttpServletRequest request, HttpServletResponse response) {
 			
 			Date date = new Date();        
-			String now = String.format("%1$tY-%1$tm-%1$td", date);
+			String now = String.format("%1$tY/%1$tm/%1$td", date);
+			now = now.substring(2);
+//			System.out.println(now); 2022-05-14
 //			System.out.println(now);
 			List<Map<String, String>> boardList = service.getBestboard();
 			
@@ -177,6 +209,7 @@ public class BoardController {
 					jsonObj.put("subject", boardMap.get("subject"));
 					jsonObj.put("read_count", boardMap.get("read_count"));
 					jsonObj.put("user_name", boardMap.get("user_name"));
+					jsonObj.put("tblname", boardMap.get("tblname"));
 					jsonObj.put("now", now);
 					jsonArr.put(jsonObj);
 				}

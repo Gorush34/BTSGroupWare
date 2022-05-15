@@ -13,4 +13,16 @@ public interface InterResourceDAO {
 
 	List<Map<String, String>> classSelect();
 
+	// == 예약 등록하기 == //
+	int addReservation(Map<String, String> paraMap);
+
+	// 자원 등록 모달에 select 자원 가져오기//
+	List<Map<String, String>> resourceSelect(Map<String, String> paraMap);
+
+	// === 예약상세보기 === //
+	List<Map<String, String>> reservationDetail(String pk_rserno);
+
+	// === 예약취소 === //
+	int cancelReservation(String pk_rserno);
+
 }

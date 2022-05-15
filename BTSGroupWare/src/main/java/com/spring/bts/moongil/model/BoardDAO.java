@@ -360,6 +360,12 @@ public class BoardDAO implements InterBoardDAO {
 		return boardMap;
 	}
 
+	@Override
+	public List<Map<String, String>> getAll() {
+		List<Map<String, String>> boardMap = sqlsession.selectList("moongil.getAll");
+		return boardMap;
+	}
+
 
 
 	

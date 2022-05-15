@@ -117,6 +117,8 @@ public interface InterBoardDAO {
 
 	List<Map<String, String>> getFileboard();
 
+	List<Map<String, String>> getAll();
+
 
 
 
