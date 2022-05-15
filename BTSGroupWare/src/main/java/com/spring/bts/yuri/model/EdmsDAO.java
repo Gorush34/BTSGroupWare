@@ -136,4 +136,25 @@ public class EdmsDAO implements InterEdmsDAO {
 		int n = sqlsession.update("yuri.reject", apprvo);
 		return n;
 	}
+
+	// 대기문서 목록 페이징 처리
+	@Override
+	public List<ApprVO> edmsListSearchWithPaging_wait(Map<String, String> paraMap) {
+		List<ApprVO> edmsList = sqlsession.selectList("yuri.edmsListSearchWithPaging_wait", paraMap);
+		return edmsList;
+	}
+	
+	// 승인문서 목록 페이징 처리
+	@Override
+	public List<ApprVO> edmsListSearchWithPaging_accept(Map<String, String> paraMap) {
+		List<ApprVO> edmsList = sqlsession.selectList("yuri.edmsListSearchWithPaging_accept", paraMap);
+		return edmsList;
+	}
+	
+	// 반려문서 목록 페이징 처리
+	@Override
+	public List<ApprVO> edmsListSearchWithPaging_reject(Map<String, String> paraMap) {
+		List<ApprVO> edmsList = sqlsession.selectList("yuri.edmsListSearchWithPaging_reject", paraMap);
+		return edmsList;
+	}
 }

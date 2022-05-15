@@ -178,7 +178,26 @@ public class EdmsService implements InterEdmsService {
 	}
 	
 	
-	
+	// 페이징 처리한 대기문서 목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함한 것)
+	@Override
+	public List<ApprVO> edmsListSearchWithPaging_wait(Map<String, String> paraMap) {
+		List<ApprVO> edmsList = dao.edmsListSearchWithPaging_wait(paraMap);
+		return edmsList;
+	}
+
+	// 페이징 처리한 승인문서 목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함한 것)
+	@Override
+	public List<ApprVO> edmsListSearchWithPaging_accept(Map<String, String> paraMap) {
+		List<ApprVO> edmsList = dao.edmsListSearchWithPaging_accept(paraMap);
+		return edmsList;
+	}
+
+	// 페이징 처리한 반려문서 목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함한 것)
+	@Override
+	public List<ApprVO> edmsListSearchWithPaging_reject(Map<String, String> paraMap) {
+		List<ApprVO> edmsList = dao.edmsListSearchWithPaging_reject(paraMap);
+		return edmsList;
+	}
 	
 	
 	
