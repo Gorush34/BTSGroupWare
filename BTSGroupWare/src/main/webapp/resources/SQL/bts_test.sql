@@ -293,6 +293,6 @@ where A.fk_emp_no = 80000002
 ) V
 where rno between 1 and 3
 
-
 select *
 from tbl_employees
+where pk_emp_no = 80000888

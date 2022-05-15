@@ -566,7 +566,7 @@
 				<input class="requiredInfo" required id="hp3" name="hp3" type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
 			 	<span class="error">올바른 휴대전화 번호가 아닙니다.</span>
 			 </td>
-	     </tr>
+	    </tr>
 		<tr>
 			<th>이메일 &nbsp;<span id="star">*</span></th>
 			<td>
@@ -595,8 +595,10 @@
 	</form>
 	<div style="padding-left: 200px;">
 		<button class="btn btn-info" id="btn_register" style="border: solid lightgray 2px;" onclick="goRegister();">저장</button>
+		<!-- 
 		<button class="btn btn-default" id="btn_list" style="border: solid lightgray 2px;">목록으로 이동</button>
 		<button class="btn btn-default" id="btn_cancel" style="border: solid lightgray 2px;">취소</button>
+		 -->
 	</div>
 	
 	 	

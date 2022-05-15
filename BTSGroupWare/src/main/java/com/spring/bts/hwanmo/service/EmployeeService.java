@@ -92,4 +92,11 @@ public class EmployeeService implements InterEmployeeService {
 		return n;
 	}
 
+	// 회원정보 수정
+	@Override
+	public int updateMember(EmployeeVO empvo) {
+		int n = empDAO.updateMember(empvo);
+		return n;
+	}
+
 }

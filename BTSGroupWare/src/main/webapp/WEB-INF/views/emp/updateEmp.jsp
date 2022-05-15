@@ -8,6 +8,14 @@
 
 %>
 
+<style type="text/css">
+
+	th#th_title {
+		width: 120px;
+	
+	}
+
+</style>
 
 <script type="text/javascript">
 
@@ -273,17 +281,17 @@
 	                        extraAddr = ' (' + extraAddr + ')';
 	                    }
 	                    // 조합된 참고항목을 해당 필드에 넣는다.
-	                    document.getElementById("extraAddress").value = extraAddr;
+	                    document.getElementById("extraaddress").value = extraAddr;
 	                
 	                } else {
-	                    document.getElementById("extraAddress").value = '';
+	                    document.getElementById("extraaddress").value = '';
 	                }
 
 	                // 우편번호와 주소 정보를 해당 필드에 넣는다.
 	                document.getElementById('postcode').value = data.zonecode;
 	                document.getElementById("address").value = addr;
 	                // 커서를 상세주소 필드로 이동한다.
-	                document.getElementById("detailAddress").focus();
+	                document.getElementById("detailaddress").focus();
 	            }
 	        }).open();
 	 			
@@ -337,10 +345,6 @@
 	 	}); // end of $("button#updateImage").on("click", function (event) {}---------------------------
 
 
-	 
-	 
-	 
-	
 	}); // end of $(document).ready(function() {})---------------
 	
 	// 함수 정의
@@ -433,8 +437,8 @@
 	 	
 	} // end of function isExistEmailCheck(){}---------------------------------------
 	
-	// 가입하기		
-	function goRegister() {
+	// 수정하기		
+	function goUpdate() {
 		
 		// *** 필수입력사항에 모두 입력이 되었는지 검사한다. *** //
 		let b_FlagRequiredInfo = false;
@@ -463,29 +467,14 @@
 			return; // 종료
 		}
 		
-		// *** 아이디 중복확인을 클릭했는지 검사한다. *** //
-		if(!b_flagIdDuplicateClick) {
-			// "아이디중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도임.
-			alert("아이디중복확인 클릭하여 ID중복검사를 하세요!!");
-			return; // 종료
-		}
-		  
-		  
-		// *** 이메일 중복확인을 클릭했는지 검사한다. *** //
-		if(!b_flagEmailDuplicateClick) {
-			// "이메일중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도임.
-			alert("이메일중복확인 클릭하여 email 중복검사를 하세요!!");
-			return; // 종료
-		}
-		
 		
 		const frm = document.updateFrm;
-		frm.action = "<%= ctxPath%>/emp/registerEmpSubmit.bts";
+		frm.action = "<%= ctxPath%>/emp/updateEmpEnd.bts";
 		frm.method = "POST";
 		frm.submit();
 		
 		
-	}// end of 	function goRegister()--------------------------------
+	}// end of function goUpdate()--------------------------------
 	
 </script>
 
@@ -512,25 +501,25 @@
 		</tr>
 		
 		<tr>
-			<td><strong>이름&nbsp;</strong><span id="star">*</span></td>
+			<th id="th_title"><strong>이름&nbsp;</strong><span id="star">*</span></th>
 			<td><input required type="text" class="requiredInfo" id="emp_name" name="emp_name" size="5" placeholder="이름" style="width: 100px;" value="${emp.emp_name}" /></td>
 		</tr>
 		<tr>
-			<th><label for="pk_emp_no">사번&nbsp;<span id="star">*</span></label></th>
+			<th id="th_title"><label for="pk_emp_no">사번&nbsp;<span id="star">*</span></label></th>
 			<td>
 				<input required type="text" class="requiredInfo" id="pk_emp_no" name="pk_emp_no" size="20"  maxlength='16' value="${emp.pk_emp_no}" readonly/>
 			</td>    
 		</tr>
 		<tr>
-			<th><label for="emp_pwd">비밀번호&nbsp;<span id="star">*</span></label></th>
+			<th id="th_title"><label for="emp_pwd">비밀번호&nbsp;<span id="star">*</span></label></th>
 			<td><input type="password" class="requiredInfo" id="emp_pwd" name="emp_pwd" size="20" maxlength="20" required autoComplete="off" />&nbsp;(영문 대소문자/숫자/특수문자 모두 조합, 8자~16자)<br><span class="error" style="margin-left: 200px;">암호가 올바르지 않습니다.</span></td>
 		</tr>
 		<tr>
-			<th><label for="pwdCheck">비밀번호확인&nbsp;<span id="star">*</span></label></th>
+			<th id="th_title"><label for="pwdCheck">비밀번호확인&nbsp;<span id="star">*</span></label></th>
 			<td><input type="password" class="requiredInfo" id="pwdCheck" size="20" maxlength="20" required autoComplete="off" /><span class="error">암호가 일치하지 않습니다.</span></td>
 		</tr>
 		<tr>
-			<td><strong>부서</strong> &nbsp;<span id="star">*</span></td>
+			<th id="th_title"><strong>부서</strong> &nbsp;<span id="star">*</span></th>
 			<td>
 				<select name="fk_department_id" id="fk_department_id" style="height: 26px;" >
 			         <option value="">부서 선택</option>
@@ -544,7 +533,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td><strong>직위</strong> &nbsp;<span id="star">*</span></td>
+			<th id="th_title"><strong>직위</strong> &nbsp;<span id="star">*</span></th>
 			<td>
 				<select name="fk_rank_id" id="fk_rank_id" style="height: 26px;" >
 			         <option value="">직위 선택</option>
@@ -560,7 +549,7 @@
 			</td>
 		</tr>
 		<tr>
-			<th>우편번호 &nbsp;<span id="star">*</span></th>
+			<th id="th_title">우편번호 &nbsp;<span id="star">*</span></th>
 		    <td>
 		       <input required type="text" class="requiredInfo" id="postcode" name="postcode" size="5" placeholder="우편번호" values="addr" style="width: 100px;" />
 		       &nbsp;&nbsp;
@@ -568,15 +557,15 @@
 		    </td>
 		</tr>
 		<tr>
-			<th>주소 &nbsp;<span id="star">*</span></th>
+			<th id="th_title">주소 &nbsp;<span id="star">*</span></th>
 			<td>
 				<input class="my-1" class="requiredInfo" required type="text" id="address" name="address"  size="50" placeholder="주소" value="${emp.address}"/><br>
-				<input class="my-1" type="text" id="detailAddress" name="detailAddress" size="50" placeholder="상세주소" value="${emp.detailaddress}" /><br>
-				<input class="my-1" type="text" id="extraAddress" name="extraAddress" size="50" placeholder="참고항목" value="${emp.extraaddress}" />                
+				<input class="my-1" type="text" id="detailaddress" name="detailaddress" size="50" placeholder="상세주소" value="${emp.detailaddress}" /><br>
+				<input class="my-1" type="text" id="extraaddress" name="extraaddress" size="50" placeholder="참고항목" value="${emp.extraaddress}" />                
 			</td>
 		</tr>
 		<tr>
-			<th>일반전화</th>
+			<th id="th_title">일반전화</th>
 			<td>
 				<select id="num1" name="num1">
 					<option value="">선택</option>
@@ -605,7 +594,7 @@
 			</td>
 		</tr>
 		<tr>
-			<th>휴대전화 &nbsp;<span id="star">*</span></th>
+			<th id="th_title">휴대전화 &nbsp;<span id="star">*</span></th>
 	        <td>
 	        	<select id="hp1" name="hp1">
 					<option value="010">010</option>
@@ -616,36 +605,32 @@
 			 </td>
 	     </tr>
 		<tr>
-			<th>이메일 &nbsp;<span id="star">*</span></th>
+			<th id="th_title">이메일 &nbsp;<span id="star">*</span></th>
 			<td>
-				<input type="email" class="requiredInfo" id="uq_email" name="uq_email" size="20" maxlength="20" required placeholder="example@gmail.com" value="${emp.uq_email }"/>
-				<span id="isExistIdCheck" class="duplicateCheck" onclick="isExistEmailCheck();">&nbsp;이메일중복확인&nbsp;&nbsp;<i class="fas fa-angle-right"></i>&nbsp;</span>
-				<br>
-				<span class="error">올바른 이메일 양식이 아닙니다.</span>
-				<span id="emailCheckResult"></span>
+				<input type="email" class="requiredInfo" id="uq_email" name="uq_email" size="20" maxlength="20" required placeholder="example@gmail.com" value="${emp.uq_email }" readonly/>
 			</td>
 		</tr>            
 		 <tr>
-	        <th>생년월일&nbsp;<span id="star">*</span></th> 
+	        <th id="th_title">생년월일&nbsp;<span id="star">*</span></th> 
 	        <td>
 	           <input class="requiredInfo" type="text" id=birthday name="birthday" value="${emp.birthday}" readonly/>
 	        </td>
 	      </tr>
 		<tr>
-	        <th>성별&nbsp;<span id="star">*</span></th>
+	        <th id="th_title">성별&nbsp;<span id="star">*</span></th>
 	        <td>
 	           <input type="radio" id="male" name="gender" value="1" /><label for="male" style="margin-left: 2%;">남자</label>
 	           <input type="radio" id="female" name="gender" value="2" style="margin-left: 10%;" /><label for="female" style="margin-left: 2%;">여자</label>
-	           <input type="hidden" id="gen" value="${emp.gender}" />
+	           <input type="hidden" id="gen" name="gen" value="${emp.gender}" />
+	           <input type="hidden" id="img_name" name="img_name" value="${emp.img_name}" />
 	        </td>
 	    </tr>
 		
 	</table>
 	</form>
 	<div style="padding-left: 200px;">
-		<button class="btn btn-info" id="btn_register" style="border: solid lightgray 2px;" onclick="goRegister();">저장</button>
-		<button class="btn btn-default" id="btn_list" style="border: solid lightgray 2px;">목록으로 이동</button>
-		<button class="btn btn-default" id="btn_cancel" style="border: solid lightgray 2px;">취소</button>
+		<button class="btn btn-info" id="btn_register" style="border: solid lightgray 2px;" onclick="goUpdate();">저장</button>
+		<!-- <button class="btn btn-default" id="btn_cancel" style="border: solid lightgray 2px;">취소</button> -->
 	</div>
 	
 	 	

@@ -98,6 +98,13 @@ public class EmployeeDAO implements InterEmployeeDAO {
 		int n = sqlsession.update("hwanmo.updateEmpImg", empVO);
 		return n;
 	}
+
+	// 회원정보 수정
+	@Override
+	public int updateMember(EmployeeVO empvo) {
+		int n = sqlsession.update("hwanmo.updateMember", empvo);
+		return n;
+	}
 	
 	
 	

@@ -158,7 +158,17 @@ public class EmployeeController {
 		String birthday = request.getParameter("birthday");										/* 생년월일 */	
 		String img_name = request.getParameter("img_name");								
 		String img_path = request.getParameter("img_path");												
-		int gradelevel = Integer.parseInt(request.getParameter("gradelevel"));					//회원가입안되면 지워버려라					
+		int gradelevel = 0;				//회원가입안되면 지워버려라					
+		
+		if(img_name == null) {
+			img_name = "";
+		}
+		if(img_path == null) {
+			img_path = "";
+		}
+		if(request.getParameter("gradelevel") != null) {
+			gradelevel = Integer.parseInt(request.getParameter("gradelevel"));	
+		}
 		
 		String com_tel = "";
 		if( num2 == "" && num3 == "") {
@@ -613,10 +623,76 @@ public class EmployeeController {
 		jsonObj.put("path", path);
 		
 		return jsonObj.toString();
-		
-
 			
 	} // end of --------------------------------
+	
+	
+	
+	// 사원등록 버튼 클릭시
+	@ResponseBody
+	@RequestMapping(value="/emp/updateEmpEnd.bts", method = {RequestMethod.POST}, produces="text/plain;charset=UTF-8")
+	public ModelAndView updateEmpEnd(ModelAndView mav, HttpServletRequest request, EmployeeVO empvo) {
+	
+		/*
+        form 태그의 name 명과  BoardVO 의 필드명이 같다면 
+        request.getParameter("form 태그의 name명"); 을 사용하지 않더라도
+               자동적으로 BoardVO boardvo 에 set 되어진다. (xml(Mapper)파일에서 일일이 set 을 해주지 않아도 된다.)
+	    */
+		
+		int pk_emp_no = Integer.parseInt(request.getParameter("pk_emp_no")); 					/* 사원번호 */
+		String num1 = request.getParameter("num1");												/* 사내번호1 */
+		String num2 = request.getParameter("num2");												/* 사내번호2 */
+		String num3 = request.getParameter("num3");												/* 사내번호3 */
+		String hp1 = request.getParameter("hp1");												/* 휴대전화1 */
+		String hp2 = request.getParameter("hp2");												/* 휴대전화2 */
+		String hp3 = request.getParameter("hp3");												/* 휴대전화3 */
+		String birthday = request.getParameter("birthday");										/* 생년월일 */	
+		String img_name = request.getParameter("img_name");								
+		// String img_path = request.getParameter("img_path");												
+		
+		String com_tel = "";
+		if( num2 == "" && num3 == "") {
+			com_tel = "";
+		}else {
+			com_tel = num1+"-"+num2+"-"+num3;
+		}
+		String uq_phone = hp1+"-"+hp2+"-"+hp3;
+		
+		String uq_email = "";
+		try {
+			uq_email = aes.encrypt(request.getParameter("uq_email"));	 /* 이메일 */
+			uq_phone = aes.encrypt(uq_phone);							 /* 합친 휴대전화 암호화 */
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}	
+		empvo.setPostal(request.getParameter("postcode"));
+		empvo.setCom_tel(com_tel);
+		empvo.setUq_phone(uq_phone);
+		empvo.setUq_email(uq_email);
+		
+		String message = "";
+		String loc = "";
+		int n = empService.updateMember(empvo);
+			
+		if(n == 1) {
+			message = "업데이트 성공!";
+			loc = "javascript:history.back()";// 자바스크립트를 이용한 이전페이지로 이동한다.
+		}
+		else {
+			message = "SQL 구문 에러발생";
+			loc = "javascript:history.back()";// 자바스크립트를 이용한 이전페이지로 이동한다.
+		}
+		mav.addObject("message", message);
+		mav.addObject("loc", loc);
+		
+		mav.setViewName("msg");
+		return mav;
+		
+		
+	} // end of public ModelAndView updateEmpEnd(ModelAndView mav, HttpServletRequest request) {})----------------
+	
+	
+	
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	

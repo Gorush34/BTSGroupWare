@@ -31,4 +31,7 @@ public interface InterEmployeeService {
 	// 프로필 사진 업데이트
 	int updateEmpImg(EmployeeVO empVO);
 
+	// 회원정보 수정
+	int updateMember(EmployeeVO empvo);
+
 }
