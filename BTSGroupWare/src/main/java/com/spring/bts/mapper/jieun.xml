@@ -312,11 +312,12 @@
 		<result property="RSERSTARTDATE"   column="rserstartdate"    javaType="String"/>
 		<result property="RSERENDDATE"     column="rserenddate"      javaType="String"/>
 		<result property="RSERUSECASE"     column="rserusecase"      javaType="String"/>
+		<result property="COLOR"     column="color"      javaType="String"/>
 	</resultMap>
 	<select id="resourceSpecialReservation" parameterType="HashMap" resultMap="resourceSpecialReservation_Map">	
 	select RV.pk_rserno, RV.fk_classno, RV.fk_rno, RV.fk_emp_no, 
 		   E.emp_name, R.rname, R.rinfo,
-		   RV.rserstartdate, RV.rserenddate, RV.rserusecase
+		   RV.rserstartdate, RV.rserenddate, RV.rserusecase, RV.color
 	from tbl_resource R
 	join tbl_reservation RV
 	ON R.pk_rno = RV.fk_rno 
@@ -336,8 +337,8 @@
 
 	<!--  예약 등록하기  -->
 	<insert id="addReservation" parameterType="HashMap">
-		insert into tbl_reservation(pk_rserno, fk_classno, fk_rno, fk_emp_no, rserstartdate, rserenddate, rserusecase)
-		values (seq_rserno.nextval, #{fk_classno}, #{fk_rno}, #{fk_emp_no}, to_date(#{rserstartdate}, 'yyyy-mm-ddhh24miss'), to_date(#{rserenddate}, 'yyyy-mm-ddhh24miss'), #{rserusecase})
+		insert into tbl_reservation(pk_rserno, fk_classno, fk_rno, fk_emp_no, rserstartdate, rserenddate, rserusecase, color)
+		values (seq_rserno.nextval, #{fk_classno}, #{fk_rno}, #{fk_emp_no}, to_date(#{rserstartdate}, 'yyyy-mm-ddhh24miss'), to_date(#{rserenddate}, 'yyyy-mm-ddhh24miss'), #{rserusecase}, #{color})
 	</insert>
 
 	<!--  예약 상세보기 -->
@@ -388,4 +389,20 @@
 		delete from tbl_resource
 		where pk_rno = #{pk_rno}
 	</delete>
+	
+	
+	<!-- ============================================================================================== -->
+	
+	<!-- 오늘의 일정 수 -->
+	<select id="scheduleCount" parameterType="int" resultType="int">
+		select count(*)
+		from tbl_schedule
+		where fk_emp_no = #{pk_emp_no} and (startdate = to_date(sysdate, 'yy/mm/dd') or enddate = to_date(sysdate, 'yy/mm/dd'))
+	</select>
+	<!-- 나의 예약현황 -->
+	<select id="reservationCount" parameterType="int" resultType="int">
+		select count(*)
+		from tbl_reservation
+		where fk_emp_no = #{pk_emp_no} and to_date(sysdate, 'yy/mm/dd') <![CDATA[ < ]]> rserenddate
+	</select>
 </mapper>

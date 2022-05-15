@@ -90,5 +90,12 @@ public class ResourceService implements InterResourceService {
 		int n = dao.deleteResource(pk_rno);
 		return n;
 	}
+
+	// == 메인 페이지 예약 수 불러오기 == //
+	@Override
+	public int reservationCount(int pk_emp_no) {
+		int n = dao.reservationCount(pk_emp_no);
+		return n;
+	}
 	
 }

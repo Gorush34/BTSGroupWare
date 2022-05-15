@@ -162,6 +162,13 @@ public class CalendarDAO implements InterCalendarDAO {
 		return calendarSearchList;
 	}
 	
+	// 오늘의 일정 수
+	@Override
+	public int scheduleCount(int pk_emp_no) {
+		int n = sqlsession.selectOne("jieun.scheduleCount", pk_emp_no);
+		return n;
+	}
+	
 	
 	
 	

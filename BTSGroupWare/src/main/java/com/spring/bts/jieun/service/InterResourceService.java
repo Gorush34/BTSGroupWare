@@ -37,4 +37,7 @@ public interface InterResourceService {
 	// == 자원 삭제 == //
 	int deleteResource(String pk_rno);
 
+	// == 메인 페이지 예약 수 불러오기 == //
+	int reservationCount(int pk_emp_no);
+
 }

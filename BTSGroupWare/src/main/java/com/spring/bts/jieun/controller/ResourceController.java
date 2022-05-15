@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.spring.bts.common.MyUtil;
+import com.spring.bts.hwanmo.model.EmployeeVO;
 import com.spring.bts.jieun.model.CalendarVO;
 import com.spring.bts.jieun.model.ScheduleVO;
 import com.spring.bts.jieun.service.InterResourceService;
@@ -97,6 +98,7 @@ public class ResourceController {
 			jsonObj.addProperty("RSERSTARTDATE", map.get("RSERSTARTDATE"));
 			jsonObj.addProperty("RSERENDDATE", map.get("RSERENDDATE"));
 			jsonObj.addProperty("PK_RSERNO", map.get("PK_RSERNO"));
+			jsonObj.addProperty("COLOR", map.get("COLOR"));
 			
 			jsonArr.add(jsonObj);
 		}// end of for-------------------------------------------
@@ -141,7 +143,7 @@ public class ResourceController {
 		String fk_rno = request.getParameter("pk_rno");
 		String fk_classno = request.getParameter("pk_classno");
 		String rserusecase = request.getParameter("rserusecase");
-		
+		String color = request.getParameter("color");
 		
 		Map<String, String> paraMap = new HashMap<>();
 		
@@ -151,6 +153,7 @@ public class ResourceController {
 		paraMap.put("fk_rno", fk_rno);
 		paraMap.put("fk_classno", fk_classno);
 		paraMap.put("rserusecase", rserusecase);
+		paraMap.put("color", color);
 		
 		int n = service.addReservation(paraMap);
 		
@@ -329,5 +332,26 @@ public class ResourceController {
 		
 		return jsonObj.toString();
 	}
+	
+	
+	// == 메인 페이지 예약 수 불러오기 == //
+		@ResponseBody
+		@RequestMapping(value="/reservation/reservationCount.bts")
+		public String reservationCount(HttpServletRequest request) {
+			
+			HttpSession session = request.getSession();
+			EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+			
+			
+			int pk_emp_no = loginuser.getPk_emp_no();
+			System.out.println("pk_emp_no" +pk_emp_no);
+			int n = service.reservationCount(pk_emp_no);
+			System.out.println(n);
+			
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("n", n);
+			
+			return jsonObj.toString();
+		}
 		
 }
