@@ -177,7 +177,6 @@
 	      	    $("form > input[name=chooseDate]").val(info.dateStr);
 	      	    
 	      	    var frm = document.dateFrm;
-	      	    frm.method="POST";
 	      	    frm.action="<%= ctxPath%>/calendar/scheduleRegister.bts";
 	      	    frm.submit();
 	      	  }, 

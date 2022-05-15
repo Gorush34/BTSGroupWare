@@ -159,7 +159,7 @@
 		                            	title: item.EMP_NAME,
 		                            	start: item.RSERSTARTDATE,
 		                            	end: item.RSERENDDATE,
-		                            	color: "#00ace6;",
+		                            	color: item.COLOR,
 		                            	id: item.PK_RSERNO
 		                            });
 		                	 });      
@@ -322,6 +322,7 @@
         	   	 "fk_emp_no":$('input#fk_emp_no').val(),
         	   	 "pk_classno":$('select.calpk_classno').val(),
         	   	 "rserusecase":$('textarea#rserusecase').val(),
+        	   	 "color":$('input#color').val(),
         	   	 "pk_rno":calpk_rno},
            type:"POST",
            dataType:"JSON",
@@ -535,6 +536,10 @@
                  <tr>
                    <th>사용용도</th>
                    <td><textarea rows="4" cols="100" style="height: 200px;" name="rserusecase" id="rserusecase"  class="form-control"></textarea></td>
+                 </tr>
+                 <tr>
+                   <th>색상</th>
+                   <td><input type="color" id="color" value="#0096c6"></td>
                  </tr>
      		</table>
      		<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}"/>
