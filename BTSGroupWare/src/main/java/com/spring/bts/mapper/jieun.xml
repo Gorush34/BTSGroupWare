@@ -288,7 +288,7 @@
 		from tbl_resource R
 		join tbl_resourceclass RC
 		on R.fk_classno = RC.pk_classno
-		order by RC.pk_classno asc
+		order by R.rname asc
 	</select>
 	
 	<select id="classSelect" resultMap="resourceReservation_Map">
@@ -338,7 +338,7 @@
 	<!--  예약 등록하기  -->
 	<insert id="addReservation" parameterType="HashMap">
 		insert into tbl_reservation(pk_rserno, fk_classno, fk_rno, fk_emp_no, rserstartdate, rserenddate, rserusecase, color)
-		values (seq_rserno.nextval, #{fk_classno}, #{fk_rno}, #{fk_emp_no}, to_date(#{rserstartdate}, 'yyyy-mm-ddhh24miss'), to_date(#{rserenddate}, 'yyyy-mm-ddhh24miss'), #{rserusecase}, #{color})
+		values (seq_rserno.nextval, #{fk_classno}, #{fk_rno}, #{fk_emp_no}, to_date(#{rserstartdate}, 'yyyymmddhh24miss'), to_date(#{rserenddate}, 'yyyymmddhh24miss'), #{rserusecase}, #{color})
 	</insert>
 
 	<!--  예약 상세보기 -->

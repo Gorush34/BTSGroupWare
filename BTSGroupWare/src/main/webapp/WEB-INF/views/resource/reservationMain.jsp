@@ -269,8 +269,20 @@
 	function goReservation(){
 		
 		// 일자 유효성 검사 (시작일자 > 종료일자 X)	
-		var startDate = $("input#startdate").val();
-		var endDate = $("input#enddate").val();
+		var startDate = $("input[name=startDate]").val();
+		var startArr = startDate.split("-");
+		startDate = "";
+		for(var i = 0; i<startArr.length; i++){
+			startDate += startArr[i];
+		}
+		
+		var endDate = $("input[name=endDate]").val();
+		var endArr = endDate.split("-");
+		endDate = "";
+		for(var i = 0; i<endArr.length; i++){
+			endDate += endArr[i];
+		}
+		
 		var startHour= $("select#startHour").val();
      	var endHour = $("select#endHour").val();
      	var startMinute= $("select#startMinute").val();
