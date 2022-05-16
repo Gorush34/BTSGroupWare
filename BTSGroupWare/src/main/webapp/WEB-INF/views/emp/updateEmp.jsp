@@ -25,7 +25,13 @@
 	let b_flagEmailDuplicateClick = false;
 	// 가입하기 버튼 클릭시 "이메일중복확인" 을 클릭했는지 클릭안했는지를 알아보기 위한 용도이다.
 
+	var imgname = "";
+	
 	$(document).ready(function() {
+		
+		
+		getEmpImgName();
+		$("#empProfile").attr("src", "<%= ctxPath%>/resources/files/" + imgname); 
 		
 		// select 된 곳의 값들 넣어주기 시작
 		$("select[name=fk_department_id]").val((("${requestScope.loginuser.fk_department_id}" == '') ? "" : "${requestScope.loginuser.fk_department_id}")).prop("selected", true); 
@@ -328,12 +334,12 @@
 	 		  , type: 'POST'
 	 		  , data: formData
 	 		  , dataType: "json"
-	 		  
+	 		  , async: false
 	 		  , success: function (json) { 
-	 			  alert(json.img_name );
-	 			 $("#empProfile").attr("src", "<%= ctxPath%>/resources/files/${json.img_name}");
-	 			 
-	 			 <%-- $("#empProfile").attr("src", json.path +"\\"+json.img_name);  --%>
+	 			 alert(json.img_name);
+	 			 <%-- $("#empProfile").attr("src", "<%= ctxPath%>/resources/files/${json.img_name}"); --%>
+	 			 $("#empProfile").attr("src", json.path +"/"+json.img_name); 
+	 			 // history.go(0);
 	 		  }, error: function (json) { 
 	 			  alert("실패!");
 	 		  }, 
@@ -388,6 +394,11 @@
 		
 	}// end of function goUpdate()--------------------------------
 	
+	function getEmpImgName() {
+		
+		imgname = $("input#img_name").val();
+	}
+	
 </script>
 
 <div id="tbl_regEmp">
@@ -400,7 +411,11 @@
 		<tr>
 			<td><strong>사진</strong></td>
 			<td><input type="hidden" name="emp_no" id="emp_no" value="${emp.pk_emp_no}" /></td>
-			<td style="align:center;"><img id="empProfile" src="<%=ctxPath %>/resources/images/ques.png" alt="..." ></td>
+			<td style="align:center;">
+				<img id="empProfile">
+				<%-- <img id="empProfile" src="<%= ctxPath%>/resources/images/nol.png"> --%>
+				<%-- <img id="empProfile" src="<%= ctxPath%>/resources/files/${emp.img_name}"> --%>
+			</td>
 			<td style="padding-left: 20px;"><input type="file" name="attach" id="attach" />
 			<br><button type="button" style="margin-top: 30px;" id="updateImage" class="btn btn-primary">사진변경</button></td>
 		</tr>
@@ -409,7 +424,7 @@
 	<form name="updateFrm" enctype="multipart/form-data">
 	<table id="tblEmpUpdate">
 		<tr>
-			<td><input type="hidden" id="img_name" name="img_name" /></td>
+			<td><input type="hidden" id="img_name" name="img_name" value="${emp.img_name}"/></td>
 		</tr>
 		
 		<tr>

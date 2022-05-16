@@ -387,10 +387,11 @@
 	<resultMap type="Map" id="birthgender">
 		<result property="birthday" 			column="birthday" 		javaType="String" />
 		<result property="gender" 				column="gender" 		javaType="String" />
+		<result property="img_name" 			column="img_name" 		javaType="String" />
 	</resultMap>
 	
 	<select id="getBirthday" resultMap="birthgender" parameterType="int">
-		select birthday, gender
+		select birthday, gender, img_name
 		from tbl_employees
 		where pk_emp_no = #{pk_emp_no}
 	</select>
@@ -409,4 +410,30 @@
 			 , uq_phone = #{uq_phone}, uq_email = #{uq_email}, img_name = #{img_name}
 		where pk_emp_no = #{pk_emp_no}
 	</update>
+	
+	<!-- 회원정보 구해오기(메인화면) -->
+	<resultMap type="Map" id="getEmpInfo_map">
+		<result property="pk_emp_no" 				column="pk_emp_no" 			javaType="int" />
+		<result property="emp_name" 				column="emp_name" 			javaType="String" />
+		<result property="ko_depname" 				column="ko_depname" 		javaType="String" />
+		<result property="ko_rankname" 				column="ko_rankname" 		javaType="String" />
+	</resultMap>
+	
+	<select id="getEmpInfo" resultMap="getEmpInfo_map" parameterType="int">
+		select pk_emp_no, ko_depname, emp_name, ko_rankname
+		from
+		(
+		select D.ko_depname AS ko_depname, E.pk_emp_no AS pk_emp_no, E.emp_name AS emp_name
+		     , S.ko_rankname AS ko_rankname
+		from tbl_employees E
+		JOIN tbl_dep_sort D
+		ON E.fk_department_id = D.pk_dep_no
+		join tbl_rank_sort S
+		on E.fk_rank_id = S.PK_RANK_NO
+		where E.pk_emp_no = #{pk_emp_no}
+		) V
+	</select>
+	
+	
+	
 </mapper>

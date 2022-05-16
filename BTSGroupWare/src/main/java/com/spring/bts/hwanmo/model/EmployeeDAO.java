@@ -1,6 +1,7 @@
 package com.spring.bts.hwanmo.model;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -104,6 +105,13 @@ public class EmployeeDAO implements InterEmployeeDAO {
 	public int updateMember(EmployeeVO empvo) {
 		int n = sqlsession.update("hwanmo.updateMember", empvo);
 		return n;
+	}
+
+	// 회원정보 받아오기
+	@Override
+	public List<Map<String, Object>> getEmpInfo(int pk_emp_no) {
+		List<Map<String, Object>> empList = sqlsession.selectList("hwanmo.getEmpInfo", pk_emp_no);
+		return empList;
 	}
 	
 	
