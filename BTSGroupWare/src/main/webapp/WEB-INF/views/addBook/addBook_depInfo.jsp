@@ -10,71 +10,6 @@
 
 <title>부서상세정보</title>
 
-<script type="text/javascript">
-
-	$( document ).ready( function() {
-	
-	  $( "div#y_teamwon" ).slideToggle().hide();
-	  $( "button#y_team" ).click( function() {
-	      $( "div#y_teamwon" ).slideToggle();
-	    });
-		  
-	  $( "div#m_teamwon" ).slideToggle().hide();
-	  $( "button#m_team" ).click( function() {
-	    $( "div#m_teamwon" ).slideToggle();
-	  });
-	  
-	  $( "div#g_teamwon" ).slideToggle().hide();
-	  $( "button#g_team" ).click( function() {
-	    $( "div#g_teamwon" ).slideToggle();
-	  });
-	  
-	  $( "div#c_teamwon" ).slideToggle().hide();
-	  $( "button#c_team" ).click( function() {
-	    $( "div#c_teamwon" ).slideToggle();
-	  });
-	  
-	  $( "div#i_teamwon" ).slideToggle().hide();
-	  $( "button#i_team" ).click( function() {
-	    $( "div#i_teamwon" ).slideToggle();
-	  });
-	  
-	  $( "div#h_teamwon" ).slideToggle().hide();
-	  $( "button#h_team" ).click( function() {
-	    $( "div#h_teamwon" ).slideToggle();
-	  });
-	  
-	  sessionScope
-	  
-	}); // end of $( document ).ready( function()
-
-			
-	function teamwonInfo(i)	{
-		$.ajax({
-			url:"<%= ctxPath%>/addBook/addBook_depInfo_select_ajax.bts",
-			data:{"pk_emp_no" : $("input#pk_emp_no_"+i).val()},
-			type: "post",
-			dataType: 'json',
-			success : function(json) {
-				$("input#name").val(json.name)
-				$("input#department").val(json.department)
-				$("input#rank").val(json.rank)
-				$("input#email").val(json.email)
-				$("input#phone").val(json.phone)
-				$("input#address").val(json.address)
-				$("input#detailaddress").val(json.detailaddress)
-			},
-			error: function(request){
-				
-			}
-		});
-	}	
-			
-			
-			
-			
-</script>
-
 <style type="text/css">
 
 	#tbl_depName { 
@@ -82,8 +17,82 @@
 		border-spacing: 0 12px;
 	}
 
+/* ----------------------------------------------------  */
+
+
+.highcharts-figure,
+.highcharts-data-table table {
+    min-width: 360px;
+    max-width: 800px;
+    margin: 1em auto;
+}
+
+.highcharts-data-table table {
+    font-family: Verdana, sans-serif;
+    border-collapse: collapse;
+    border: 1px solid #ebebeb;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.highcharts-data-table caption {
+    padding: 1em 0;
+    font-size: 1.2em;
+    color: #555;
+}
+
+.highcharts-data-table th {
+    font-weight: 600;
+    padding: 0.5em;
+}
+
+.highcharts-data-table td,
+.highcharts-data-table th,
+.highcharts-data-table caption {
+    padding: 0.5em;
+}
+
+.highcharts-data-table thead tr,
+.highcharts-data-table tr:nth-child(even) {
+    background: #f8f8f8;
+}
+
+.highcharts-data-table tr:hover {
+    background: #f1f7ff;
+}
+
+#container h4 {
+    text-transform: none;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+#container p {
+    font-size: 13px;
+    line-height: 16px;
+}
+
+@media screen and (max-width: 600px) {
+    #container h4 {
+        font-size: 2.3vw;
+        line-height: 3vw;
+    }
+
+    #container p {
+        font-size: 2.3vw;
+        line-height: 3vw;
+    }
+}
+
 </style>
 
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/sankey.js"></script>
+<script src="https://code.highcharts.com/modules/organization.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
 
 <h1>조직도</h1>
@@ -99,44 +108,12 @@
 </ul>
 <div class="tab-content">
   <div class="tab-pane fade show active" id="depName">
-    <table id="tbl_depName">
-    	<tr>
-    		<td style="dispay:inline;">
-	    		<p style="font-size:25pt;"><strong>영업팀</strong><p>
-			    <p style="font-size:11pt;">영업팀 입니다</p>
-			</td>
-		</tr>
-		<tr>
-    		<td style="dispay:inline-block;">
-	    		<p style="font-size:25pt;"><strong>마케팅팀</strong><p>
-			    <p style="font-size:11pt;">마케팅팀 입니다</p>
-			</td>
-		</tr>
-		<tr>
-    		<td style="dispay:inline-block;">
-	    		<p style="font-size:25pt;"><strong>기획팀</strong><p>
-			    <p style="font-size:11pt;">기획팀 입니다</p>
-			</td>
-		</tr>
-		<tr>
-    		<td style="dispay:inline-block;">
-	    		<p style="font-size:25pt;"><strong>총무팀</strong><p>
-			    <p style="font-size:11pt;">총무팀 입니다</p>
-			</td>
-		</tr>
-		<tr>
-    		<td style="dispay:inline-block;">
-	    		<p style="font-size:25pt;"><strong>인사팀</strong><p>
-			    <p style="font-size:11pt;">인사팀 입니다</p>
-			</td>
-		</tr>
-		<tr>
-    		<td style="dispay:inline-block;">
-	    		<p style="font-size:25pt;"><strong>회계팀</strong><p>
-			    <p style="font-size:11pt;">회계팀 입니다</p>
-			</td>
-		</tr>
-	</table>
+    
+<figure class="highcharts-figure">
+    <div id="container" style="margin-top:15%; /* 글꼴  */-webkit-text-stroke-width: thin;"></div>
+    
+</figure>
+
   </div>
   
   <!-- 부서원 목록  -->
@@ -289,3 +266,186 @@
 	</div>
 	</div>
 </div>
+
+
+
+
+<script type="text/javascript">
+
+	$( document ).ready( function() {
+	
+	  $( "div#y_teamwon" ).slideToggle().hide();
+	  $( "button#y_team" ).click( function() {
+	      $( "div#y_teamwon" ).slideToggle();
+	    });
+		  
+	  $( "div#m_teamwon" ).slideToggle().hide();
+	  $( "button#m_team" ).click( function() {
+	    $( "div#m_teamwon" ).slideToggle();
+	  });
+	  
+	  $( "div#g_teamwon" ).slideToggle().hide();
+	  $( "button#g_team" ).click( function() {
+	    $( "div#g_teamwon" ).slideToggle();
+	  });
+	  
+	  $( "div#c_teamwon" ).slideToggle().hide();
+	  $( "button#c_team" ).click( function() {
+	    $( "div#c_teamwon" ).slideToggle();
+	  });
+	  
+	  $( "div#i_teamwon" ).slideToggle().hide();
+	  $( "button#i_team" ).click( function() {
+	    $( "div#i_teamwon" ).slideToggle();
+	  });
+	  
+	  $( "div#h_teamwon" ).slideToggle().hide();
+	  $( "button#h_team" ).click( function() {
+	    $( "div#h_teamwon" ).slideToggle();
+	  });
+	  
+	  sessionScope
+	  
+	}); // end of $( document ).ready( function()
+
+			
+	function teamwonInfo(i)	{
+		$.ajax({
+			url:"<%= ctxPath%>/addBook/addBook_depInfo_select_ajax.bts",
+			data:{"pk_emp_no" : $("input#pk_emp_no_"+i).val()},
+			type: "post",
+			dataType: 'json',
+			success : function(json) {
+				$("input#name").val(json.name)
+				$("input#department").val(json.department)
+				$("input#rank").val(json.rank)
+				$("input#email").val(json.email)
+				$("input#phone").val(json.phone)
+				$("input#address").val(json.address)
+				$("input#detailaddress").val(json.detailaddress)
+			},
+			error: function(request){
+				
+			}
+		});
+	}	
+			
+/* ---------------------------------------------------------------------- */			
+			
+/* 조직도  */
+
+Highcharts.chart('container', {
+    chart: {
+        height: 800,
+        inverted: true
+    },
+
+    title: {
+        text: 'B.T.S 조직도'
+    },
+
+    accessibility: {
+        point: {
+            descriptionFormatter: function (point) {
+                var nodeName = point.toNode.name,
+                    nodeId = point.toNode.id,
+                    nodeDesc = nodeName === nodeId ? nodeName : nodeName + ', ' + nodeId,
+                    parentDesc = point.fromNode.id;
+                return point.index + '. ' + nodeDesc + ', reports to ' + parentDesc + '.';
+            }
+        }
+    },
+
+    series: [{
+        type: 'organization',
+        name: 'Highsoft',
+        keys: ['from', 'to'],
+        data: [
+            ['CEO', 'exe_director'],
+            ['exe_director', 'sales_team'],
+            ['exe_director', 'marketing_team'],
+            ['exe_director', 'planning_team'],
+            ['exe_director', 'manager_team'],
+            ['exe_director', 'personnel_team'],
+            ['exe_director', 'accounting_team'],
+           
+        ],
+        levels: [{
+            level: 0,
+            color: 'black',
+            dataLabels: {
+                color: 'white'
+            },
+            height: 10
+        }, {
+            level: 1,
+            color: 'silver',
+            dataLabels: {
+                color: 'black'
+            },
+            height: 10
+        }, {
+            level: 2,
+            color: '#980104'
+        }, {
+            level: 4,
+            color: '#359154'
+        }],
+        nodes: [{
+            id: 'CEO',
+            title: '[사장]',
+            name: '이순신',
+        }, {
+            id: 'exe_director',
+            title: '[전무]',
+            name: '엄정화',
+        }, {
+            id: 'sales_team',
+            title: 'sales_team',
+            name: '영업',
+            color: '#007ad0',
+        }, {
+            id: 'marketing_team',
+            title: 'marketing_team',
+            name: '마케팅',
+            color: '#007ad0',
+        }, {
+            id: 'planning_team',
+            title: 'planning_team',
+            name: '기획',
+            color: '#007ad0',
+        }, {
+        	id: 'manager_team',
+            title: 'manager_team',
+            name: '총무',
+        }, {
+        	id: 'personnel_team',
+            title: 'personnel_team',
+            name: '인사',
+        }, {
+        	id: 'accounting_team',
+            title: 'accounting_team',
+            name: '회계',
+        }],
+        colorByPoint: false,
+        color: '#007ad0',
+        dataLabels: {
+            color: 'white'
+        },
+        borderColor: 'white',
+        nodeWidth: 90
+    }],
+    tooltip: {
+        outside: true
+    },
+    exporting: {
+        allowHTML: true,
+        sourceWidth: 800,
+        sourceHeight: 600
+    }
+
+});
+
+/* 조직도  */
+
+</script>

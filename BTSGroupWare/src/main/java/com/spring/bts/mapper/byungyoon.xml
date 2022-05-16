@@ -19,7 +19,7 @@
             on E.pk_emp_no = A.registeruser
             where A.registeruser = #{pk_emp_no}
             <if test='searchWord != ""'>
-			and lower(#{searchWord})||'%'
+			and addb_name like '%' || lower(#{searchWord})|| '%'
 			</if>
             ) V
       where rno between #{startRno} and #{endRno}
@@ -78,9 +78,9 @@
 	<select id="addBook_main_totalPage" parameterType="HashMap" resultType="int">
 		select count(*) 
 		from tbl_addbook
-		where registeruser = to_number(#{registeruser})
+		where registeruser = #{registeruser}
 		<if test='searchWord != ""'>
-		and '%' || lower(#{searchWord})||'%'
+		and addb_name like '%' || lower(#{searchWord})|| '%'
 		</if>
 	</select>
 	
