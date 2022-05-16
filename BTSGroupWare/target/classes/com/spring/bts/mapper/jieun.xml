@@ -16,10 +16,10 @@
 	</insert>
 
 			<!-- // 사내 캘린더에 캘린더 소분류 명 존재 여부 알아오기  -->
-			<select id="existComCalendar" parameterType="String" resultType="int">
+			<select id="existComCalendar" parameterType="HashMap" resultType="int">
 				select  count(*)
 				from tbl_calendar
-				where fk_lgcatgono = 2 and calname = #{addCom_calname}
+				where fk_lgcatgono = 2 and and fk_emp_no = #{fk_emp_no} and calname = #{addCom_calname}
 			</select>
 	
 	<!-- 사내 캘린더에 사내 캘린더 소분류 보여주기 -->
@@ -36,10 +36,10 @@
 		values (seq_calno.nextval, 1, #{addMy_calname}, #{fk_emp_no})
 	</insert>
 			<!-- 내 캘린더에 캘린더 소분류 명 존재 여부 알아오기 -->
-			<select id="existMyCalendar" parameterType="String" resultType="int">
+			<select id="existMyCalendar" parameterType="HashMap" resultType="int">
 				select count(*)
 				from tbl_calendar
-				where fk_lgcatgono = 1 and calname = #{addMy_calname}
+				where fk_lgcatgono = 1 and fk_emp_no = #{fk_emp_no} and calname = #{addMy_calname}
 			</select>
 	
 	<!-- 내 캘린더에 내 캘린더 소분류 보여주기 -->
@@ -57,7 +57,7 @@
 	</update>
 	
 	<!-- 캘린더에 이름이 있는지 확인 -->
-	<select id="existsCalendar" parameterType="HashMap" resultType="int">
+	<select id="existsCalendar" parameterType="String" resultType="int">
 		select count(*)
 		from tbl_calendar
 		where fk_lgcatgono = #{caltype} 
@@ -340,6 +340,18 @@
 		insert into tbl_reservation(pk_rserno, fk_classno, fk_rno, fk_emp_no, rserstartdate, rserenddate, rserusecase, color)
 		values (seq_rserno.nextval, #{fk_classno}, #{fk_rno}, #{fk_emp_no}, to_date(#{rserstartdate}, 'yyyymmddhh24miss'), to_date(#{rserenddate}, 'yyyymmddhh24miss'), #{rserusecase}, #{color})
 	</insert>
+	
+	<select id="existReservation" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_reservation
+		where fk_rno = #{fk_rno} and
+		      (
+		      to_date(#{rserstartdate}, 'yy/mm/dd hh24:mi:ss') BETWEEN rserstartdate AND rserenddate
+		   OR to_date(#{rserenddate}, 'yy/mm/dd hh24:mi:ss') BETWEEN rserstartdate AND rserenddate 
+           OR rserstartdate BETWEEN to_date(#{rserstartdate}, 'yy/mm/dd hh24:mi:ss')  AND to_date(#{rserenddate}, 'yy/mm/dd hh24:mi:ss')
+           OR rserenddate BETWEEN to_date(#{rserstartdate}, 'yy/mm/dd hh24:mi:ss')  AND to_date(#{rserenddate}, 'yy/mm/dd hh24:mi:ss')
+		      )
+	</select>
 
 	<!--  예약 상세보기 -->
 	<select id="reservationDetail" parameterType="String" resultMap="resourceSpecialReservation_Map">
