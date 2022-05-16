@@ -296,3 +296,16 @@ where rno between 1 and 3
 select *
 from tbl_employees
 where pk_emp_no = 80000888
+
+select *
+from tbl_att_sort
+
+update tbl_att_sort set att_sort_korname = '훈련'
+where pk_att_sort_no = 30
+
+commit;
+
+
+select img_name
+from tbl_employees
+where pk_emp_no = 80000002

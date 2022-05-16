@@ -44,8 +44,8 @@ public class CalendarDAO implements InterCalendarDAO {
 	}
 		// 사내 캘린더에 캘린더 소분류 명 존재 여부 알아오기
 		@Override
-		public int existComCalendar(String addCom_calname) {
-			int m = sqlsession.selectOne("jieun.existComCalendar", addCom_calname);
+		public int existComCalendar(Map<String, String> map) {
+			int m = sqlsession.selectOne("jieun.existComCalendar", map);
 			return m;
 		}
 		
@@ -65,8 +65,8 @@ public class CalendarDAO implements InterCalendarDAO {
 	}
 			// 내 캘린더에 캘린더 소분류 명 존재 여부 알아오기
 			@Override
-			public int existMyCalendar(String addMy_calname) {
-				int n = sqlsession.selectOne("jieun.existMyCalendar", addMy_calname);
+			public int existMyCalendar(Map<String, String> map) {
+				int n = sqlsession.selectOne("jieun.existMyCalendar", map);
 				return n;
 			}
 

@@ -15,6 +15,8 @@ public interface InterResourceDAO {
 
 	// == 예약 등록하기 == //
 	int addReservation(Map<String, String> paraMap);
+		// 예약 목록 존재 여부 알아오기
+		int existReservation(Map<String, String> map);
 
 	// 자원 등록 모달에 select 자원 가져오기//
 	List<Map<String, String>> resourceSelect(Map<String, String> paraMap);
@@ -39,5 +41,7 @@ public interface InterResourceDAO {
 
 	// == 메인 페이지 예약 수 불러오기 == //
 	int reservationCount(int pk_emp_no);
+
+	
 
 }

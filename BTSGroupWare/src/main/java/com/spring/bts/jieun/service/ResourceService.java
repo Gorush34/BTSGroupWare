@@ -1,5 +1,6 @@
 package com.spring.bts.jieun.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +39,24 @@ public class ResourceService implements InterResourceService {
 	// == 예약 등록하기 == //
 	@Override
 	public int addReservation(Map<String, String> paraMap) {
-		int n = dao.addReservation(paraMap);
+		int n = 0;
+		
+		String rserstartdate = paraMap.get("rserstartdate");
+		String rserenddate = paraMap.get("rserenddate");
+		String fk_rno = paraMap.get("fk_rno");
+		
+		Map<String, String> map = new HashMap<>();
+		map.put("rserstartdate", rserstartdate);
+		map.put("rserenddate", rserenddate);
+		map.put("fk_rno", fk_rno);
+		
+		// 예약 목록 존재 여부 알아오기
+		int m = dao.existReservation(map);
+		
+		if(m==0) {
+			n = dao.addReservation(paraMap);
+		}
+		
 		return n;
 	}
 

@@ -102,7 +102,7 @@
 		          , R.ko_rankname AS ko_rankname
 		          , D.ko_depname AS ko_depname
 		    from tbl_appr A
-		     join tbl_employees E 
+		    join tbl_employees E 
 		    on A.FK_EMP_NO = E.pk_emp_no
 		    join tbl_rank_sort R
 		    on E.FK_RANK_ID = R.PK_RANK_NO
@@ -288,7 +288,7 @@
 
 
 
-	<!-- // ==== 파일첨부가 있는 게시판의 페이징 처리한 대기목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함한 것) ==== // -->		
+	<!-- // ==== 파일첨부가 있는 게시판의 페이징 처리한 승인목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함한 것) ==== // -->		
 	<select id="edmsListSearchWithPaging_accept" parameterType="HashMap" resultType="com.spring.bts.yuri.model.ApprVO">
 		select	pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno,
 		        fk_fin_empno, emergency, title, contents, filename,
@@ -327,7 +327,7 @@
 
 
 	<!-- 반려문서함 -->
-	<!-- // ==== 파일첨부가 있는 게시판의 페이징 처리한 대기목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함한 것) ==== // -->		
+	<!-- // ==== 파일첨부가 있는 게시판의 페이징 처리한 반려목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함한 것) ==== // -->		
 	<select id="edmsListSearchWithPaging_reject" parameterType="HashMap" resultType="com.spring.bts.yuri.model.ApprVO">
 		select	pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno,
 		        fk_fin_empno, emergency, title, contents, filename,
@@ -364,24 +364,6 @@
 		where T.rno between #{startRno} and #{endRno}
 	</select>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	<!-- <choose>
-		<when test="">and status = #{status}</when>
-		</choose> -->
-
 	<!-- 상세부서정보 페이지 사원목록 불러오기 -->
 	<select id="addBook_depInfo_select" resultType="com.spring.bts.hwanmo.model.EmployeeVO">
 		select E.pk_emp_no, E.emp_name , R.ko_rankname , D.ko_depname , R.pk_rank_no
@@ -394,60 +376,49 @@
 	</select>
    
    
-   <!-- 상태 - 0 대기중, 1 진행중, 2 승인됨, 3 반려됨 -->
-   
-   <!-- 문서 승인하기 -->
+	<!-- status		0 대기중, 1 진행중, 2 승인됨, 3 반려됨 -->
+	<!-- mid_accept	0 아무것도 안 함, 1 승인함, 2 반려함  -->
+	<!-- fin_accept	0 아무것도 안 함, 1 승인함, 2 반려함  -->
+	<!-- 문서 승인하기 -->
 	<update id="accept" parameterType="com.spring.bts.yuri.model.ApprVO">
 		update tbl_appr
-		<!-- 중간결재자의 승인 -->
 		<choose>
-			<when test="mid_accept != null and mid_accept == 0 and status == 0">
+			<!-- 중간결재자의 승인 -->
+			<when test="mid_accept == 0 and status == 0">
 			set status = 1, mid_accept = 1
 			where pk_appr_no = #{pk_appr_no}
-				  and fk_emp_no = #{fk_mid_emp_no}
+				  and fk_mid_empno = #{fk_emp_no}
 			</when>
-		</choose>
-		
-		<!-- 최종결재자의 승인 -->
-		<choose>
-			<when test="fin_accept != null and mid_accept == 1 and fin_accept == 0 and status == 1">
+			<!-- 최종결재자의 승인 -->
+			<when test="mid_accept == 1 and fin_accept == 0 and status == 1">
 			set status = 2, fin_accept = 1
 			where pk_appr_no = #{pk_appr_no}
-				  and fk_emp_no = #{fk_fin_emp_no}
+		      and fk_fin_empno = #{fk_emp_no}
 			</when>
 		</choose>
-	</update>		  
-	<!--
-	<set>
-		<if test="status == 0 && mid_accept == 0">
-			status = 1, mid_accept = 1
-			where pk_appr_no = #{pk_appr_no}
-				  and fk_emp_no = #{fk_fin_emp_no}
-		</if>
-	</set> 
-	 -->
+	</update>
 
+
+	<!-- status		0 대기중, 1 진행중, 2 승인됨, 3 반려됨 -->
+	<!-- mid_accept 0 아무것도 안 함, 1 승인함, 2 반려함  -->
+	<!-- fin_accept 0 아무것도 안 함, 1 승인함, 2 반려함  -->
 	<!-- 문서 반려하기 -->
 	<update id="reject" parameterType="com.spring.bts.yuri.model.ApprVO">
 		update tbl_appr
-		<!-- 중간결재자의 반려 -->
 		<choose>
-			<when test="mid_accept != null and mid_accept == 0 and status == 0">
-			set status = 3, mid_accept = 1
-				where pk_appr_no = #{pk_appr_no}
-					  and fk_emp_no = #{fk_mid_emp_no}
+			<!-- 중간결재자의 반려 -->
+			<when test="mid_accept == 0 and status == 0">
+			set status = 3, mid_accept = 2
+			where pk_appr_no = #{pk_appr_no}
+				  and fk_mid_empno = #{fk_emp_no}
+			</when>
+			<!-- 최종결재자의 반려 / 즉 중간결재자는 승인했지만 최종결재자는 반려하는 것! -->
+			<when test="mid_accept == 1 and fin_accept == 0 and status == 1">
+			set status = 3, fin_accept = 2
+			where pk_appr_no = #{pk_appr_no}
+				  and fk_fin_empno = #{fk_emp_no}
 			</when>
 		</choose>
-		
-		<!-- 최종결재자의 반려 -->
-		<choose>
-			<when test="fin_accept != null and mid_accept == 1 and fin_accept == 0 and status == 1">
-			set status = 3, fin_accept = 1
-				where pk_appr_no = #{pk_appr_no}
-					  and fk_emp_no = #{fk_fin_emp_no}
-			</when>
-		</choose>
-	</update>	
-
+	</update>
 
 </mapper>

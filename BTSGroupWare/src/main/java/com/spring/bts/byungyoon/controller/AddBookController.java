@@ -38,8 +38,6 @@ public class AddBookController {
    @RequestMapping(value="/addBook/addBook_main.bts")
    public ModelAndView requiredLogin_requaddBook_main(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 	   
-	   
-	   
 	   Map<String, String> paraMap = new HashMap<>();
 	   
 	   HttpSession session = request.getSession();
@@ -281,18 +279,24 @@ public class AddBookController {
 	   int fk_rank_no = Integer.parseInt(request.getParameter("rank"));
 	   String email1 = request.getParameter("email1");
 	   String email2 = request.getParameter("email2");
-	   String email = email1+"@"+email2;
 	   String hp1 = request.getParameter("hp1");												
 	   String hp2 = request.getParameter("hp2");												
 	   String hp3 = request.getParameter("hp3");
-	   String phone = hp1+"-"+hp2+"-"+hp3;
 	   String companyname = request.getParameter("company_name");
 	   String num1 = request.getParameter("num1");												
 	   String num2 = request.getParameter("num2");												
 	   String num3 = request.getParameter("num3");
-	   String com_tel = num1+"-"+num2+"-"+num3;
 	   String company_address  = request.getParameter("company_address");
 	   String memo = request.getParameter("memo");
+	   
+	   String email = email1+"@"+email2;
+	   String phone = hp1+"-"+hp2+"-"+hp3;
+	   String com_tel = "";
+		if( num2 == "" && num3 == "") {
+			com_tel = "";
+		}else {
+			com_tel = num1+"-"+num2+"-"+num3;
+		}
 	   
 	   
 	   AddBookVO avo = new AddBookVO(); 
@@ -334,7 +338,7 @@ public class AddBookController {
    
    // 상세부서정보 페이지
    @RequestMapping(value="/addBook/addBook_depInfo.bts")
-   public ModelAndView addBook_depInfo(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+   public ModelAndView requiredLogin_addBook_depInfo(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 	   
 	   HttpSession session = request.getSession();
 	   EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
