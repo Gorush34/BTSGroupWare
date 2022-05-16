@@ -21,7 +21,35 @@
 
 <script type="text/javascript">
 
+	
+
 	$(document).ready(function(){
+		
+		
+		$(document).on("click","input:checkbox[name=com_calno]",function(){	
+			var com_smcatgonoArr = document.querySelectorAll("input.com_calno");
+		    
+			com_smcatgonoArr.forEach(function(item) {
+		         item.addEventListener("change", function() {  // "change" 대신에 "click" 을 해도 무방함.
+		         //	 console.log(item);
+		        	 calendar.refetchEvents();  // 모든 소스의 이벤트를 다시 가져와 화면에 다시 표시합니다.
+		         });
+		    });// end of com_smcatgonoArr.forEach(function(item) {})---------------------
+		  
+		});// end of $(document).on("click","input:checkbox[name=com_smcatgono]",function(){})--------
+		
+		$(document).on("click","input:checkbox[name=my_calno]",function(){	
+			var com_smcatgonoArr = document.querySelectorAll("input.my_calno");
+		    
+			com_smcatgonoArr.forEach(function(item) {
+		         item.addEventListener("change", function() {  // "change" 대신에 "click" 을 해도 무방함.
+		         //	 console.log(item);
+		        	 calendar.refetchEvents();  // 모든 소스의 이벤트를 다시 가져와 화면에 다시 표시합니다.
+		         });
+		    });// end of com_smcatgonoArr.forEach(function(item) {})---------------------
+		  
+		});// end of $(document).on("click","input:checkbox[name=com_smcatgono]",function(){})--------
+		
 		
 		// 모든 datepicker에 대한 공통 옵션 설정
 	    $.datepicker.setDefaults({
@@ -189,14 +217,14 @@
 		    	//console.log("확인용 :"+ arr_checkbox_calno);
 	            var arr_calendar_checkbox = document.querySelectorAll("input.calendar_checkbox"); 
 	            // 사내캘린더, 내캘린더, 공유받은캘린더 에서의 모든 체크박스임
-	            console.log("확인용 :"+ arr_calendar_checkbox);
+	            //console.log("확인용 :"+ arr_calendar_checkbox);
 	            arr_calendar_checkbox.forEach(function(item) { // item 이 사내캘린더, 내캘린더, 공유받은캘린더 에서의 모든 체크박스 중 하나인 체크박스임
 		              if (item.checked) { 
 		            	// 사내캘린더, 내캘린더, 공유받은캘린더 에서의 체크박스중 체크박스에 체크를 한 경우 라면
 		                
 		            	if (arg.event.extendedProps.cid === item.value) { // item.value 가 체크박스의 value 값이다.
-		                	 console.log("일정을 보여주는 cid : "  + arg.event.extendedProps.cid);
-		                	 console.log("일정을 보여주는 체크박스의 value값(item.value) : " + item.value);
+		                	 //console.log("일정을 보여주는 cid : "  + arg.event.extendedProps.cid);
+		                	 //console.log("일정을 보여주는 체크박스의 value값(item.value) : " + item.value);
 		                    
 		                	arg.el.style.display = "block"; // 풀캘린더에서 일정을 보여준다.
 		                }
@@ -206,8 +234,8 @@
 		            	// 사내캘린더, 내캘린더, 공유받은캘린더 에서의 체크박스중 체크박스에 체크를 해제한 경우 라면
 		                
 		            	if (arg.event.extendedProps.cid === item.value) {
-		            		 console.log("일정을 숨기는 cid : "  + arg.event.extendedProps.cid);
-		                	 console.log("일정을 숨기는 체크박스의 value값(item.value) : " + item.value);
+		            		 //console.log("일정을 숨기는 cid : "  + arg.event.extendedProps.cid);
+		                	 //console.log("일정을 숨기는 체크박스의 value값(item.value) : " + item.value);
 		                	
 		            		arg.el.style.display = "none"; // 풀캘린더에서 일정을  숨긴다.
 		                }

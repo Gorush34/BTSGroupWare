@@ -34,12 +34,16 @@
 		
 		// 내용 유효성 검사
 		var rinfo = $("textarea#rinfo").val().trim();
-        if(rinfo==""){
+        if(rinfo=="" || rinfo == "<p>&nbsp;</p>"){
 			alert("자원정보를 입력하세요."); 
 			return;
 		}
-		
-
+        rinfo = $("textarea#rinfo").val().replace(/<p><br><\/p>/gi, "<br>");
+        rinfo = rinfo.replace(/<\/p><p>/gi, "<br>"); //</p><p> -> <br>로 변환  
+        rinfo = rinfo.replace(/(<\/p><br>|<p><br>)/gi, "<br><br>"); //</p><br>, <p><br> -> <br><br>로 변환
+        rinfo = rinfo.replace(/(<p>|<\/p>)/gi, ""); //<p> 또는 </p> 모두 제거시
+      
+        $("textarea#rinfo").val(rinfo);
 		
 		var frm = document.resourceRegisterFrm;
 		frm.action="<%= ctxPath%>/resource/resourceRegister_end.bts";

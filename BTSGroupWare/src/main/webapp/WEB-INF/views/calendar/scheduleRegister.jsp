@@ -179,6 +179,17 @@
 	     	var startMinute= $("select#startMinute").val();
 	     	var endMinute= $("select#endMinute").val();
 	     	
+	     	// 시작일자가 1950년 이전일 경우
+	     	if(Number(startDate) - 19500101 < 0){
+	     		alert("해당날짜는 지정이 불가합니다.")
+	     		return;
+	     	}
+	        // 종료일자가 2999년 이후일 경우
+	     	if(Number(endDate) - 29991231 > 0){
+	     		alert("해당날짜는 지정이 불가합니다.")
+	     		return;
+	     	}
+	     	
 	     	// 시작일자 > 종료일자 : 경고
 	     	if(Number(endDate) - Number(startDate) <0){
 	     		alert("종료일이 시작일 보다 빠릅니다.")
@@ -215,6 +226,22 @@
 	     		alert("캘린더를 선택하시오.")
 	     		return;
 	     	}
+	     	
+	     	// 내용 유효성 검사
+	     	var content = $("textarea#content").val();
+	     	
+	     	// p태그 작업 막기
+	     	if(content == "" || content == "<p>&nbsp;</p>") {
+	             alert("글내용을 입력하세요!!");
+	             return;
+	          }
+	     	content = $("textarea#content").val().replace(/<p><br><\/p>/gi, "<br>");
+	     	content = content.replace(/<\/p><p>/gi, "<br>"); //</p><p> -> <br>로 변환  
+	     	content = content.replace(/(<\/p><br>|<p><br>)/gi, "<br><br>"); //</p><br>, <p><br> -> <br><br>로 변환
+	     	content = content.replace(/(<p>|<\/p>)/gi, ""); //<p> 또는 </p> 모두 제거시
+	      
+	        $("textarea#content").val(content);
+	     	
 	     	
 	     	// 시작일과 종료일, 오라클에 들어갈 date 형식으로  변경
 	     	var sdate = startDate+$("select#startHour").val()+$("select#startMinute").val()+"00";
@@ -312,19 +339,21 @@
 <h4 style="margin: 0 80px">일정등록</h4>
 	<div id="srFrm" style="margin:50px 100px;">
 		<form name="scheduleRegisterFrm">
-			<div>
-				<input type="text" id="subject" name="subject" size="50"/>&nbsp;&nbsp;
-				<input type="checkbox" id="secret" name="secret"/><label for="secret">비공개</label> &nbsp;&nbsp;&nbsp;
-				<span class="tooltip-right" data-tooltip="비공개 일정은 참석자만 확인가능합니다."><i class="bi bi-question-circle-fill"></i></span>
-			</div>
+			
 			<table id="scheduleRegisterContent">
+				<tr>
+					<th>일정</th>
+					<td>
+						<input type="text" id="subject" name="subject" size="50"/>&nbsp;&nbsp;
+					</td>
+				</tr>
 				<tr>
 					<th>날짜</th>
 					<td>
-						<input type="date" id="startDate" value="${requestScope.chooseDate}" style="height: 30px;"/>&nbsp; 
+						<input type="date" id="startDate" min="1900-01-01" max="2999-12-31" value="${requestScope.chooseDate}" style="height: 30px;"/>&nbsp; 
 						<select id="startHour" class="schedule"></select> 시
 						<select id="startMinute" class="schedule"></select> 분
-						- <input type="date" id="endDate" value="${requestScope.chooseDate}" style="height: 30px;"/>&nbsp;
+						- <input type="date" id="endDate" min="1900-01-01" max="2999-12-31" value="${requestScope.chooseDate}" style="height: 30px;"/>&nbsp;
 						<select id="endHour" class="schedule"></select> 시
 						<select id="endMinute" class="schedule"></select> 분&nbsp;
 						<input type="checkbox" id="allDay" name="allDay"/><label for="allDay"> &nbsp;종일</label>&nbsp;&nbsp;&nbsp;
@@ -382,7 +411,7 @@
 			
 		<div style="text-align: center;">
 		<button type="button" class="btn btn-primary btn-sm" id="register" >확인</button>
-		<button type="button" class="btn btn-outline-primary btn-sm" onclick="javascript:location.href='<%= ctxPath%>/calendar/calendarMain.bts'">취소</button>
+		<button type="button" class="btn btn-outline-primary btn-sm" onclick="javascript:location.href='<%= ctxPath%>/calendar/calenderMain.bts'">취소</button>
 		</div>
 	 </div>	
 </div>
