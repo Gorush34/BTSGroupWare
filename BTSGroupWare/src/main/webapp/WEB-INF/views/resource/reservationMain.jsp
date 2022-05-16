@@ -269,13 +269,36 @@
 	function goReservation(){
 		
 		// 일자 유효성 검사 (시작일자 > 종료일자 X)	
-		var startDate = $("input#startdate").val();
-		var endDate = $("input#enddate").val();
+		var startDate = $("input[name=startDate]").val();
+		var startArr = startDate.split("-");
+		startDate = "";
+		for(var i = 0; i<startArr.length; i++){
+			startDate += startArr[i];
+		}
+		
+		var endDate = $("input[name=endDate]").val();
+		var endArr = endDate.split("-");
+		endDate = "";
+		for(var i = 0; i<endArr.length; i++){
+			endDate += endArr[i];
+		}
+		
 		var startHour= $("select#startHour").val();
      	var endHour = $("select#endHour").val();
      	var startMinute= $("select#startMinute").val();
      	var endMinute= $("select#endMinute").val();
      	
+     	
+       // 시작일자가 1950년 이전일 경우
+     	if(Number(startDate) - 19500101 < 0){
+     		alert("해당날짜는 지정이 불가합니다.")
+     		return;
+     	}
+        // 종료일자가 2999년 이후일 경우
+     	if(Number(endDate) - 29991231 > 0){
+     		alert("해당날짜는 지정이 불가합니다.")
+     		return;
+     	}
      	// 시작일자 > 종료일자 : 경고
      	if(Number(endDate) - Number(startDate) <0){
      		alert("종료일이 시작일 보다 빠릅니다.")
@@ -307,12 +330,26 @@
      	$("input[name=startdate]").val(sdate);
      	$("input[name=enddate]").val(edate);
     
-     	
+     	// 자원 select 유효성 검사
      	var calpk_rno = $("select[name=pk_rno]").val();
         if (calpk_rno.trim() == "") {
            alert("자원을 선택해주세요.");
            return false;
         }
+        
+        // 이용용도 유효성 검사
+     	var rserusecase = $("textarea#rserusecase").val();
+        if (rserusecase.trim() == "" || rserusecase == "<p>&nbsp;</p>") {
+           alert("이용용도를 기입해주세요.");
+           return false;
+        }
+        
+        rserusecase = $("textarea#rserusecase").val().replace(/<p><br><\/p>/gi, "<br>");
+        rserusecase = rserusecase.replace(/<\/p><p>/gi, "<br>"); //</p><p> -> <br>로 변환  
+        rserusecase = rserusecase.replace(/(<\/p><br>|<p><br>)/gi, "<br><br>"); //</p><br>, <p><br> -> <br><br>로 변환
+        rserusecase = rserusecase.replace(/(<p>|<\/p>)/gi, ""); //<p> 또는 </p> 모두 제거시
+      
+        $("textarea#rserusecase").val(rserusecase);
      	
         // db에 넣기
         $.ajax({
