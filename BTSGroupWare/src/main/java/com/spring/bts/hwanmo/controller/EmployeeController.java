@@ -516,6 +516,7 @@ public class EmployeeController {
 		paraMap = empService.getBirthday(pk_emp_no);
 		loginuser.setBirthday(paraMap.get("birthday"));
 		loginuser.setGender(paraMap.get("gender"));
+		loginuser.setImg_name(paraMap.get("img_name"));
 		// System.out.println("생년월일 : " + loginuser.getBirthday());
 		// System.out.println("성별 : " + loginuser.getGender());
 		

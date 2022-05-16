@@ -387,10 +387,11 @@
 	<resultMap type="Map" id="birthgender">
 		<result property="birthday" 			column="birthday" 		javaType="String" />
 		<result property="gender" 				column="gender" 		javaType="String" />
+		<result property="img_name" 			column="img_name" 		javaType="String" />
 	</resultMap>
 	
 	<select id="getBirthday" resultMap="birthgender" parameterType="int">
-		select birthday, gender
+		select birthday, gender, img_name
 		from tbl_employees
 		where pk_emp_no = #{pk_emp_no}
 	</select>
