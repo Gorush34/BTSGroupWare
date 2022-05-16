@@ -561,6 +561,7 @@ td#no{
 
 
 <div class="container_fluid">
+		<c:set var="emp" value="${requestScope.empList.get(0)}" />
 	    <div class="row">
         <!-- 왼쪽 섹션 시작 -->
         <div class="col-sm-2 gadget_design_wrap" id="section_left">
@@ -578,10 +579,10 @@ td#no{
 	        			</span>
 	        		</span>
 	        		<span class="info">
-	        			<span class="name" title="">정환모</span>
-	        			<span class="position">사원</span>
+	        			<span class="name" title="">${emp.emp_name}</span>
+	        			<span class="position">${emp.ko_rankname}</span>
 	        			<br>
-	        			<span class="part">인사과</span>
+	        			<span class="part">${emp.ko_depname}</span>
 	        		</span>
 	        	</div>
 	        
@@ -657,7 +658,7 @@ td#no{
 				<div class="gadget_design_wrap left_section" id="gadget_design_wrap">
 					<ul class="type_btn_list_block" id="btn_list_block">
 						<li class="odd btn_list_li" style="border-top-left-radius: 5px;">
-							<a href="" data-bypass="true" data-popup="width=1024,height=790,scrollbars=yes,resizable=yes" id="btn_a">
+							<a href="<%= ctxPath%>/mail/mailReceiveList.bts" data-bypass="true" data-popup="width=1024,height=790,scrollbars=yes,resizable=yes" id="btn_a">
 								<span class="type">
 									<i class="far fa-envelope fa-2x" id="idx-icon"></i>
 								</span>
@@ -665,7 +666,7 @@ td#no{
 							</a>
 						</li>
 						<li class="even btn_list_li" style="border-top-right-radius: 5px;">
-							<a href="" id="btn_a">
+							<a href="<%= ctxPath%>/addBook/addBook_telAdd.bts" id="btn_a">
 								<span class="type">
 									<i class="far fa-address-book fa-2x" id="idx-icon"></i>
 								</span>
@@ -681,7 +682,7 @@ td#no{
 							</a>
 						</li>
 						<li class="even btn_list_li" style="border-bottom-right-radius: 5px;">
-							<a href="" data-bypass="true" id="btn_a">
+							<a href="<%= ctxPath%>/board/main.bts" data-bypass="true" id="btn_a">
 								<span class="type">
 									<i class="fas fa-chalkboard fa-2x" id="idx-icon"></i>
 								</span>

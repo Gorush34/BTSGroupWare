@@ -3,6 +3,7 @@ package com.spring.bts.hwanmo.service;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +98,13 @@ public class EmployeeService implements InterEmployeeService {
 	public int updateMember(EmployeeVO empvo) {
 		int n = empDAO.updateMember(empvo);
 		return n;
+	}
+
+	// 회원정보 받아오기
+	@Override
+	public List<Map<String, Object>> getEmpInfo(int pk_emp_no) {
+		List<Map<String, Object>> empList = empDAO.getEmpInfo(pk_emp_no);
+		return empList;
 	}
 
 }

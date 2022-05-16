@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.bts.common.AES256;
 import com.spring.bts.common.MyUtil;
 import com.spring.bts.common.Sha256;
 import com.spring.bts.hwanmo.model.EmployeeVO;
+import com.spring.bts.hwanmo.service.InterEmployeeService;
 import com.spring.bts.service.*;
 
 /*
@@ -83,6 +85,12 @@ public class BtsController {
     // private InterBoardService service = new BoardService(); 
     // ===> BoardController 객체가 메모리에서 삭제 되어지면  BoardService service 객체는 멤버변수(필드)이므로 메모리에서 자동적으로 삭제되어진다.
 	
+	@Autowired
+	private AES256 aes;
+	
+	@Autowired
+	private InterEmployeeService empService;
+	
 	@Autowired	// Type에 따라 알아서 Bean을 주입해준다.
 	private InterBtsService service;
 	
@@ -95,9 +103,18 @@ public class BtsController {
 		// List<String> imgfilenameList = service.getImgfilenameList();
 		
 		// mav.addObject("imgfilenameList", imgfilenameList);
-		mav.setViewName("main/index.tiles1");
+		
 		// /WEB-INF/views/tiles1/main/index.jsp 페이지를 만들어야 한다.
 		
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+		int pk_emp_no = loginuser.getPk_emp_no();
+		
+		// 회원정보 받아오기
+		List<Map<String, Object>> empList = empService.getEmpInfo(pk_emp_no);
+		
+		mav.addObject("empList", empList);
+		mav.setViewName("main/index.tiles1");
 		return mav;
 	}
 	
