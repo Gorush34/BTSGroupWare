@@ -305,7 +305,7 @@ public class CalendarController {
 
 //	
 	// === 일정 등록 하기 === //
-	@RequestMapping(value="/calendar/scheduleRegisterInsert.bts")
+	@RequestMapping(value="/calendar/scheduleRegisterInsert.bts",method = {RequestMethod.POST})
 	public ModelAndView scheduleRegisterInsert(ModelAndView mav, HttpServletRequest request) throws Throwable {
 		
 		String method = request.getMethod();
