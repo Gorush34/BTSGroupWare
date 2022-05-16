@@ -311,5 +311,18 @@ public class ApprVO {
 	public void setManager(String manager) {
 		this.manager = manager;
 	}
+
+	@Override
+	public String toString() {
+		return "ApprVO [pk_appr_no=" + pk_appr_no + ", fk_appr_sortno=" + fk_appr_sortno + ", fk_emp_no=" + fk_emp_no
+				+ ", fk_mid_empno=" + fk_mid_empno + ", fk_fin_empno=" + fk_fin_empno + ", emergency=" + emergency
+				+ ", title=" + title + ", contents=" + contents + ", filename=" + filename + ", orgfilename="
+				+ orgfilename + ", fileSize=" + fileSize + ", status=" + status + ", mid_accept=" + mid_accept
+				+ ", fin_accept=" + fin_accept + ", mid_opinion=" + mid_opinion + ", fin_opinion=" + fin_opinion
+				+ ", writeday=" + writeday + ", viewcnt=" + viewcnt + ", previousseq=" + previousseq
+				+ ", previoussubject=" + previoussubject + ", nextseq=" + nextseq + ", nextsubject=" + nextsubject
+				+ ", emp_name=" + emp_name + ", ko_rankname=" + ko_rankname + ", ko_depname=" + ko_depname
+				+ ", manager=" + manager + ", attach=" + attach + "]";
+	}
 	
 }

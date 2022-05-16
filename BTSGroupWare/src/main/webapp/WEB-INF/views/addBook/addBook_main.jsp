@@ -102,7 +102,10 @@ $( document ).ready( function() {
 			<td colspan="8" style="text-align: left;"><br><h2>${sessionScope.loginuser.emp_name} 의 주소록&nbsp;<button class="btn btn-info btn-sm" id="" style="border: solid lightgray 1.5px;" onclick="location.href='http://localhost:9090/bts/addBook/addBook_telAdd.bts'">추가</button></h2><br><br></td>
 			<td>
 				  <div class="d-flex align-items-center">
-				    <form name="searchFrm"><input class="form-control" type="text" name="searchWord" id="searchWord" value="" style="width:115px;" placeholder="주소록검색" aria-label="Search"><input type="text" style="display: none;"/></form>
+				    <form name="searchFrm">
+					    <input class="form-control" type="text" name="searchWord" id="searchWord" value="" style="width:120px;" placeholder="이름으로 검색" aria-label="Search">
+					    <input type="text" style="display: none;"/>
+				    </form>
 				    <button id="searchBtn" class="btn btn-outline-success flex-shrink-0" type="button" style="margin-bottom:10%;" onclick="goSearch()">검색</button>
 				  </div>
 			</td>
@@ -211,13 +214,13 @@ $( document ).ready( function() {
 		
 		<div class="form-group">
 		<label for="recipient-name" class="control-label"><strong>이름</strong></label>
-		<input type="text" class="form-control" id="name" name="name" maxlength="6">
+		<input type="text" class="form-control" id="name" name="name" maxlength="3">
 		</div>
 		
 		<div class="form-group">
 		<label for="recipient-name" class="control-label"><strong>부서</strong></label>
 			<select id="department" name="department" class="form-control">
-			  <option value="700" selected >&nbsp;</option>
+			  <option value="700">--</option>
 			  <option value="100">영업</option>
 			  <option value="200">마케팅</option>
 			  <option value="300">기획</option>
@@ -230,7 +233,7 @@ $( document ).ready( function() {
 		<div class="form-group">
 		<label for="recipient-name" class="control-label"><strong>직급</strong></label>
 			<select id="rank" name="rank" class="form-control">
-			  <option value="90"selected >&nbsp;</option>
+			  <option value="90">--</option>
 			  <option value="10">사원</option>
 			  <option value="20">주임</option>
 			  <option value="30">대리</option>
@@ -245,9 +248,9 @@ $( document ).ready( function() {
 		<div class="form-group">
 		<label for="recipient-name" class="control-label"><strong>이메일</strong></label>
 		<p>
-			<input class="form-control" id="email1" name="email1" style="width:140px; display:inline;" type="text" maxlength="12">&nbsp;@
-			<input class="form-control" id="email2" name="email2" style="width:137px; display:inline;" type="text" maxlength="12" placeholder="직접입력">&nbsp;
-			<select class="form-control" name="select_email" style="width:150px; display:inline;" onChange="selectEmail(this)">
+			<input class="form-control" id="email1" name="email1" style="width:135px; display:inline;" type="text" maxlength="12">&nbsp;@
+			<input class="form-control" id="email2" name="email2" style="width:135px; display:inline;" type="text" maxlength="12" placeholder="직접입력">&nbsp;
+			<select class="form-control" name="select_email" style="width:145px; display:inline;" onChange="selectEmail(this)">
 				<option value="gmail.com">gmail.com</option>
 				<option value="naver.com">naver.com</option>
 				<option value="nate.com">nate.com</option>
@@ -260,11 +263,11 @@ $( document ).ready( function() {
 		<div class="form-group" style="display:inline;">
 		<label for="recipient-name" class="control-label"><strong>휴대폰</strong></label>
 			<p>
-        	<select class="form-control" id="hp1" name="hp1" style="width:139px; display:inline;" >
+        	<select class="form-control" id="hp1" name="hp1" style="width:135px; display:inline;" >
 				<option value="010">010</option>
 			</select>&nbsp;-&nbsp;
-			<input class="form-control" id="hp2" name="hp2" style="width:140px; display:inline;" type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">&nbsp;-&nbsp; 
-			<input class="form-control" id="hp3" name="hp3" style="width:140px; display:inline;" type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+			<input class="form-control" id="hp2" name="hp2" style="width:135px; display:inline;" type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">&nbsp;-&nbsp; 
+			<input class="form-control" id="hp3" name="hp3" style="width:135px; display:inline;" type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
 			</p>
 		</div>
 		
@@ -277,7 +280,7 @@ $( document ).ready( function() {
 		<label for="recipient-name" class="control-label"><strong>회사전화번호</strong></label>
 		<div style="display:inline;">
 		<p>
-		<select class="form-control" id="num1" name="num1" style="width:139px; display:inline; ">
+		<select class="form-control" id="num1" name="num1" style="width:135px; display:inline; ">
 					<option value="">선택</option>
 					<option value="02">02</option>
 					<option value="031">031</option>
@@ -299,8 +302,8 @@ $( document ).ready( function() {
 					<option value="070">070</option>
 					<option value="010">010</option>
 				</select>&nbsp;-&nbsp;
-		<input class="form-control" id="num2" name="num2" style="width:140px; display:inline; " type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">&nbsp;-&nbsp; 
-		<input class="form-control" id="num3" name="num3" style="width:140px; display:inline; " type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+		<input class="form-control" id="num2" name="num2" style="width:135px; display:inline; " type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">&nbsp;-&nbsp; 
+		<input class="form-control" id="num3" name="num3" style="width:135px; display:inline; " type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
 		</p>
 		</div>
 		</div>

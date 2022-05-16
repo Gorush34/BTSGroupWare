@@ -64,19 +64,7 @@
 				<div id="slideTogglebox1" class="slideTogglebox">
 					<table style="margin: 0 20px;">
 						<tr>
-							<td>
-								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/edmsAdd.bts'">결재양식</span></label>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/edmsAdd.bts'">결재양식</span></label>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/edmsAdd.bts'">결재양식</span></label>
-							</td>
+							<td><label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/edmsAdd.bts'">결재문서 작성하기</span></label></td>
 						</tr>
 					</table>
 				</div>
@@ -106,11 +94,6 @@
 						<tr>
 							<td>
 								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/reject/list.bts'">반려문서함</span></label>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<label for="mySche"><span style="margin-left: 5px;"  onclick="javascript:location.href='#'">임시문서함</span></label>
 							</td>
 						</tr>
 					</table>

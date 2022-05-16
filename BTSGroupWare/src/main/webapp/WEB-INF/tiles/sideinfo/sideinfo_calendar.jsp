@@ -486,12 +486,10 @@
 
 	<div>
 	   <div id="sidebar" style="font-size: 11pt;">
-	   <form action=".../views/calendar/calendarMain.jsp">
 		 <h4>캘린더</h4>
 		 
 			<input type="hidden" value="${sessionScope.loginuser.pk_emp_no}" id="fk_emp_no"/>
 		
-		<button type="button" class="btn btn-outline-primary btn-lg " style="margin: 15px auto; width:200px; display:block;" onclick="javascript:location.href='<%= ctxPath%>/calendar/scheduleRegister.bts'">일정등록</button>
 			<ul style="list-style-type: none; padding: 10px;">
 				<li style="margin-bottom: 15px;">
 					<div id="calenderbtn1" class="calenderbtn">사내 캘린더</div>
@@ -518,7 +516,6 @@
 				</li>
 			</ul>
 		<input type="checkbox" id="sharedCal" class="calendar_checkbox" value="0" checked/>&nbsp;&nbsp;<label for="sharedCal">공유받은 캘린더</label> 
-	</form>
 	</div>
 		
 	</div>

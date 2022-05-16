@@ -93,6 +93,11 @@
         		alert(" 잔여휴가 개수가 부족합니다.(잔여휴가일수 : " + $("input#rest_vac_days").val() + " 일)");
         		return;
         	}
+        	else if( $("input#vac_days").val() <= 0 ) {
+        		// 잔여휴가가 부족할 때
+        		alert(" 휴가일수는 1일 이상이어야 합니다.");
+        		return;
+        	}
         	else if( $("input#vac_days").val().trim() == "" ) {
         		// 휴가일자를 입력하지 않았을 때
         		alert("휴가일수를 입력해주세요!");
@@ -161,6 +166,11 @@
 			// console.log(b_flagCheckCalVacation);
 			return;
 		}
+		else if( $("input#att_content").val().trim() == "" ) {
+    		// 휴가일자를 입력하지 않았을 때
+    		alert("휴가사유를 입력해주세요!");
+    		return;
+    	}
 		
 		const frm = document.reportVacationFrm;
 		frm.action = "<%= ctxPath%>/att/reportVacationSubmit.bts";
@@ -225,7 +235,7 @@
 						      			<input type="radio" id="van_common" name="van_common" value="${attSort.pk_att_sort_no}">
 						      			<input type="hidden" id="m_cnt" value="${attSort.minus_cnt}" />
 						      			<input type="hidden" id="m_cnt" value="${attSort.att_sort_korname}" />
-						      			<label for="van_common">${attSort.att_sort_korname}</label>
+						      			<label for="">${attSort.att_sort_korname}</label>
 						      		</c:forEach>
 						      		</td>
 						      	</tr>	
@@ -234,7 +244,7 @@
 					      			<c:forEach items="${requestScope.attSortList}" var="attSort" begin="4" end="7" step="1">
 						      			<input type="radio" id="van_common" name="van_common" value="${attSort.pk_att_sort_no}">
 						      			<input type="hidden" id="m_cnt" value="${attSort.minus_cnt}" />
-						      			<label for="van_common">${attSort.att_sort_korname}</label>
+						      			<label for="">${attSort.att_sort_korname}</label>
 						      		</c:forEach>
 						      		</td>
 						      	</tr>

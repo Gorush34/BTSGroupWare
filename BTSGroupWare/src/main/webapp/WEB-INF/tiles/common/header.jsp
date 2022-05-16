@@ -115,7 +115,13 @@
          <div style="float: right;">
          	<li class="nav-item dropdown login_dropdown">
               <a class="nav-link text-info" href="#" id="navbarDropdown" data-toggle="dropdown">
-              <img src="<%= ctxPath%>/resources/images/mu.png" id="memberProfile" />
+              <c:if test="${sessionScope.loginuser.img_name ne null}">
+              <img src="<%= ctxPath%>/resources/files/${sessionScope.loginuser.img_name}" id="memberProfile" />
+              </c:if>
+              <c:if test="${sessionScope.loginuser.img_name eq null}">
+  			  <img src="<%= ctxPath%>/resources/images/mu.png" id="memberProfile" />
+  			  </c:if>
+              <%-- <img src="<%= ctxPath%>/resources/images/mu.png" id="memberProfile" /> --%>
               </a>  
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item" href="<%=ctxPath%>/emp/updateEmp.bts">나의정보</a>

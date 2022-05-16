@@ -1,6 +1,7 @@
 package com.spring.bts.hwanmo.service;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 import com.spring.bts.hwanmo.model.EmployeeVO;
@@ -33,5 +34,8 @@ public interface InterEmployeeService {
 
 	// 회원정보 수정
 	int updateMember(EmployeeVO empvo);
+
+	// 회원정보 가져오기
+	List<Map<String, Object>> getEmpInfo(int pk_emp_no);
 
 }

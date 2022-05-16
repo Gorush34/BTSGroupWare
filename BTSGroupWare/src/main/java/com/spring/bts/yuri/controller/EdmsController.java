@@ -120,6 +120,7 @@ public class EdmsController {
 	//	System.out.println("확인용 양식  => " + docform );
 		
 		
+		
 		// ===== 들어왔는지 찍어보는 곳 종료 ===== //
 		
 		// 파일첨부가 없는 전자결재 문서작성
@@ -604,6 +605,8 @@ public class EdmsController {
 		String searchWord = request.getParameter("searchWord");
 		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
 		
+		
+		
 		System.out.println("~~~ searchWord : " + searchWord);
 		
 		if(searchType == null || (!"title".equals(searchType) && !"emp_name".equals(searchType)) ) {
@@ -924,6 +927,8 @@ public class EdmsController {
 		 	}
 		 	paraMap.put("loginuser_empno", loginuser_empno);
 	 		
+		 	
+		 	
 			// === !!! 중요 !!! 
 			//     글1개를 보여주는 페이지 요청은 select 와 함께 
 			//     DML문(지금은 글조회수 증가인 update문)이 포함되어져 있다.
@@ -1182,20 +1187,20 @@ public class EdmsController {
 	@RequestMapping(value="/edms/appr/accept.bts")
 	public ModelAndView requiredLogin_accept(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
 		
-		// 승인하기 할 글번호 가져오기
+		// 승인할 문서번호 가져오기
 		String pk_appr_no = request.getParameter("pk_appr_no");
 		
-		// 결재자 사번 가져오기
+		// 중간/최종결재자 사번 가져오기
 		String fk_mid_empno = request.getParameter("fk_mid_empno");
 		String fk_fin_empno = request.getParameter("fk_fin_empno");
+		String status = request.getParameter("status");
 		
 		// 승인해야 할 글1개 내용을 가져와서 로그인+중간결재자인 사람이라면 승인이 가능하지만 다른 사람은 승인이 불가능하도록 해야 한다.
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("pk_appr_no", pk_appr_no);
 		paraMap.put("fk_mid_empno", fk_mid_empno);
 		paraMap.put("fk_fin_empno", fk_fin_empno);
-		
-		System.out.println("중간결재 paraMap 확인용 " + pk_appr_no);
+		paraMap.put("status", status);
 				
 		ApprVO apprvo = service.getViewWithNoAddCount(paraMap);
 		// 글조회수(readCount) 증가 없이 단순히 글1개만 조회해주는 것이다.
@@ -1203,14 +1208,30 @@ public class EdmsController {
 		HttpSession session = request.getSession();
 		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
 
-		System.out.println("승인- 확인용 pk_appr_no " + pk_appr_no);
-		System.out.println("승인- 확인용 apprvo.getTitle() " + apprvo.getTitle());
-		System.out.println("중간결재 apprvo 확인용 empno " + apprvo.getFk_mid_empno());
+/*	
+		System.out.println("승인 확인용 문서번호 pk_appr_no " + pk_appr_no);
+		System.out.println("승인 확인용 apprvo.getTitle() " + apprvo.getTitle());
+		System.out.println("승인 확인용 loginuser.getPk_emp_no() = [" + loginuser.getPk_emp_no() + "]");
+		System.out.println("승인 확인용 apprvo.getFk_mid_empno() = [" + apprvo.getFk_mid_empno() + "]");
+		System.out.println("승인 확인용 apprvo.getFk_fin_empno() = [" + apprvo.getFk_fin_empno() + "]");
+*/
 		
-		// 로그인한 사용자가 1. mid_emp_no 이거나 2. fin_emp_no일 때만 가능하도록 막아주기 
-		if( loginuser.getPk_emp_no() != apprvo.getFk_mid_empno() ||
-				loginuser.getPk_emp_no() != apprvo.getFk_mid_empno() ) { 
+		// 로그인한 사용자가 1. mid_emp_no 이거나 2. fin_emp_no일 때만 가능하도록 막아주기
+		
+		
+/*
+		=== 논리 연산자 === 
+		and연산자: 둘 중 하나라도 false면 false. 즉 모든 항이 참이어야 참이 된다.
+		( & 는 전체검사, &&는 앞쪽 조건만 false면 우항을 검사하지 않아서 속도 빠름 )
+		or연산자: 둘 중 하나라도 true이면 true.
+		( | 는 전체검사, ||는 앞쪽 조건만 true면 우항을 검사하지 않아서 속도 빠름 )
+*/		
+		// 1. 로그인한 사용자가 결재자가 아닌 경우 
+		if( loginuser.getPk_emp_no() != apprvo.getFk_mid_empno() 
+				&& loginuser.getPk_emp_no() != apprvo.getFk_fin_empno() ) { 
+		// 최종결재자로 로그인 하면 당연히 전자는 true, 후자가 false => 그럼 &&에 따라서 이걸 타면 안된다.
 			
+			// &&(and연산자) 모든 조건이 참이어야 성립			
 			String message = "승인할 수 있는 권한이 없습니다.";
 			String loc = "javascript:history.back()";
 			
@@ -1219,22 +1240,22 @@ public class EdmsController {
 			mav.setViewName("msg");
 		}
 		
-		// 중간 결재자인 경우
+		// 2. 로그인한 사용자가 중간 결재자인 경우
 		else if( loginuser.getPk_emp_no() == apprvo.getFk_mid_empno() ) {
 			mav.addObject("pk_appr_no", pk_appr_no);
 			mav.addObject("fk_mid_empno", apprvo.getFk_mid_empno());
 			mav.setViewName("appr/accept.edms");
 			
-			System.out.println("중간결재 mav 확인용 empno " + apprvo.getFk_mid_empno());			
+		//	System.out.println("중간결재 mav 확인용 empno " + apprvo.getFk_mid_empno());			
 		}
 		
-		// 최종결재자인 경우
+		// 3. 로그인한 사용자가 최종결재자인 경우
 		else if( loginuser.getPk_emp_no() == apprvo.getFk_fin_empno() ) {
 			mav.addObject("pk_appr_no", pk_appr_no);
 			mav.addObject("fk_fin_empno", apprvo.getFk_fin_empno());
 			mav.setViewName("appr/accept.edms");
 			
-			System.out.println("최종결재 mav 확인용 empno " + apprvo.getFk_fin_empno());	
+		//	System.out.println("최종결재 mav 확인용 empno " + apprvo.getFk_fin_empno());	
 		}
 		
 		mav.addObject("apprvo", apprvo);
@@ -1252,8 +1273,15 @@ public class EdmsController {
 		paraMap.put("pk_appr_no", pk_appr_no);
 		
 		ApprVO apprvo = service.getViewWithNoAddCount(paraMap);
-		int n = service.accept(apprvo);
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
 		
+		apprvo.setFk_emp_no(loginuser.getPk_emp_no()); 
+		// 로그인한 사람이 중간결재자인지 최종결재자인지 모르기 때문에 중간결재일때는 로그인한 사용자가 중간결재자로 등록된 것만 업데이트 되게 해야 한다
+		// 그런데 apprvo에는 pk_emp_no 같은 게 없으므로 fk_emp_no에 임시로 로그인한 사용자 값을 넣어준다.
+		
+		int n = service.accept(apprvo);
+
 		if(n==1) {
 			mav.addObject("message", "승인 성공!!");
 			mav.addObject("loc", request.getContextPath()+"/edms/list.bts");
@@ -1269,25 +1297,24 @@ public class EdmsController {
 	}
 	
 	
-	
 	// === 반려하기 페이지 요청하기 === //
 	@RequestMapping(value="/edms/appr/reject.bts")
 	public ModelAndView requiredLogin_reject(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
 		
-		// 승인하기 할 글번호 가져오기
+		// 반려할 문서번호 가져오기
 		String pk_appr_no = request.getParameter("pk_appr_no");
 		
-		// 결재자 사번 가져오기
+		// 중간/최종결재자 사번 가져오기
 		String fk_mid_empno = request.getParameter("fk_mid_empno");
 		String fk_fin_empno = request.getParameter("fk_fin_empno");
+		String status = request.getParameter("status");
 		
-		// 승인해야 할 글1개 내용을 가져와서 로그인+중간결재자인 사람이라면 승인이 가능하지만 다른 사람은 승인이 불가능하도록 해야 한다.
+		// 반려해야 할 글1개 내용을 가져와서 로그인+중간결재자인 사람이라면 반려할 수 있지만 다른 사람은 불가능하도록 한다.
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("pk_appr_no", pk_appr_no);
 		paraMap.put("fk_mid_empno", fk_mid_empno);
 		paraMap.put("fk_fin_empno", fk_fin_empno);
-		
-		System.out.println("중간결재 paraMap 확인용 " + pk_appr_no);
+		paraMap.put("status", status);
 				
 		ApprVO apprvo = service.getViewWithNoAddCount(paraMap);
 		// 글조회수(readCount) 증가 없이 단순히 글1개만 조회해주는 것이다.
@@ -1295,15 +1322,19 @@ public class EdmsController {
 		HttpSession session = request.getSession();
 		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
 
-		System.out.println("승인- 확인용 pk_appr_no " + pk_appr_no);
-		System.out.println("승인- 확인용 apprvo.getTitle() " + apprvo.getTitle());
-		System.out.println("중간결재 apprvo 확인용 empno " + apprvo.getFk_mid_empno());
+
+		System.out.println("반려 확인용 문서번호 pk_appr_no " + pk_appr_no);
+		System.out.println("반려 확인용 apprvo.getTitle() " + apprvo.getTitle());
+		System.out.println("반려 확인용 loginuser.getPk_emp_no() = [" + loginuser.getPk_emp_no() + "]");
+		System.out.println("반려 확인용 apprvo.getFk_mid_empno() = [" + apprvo.getFk_mid_empno() + "]");
+		System.out.println("반려 확인용 apprvo.getFk_fin_empno() = [" + apprvo.getFk_fin_empno() + "]");
 		
-		// 로그인한 사용자가 1. mid_emp_no 이거나 2. fin_emp_no일 때만 가능하도록 막아주기 
-		if( loginuser.getPk_emp_no() != apprvo.getFk_mid_empno() ||
-				loginuser.getPk_emp_no() != apprvo.getFk_mid_empno() ) { 
+		// 로그인한 사용자가 1. mid_emp_no 이거나 2. fin_emp_no일 때만 가능하도록 막아주기
+		
+		// 1. 로그인한 사용자가 결재자가 아닌 경우 
+		if (loginuser.getPk_emp_no() != apprvo.getFk_mid_empno() && loginuser.getPk_emp_no() != apprvo.getFk_fin_empno()) { 
 			
-			String message = "승인할 수 있는 권한이 없습니다.";
+			String message = "반려할 수 있는 권한이 없습니다.";
 			String loc = "javascript:history.back()";
 			
 			mav.addObject("message", message);
@@ -1311,20 +1342,20 @@ public class EdmsController {
 			mav.setViewName("msg");
 		}
 		
-		// 중간 결재자인 경우
-		else if( loginuser.getPk_emp_no() != apprvo.getFk_mid_empno() ) {
+		// 2. 로그인한 사용자가 중간 결재자인 경우
+		else if( loginuser.getPk_emp_no() == apprvo.getFk_mid_empno() ) {
 			mav.addObject("pk_appr_no", pk_appr_no);
 			mav.addObject("fk_mid_empno", apprvo.getFk_mid_empno());
-			mav.setViewName("appr/accept.edms");
+			mav.setViewName("appr/reject.edms");
 			
 			System.out.println("중간결재 mav 확인용 empno " + apprvo.getFk_mid_empno());			
 		}
 		
-		// 최종결재자인 경우
-		else if( loginuser.getPk_emp_no() != apprvo.getFk_fin_empno() ) {
+		// 3. 로그인한 사용자가 최종결재자인 경우
+		else if( loginuser.getPk_emp_no() == apprvo.getFk_fin_empno() ) {
 			mav.addObject("pk_appr_no", pk_appr_no);
 			mav.addObject("fk_mid_empno", apprvo.getFk_fin_empno());
-			mav.setViewName("appr/accept.edms");
+			mav.setViewName("appr/reject.edms");
 		}
 		
 		mav.addObject("apprvo", apprvo);
@@ -1343,6 +1374,12 @@ public class EdmsController {
 		
 		ApprVO apprvo = service.getViewWithNoAddCount(paraMap);
 		
+		// 로그인 정보를 가져온다.
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+		
+		apprvo.setFk_emp_no(loginuser.getPk_emp_no());
+		
 		int n = service.reject(apprvo);
 		
 		if(n==1) {
@@ -1358,24 +1395,6 @@ public class EdmsController {
 		
 		return mav;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	// 검색어 입력시 자동글 완성 searchAutoComplete
 	@ResponseBody
@@ -1603,10 +1622,11 @@ public class EdmsController {
 
 	// === 전자결재 홈 페이지 === //
 	// 주소록 연락처 추가 페이지 
-   @RequestMapping(value="/edms/modal.bts")
+/*
+	@RequestMapping(value="/edms/modal.bts")
    public ModelAndView modal(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, ApprVO apprvo) {
       
-      /* 유리 줄 부분 시작 */
+      //조직도 시작
       List<EmployeeVO> empList = service.addBook_depInfo_select();
       
       mav.addObject("empList", empList);
@@ -1623,13 +1643,13 @@ public class EdmsController {
       System.out.println("모달창 확인용 => " + apprvo.getFk_mid_empno());
       System.out.println("모달창 확인용 => " + apprvo.getFk_fin_empno());
       
-      /* 유리 줄 부분 끝 */
+      //조직도 끝
       
       mav.setViewName("modal.edms");
       
       return mav;
    }
-	
+*/	
 
 	
 	

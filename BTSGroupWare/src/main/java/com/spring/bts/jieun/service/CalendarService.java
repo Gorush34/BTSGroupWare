@@ -1,5 +1,6 @@
 package com.spring.bts.jieun.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,9 +30,14 @@ public class CalendarService implements InterCalendarService {
 	public int addComCalendar(Map<String, String> paraMap) {
 		int n = 0;
 		String addCom_calname = paraMap.get("addCom_calname");
+		String fk_emp_no = paraMap.get("fk_emp_no");
+		
+		Map<String, String> map = new HashMap<>();
+		map.put("addCom_calname", addCom_calname);
+		map.put("fk_emp_no", fk_emp_no);
 		
 		// 사내 캘린더에 캘린더 소분류 명 존재 여부 알아오기
-		int m = dao.existComCalendar(addCom_calname);
+		int m = dao.existComCalendar(map);
 		
 		if(m==0) {
 			n = dao.addComCalendar(paraMap);
@@ -51,9 +57,14 @@ public class CalendarService implements InterCalendarService {
 	public int addMyCalendar(Map<String, String> paraMap) {
 		int n = 0;
 		String addMy_calname = paraMap.get("addMy_calname");
+		String fk_emp_no = paraMap.get("fk_emp_no");
+		
+		Map<String, String> map = new HashMap<>();
+		map.put("addMy_calname", addMy_calname);
+		map.put("fk_emp_no", fk_emp_no);
 		
 		// 내 캘린더에 캘린더 소분류 명 존재 여부 알아오기
-		int m = dao.existMyCalendar(addMy_calname);
+		int m = dao.existMyCalendar(map);
 		
 		if(m==0) {
 			n = dao.addMyCalendar(paraMap);

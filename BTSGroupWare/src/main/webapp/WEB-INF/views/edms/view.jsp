@@ -99,8 +99,11 @@
 		</tr>
 		
 		<tr>
-			<th>작성자 <input type="text" value="${requestScope.apprvo.fk_emp_no}"></th> 
-          	<td style="background-color: #F7F7F7;">${requestScope.apprvo.emp_name}&nbsp;[${requestScope.apprvo.ko_rankname}]</td>
+			<th>작성자</th> 
+          	<td style="background-color: #F7F7F7;">
+          		${requestScope.apprvo.emp_name}&nbsp;[${requestScope.apprvo.ko_rankname}]<br/>
+          		(사번&nbsp;${requestScope.apprvo.fk_emp_no})
+          	</td>
           	<td rowspan="2" style="background-color: #F7F7F7;">${requestScope.apprvo.emp_name}중간결재자이름</td>
 			<td rowspan="2" style="background-color: #F7F7F7;">${requestScope.apprvo.emp_name}최종결재자이름</td>
 		</tr>
@@ -113,11 +116,21 @@
 		<tr>
 			<th>작성일자</th>
           	<td style="background-color: #F7F7F7;">${requestScope.apprvo.writeday}</td>
-          	<td style="background-color: #F7F7F7;">결재상태</td>
-			<td style="background-color: #F7F7F7;">결재상태</td>
+          	<td style="background-color: #F7F7F7;">
+          		<c:if test="${requestScope.apprvo.status == 0}">대기중</c:if> 
+          		<c:if test="${requestScope.apprvo.status == 1}">진행중</c:if>
+          		<c:if test="${requestScope.apprvo.status == 2}">승인됨</c:if>
+          		<c:if test="${requestScope.apprvo.status == 3}">반려됨</c:if>
+          	</td>
+          	<td style="background-color: #F7F7F7;">
+          		<c:if test="${requestScope.apprvo.status == 0}">대기중</c:if> 
+          		<c:if test="${requestScope.apprvo.status == 1}">진행중</c:if>
+          		<c:if test="${requestScope.apprvo.status == 2}">승인됨</c:if>
+          		<c:if test="${requestScope.apprvo.status == 3}">반려됨</c:if>
+          	</td>
 		</tr>
 	</table>
-<!-- </form> 오류 폼으로 감싸면 view.bts? 뒤에 URL ? 이 안 온 다-->
+<!-- </form> 오류 폼으로 감싸면 view.bts? 뒤에 쿼리스트링이 안 온다-->
 	</div>
 
 	
@@ -171,10 +184,10 @@
 				</td>
 			</tr>
 			<tr>
-					<th>파일크기(bytes)</th>
-					<td>
-						<fmt:formatNumber value="${requestScope.apprvo.fileSize}" pattern="#,###" />
-					</td>
+				<th>파일크기(bytes)</th>
+				<td>
+					<fmt:formatNumber value="${requestScope.apprvo.fileSize}" pattern="#,###" />
+				</td>
 			</tr>
 			</c:if>
 			
@@ -204,20 +217,20 @@
 			<br/><hr>
 			
 			<input type="text" class="form-control" value="2. loginuser != null && 글쓴 사람인 경우" readonly ><br/>
-			<c:if test="${sessionScope.loginuser != null and sessioScope.loginuser.pk_emp_no eq apprvo.getFk_emp_no()}">
+			<%-- <c:if test="${sessionScope.loginuser != null and sessioScope.loginuser.pk_emp_no eq apprvo.getFk_emp_no()}"> --%>
 			<button type="button" class="btn btn-dark btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edit.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">글수정하기</button>
 			<button type="button" class="btn btn-dark btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/del.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">글삭제하기</button>
-			</c:if>
+			<%-- </c:if> --%>
 			<br/><hr>
 			
 			<input type="text" class="form-control" value="1. sqlsession의 empno = 원글의 mid_emp_no인 경우 && mid_accept 0인 경우 && status = 1/ 2. sqlsession의 empno = 원글의 fin_emp_no인 경우 && mid_accept 1인 경우" readonly ><br/>
-			<c:if test="${ (requestScope.apprvo.fk_mid_empno eq sessioScope.loginuser.pk_emp_no 
-							and requestScope.apprvo.mid_accept == 0 and requestScope.apprvo.status == 1)
-							 || (requestScope.apprvo.fk_fin_empno eq sessioScope.loginuser.pk_emp_no and requestScope.apprvo.mid_accept eq 0 ) }">
+			<%-- <c:if test="${ requestScope.apprvo.fk_mid_empno eq sessioScope.loginuser.pk_emp_no 
+					   and requestScope.apprvo.mid_accept == 0 and requestScope.apprvo.status == 1)
+					   || (requestScope.apprvo.fk_fin_empno eq sessioScope.loginuser.pk_emp_no and requestScope.apprvo.mid_accept eq 0 ) }"> --%>
 				<button type="button" class="btn btn-success btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">문서승인</button>
 				<button type="button" class="btn btn-danger btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">문서반려</button>
-			</c:if>
+			<%-- </c:if> --%>
 			<br/><hr>
-	
+			
 	
 </c:if>

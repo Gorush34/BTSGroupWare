@@ -42,6 +42,13 @@ public class ResourceDAO implements InterResourceDAO {
 		int n = sqlsession.insert("jieun.addReservation", paraMap);
 		return n;
 	}
+	
+		// 예약 목록 존재 여부 알아오기
+		@Override
+		public int existReservation(Map<String, String> map) {
+			int m = sqlsession.selectOne("jieun.existReservation", map);
+			return m;
+		}
 
 	// 자원 등록 모달에 select 자원 가져오기//
 	@Override
@@ -98,5 +105,7 @@ public class ResourceDAO implements InterResourceDAO {
 		int n = sqlsession.selectOne("jieun.reservationCount", pk_emp_no);
 		return n;
 	}
+
+	
 
 }
