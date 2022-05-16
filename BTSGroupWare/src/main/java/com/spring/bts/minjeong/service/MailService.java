@@ -164,7 +164,7 @@ public class MailService implements InterMailService {
 	  SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm"); // 발송날짜에서 2022-05-26 21:40 형식으로 불러옴
 	  String currentTime = dateFormat.format(currentDate.getTime());
 	  
-	  System.out.println("Mail 현재시각 : " + currentTime);
+	//System.out.println("Mail 현재시각 : " + currentTime);
 
 	  // 메일테이블에서 reservation_status = 1인 값들을 select 한 결과의 발송날짜(reservation_date)와 
 	  // java에서 구한  currentTime 이 같다면 메일테이블에 insert 한다. (년-월-일 시:분)
@@ -245,7 +245,8 @@ public class MailService implements InterMailService {
 				  mailvo.setOrgfilename(reservationList.get(i).getOrgfilename());
 				  mailvo.setFilesize(reservationList.get(i).getFilesize());
 				  mailvo.setReg_date(reservationList.get(i).getReg_date());
-				  mailvo.setImportance(reservationList.get(i).getImportance());
+				  mailvo.setImportance(reservationList.get(i).getImportance_star_send());
+				  mailvo.setImportance(reservationList.get(i).getImportance_star_rec());
 				  mailvo.setRead_status(reservationList.get(i).getRead_status());
 				  mailvo.setReservation_date(reservationList.get(i).getReservation_date());
 				  mailvo.setReservation_status(reservationList.get(i).getReservation_status());
@@ -280,7 +281,7 @@ public class MailService implements InterMailService {
 		  	}
 		  	else {
 				// 예약 발송 실패
-		  		System.out.println("****** 발송예약에 실패했습니다. ******");
+		 //		System.out.println("****** 발송예약에 실패했습니다. ******");
 			}		  
 		  
 	  }// end of if(reservationList != null && reservationList.size() > 0)---------------------------------------------------
