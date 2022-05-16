@@ -7,7 +7,10 @@
  <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
  <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %> 
  <style>
-
+#commentContent{
+    width: 86%;
+    margin-right: 17px;
+}
 	#pageBar > ul > li > a {
 		color: black;
 	}
@@ -190,6 +193,27 @@
  <script>
  $(document).ready(function(){
 		
+	 /// 글삭제
+	 $("button#btnDelete").click(function(){
+		  
+		 if( "${boardvo.pw}" != $("input#pw").val() ) {
+			 alert("글암호가 일치하지 않습니다.");
+			 return;
+		 } 
+		 else {
+			// 폼(form)을 전송(submit)
+			const frm = document.delFrm;
+			frm.method = "POST";
+			frm.action = "<%= ctxPath%>/board/delEnd.bts";
+			frm.submit();
+		 }
+		 
+	 });
+
+	 
+	 ////////////////////////////////////////////
+	 
+	 
 	 // goReadComment();  // 페이징처리 안한 댓글 읽어오기 
 	     goViewComment(1); // 페이징처리 한 댓글 읽어오기 
 		
@@ -304,7 +328,7 @@
 						  html += "<td class='comment_name'>"+item.name+"</td>";
 						  html += "<td class='comment_regDate'>"+item.regDate+"</td>";
 						  if( writeuser == loginuser ) {
-							  html += "<td style='text-align: center;' onclick='goDelComment(\""+item.pk_seq+"\")'><span style='cursor: pointer; color: gray;border: 1px solid gray; margin-left: 10px;'>X</span></td>";
+							  html += "<td style='text-align: center;' onclick='goDelComment(\""+item.pk_seq+"\")'><span style='cursor: pointer; color: gray; margin-left: 10px;'>X</span></td>";
 						    } 
 						  html += "</tr>";
 					  });
@@ -415,12 +439,12 @@
 	  <div class="header">
 		<div id="smallHeader">	
 			<span onclick="javascript:location.href='<%= request.getContextPath()%>/board/write.bts?fk_seq=${requestScope.boardvo.pk_seq}&groupno=${requestScope.boardvo.groupno}&depthno=${requestScope.boardvo.depthno}&subject=${requestScope.boardvo.subject}'"><button type="button" class="btn btn-outline-primary">답글쓰기</button></span>
-			<span onclick="javascript:location.href='<%= request.getContextPath()%>/board/del.bts?pk_seq=${requestScope.boardvo.pk_seq}'"><button type="button" class="btn btn-outline-danger">삭제하기</button></span>
+			<span data-toggle="modal" data-target="#myModal"><button type="button" class="btn btn-outline-danger">삭제하기</button></span>
 			<span onclick="javascript:location.href='<%= request.getContextPath()%>/board/edit.bts?pk_seq=${requestScope.boardvo.pk_seq}'"><button type="button" class="btn btn-outline-warning">수정하기</button></span>
 		</div>
 		
 		<div id="smallHeader_right">
-			<span onclick="javascript:location.href='<%= request.getContextPath()%>${requestScope.gobackURL}'"><button type="button" class="btn btn-outline-success">목록</button></span>
+			<span onclick="javascript:location.href='<%= request.getContextPath()%>${requestScope.gobackURL}'"><button type="button" class="btn btn-secondary">목록</button></span>
 		</div>
 	</div>
 	 
@@ -525,8 +549,8 @@
     	      <table class="table" style="width: 1024px">
 				
 				   <tr style="height: 30px;">
-					      <th style="padding-left: 50px;">댓글</th>
-				      <td style="width: 90%;">
+					      <th style="padding-top: 17px !important;padding-left: 40px; font-size: 14pt; font-weight: 550; color: #737373;">댓글</th>
+				      <td style="width: 91%;">
 				        <input type="hidden" name="fk_emp_no" id="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />  
 				         <input type="hidden" name="name" id="name" value="${sessionScope.loginuser.emp_name}" readonly />
 				         <input type="text" name="content" id="commentContent" size="100" />
@@ -575,6 +599,53 @@
 	   		<div style="margin-bottom: 1%; font-size: 9pt;">다음글&nbsp;&nbsp;<span class="move" onclick="javascript:location.href='/bts/board/view_2.bts?pk_seq=${requestScope.boardvo.nextseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.boardvo.nextsubject}</span></div>
     	</c:if>	
 	</div>
+
+
+<div class="modal fade" id="myModal" role="dialog"> 
+<div class="modal-dialog"> 
+<div class="modal-content"> 
+<div class="modal-header"> 
+
+<h2 class="modal-title">
+글삭제
+</h2> 
+
+<button type="button" class="close" data-dismiss="modal">
+×
+</button> 
+
+</div> 
+<div class="modal-body"> 
+<div style="display: flex;">
+<div style="margin: auto; padding-left: 3%;">
+
+
+<form name="delFrm">
+	<table style="width: 455px" class="table table-bordered">
+		<tr>
+			<th style="width: 22%; background-color: #DDDDDD;">글암호</th>
+			<td>
+				<input style="width: 100%;" type="password" id="pw" />
+				<input type="hidden" name="pk_seq" value="${boardvo.pk_seq}" readonly />
+				<input type="hidden" name="filename" value="${boardvo.filename}" readonly />
+				<input type="hidden" name="fk_emp_no" value="${boardvo.fk_emp_no}" readonly />
+			</td>
+		</tr>
+	</table>
+	
+	<div style="margin: 20px;">
+		<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnDelete">글삭제완료</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">글삭제취소</button>
+	</div>
+	
+</form>   
+</div>
+</div>    
+</div> 
+</div> 
+</div> 
+</div>
+
 	
 	
 	<script>
@@ -590,21 +661,19 @@
 					  success:function(likeCheck){
 						 
 						  if(likeCheck == 0){
-		                  	alert("추천완료.");
 		                  	location.reload();
 		                  }
 		                  else {
-		                   alert("추천취소");
 		                  	location.reload();
 		                  }
 					  },
-					  error: function(request, status, error){
+					  error: function(request, status, 	error){
 							alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 					  }
 				  });
 			}
 			else {
-				alert("로그인을 해주세요.")
+				alert("로그인을 해주세요.");
 			}
 			
 	 }

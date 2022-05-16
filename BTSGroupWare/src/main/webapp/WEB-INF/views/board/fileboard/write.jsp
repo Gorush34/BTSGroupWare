@@ -162,7 +162,7 @@
 				<th style="width: 15%; background-color: #DDDDDD; text-align: right;">부서</th>
 					<td>
 						<select id="ko_depname" name="ko_depname" style="height: 30px;">
-							<option value="" selected disabled>==부서 선택==</option>	
+							<option value="" selected disabled>ㅡ부서 선택ㅡ</option>	
 							<option value="공통">공통</option>
 							<option value="영업">영업</option>				 								
 							<option value="마케팅">마케팅</option>				 								

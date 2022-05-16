@@ -163,7 +163,7 @@
 				<th style="width: 15%; background-color: #DDDDDD; text-align: right;">머릿말</th>
 					<td>
 						<select id="header" name="header" style="height: 30px;">
-							<option value="" selected disabled>==머릿말 선택==</option>	
+							<option value="" selected disabled>ㅡ머릿말 선택ㅡ</option>	
 							<option value="알려드립니다">알려드립니다</option>				 								
 							<option value="인사이동">인사이동</option>				 								
 							<option value="부고">부고</option>				 					 

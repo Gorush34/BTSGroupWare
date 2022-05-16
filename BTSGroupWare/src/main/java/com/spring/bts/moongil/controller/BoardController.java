@@ -969,101 +969,83 @@ public class BoardController {
 			return likeCheck;
 	}
 	
-	// === #76. 글삭제 페이지 요청 === //
-	@RequestMapping(value="/board/del.bts")
-	public ModelAndView requiredLogin_del(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
-		
-				// 삭제해야 할 글번호 가져오기
-				String pk_seq = request.getParameter("pk_seq");
-				
-				Map<String, String> paraMap = new HashMap<>();
-				paraMap.put("pk_seq", pk_seq);
-				
-				///////////////////////////////
-				paraMap.put("searchType", "");
-				paraMap.put("searchWord", "");
-				///////////////////////////////
-				
-				BoardVO boardvo = service.getViewWithNoAddCount(paraMap);
-				// 글조회수(readCount) 증가 없이 단순히 글1개만 조회해주는 것이다.
-				
-				HttpSession session = request.getSession();
-				EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
-
-			 	int login_userid1 = 0;
-			 	if(loginuser != null) {
-			 	   login_userid1 = loginuser.getPk_emp_no();
-			 	   // login_userid 는 로그인 되어진 사용자의 userid 이다.
-			 	}
-
-			 	String login_userid = Integer.toString(login_userid1);
-
-			 	
-				if( !login_userid.equals(boardvo.getFk_emp_no()) ) {
-					String message = "다른 사용자의 글은 삭제가 불가합니다.";
-					String loc = "javascript:history.back()";
-					
-					mav.addObject("message", message);
-					mav.addObject("loc", loc);
-					mav.setViewName("msg");
-				}
-				else {
-					// 자신의 글을 삭제할 경우
-					// 글작성시 입력해준 글암호와 일치하는지 여부를 알아오도록 암호를 입력받아주는 del.jsp 페이지를 띄우도록 한다. 
-					mav.addObject("pw", boardvo.getPw());
-					mav.addObject("pk_seq", pk_seq);
-					mav.setViewName("board/del.board");
-				}
-		
-		return mav;
-	}
 	
 	
 	// === #77. 글삭제 페이지 완료하기 === //
 	@RequestMapping(value="/board/delEnd.bts", method= {RequestMethod.POST})
 	public ModelAndView delEnd(ModelAndView mav, HttpServletRequest request) {
 		
+		// 삭제해야 할 글번호 가져오기
 		String pk_seq = request.getParameter("pk_seq");
-		
+		String fk_emp_no = request.getParameter("fk_emp_no");
+//		 	System.out.println("글쓴이 =>"+fk_emp_no);
+//		 	System.out.println("글번호 =>"+pk_seq);
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("pk_seq", pk_seq);
 		
-		////////////////////////////////////////////////////
-		// === #164. 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파이을 삭제해주어야 한다. === //
+		///////////////////////////////
 		paraMap.put("searchType", "");
 		paraMap.put("searchWord", "");
+		///////////////////////////////
 		
 		BoardVO boardvo = service.getViewWithNoAddCount(paraMap);
-		String filename = boardvo.getFilename();
+		// 글조회수(readCount) 증가 없이 단순히 글1개만 조회해주는 것이다.
 		
-		if( filename != null && !"".equals(filename)) {
-			
-			HttpSession session = request.getSession();
-			String root = session.getServletContext().getRealPath("/");
-			String path = root+"resources"+File.separator+"files";
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
 
-			paraMap.put("path", path); // 삭제해야 할 파일이 저장된 경로
-			paraMap.put("filename", filename);// 삭제해야할 파일명
+	 	int login_userid1 = 0;
+	 	if(loginuser != null) {
+	 	   login_userid1 = loginuser.getPk_emp_no();
+	 	   // login_userid 는 로그인 되어진 사용자의 userid 이다.
+	 	}
+
+	 	String login_userid = Integer.toString(login_userid1);
+	 	
+	 	
+	 	
+		if( !login_userid.equals(fk_emp_no) ) {
+			String message = "다른 사용자의 글은 삭제가 불가합니다.";
+			String loc = "javascript:history.back()";
 			
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+			mav.setViewName("msg");
 		}
-		// === 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파이을 삭제해주어야 한다. 끝 === //
-		////////////////////////////////////////////////////////////
 		
-		int n = service.del(paraMap);
 		
-		if(n==1) {
-			mav.addObject("message", "글 삭제 성공!!");
-			mav.addObject("loc", request.getContextPath()+"/board/list.bts");
-		}
 		else {
-			mav.addObject("message", "글 삭제 실패!!");
-			mav.addObject("loc", "javascript:history.back()");
-		}
-		
-		mav.setViewName("msg");
-		
+			boardvo = service.getViewWithNoAddCount(paraMap);
+			String filename = boardvo.getFilename();
+			
+			if( filename != null && !"".equals(filename)) {
+				
+				session = request.getSession();
+				String root = session.getServletContext().getRealPath("/");
+				String path = root+"resources"+File.separator+"files";
+
+				paraMap.put("path", path); // 삭제해야 할 파일이 저장된 경로
+				paraMap.put("filename", filename);// 삭제해야할 파일명
+				
+			}
+			// === 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파이을 삭제해주어야 한다. 끝 === //
+			////////////////////////////////////////////////////////////
+			
+			int n = service.del(paraMap);
+			
+			if(n==1) {
+				mav.addObject("message", "글 삭제 성공!!");
+				mav.addObject("loc", request.getContextPath()+"/board/list.bts");
+			}
+			else {
+				mav.addObject("message", "글 삭제 실패!!");
+				mav.addObject("loc", "javascript:history.back()");
+			}
+			
+			mav.setViewName("msg");
+		}	
 		return mav;
-	}
+	}	
 	
 	
 	
@@ -1933,100 +1915,81 @@ public class BoardController {
 			
 			return mav;
 		}	
-	
-		// === #76. 글삭제 페이지 요청 === //
-		@RequestMapping(value="/notice/del.bts")
-		public ModelAndView requiredLogin_del_notice(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
-			
-					// 삭제해야 할 글번호 가져오기
-					String pk_seq = request.getParameter("pk_seq");
-					
-					Map<String, String> paraMap = new HashMap<>();
-					paraMap.put("pk_seq", pk_seq);
-					
-					///////////////////////////////
-					paraMap.put("searchType", "");
-					paraMap.put("searchWord", "");
-					///////////////////////////////
-					
-					NoticeVO noticevo = service.getViewWithNoAddCount_notice(paraMap);
-					// 글조회수(readCount) 증가 없이 단순히 글1개만 조회해주는 것이다.
-					
-					HttpSession session = request.getSession();
-					EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
-
-				 	int login_userid1 = 0;
-				 	if(loginuser != null) {
-				 	   login_userid1 = loginuser.getPk_emp_no();
-				 	   // login_userid 는 로그인 되어진 사용자의 userid 이다.
-				 	}
-
-				 	String login_userid = Integer.toString(login_userid1);
-
-				 	
-					if( !login_userid.equals(noticevo.getFk_emp_no()) ) {
-						String message = "다른 사용자의 글은 삭제가 불가합니다.";
-						String loc = "javascript:history.back()";
-						
-						mav.addObject("message", message);
-						mav.addObject("loc", loc);
-						mav.setViewName("msg");
-					}
-					else {
-						// 자신의 글을 삭제할 경우
-						// 글작성시 입력해준 글암호와 일치하는지 여부를 알아오도록 암호를 입력받아주는 del.jsp 페이지를 띄우도록 한다. 
-						mav.addObject("pw", noticevo.getPw());
-						mav.addObject("pk_seq", pk_seq);
-						mav.setViewName("notice/del.board");
-					}
-			
-			return mav;
-		}	
 		
 		
 		// === #77. 글삭제 페이지 완료하기 === //
 		@RequestMapping(value="/notice/delEnd.bts", method= {RequestMethod.POST})
 		public ModelAndView delEnd_notice(ModelAndView mav, HttpServletRequest request) {
 			
+			// 삭제해야 할 글번호 가져오기
 			String pk_seq = request.getParameter("pk_seq");
-			
+			String fk_emp_no = request.getParameter("fk_emp_no");
+//		 	System.out.println("글쓴이 =>"+fk_emp_no);
+//		 	System.out.println("글번호 =>"+pk_seq);
 			Map<String, String> paraMap = new HashMap<>();
 			paraMap.put("pk_seq", pk_seq);
 			
-			////////////////////////////////////////////////////
-			// === #164. 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파이을 삭제해주어야 한다. === //
+			///////////////////////////////
 			paraMap.put("searchType", "");
 			paraMap.put("searchWord", "");
+			///////////////////////////////
 			
 			NoticeVO noticevo = service.getViewWithNoAddCount_notice(paraMap);
-			String filename = noticevo.getFilename();
+			// 글조회수(readCount) 증가 없이 단순히 글1개만 조회해주는 것이다.
 			
-			if( filename != null && !"".equals(filename)) {
-				
-				HttpSession session = request.getSession();
-				String root = session.getServletContext().getRealPath("/");
-				String path = root+"resources"+File.separator+"files";
+			HttpSession session = request.getSession();
+			EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
 
-				paraMap.put("path", path); // 삭제해야 할 파일이 저장된 경로
-				paraMap.put("filename", filename);// 삭제해야할 파일명
+		 	int login_userid1 = 0;
+		 	if(loginuser != null) {
+		 	   login_userid1 = loginuser.getPk_emp_no();
+		 	   // login_userid 는 로그인 되어진 사용자의 userid 이다.
+		 	}
+
+		 	String login_userid = Integer.toString(login_userid1);
+		 	
+		 	
+		 	
+			if( !login_userid.equals(fk_emp_no) ) {
+				String message = "다른 사용자의 글은 삭제가 불가합니다.";
+				String loc = "javascript:history.back()";
 				
+				mav.addObject("message", message);
+				mav.addObject("loc", loc);
+				mav.setViewName("msg");
 			}
-			// === 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파이을 삭제해주어야 한다. 끝 === //
-			////////////////////////////////////////////////////////////
 			
-			int n = service.del_notice(paraMap);
 			
-			if(n==1) {
-				mav.addObject("message", "글 삭제 성공!!");
-				mav.addObject("loc", request.getContextPath()+"/notice/list.bts");
-			}
 			else {
-				mav.addObject("message", "글 삭제 실패!!");
-				mav.addObject("loc", "javascript:history.back()");
-			}
-			
-			mav.setViewName("msg");
-			
+				noticevo = service.getViewWithNoAddCount_notice(paraMap);
+				String filename = noticevo.getFilename();
+				
+				if( filename != null && !"".equals(filename)) {
+					
+					session = request.getSession();
+					String root = session.getServletContext().getRealPath("/");
+					String path = root+"resources"+File.separator+"files";
+
+					paraMap.put("path", path); // 삭제해야 할 파일이 저장된 경로
+					paraMap.put("filename", filename);// 삭제해야할 파일명
+					
+				}
+				// === 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파이을 삭제해주어야 한다. 끝 === //
+				////////////////////////////////////////////////////////////
+				
+				int n = service.del_notice(paraMap);
+				
+				if(n==1) {
+					mav.addObject("message", "글 삭제 성공!!");
+					mav.addObject("loc", request.getContextPath()+"/notice/list.bts");
+				}
+				else {
+					mav.addObject("message", "글 삭제 실패!!");
+					mav.addObject("loc", "javascript:history.back()");
+				}
+				
+				mav.setViewName("msg");
+			}	
 			return mav;
 		}
 		
@@ -2483,100 +2446,82 @@ public class BoardController {
 			
 			return mav;
 		}		
-	
-		// === #76. 글삭제 페이지 요청 === //
-			@RequestMapping(value="/fileboard/del.bts")
-			public ModelAndView requiredLogin_del_fileboard(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
-				
-					// 삭제해야 할 글번호 가져오기
-					String pk_seq = request.getParameter("pk_seq");
-					
-					Map<String, String> paraMap = new HashMap<>();
-					paraMap.put("pk_seq", pk_seq);
-					
-					///////////////////////////////
-					paraMap.put("searchType", "");
-					paraMap.put("searchWord", "");
-					///////////////////////////////
-					
-					FileboardVO fileboardvo = service.getViewWithNoAddCount_fileboard(paraMap);
-					// 글조회수(readCount) 증가 없이 단순히 글1개만 조회해주는 것이다.
-					
-					HttpSession session = request.getSession();
-					EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
-
-				 	int login_userid1 = 0;
-				 	if(loginuser != null) {
-				 	   login_userid1 = loginuser.getPk_emp_no();
-				 	   // login_userid 는 로그인 되어진 사용자의 userid 이다.
-				 	}
-
-				 	String login_userid = Integer.toString(login_userid1);
-
-				 	
-					if( !login_userid.equals(fileboardvo.getFk_emp_no()) ) {
-						String message = "다른 사용자의 글은 삭제가 불가합니다.";
-						String loc = "javascript:history.back()";
-						
-						mav.addObject("message", message);
-						mav.addObject("loc", loc);
-						mav.setViewName("msg");
-					}
-					else {
-						// 자신의 글을 삭제할 경우
-						// 글작성시 입력해준 글암호와 일치하는지 여부를 알아오도록 암호를 입력받아주는 del.jsp 페이지를 띄우도록 한다. 
-						mav.addObject("pw", fileboardvo.getPw());
-						mav.addObject("pk_seq", pk_seq);
-						mav.setViewName("fileboard/del.board");
-					}
-			
-				return mav;
-			}	
+		
 			
 			
 			// === #77. 글삭제 페이지 완료하기 === //
 			@RequestMapping(value="/fileboard/delEnd.bts", method= {RequestMethod.POST})
 			public ModelAndView delEnd_fileboard(ModelAndView mav, HttpServletRequest request) {
 				
+				// 삭제해야 할 글번호 가져오기
 				String pk_seq = request.getParameter("pk_seq");
-				
+				String fk_emp_no = request.getParameter("fk_emp_no");
+	//		 	System.out.println("글쓴이 =>"+fk_emp_no);
+	//		 	System.out.println("글번호 =>"+pk_seq);
 				Map<String, String> paraMap = new HashMap<>();
 				paraMap.put("pk_seq", pk_seq);
 				
-				////////////////////////////////////////////////////
-				// === #164. 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파이을 삭제해주어야 한다. === //
+				///////////////////////////////
 				paraMap.put("searchType", "");
 				paraMap.put("searchWord", "");
+				///////////////////////////////
 				
 				FileboardVO fileboardvo = service.getViewWithNoAddCount_fileboard(paraMap);
-				String filename = fileboardvo.getFilename();
+				// 글조회수(readCount) 증가 없이 단순히 글1개만 조회해주는 것이다.
 				
-				if( filename != null && !"".equals(filename)) {
-					
-					HttpSession session = request.getSession();
-					String root = session.getServletContext().getRealPath("/");
-					String path = root+"resources"+File.separator+"files";
+				HttpSession session = request.getSession();
+				EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
 
-					paraMap.put("path", path); // 삭제해야 할 파일이 저장된 경로
-					paraMap.put("filename", filename);// 삭제해야할 파일명
+			 	int login_userid1 = 0;
+			 	if(loginuser != null) {
+			 	   login_userid1 = loginuser.getPk_emp_no();
+			 	   // login_userid 는 로그인 되어진 사용자의 userid 이다.
+			 	}
+
+			 	String login_userid = Integer.toString(login_userid1);
+			 	
+			 	
+			 	
+				if( !login_userid.equals(fk_emp_no) ) {
+					String message = "다른 사용자의 글은 삭제가 불가합니다.";
+					String loc = "javascript:history.back()";
 					
+					mav.addObject("message", message);
+					mav.addObject("loc", loc);
+					mav.setViewName("msg");
 				}
-				// === 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파이을 삭제해주어야 한다. 끝 === //
-				////////////////////////////////////////////////////////////
 				
-				int n = service.del_fileboard(paraMap);
 				
-				if(n==1) {
-					mav.addObject("message", "글 삭제 성공!!");
-					mav.addObject("loc", request.getContextPath()+"/fileboard/list.bts");
-				}
 				else {
-					mav.addObject("message", "글 삭제 실패!!");
-					mav.addObject("loc", "javascript:history.back()");
-				}
-				
-				mav.setViewName("msg");
-				
+					fileboardvo = service.getViewWithNoAddCount_fileboard(paraMap);
+					String filename = fileboardvo.getFilename();
+					
+					if( filename != null && !"".equals(filename)) {
+						
+						session = request.getSession();
+						String root = session.getServletContext().getRealPath("/");
+						String path = root+"resources"+File.separator+"files";
+	
+						paraMap.put("path", path); // 삭제해야 할 파일이 저장된 경로
+						paraMap.put("filename", filename);// 삭제해야할 파일명
+						
+					}
+					// === 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파이을 삭제해주어야 한다. 끝 === //
+					////////////////////////////////////////////////////////////
+					
+					int n = service.del_fileboard(paraMap);
+					
+					if(n==1) {
+						mav.addObject("message", "글 삭제 성공!!");
+						mav.addObject("loc", request.getContextPath()+"/fileboard/list.bts");
+					}
+					else {
+						mav.addObject("message", "글 삭제 실패!!");
+						mav.addObject("loc", "javascript:history.back()");
+					}
+					
+					mav.setViewName("msg");
+				}	
 				return mav;
 			}	
 		

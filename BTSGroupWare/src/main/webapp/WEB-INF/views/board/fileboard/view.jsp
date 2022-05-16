@@ -128,7 +128,26 @@
  <script>
  $(document).ready(function(){
 
-		
+	 /// 글삭제
+	 $("button#btnDelete").click(function(){
+		  
+		 if( "${fileboardvo.pw}" != $("input#pw").val() ) {
+			 alert("글암호가 일치하지 않습니다.");
+			 return;
+		 } 
+		 else {
+			// 폼(form)을 전송(submit)
+			const frm = document.delFrm;
+			frm.method = "POST";
+			frm.action = "<%= ctxPath%>/fileboard/delEnd.bts";
+			frm.submit();
+		 }
+		 
+	 });
+
+	 
+	 ////////////////////////////////////////////
+	 
 		$("span.move").hover(function(){
 			                   $(this).addClass("moveColor");
 		                    }
@@ -148,16 +167,14 @@
 	<hr>
 	  <div class="header">
 		<div id="smallHeader">	
-		<c:if test="${sessionScope.loginuser.fk_rank_id >= 50}">
 			<span onclick="javascript:location.href='<%= request.getContextPath()%>/fileboard/write.bts?fk_seq=${requestScope.fileboardvo.pk_seq}&groupno=${requestScope.fileboardvo.groupno}&depthno=${requestScope.fileboardvo.depthno}&subject=${requestScope.fileboardvo.subject}'"><button type="button" class="btn btn-outline-primary">답글쓰기</button></span>
-			<span onclick="javascript:location.href='<%= request.getContextPath()%>/fileboard/del.bts?pk_seq=${requestScope.fileboardvo.pk_seq}'"><button type="button" class="btn btn-outline-danger">삭제하기</button></span>
+			<span data-toggle="modal" data-target="#myModal"><button type="button" class="btn btn-outline-danger">삭제하기</button></span>
 			<span onclick="javascript:location.href='<%= request.getContextPath()%>/fileboard/edit.bts?pk_seq=${requestScope.fileboardvo.pk_seq}'"><button type="button" class="btn btn-outline-warning">수정하기</button></span>
-		</c:if>	
 			
 		</div>
 		
 		<div id="smallHeader_right">
-			<span onclick="javascript:location.href='<%= request.getContextPath()%>${requestScope.gobackURL}'"><button type="button" class="btn btn-outline-success">목록</button></span>
+			<span onclick="javascript:location.href='<%= request.getContextPath()%>${requestScope.gobackURL}'"><button type="button" class="btn btn-secondary">목록</button></span>
 		</div>
 	</div>
 	 
@@ -234,6 +251,51 @@
    		<div style="margin-bottom: 1%; font-size: 9pt;">다음글&nbsp;&nbsp;<span class="move" onclick="javascript:location.href='/bts/fileboard/view_2.bts?pk_seq=${requestScope.fileboardvo.nextseq}&ko_depname=${requestScope.paraMap.ko_depname}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.fileboardvo.nextsubject}</span></div>
     	</c:if>	
 	 
+</div>
+
+<div class="modal fade" id="myModal" role="dialog"> 
+<div class="modal-dialog"> 
+<div class="modal-content"> 
+<div class="modal-header"> 
+
+<h2 class="modal-title">
+글삭제
+</h2> 
+
+<button type="button" class="close" data-dismiss="modal">
+×
+</button> 
+
+</div> 
+<div class="modal-body"> 
+<div style="display: flex;">
+<div style="margin: auto; padding-left: 3%;">
+
+
+<form name="delFrm">
+	<table style="width: 455px" class="table table-bordered">
+		<tr>
+			<th style="width: 22%; background-color: #DDDDDD;">글암호</th>
+			<td>
+				<input style="width: 100%;" type="password" id="pw" />
+				<input type="hidden" name="pk_seq" value="${fileboardvo.pk_seq}" readonly />
+				<input type="hidden" name="pk_seq" value="${fileboardvo.filename}" readonly />
+				<input type="hidden" name="fk_emp_no" value="${fileboardvo.fk_emp_no}" readonly />
+			</td>
+		</tr>
+	</table>
+	
+	<div style="margin: 20px;">
+		<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnDelete">글삭제완료</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">글삭제취소</button>
+	</div>
+	
+</form>   
+</div>
+</div>    
+</div> 
+</div> 
+</div> 
 </div>
 	
 	
