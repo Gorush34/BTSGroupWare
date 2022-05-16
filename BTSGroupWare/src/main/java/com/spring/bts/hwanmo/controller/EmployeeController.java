@@ -410,7 +410,7 @@ public class EmployeeController {
 		
 		if( certificationCode.equals(userCertificationCode) ) {
 			message = "인증이 성공하였습니다.";
-			loc = request.getContextPath()+"/pwdUpdate.bts?pk_emp_no="+pk_emp_no;
+			loc = request.getContextPath()+"/pwd`.bts?pk_emp_no="+pk_emp_no;
 		}
 		else {	
 			message = "발급된 인증코드가 아닙니다. 인증코드를 다시 발급받으세요!!";
@@ -500,6 +500,9 @@ public class EmployeeController {
 		// 복호화된 이메일 삽입
 		loginuser.setUq_email(uq_email);
 		// 복호화된 폰번호 삽입
+		// System.out.println("확인용 폰번호 : " + uq_phone);
+		// System.out.println("쪼개놓은거2 : " + uq_phone.substring( (uq_phone.indexOf("-")+1), uq_phone.lastIndexOf("-") ) );
+		// System.out.println("쪼개놓은거3 : " +  uq_phone.substring( (uq_phone.lastIndexOf("-")+1) ));
 		loginuser.setHp2( uq_phone.substring( (uq_phone.indexOf("-")+1), uq_phone.lastIndexOf("-") ) );
 		loginuser.setHp3( uq_phone.substring( (uq_phone.lastIndexOf("-")+1) ) );
 		
@@ -516,7 +519,8 @@ public class EmployeeController {
 		// System.out.println("생년월일 : " + loginuser.getBirthday());
 		// System.out.println("성별 : " + loginuser.getGender());
 		
-		
+		System.out.println(" 컨트롤러 updateEmp.bts에서 받아진 이미지 이름 : " + loginuser.getImg_name());
+		mav.addObject("img", loginuser.getImg_name());
 		mav.addObject("loginuser", loginuser);
 		
 		mav.setViewName("updateEmp.emp");
@@ -540,7 +544,8 @@ public class EmployeeController {
 			// 1. 사용자가 보낸 첨부파일을 WAS(톰캣)의 특정 폴더에 저장해준다.
 			// WAS 의 절대경로를 알아와야 한다.
 			
-			String root = session.getServletContext().getRealPath("/");
+			// String root = session.getServletContext().getRealPath("/");
+			String root = "C:/NCS/workspace(spring)/BTSGroupWare/BTSGroupWare/src/main/webapp/";
 			EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
 			empVO.setPk_emp_no(loginuser.getPk_emp_no()); 
 			
@@ -576,7 +581,7 @@ public class EmployeeController {
 				// 파일을 받아와야만 service 에 보낼 수 있다. (DB 에 보내도록 한다.)
 				fileSize = attach.getSize();					// 첨부파일의 크기
 				empVO.setImg_name(newFileName);			// 톰캣(WAS)에 저장될 파일명
-				
+				System.out.println(" 컨트롤러 updateImg.bts에서 받아진 이미지 이름 : " + newFileName);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -593,6 +598,7 @@ public class EmployeeController {
 		else {
 			// 프로필 사진 업데이트
 			n = empService.updateEmpImg(empVO);
+			System.out.println("업데이트 성공!");
 		}
 		
 		
@@ -616,7 +622,6 @@ public class EmployeeController {
 		}
 		// ==== 파일의 이름 경로를 알아와서 원하는 위치로 이동시킨다. 끝==== //
 		*/
-		
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("n", n);
 		jsonObj.put("img_name", empVO.getImg_name());

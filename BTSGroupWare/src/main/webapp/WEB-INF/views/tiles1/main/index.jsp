@@ -569,7 +569,7 @@ td#no{
 	        	<div class="profile">
 	        		<span class="photo">
 	        			<span class="photo">
-	        				<img src="<%= ctxPath%>/resources/images/nol.png" title="" />
+	        				<img src="<%= ctxPath%>/resources/files/${sessionScope.loginuser.img_name}" title="" />
 	        			</span>
 	        		</span>
 	        		<span class="info">

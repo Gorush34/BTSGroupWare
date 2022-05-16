@@ -226,9 +226,9 @@
 	       	<form name="modal_frm">
 	       	<table style="width: 100%;" class="table table-bordered">
 	     			<tr>
-	     				<td style="text-align: center;">의견</td>
+	     				<td style="text-align: center; padding-top: 48px;">의견</td>
 	     				<td style="text-align: left; padding-left: 5px;">
-	     					<input type="text" name="opinion" id="opinion" width="330px;" />
+	     					<input type="text" name="opinion" id="opinion" style="width:100%; height: 100px;"  readonly />
 	     				</td>
 	     			</tr>
 	     		</table>
