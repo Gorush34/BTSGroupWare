@@ -155,7 +155,7 @@ public class MailService implements InterMailService {
 	
 	// 스프링 스케줄러를 이용해서 발송예약 실행하기	  
 	@Override	  
-	@Scheduled(cron = "0 * * * * *") 
+//	@Scheduled(cron = "0 * * * * *") 
 	public void reservationMailSendSchedular() throws Exception { 
 	  // ***주의*** 스케줄러로 사용되어지는 메소드는 반드시 파라미터는 없어야 한다.
 	  
@@ -164,7 +164,7 @@ public class MailService implements InterMailService {
 	  SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm"); // 발송날짜에서 2022-05-26 21:40 형식으로 불러옴
 	  String currentTime = dateFormat.format(currentDate.getTime());
 	  
-	  System.out.println("Mail 현재시각 : " + currentTime);
+	//System.out.println("Mail 현재시각 : " + currentTime);
 
 	  // 메일테이블에서 reservation_status = 1인 값들을 select 한 결과의 발송날짜(reservation_date)와 
 	  // java에서 구한  currentTime 이 같다면 메일테이블에 insert 한다. (년-월-일 시:분)
@@ -280,7 +280,7 @@ public class MailService implements InterMailService {
 		  	}
 		  	else {
 				// 예약 발송 실패
-		  		System.out.println("****** 발송예약에 실패했습니다. ******");
+		  	//	System.out.println("****** 발송예약에 실패했습니다. ******");
 			}		  
 		  
 	  }// end of if(reservationList != null && reservationList.size() > 0)---------------------------------------------------
