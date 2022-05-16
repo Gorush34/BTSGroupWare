@@ -1,5 +1,33 @@
 @charset "UTF-8";
 
+* 헤더 스타일  시작 */
+
+li.login_dropdown  { 
+   list-style: none;
+   display: inline-block;
+}
+
+img#memberProfile {
+   max-width: 40px;
+   max-height: 40px;
+   border-radius: 100%;
+}
+
+ul#secondHeaderGroup, .secondHeaderList {
+      list-style-type: none;
+      display: inline-block;
+}
+
+#navbarSupportedContent > ul > li {
+	margin-right: 20px;
+	font-size: 18px;
+}
+
+/* 헤더 스타일  끝 */
+
+
+
+
 body {font-family: font-family: 'Noto Sans KR', sans-serif; }
 
 #mycontainer   { padding:20px; }
@@ -250,26 +278,7 @@ table#scheduleRegisterContent > tbody  table#reservationTable{
 [data-tooltip]:not([data-tooltip=""]):hover:before{visibility:visible;opacity:1;top:-30px}
 [data-tooltip]:not([data-tooltip=""]):hover:after{visibility:visible;opacity:1;top:-8px}
 
-/* 헤더 스타일  시작 */
-
-li.login_dropdown  { 
-   list-style: none;
-   display: inline-block;
-}
-
-img#memberProfile {
-   max-width: 40px;
-   max-height: 40px;
-   border-radius: 100%;
-}
-
-ul#secondHeaderGroup, .secondHeaderList {
-      list-style-type: none;
-      display: inline-block;
-}
-
-/* 헤더 스타일  끝 */
-
+/
 
 /* 캘린더 상세(일정 상세) 파트 */
 table#detailScheduleContent > tbody > tr > th  {
