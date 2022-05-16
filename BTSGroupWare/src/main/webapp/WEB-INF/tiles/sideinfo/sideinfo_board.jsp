@@ -10,12 +10,27 @@
 
 <style type="text/css">
 
+li.hover:hover{
+background-color: #E9ECEF;
+cursor: pointer;
+border-radius: 2%;
+}
+
+h2#add{
+    font-size: 24pt;
+    font-weight: 800;
+    color: #000060;
+    margin-bottom: 20px;
+}
+
+#no > img{
+width: 155px;
+}
+
 td#no{
 	text-align: center;
-	font-weight: bold;
 	color: black !important;
-	padding: 20px 0 !important;
-	font-size: 13pt;
+	padding: 10px 0 20px 0 !important;
 }
 
 #boardContentAll > table:nth-child(2) > tbody > tr > td > a{
@@ -32,7 +47,7 @@ font-size: 15px;
 
 }
 
-a#side{
+#side{
     color: black;
     font-size: 15pt;
     font-weight: bold;
@@ -115,8 +130,9 @@ function goReadBest() {
 			  }
 			  else {
 				  html += "<tr>";
-				  html += "<td colspan='3' class='board' id='no'>게시물이 없습니다.</td>";
+				  html += "<td colspan='3' class='board' id='no'><img src='<%= ctxPath%>/resources/images/board/story_none.png'/></td>";			  
 				  html += "</tr>";
+
 			  }
 			  
 			  $("tbody#bestDisplay").html(html);
@@ -195,18 +211,18 @@ function goReadBest() {
           </div> 
 
 			
-			<ul  style="list-style-type: none; padding: 10px; text-align: center;">
-				<li  style="margin-bottom: 15px;">
-					<a id="side" href="<%= ctxPath%>/board/main.bts">전체글</a>
+			<ul style="list-style-type: none; padding: 10px; text-align: center;">
+				<li id="side" class="hover " style="padding: 10px 0;" onclick="javascript:location.href='<%= request.getContextPath()%>/board/main.bts'" >
+					전체글
 				</li>
-				<li style="margin-bottom: 15px;">
-					<a id="side" href="<%= ctxPath%>/notice/list.bts">공지사항</a>
+				<li id="side" class="hover " style="padding: 10px 0;" onclick="javascript:location.href='<%= request.getContextPath()%>/notice/list.bts'" >
+					공지사항
 				</li>
-				<li style="margin-bottom: 15px;">
-					<a id="side" href="<%= ctxPath%>/fileboard/list.bts">자료실</a>
+				<li id="side" class="hover " style="padding: 10px 0;" onclick="javascript:location.href='<%= request.getContextPath()%>/fileboard/list.bts'" >
+					자료실
 				</li>
-				<li >
-					<a id="side" href="<%= ctxPath%>/board/list.bts">자유게시판</a>
+				<li id="side" class="hover " style="padding: 10px 0;" onclick="javascript:location.href='<%= request.getContextPath()%>/board/list.bts'" >
+					자유게시판
 				</li>
 				
 			</ul>

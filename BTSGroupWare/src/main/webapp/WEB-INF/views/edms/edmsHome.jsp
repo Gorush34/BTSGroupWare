@@ -35,7 +35,7 @@
 				
 	<%-- 결재대기 문서가 없는 경우 시작 --%>
 	<%-- <c:if test="${empty requestScope.edmsList}"> --%>
-		<div class="card"><span>결재 대기 문서가 없습니다.</span></div>
+	<div name="">	
 	<%-- </c:if> --%>
 	<%-- 결재대기 문서가 없는 경우 종료 --%>
 		

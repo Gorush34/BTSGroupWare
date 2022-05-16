@@ -44,6 +44,8 @@
 	    $( "div#h_teamwon" ).slideToggle();
 	  });
 	  
+	  sessionScope
+	  
 	}); // end of $( document ).ready( function()
 
 			
@@ -238,7 +240,7 @@
 	 <div id="telAdd_main_tbl" style="text-align:center;">
 		<table>
 			<tr>
-				<td><h2>개인정보</h2></td>
+				<td><h2>개인정보</h2><input type="hidden" id="haha" value="${sessionScope.loginuser.pk_emp_no}"></td>
 			</tr>
 			<tr>
 				<td><strong>사진</strong></td>
@@ -274,7 +276,7 @@
 				<td><strong>상세주소</strong></td>
 				<td><input type="text" class="form-control" id="detailaddress" name="detailaddress" placeholder="상세주소" style="width:150%; height: 50px;" readonly></td>
 			</tr>
-			
+		<!-- 	
 			<tr>
 				<td></td>
 				<td colspan="10" style="text-align:center; padding-top: 18%; ">
@@ -282,6 +284,7 @@
 					<button class="btn btn-default" id="" style="border: solid lightgray 2px;">취소</button>
 				</td>
 			</tr>
+		 -->	
 		</table>
 	</div>
 	</div>

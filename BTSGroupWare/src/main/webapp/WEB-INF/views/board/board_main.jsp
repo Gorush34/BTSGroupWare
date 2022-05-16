@@ -172,14 +172,11 @@ margin: 10px;
 		<table class="table table-hover" style="width: 85%; margin-left: auto; margin-right: auto; margin-top: 30px;">
 		<thead>
 			<tr>
-				<th scope="col" class="text-center" style="width: 30px;">번호</th>	
-				<th scope="col" class="text-center" style="width: 11px;"></th>	
-				<th scope="col" class="text-center" style="width: 11px;"></th>	
-				<th scope="col" class="text-center" style="width: 65px;"></th>
-				<th scope="col" class="text-center" style="width: 200px;">제목</th>
-				<th scope="col" class="text-center" style="width: 70px;">글쓴이</th>
-				<th scope="col" class="text-center" style="width: 100px;">작성일</th>
-				<th scope="col" class="text-center" style="width: 50px;">조회수</th>
+				<th scope="col" class="text-center" style="width: 90px;">번호</th>	
+				<th scope="col" class="text-center" colspan="4" style="width: 200px;">제목</th>
+				<th scope="col" class="text-center" style="width: 120px;">글쓴이</th>
+				<th scope="col" class="text-center" style="width: 250px;">작성일</th>
+				<th scope="col" class="text-center" style="width: 100px;">조회수</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -189,13 +186,13 @@ margin: 10px;
 			          ${boardvo.pk_seq}
 			      </td>
 		
-				  <td style="padding: 12px 0;">
+				  <td style="width: 25px;">
 			         <c:if test="${not empty boardvo.filename}">
-			         <img src="<%= ctxPath%>/resources/images/disk.gif" />	
+			         <img style="width: 12px;" src="<%= ctxPath%>/resources/images/disk.gif" />	
 			         </c:if>          
 			      </td>
 		
-				  <td style="padding: 12px 0;">
+				  <td style="width: 25px;">
 				  <c:set var="text" value="${boardvo.content}"/>
 
 				  <c:if test="${fn:contains(text, 'img src')}">
@@ -203,7 +200,7 @@ margin: 10px;
 				  </c:if>
 				  </td>
 		
-					<td align="center">
+					<td style="width: 115px;" align="center">
 						<span style="font-size: 9pt; color: gray;">[${boardvo.tblname}]</span>
 					</td>
 		
@@ -219,7 +216,7 @@ margin: 10px;
 					<c:if test="${boardvo.tblname eq '자유게시판'}">
 						 <c:if test="${boardvo.read_count > 10}">
 						      	 <c:if test="${boardvo.comment_count > 0}">
-						      	 	<span style="color:red; font-size: 9pt;">HIT&nbsp;&nbsp;</span><span class="subject" onclick="goView('${boardvo.pk_seq}')">${boardvo.subject} <span style="vertical-align: super;">[<span style="color: red; font-size: 9pt; font-style: italic; font-weight: bold;">${boardvo.comment_count}</span>]</span></span>  
+						      	 	<span style="color:red; font-size: 9pt;">HIT&nbsp;&nbsp;</span><span class="subject" onclick="goView('${boardvo.pk_seq}')">${boardvo.subject} <span style="vertical-align: super;"><span style="color: #a6a6a6; font-size: 9pt; font-weight: bold;">[${boardvo.comment_count}]</span></span></span>    
 						      	 </c:if>
 						      	 
 						      	 <c:if test="${boardvo.comment_count == 0}">
@@ -230,7 +227,7 @@ margin: 10px;
 				      	 
 				      	 <c:if test="${boardvo.read_count <= 10}">
 						      	 <c:if test="${boardvo.comment_count > 0}">
-						      	 	<span class="subject" onclick="goView('${boardvo.pk_seq}')">${boardvo.subject} <span style="vertical-align: super;">[<span style="color: red; font-size: 9pt; font-style: italic; font-weight: bold;">${boardvo.comment_count}</span>]</span></span>  
+						      	 	<span class="subject" onclick="goView('${boardvo.pk_seq}')">${boardvo.subject} <span style="vertical-align: super;"><span style="color: #a6a6a6; font-size: 9pt; font-weight: bold;">[${boardvo.comment_count}]</span></span></span>  
 						      	 </c:if>
 						      	 
 						      	 <c:if test="${boardvo.comment_count == 0}">
@@ -241,26 +238,7 @@ margin: 10px;
 			      	 
 			      	 
 			      <c:if test="${boardvo.tblname eq '자료실'}">
-						 <c:if test="${boardvo.read_count > 10}">
-						      	 <c:if test="${boardvo.comment_count > 0}">
-						      	 	<span style="color:red; font-size: 9pt;">HIT&nbsp;&nbsp;</span><span class="subject" onclick="goView_fileboard('${boardvo.pk_seq}')">${boardvo.subject} <span style="vertical-align: super;">[<span style="color: red; font-size: 9pt; font-style: italic; font-weight: bold;">${boardvo.comment_count}</span>]</span></span>  
-						      	 </c:if>
-						      	 
-						      	 <c:if test="${boardvo.comment_count == 0}">
-						      	 	<span style="color:red; font-size: 9pt;">HIT&nbsp;&nbsp;</span><span class="subject" onclick="goView_fileboard('${boardvo.pk_seq}')">${boardvo.subject}</span>
-						      	 </c:if> 	      	 
-				      	 </c:if>
-				      	 
-				      	 
-				      	 <c:if test="${boardvo.read_count <= 10}">
-						      	 <c:if test="${boardvo.comment_count > 0}">
-						      	 	<span class="subject" onclick="goView_fileboard('${boardvo.pk_seq}')">${boardvo.subject} <span style="vertical-align: super;">[<span style="color: red; font-size: 9pt; font-style: italic; font-weight: bold;">${boardvo.comment_count}</span>]</span></span>  
-						      	 </c:if>
-						      	 
-						      	 <c:if test="${boardvo.comment_count == 0}">
-						      	 	<span class="subject" onclick="goView_fileboard('${boardvo.pk_seq}')">${boardvo.subject}</span>
-						      	 </c:if> 	      	 
-				      	 </c:if>
+						 <span class="subject" onclick="goView_fileboard('${boardvo.pk_seq}')">${boardvo.subject}</span>
 			      	 </c:if>	 
 			      	 
 			      	 
@@ -295,7 +273,7 @@ margin: 10px;
 		</select>
 		<input type="text" name="searchWord" id="searchWord" size="40" autocomplete="off" /> 
 		<input type="text" style="display: none;"/> <%-- form 태그내에 input 태그가 오로지 1개 뿐일경우에는 엔터를 했을 경우 검색이 되어지므로 이것을 방지하고자 만든것이다. --%> 
-		<button type="button" style="width: 30px" onclick="goSearch()">
+		<button type="button" style="width: 30px; border:none;" onclick="goSearch()">
 		<i class="fa fa-search fa-fw" aria-hidden="true"></i>
 		</button>
 	</form>

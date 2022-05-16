@@ -24,7 +24,7 @@
 	$(document).ready(function(){	
 		
 		const frm = document.viewfrm;
-		frm.method = "POST";
+		frm.method = "post";
 		frm.action = "<%= ctxPath%>/edms/view.bts";
 		frm.submit();
 	}); // end of $(document).ready(function(){}) --------------------
@@ -101,8 +101,8 @@
 		<tr>
 			<th>작성자 <input type="text" value="${requestScope.apprvo.fk_emp_no}"></th> 
           	<td style="background-color: #F7F7F7;">${requestScope.apprvo.emp_name}&nbsp;[${requestScope.apprvo.ko_rankname}]</td>
-          	<td rowspan="2" style="background-color: #F7F7F7;">중간결재자이름</td>
-			<td rowspan="2" style="background-color: #F7F7F7;">최종결재자이름</td>
+          	<td rowspan="2" style="background-color: #F7F7F7;">${requestScope.apprvo.emp_name}중간결재자이름</td>
+			<td rowspan="2" style="background-color: #F7F7F7;">${requestScope.apprvo.emp_name}최종결재자이름</td>
 		</tr>
 		
         <tr>
@@ -117,7 +117,7 @@
 			<td style="background-color: #F7F7F7;">결재상태</td>
 		</tr>
 	</table>
-</form>
+<!-- </form> 오류 폼으로 감싸면 view.bts? 뒤에 URL ? 이 안 온 다-->
 	</div>
 
 	
@@ -127,12 +127,12 @@
 				<col style="width: 16%; background-color: #e8e8e8;" />
 			</colgroup>
 			
-			<!-- <tr> -->		
 			<tr style="width: 16%;">
 				<th class="edmsView_th">제목</th>
 				<td style="width: 75%;">
-					<!-- if문 -->
-					<span style="color: red; font-weight: bold;">[긴급]</span>&nbsp;
+					<c:if test="${requestScope.apprvo.emergency == 1}">
+						<span style="color: red; font-weight: bold;">[긴급]</span>&nbsp;
+					</c:if>
 					<span>${requestScope.apprvo.title}</span>
 				</td>
 			</tr>
@@ -152,7 +152,8 @@
 					<br/>
 				</td>
 			</tr>
-
+			
+			<c:if test="${requestScope.filename ne '' || requestScope.filename ne null }"> 
 			<tr>
 				<th class="edmsView_th">첨부파일</th>
 				<td>
@@ -175,6 +176,9 @@
 						<fmt:formatNumber value="${requestScope.apprvo.fileSize}" pattern="#,###" />
 					</td>
 			</tr>
+			</c:if>
+			
+			
 		</table>
 	
 		<c:set var="v_gobackURL" value='${ fn:replace(requestScope.gobackURL, "&", " ") }' />
@@ -193,38 +197,27 @@
 			
 			<br/><hr>
 			
-			<span>loginuser != null && 글쓴 사람이 아니고 승인자도 아닌 경우</span><br>
+			<input type="text" class="form-control" value="1. loginuser != null && 글쓴 사람이 아니고 승인자도 아닌 경우" readonly ><br/>
 			<%-- 페이징 처리되어진 후 특정 글제목을 클릭하여 상세내용을 본 이후 사용자가 목록보기 버튼을 클릭했을 때 돌아갈 페이지를 알려주기 위해 현재 페이지 주소를 뷰단으로 넘겨준다. --%>
-			<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/list.bts'">전체목록보기</button>
-			<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>${requestScope.gobackURL}'">검색된결과목록보기</button>
-			
+			<button type="button" class="btn btn-dark btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/list.bts'">목록으로 돌아가기</button>
+			<button type="button" class="btn btn-dark btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>${requestScope.gobackURL}'">검색결과 목록으로</button>
 			<br/><hr>
 			
-			<span>loginuser != null && 글쓴 사람인 경우</span><br>			
-			<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edit.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">글수정하기</button>
-			<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/del.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">글삭제하기</button>
-			
+			<input type="text" class="form-control" value="2. loginuser != null && 글쓴 사람인 경우" readonly ><br/>
+			<c:if test="${sessionScope.loginuser != null and sessioScope.loginuser.pk_emp_no eq apprvo.getFk_emp_no()}">
+			<button type="button" class="btn btn-dark btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edit.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">글수정하기</button>
+			<button type="button" class="btn btn-dark btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/del.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">글삭제하기</button>
+			</c:if>
 			<br/><hr>
 			
-			<span>
-				1. sqlsession의 empno = 원글의 mid_emp_no인 경우 && mid_accept 0인 경우<br/>
-				2. sqlsession의 empno = 원글의 fin_emp_no인 경우 && mid_accept 1인 경우<br/>
-			</span>
-			
-			<%-- <c:if test="${sessionScope.loginuser.pk_emp_no = ${requestScope.apprvo.fk_mid_empno} }"> --%>
-				<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">승인</button>
-				<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">반려</button>
-			<%-- </c:if> --%>
+			<input type="text" class="form-control" value="1. sqlsession의 empno = 원글의 mid_emp_no인 경우 && mid_accept 0인 경우 && status = 1/ 2. sqlsession의 empno = 원글의 fin_emp_no인 경우 && mid_accept 1인 경우" readonly ><br/>
+			<c:if test="${ (requestScope.apprvo.fk_mid_empno eq sessioScope.loginuser.pk_emp_no 
+							and requestScope.apprvo.mid_accept == 0 and requestScope.apprvo.status == 1)
+							 || (requestScope.apprvo.fk_fin_empno eq sessioScope.loginuser.pk_emp_no and requestScope.apprvo.mid_accept eq 0 ) }">
+				<button type="button" class="btn btn-success btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">문서승인</button>
+				<button type="button" class="btn btn-danger btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">문서반려</button>
+			</c:if>
 			<br/><hr>
-<%--
-	 <div style="margin: 20px;">
-		<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnApprWrite">결재요청</button>
-		<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnApprCancel">상신취소</button>
-		상신취소는 문서삭제의 기능을 한다 !
-		<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnAppredit">문서수정</button>
-		<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnApprCancel">문서삭제</button>
-	</div>
---%>
 	
 	
 </c:if>

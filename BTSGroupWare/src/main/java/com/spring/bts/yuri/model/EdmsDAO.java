@@ -112,7 +112,7 @@ public class EdmsDAO implements InterEdmsDAO {
 	// 총 게시물 건수(totalCount) 구하기 - 검색이 있을 때와 검색이 없을 때로 나뉜다.
 	@Override
 	public int getTotalCount(Map<String, String> paraMap) {
-		int n = sqlsession.selectOne("yuri.getTotalCount");
+		int n = sqlsession.selectOne("yuri.getTotalCount", paraMap);
 		return n;
 	}
 
@@ -122,10 +122,39 @@ public class EdmsDAO implements InterEdmsDAO {
 		List<EmployeeVO> empList = sqlsession.selectList("yuri.addBook_depInfo_select");
 		return empList;
 	}
-
+	
+	// 승인하기
 	@Override
 	public int accept(ApprVO apprvo) {
 		int n = sqlsession.update("yuri.accept", apprvo);
 		return n;
+	}
+
+	// 반력하기
+	@Override
+	public int reject(ApprVO apprvo) {
+		int n = sqlsession.update("yuri.reject", apprvo);
+		return n;
+	}
+
+	// 대기문서 목록 페이징 처리
+	@Override
+	public List<ApprVO> edmsListSearchWithPaging_wait(Map<String, String> paraMap) {
+		List<ApprVO> edmsList = sqlsession.selectList("yuri.edmsListSearchWithPaging_wait", paraMap);
+		return edmsList;
+	}
+	
+	// 승인문서 목록 페이징 처리
+	@Override
+	public List<ApprVO> edmsListSearchWithPaging_accept(Map<String, String> paraMap) {
+		List<ApprVO> edmsList = sqlsession.selectList("yuri.edmsListSearchWithPaging_accept", paraMap);
+		return edmsList;
+	}
+	
+	// 반려문서 목록 페이징 처리
+	@Override
+	public List<ApprVO> edmsListSearchWithPaging_reject(Map<String, String> paraMap) {
+		List<ApprVO> edmsList = sqlsession.selectList("yuri.edmsListSearchWithPaging_reject", paraMap);
+		return edmsList;
 	}
 }

@@ -14,17 +14,24 @@
       select ROW_NUMBER() OVER(ORDER BY A.addb_name) AS rno, A.pk_addbook_no , A.addb_name , R.ko_rankname, A.phone AS phone, A.email AS email, A.companyname, A.com_tel
             from tbl_ADDBOOK A 
             join tbl_rank_sort R
-            on R.PK_RANK_NO = A.fk_rank_no)
+            on R.PK_RANK_NO = A.fk_rank_no
+            join tbl_employees E
+            on E.pk_emp_no = A.registeruser
+            where A.registeruser = #{pk_emp_no}
+            <if test='searchWord != ""'>
+			and lower(#{searchWord})||'%'
+			</if>
+            ) V
       where rno between #{startRno} and #{endRno}
    </select>
 	
 	
 	<!-- 주소록 연락처에 insert 하기 -->
 	<insert id="addBook_telAdd_insert" parameterType="com.spring.bts.byungyoon.model.AddBookVO" >
-		insert into tbl_ADDBOOK(PK_ADDBOOK_NO, FK_DEPT_NO, FK_RANK_NO, ADDB_NAME, COM_TEL, POSTCODE, ADDRESS, DETAILADDRESS, REFERENCEADDRESS, PHONE, EMAIL, PHOTOFILEPATH, PHOTOFILENAME, COMPANYNAME, MEMO, COMPANY_ADDRESS, KO_RANKNAME, KO_DEPNAME, FK_EMP_NO  )
-		values( addbook_seq.nextval , #{fk_dept_no} ,#{fk_rank_no} , #{addb_name} ,#{com_tel} ,default ,default ,default ,default ,#{phone} ,#{email} ,default ,default ,#{companyname} ,#{memo} ,#{company_address} ,default ,default, default  ) 
+		insert into tbl_ADDBOOK(registeruser , PK_ADDBOOK_NO, FK_DEPT_NO, FK_RANK_NO, ADDB_NAME, COM_TEL, POSTCODE, ADDRESS, DETAILADDRESS, REFERENCEADDRESS, PHONE, EMAIL, PHOTOFILEPATH, PHOTOFILENAME, COMPANYNAME, MEMO, COMPANY_ADDRESS, KO_RANKNAME, KO_DEPNAME, FK_EMP_NO  )
+		values(#{registeruser} ,  addbook_seq.nextval , #{fk_dept_no} ,#{fk_rank_no} , #{addb_name} ,#{com_tel} ,default ,default ,default ,default ,#{phone} ,#{email} ,default ,default ,#{companyname} ,#{memo} ,#{company_address} ,default ,default, default  ) 
 	</insert>
-	
+	 
 	
 	<!-- 상세부서정보 페이지 사원목록 불러오기 -->
 	<select id="addBook_depInfo_select" resultType="com.spring.bts.hwanmo.model.EmployeeVO">
@@ -68,9 +75,13 @@
 	</update>
 
 	<!-- 주소록 메인에서 총 연락처 개수 가져오기 -->
-	<select id="addBook_main_totalPage" resultType="int">
+	<select id="addBook_main_totalPage" parameterType="HashMap" resultType="int">
 		select count(*) 
 		from tbl_addbook
+		where registeruser = to_number(#{registeruser})
+		<if test='searchWord != ""'>
+		and '%' || lower(#{searchWord})||'%'
+		</if>
 	</select>
 	
 	<!-- // 주소록 삭제하기 -->

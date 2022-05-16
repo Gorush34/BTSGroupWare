@@ -103,7 +103,7 @@
 		
 		
 		// [중요] on을 쓰면 id와 클래스가? 100% 잡힌다! (jQeury 참조!) 별 200개!!!
-		// on 을 사용하면 변경 이후의 이벤트가 변경 ㅎ
+		// on 을 사용하면 변경 이후의 이벤트가 변경된다.
 		$(document).on("click", "span.result", function() {
 			const word = $(this).text();
 			$("input#searchWord").val(word);	// 텍스트 박스에 검색된 결과의 문자열을 입력해준다.
@@ -118,28 +118,28 @@
 	// Function Declaration
 	function goView(pk_appr_no) {
 	<%--			
-		location.href = "<%= ctxPath%>/view.action?seq="+seq;
+		location.href = "<%= ctxPath%>/view.bts?pk_appr_no="+pk_appr_no;
 	--%>
 
 	// === 페이징 처리되어진 후 특정 글제목을 클릭하여 상세내용을 본 이후
 	//	사용자가 목록보기 버튼을 클릭했을 때 돌아갈 페이지를 알려주기 위해	
 	//	현재 페이지 주소를 뷰단으로 넘겨준다.
 	
-		const gobackURL = "${requestScope.gobackURL}";
+		const gobackURL = "${requestScope.gobackURL}"; // 자꾸 빨간줄 뜸
 		
-		alert("확인용 gobackURL : " + gobackURL);
+	//	alert("list 단에서 확인용 gobackURL : " + gobackURL);
 
 		const searchType = $("select#searchType").val();	// form 태그의 select!
 		const searchWord = $("input#searchWord").val();	
 		
 		location.href = "<%= ctxPath%>/edms/view.bts?pk_appr_no="+pk_appr_no+"&gobackURL="+gobackURL+"&searchType="+searchType+"&searchWord="+searchWord;
 				
-	} // end of function goView(seq)
+	} // end of function goView(pk_appr_no)
 
 	function goSearch(){
 		const frm = document.searchFrm;
 		frm.method = "GET";
-		frm.action = "<%= ctxPath%>/edms/list.action";
+		frm.action = "<%= ctxPath%>/edms/list.bts";
 		frm.submit();
 	} // end of function goSearch() --------------------
 	
@@ -150,15 +150,24 @@
 
 <div class="edmslist">
 	<div class="edmsHomeTitle">
-		<span class="edms_maintitle">대기문서함</span>
+		<%-- <c:if test="${requestScope.apprvo.status eq 0}">
+			<span class="edms_maintitle">대기문서함</span>
+		</c:if>
+		<c:if test="${requestScope.apprvo.status eq 1}">
+			<span class="edms_maintitle">승인문서함</span>
+		</c:if>
+		<c:if test="${requestScope.apprvo.status eq 2}">
+			<span class="edms_maintitle">반려문서함</span>
+		</c:if> --%>
+		
 		<p style="margin-bottom: 10px;"></p>
 	</div>
 
 
-	<!-- 결재대기 문서목록 시작 -->
-	<div id="edms_wait">
-		<span class="edms_title">결재대기 목록보기</span>
-
+	<!-- 문서목록 시작 -->
+	<div id="edmsList">
+		<span class="edms_title">문서목록보기</span>
+		<!--
 		<div class="dropdown">
 			<button class="btn btn-primart-outline dropdown-toggle" type="button" data-toggle="dropdown"
 					aria-haspopup="true" aria-expanded="false">10개 보기</button>
@@ -168,7 +177,8 @@
 				<a class="dropdown-item" href="#">50개 보기</a>
 			</div>
 		</div>
-				
+		-->
+			
 		<div class="divClear"></div>
 
 		<%-- 결재대기 목록이 없을 때 시작 --%>
@@ -209,19 +219,20 @@
 					
 					<td>${apprvo.writeday}</td>
 					
-					<td>결재양식</td> <%-- ${appr.fk_appr_sortno} --%>
+					<td>${apprvo.fk_appr_sortno}</td> <%-- ${apprvo.fk_appr_sortno} --%>
 					
 					<td>
-					<c:if test="${apprvo.emergency == '1'}">
-						<button id="btn_emergency" class="btn btn-outline-danger" style="height: 100%; line-height: 9pt; font-size: 9pt;">긴급</button>
+					<c:if test="${apprvo.emergency == 1}">
+						<button id="btn_emergency" class="btn btn-outline-danger disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">긴급</button>
 					</c:if>
-					<c:if test="${apprvo.emergency == '0'}">
+					<c:if test="${apprvo.emergency == 0}">
 						&nbsp;
 					</c:if>
 					</td>
 					
 					<td>
-						<span class="title" onclick="goView('${apprvo.pk_appr_no}')">${appr.title}</span>
+						<span class="title" onclick="goView('${apprvo.pk_appr_no}')" style="cursor: pointer;">${apprvo.title}</span>
+						
 					</td>
 					
 					<td>
@@ -235,9 +246,20 @@
 					
 					<td>${apprvo.pk_appr_no}</td>
 					<td>
-						<c:if test="${apprvo.status == 0}">대기중 ${appr.status}</c:if>
-						<c:if test="${apprvo.status == 1}">승인됨 ${appr.status}</c:if>
-						<c:if test="${apprvo.status == 2}">반려됨 ${appr.status}</c:if>
+						<c:choose>
+							<c:when test="${apprvo.status == 0}">
+							<button class="btn btn-outline-secondary disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">대기중</button>
+							</c:when>
+							<c:when test="${apprvo.status == 1}">
+							<button class="btn btn-outline-info disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">진행중</button>
+							</c:when>
+							<c:when test="${apprvo.status == 2}">
+							<button class="btn btn-info disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">승인됨</button>
+							</c:when>
+							<c:when test="${apprvo.status == 3}">
+							<button class="btn btn-secondary disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">반려됨</button>
+							</c:when>
+						</c:choose>
 					</td>
 				</tr>
 				</c:forEach>
@@ -252,7 +274,7 @@
 		
 		
 		<%-- === 페이지바 보여주기 --%>
-		<div align="center" style="border: solid 1px grey; width: 70%; margin: 20px auto;">
+		<div align="center" style="border: solid 0px grey; width: 70%; margin: 20px auto;">
 			${requestScope.pageBar}
 		</div>
 		
@@ -260,9 +282,9 @@
 		<form name="searchFrm" style="margin-top: 20px;">
 			<select name="searchType" id="searchType" style="height: 26px;">
 				<option value="title">글제목</option>
-				<option value="name">글쓴이</option>
+				<!-- <option value="emp_name">글쓴이</option> -->
 			</select>
-			<input type="text" name="searchWord" id="searchWord" size="40" autocomplete="off" />
+			<input type="text" name="searchWord" id="searchWord" class="form-controll" size="40" autocomplete="off" />
 			<input type="text" style="display: none;" />
 			<%-- form 태그내에 input 태그가 오로지 1개일 경우에는 엔터를 했을 경우 검색이 되어지므로 이것을 방지하고자 만든것이다. hidden으로 해도 바로 submit되어버리므로 안된다! --%>
 			<button type="button" class="btn btn-secondary btn-sm" onclick="goSearch()">검색</button>
@@ -275,50 +297,6 @@
 	</div>
 	<!-- 결재대기 문서목록 종료 -->
 	
-	<!-- 페이지바 -->
-	<!-- 
-	<div class="pagination">
-		<nav aria-label="Page navigation">
-			<ul class="pagination justify-content-center">
-				<li class="page-item disabled">
-					<a class="page-link" href="#" aria-label="Previous">
-						<span aria-hidden="true">&laquo;</span>
-						<span class="sr-only">Previous</span>
-					</a>
-				</li>
-				<li class="page-item active"><a class="page-link" href="#">1</a></li>
-				<li class="page-item"><a class="page-link" href="#">2</a></li>
-				<li class="page-item"><a class="page-link" href="#">3</a></li>
-				<li class="page-item">
-					<a class="page-link" href="#" aria-label="Next">
-						<span aria-hidden="true">&raquo;</span>
-						<span class="sr-only">Next</span>
-					</a>
-				</li>
-			</ul>
-		</nav>
-	</div>
-
-	<div class="pagination" style="display: inline-block; text-align: center; clear: both;">
-		<nav aria-label="Page navigation example">
-			<ul class="pagination justify-content-center">
-				<li class="page-item disabled">
-					<a class="page-link" href="#" tabindex="-1">&laquo;</a>
-				</li>
-				<li class="page-item"><a class="page-link" href="#">1</a></li>
-				<li class="page-item"><a class="page-link" href="#">2</a></li>
-				<li class="page-item"><a class="page-link" href="#">3</a></li>
-				<li class="page-item"><a class="page-link" href="#">4</a></li>
-				<li class="page-item"><a class="page-link" href="#">5</a></li>
-				<li class="page-item">
-					<a class="page-link" href="#">&raquo;</a>
-				</li>
-			</ul>
-		</nav>
-	</div>
-	-->
-	 
-	<!-- 페이지바 컨트롤러에서 만들기 -->
 	
 	<div class="divClear"></div>
 </div>

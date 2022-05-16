@@ -69,60 +69,39 @@ public class EdmsController {
 	@RequestMapping(value="/edms/edmsAdd.bts", produces="text/plain;charset=UTF-8")
 	public ModelAndView requiredLogin_addEdms(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
-	//	getCurrentURL(request); // 로그아웃을 했을 때  현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+	//	getCurrentURL(request);
+		// 로그아웃을 했을 때  현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
 		// 위의 문장을 주석처리하고 게시판 - 글쓰기 - 로그인 - 로그아웃 을 하면  goBackURL이 없으므로 시작페이지로 간다!
 		
-		
+	
 		/* 유리 줄 부분 시작 */
-	      List<EmployeeVO> empList = service.addBook_depInfo_select();
-	      
-	      mav.addObject("empList", empList);
-	      
-	      System.out.println(request.getParameter("middle_empno"));
-	      System.out.println(request.getParameter("middle_name"));
-	      System.out.println(request.getParameter("middle_rank"));
-	      System.out.println(request.getParameter("middle_dept"));
-	      System.out.println(request.getParameter("last_empno"));
-	      System.out.println(request.getParameter("last_name"));
-	      System.out.println(request.getParameter("last_rank"));
-	      System.out.println(request.getParameter("last_dept"));
-	      
-	      /* 유리 줄 부분 끝 */
-	      
+		List<EmployeeVO> empList = service.addBook_depInfo_select();
+
+		mav.addObject("empList", empList);
+		
+		System.out.println("~~~ 조직도 시작 ~~~");
+		System.out.println("중간결재자 사번 => " + request.getParameter("middle_empno"));
+		System.out.println("중간결재자 이름 => " + request.getParameter("middle_name"));
+		System.out.println("중간결재자 직급 => " + request.getParameter("middle_rank"));
+		System.out.println("중간결재자 부서 => " + request.getParameter("middle_dept"));
+		System.out.println("최종결재자 사번 => " + request.getParameter("last_empno"));
+		System.out.println("최종결재자 이름 => " + request.getParameter("last_name"));
+		System.out.println("최종결재자 직급 => " + request.getParameter("last_rank"));
+		System.out.println("최종결재자 부서 => " + request.getParameter("last_dept"));
+		System.out.println("~~~ 조직도 끝 ~~~\n");
+		/* 유리 줄 부분 끝 */
+	    
+		
+		System.out.println("사번? " + request.getParameter("name"));
+		
+		
 		mav.setViewName("add.edms");
 		// /WEB-INF/views/edms/{1}.jsp
-		// /WEB-INF/views/edms/edmsAdd.jsp 페이지를 만들어야 한다.
+		// /WEB-INF/views/edms/add.jsp 페이지를 만들어야 한다.
 		return mav;
 		
 	}
-	
-	
-	// 전자결재 작성 시 주소록 불러오기 #yuly
-	/*
-	@ResponseBody
-	@RequestMapping(value="/edms/apprList.bts", produces="text/plain;charset=UTF-8")
-	public String apprList(HttpServletRequest request) {
 		
-		String apprName = request.getParameter("apprName"); // 뷰단에서 저장해줘야 하나?
-		
-		// 사원 명단 불러오기
-		List<EmployeeVO> apprList = service.searchApprEmpList(apprEmpName);
-
-		JSONArray jsonArr = new JSONArray();
-		if(ApprEmpList != null && ApprEmpList.size() > 0) {
-			for(EmployeeVO evo : ApprEmpList) {
-				JSONObject jsObj = new JSONObject();
-				jsObj.put("userid", evo.getPk_emp_no());
-				jsObj.put("name", evo.getEmp_name());
-								
-				jsonArr.put(jsObj);
-			}
-		}
-				
-		return jsonArr.toString();
-	}
-	*/
-	
 	// === (파일첨부가 있는)전자결재 문서작성 완료 요청 === //
 	@RequestMapping(value="/edms/edmsAddEnd.bts", method= {RequestMethod.POST})
 	public ModelAndView edmsAddEnd(Map<String,String> paraMap, ModelAndView mav, ApprVO apprvo, MultipartHttpServletRequest mrequest) { // <== After Advice 를 사용하기 및 파일 첨부하기
@@ -144,7 +123,8 @@ public class EdmsController {
 		// ===== 들어왔는지 찍어보는 곳 종료 ===== //
 		
 		// 파일첨부가 없는 전자결재 문서작성
-	/*
+	
+		System.out.println("/edms/edmsAddEnd.bts 시작");
 		System.out.println("~~~~~ 결재번호 apprvo.getPk_appr_no() => " + apprvo.getPk_appr_no());
 		System.out.println("~~~~~ 결재구분번호 apprvo.getFk_appr_sortno() => " + apprvo.getFk_appr_sortno()); 
 		System.out.println("~~~~~ 사원번호 apprvo.getFk_emp_no() => " + apprvo.getFk_emp_no()); 
@@ -156,7 +136,7 @@ public class EdmsController {
 		System.out.println("~~~~~ 최종승인여부 apprvo.getFin_accept() => " + apprvo.getFin_accept());
 		System.out.println("~~~~~ 결재작성일자 apprvo.getWriteday() => " + apprvo.getWriteday());
 		System.out.println("~~~~~ 파일읽음여부 apprvo.getViewcnt() => " + apprvo.getViewcnt());
-	*/
+	
 		
 		
 	/*
@@ -291,10 +271,7 @@ public class EdmsController {
 	
 	
 	
-	
-	
-	
-	// === 글목록 보기 페이지 요청 === //
+	// 전체 글목록 보기 //
 	@RequestMapping(value="/edms/list.bts")
 	public ModelAndView list(ModelAndView mav, HttpServletRequest request) {
 		
@@ -329,12 +306,15 @@ public class EdmsController {
 		 * 또는
 		 * list.bts?searchType=subject&searchWord=&currentShowPageNo=3 와 같이 해주어야 한다.
 		 */
-		
+		 
+//		String status = request.getParameter("status");
 		String searchType = request.getParameter("searchType");
 		String searchWord = request.getParameter("searchWord");
 		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
 		
-		if(searchType == null || (!"title".equals(searchType) && !"name".equals(searchType)) ) {
+		System.out.println("~~~ searchWord : " + searchWord);
+		
+		if(searchType == null || (!"title".equals(searchType) && !"emp_name".equals(searchType)) ) {
 			searchType = "";
 		}
 		
@@ -343,8 +323,31 @@ public class EdmsController {
 		}
 		
 		Map<String, String> paraMap = new HashMap<>();
+//		paraMap.put("status", status);
 		paraMap.put("searchType", searchType);
 		paraMap.put("searchWord", searchWord);
+		
+/*		
+		ApprVO apprvo = null;
+		
+		if( "yes".equals(session.getAttribute("readCountPermission")) ) {
+	 		// 글목록보기를 클릭한 다음에 특정글을 조회해온 경우이다.
+	 	 
+			apprvo = service.getView(paraMap);
+		 	// 글조회수 증가와 함께 글1개를 조회를 해주는 것 
+	 		
+	 		session.removeAttribute("readCountPermission");
+	 		// 중요함!! session 에 저장된 readCountPermission 을 삭제한다.
+	 	}
+	 	else {
+	 		// 웹브라우저에서 새로고침(F5)을 클릭한 경우이다. 
+	 		
+	 		apprvo = service.getViewWithNoAddCount(paraMap);
+		 	// 글조회수 증가는 없고 단순히 글1개 조회만을 해주는 것이다.  
+	 	}
+		
+		mav.addObject("apprvo", apprvo);
+*/		
 		
 		// 먼저 총 게시물 건수(totalCount)를 구해와야 한다.
 		// 총 게시물 건수(totalCount)는 검색조건이 있을 때와 없을때로 나뉘어진다. 
@@ -358,7 +361,7 @@ public class EdmsController {
 		
 		// 총 게시물 건수(totalCount)
 		totalCount = service.getTotalCount(paraMap);
-	//	System.out.println("~~~~~ 확인용 totalCount : " + totalCount);
+		System.out.println("~~~~~ 확인용 totalCount : " + totalCount);
 		
 		// 만약에 총 게시물 건수(totalCount)가 127개 이라면
 		// 총 페이지수(totalPage)는 13개가 되어야 한다.
@@ -410,6 +413,7 @@ public class EdmsController {
 		if(pageNo != 1) {
 			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1'>[맨처음]</a></li>";
 			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+			
 		}
 		
 		while( !(loop > blockSize || pageNo > totalPage) ) {
@@ -443,7 +447,7 @@ public class EdmsController {
 		 * 현재 페이지 주소를 뷰단으로 넘겨준다.
 		 */		
 		String gobackURL = MyUtil.getCurrentURL(request);
-//		System.out.println("~~~++~~ 확인용 gobackURL : " + gobackURL);
+		// System.out.println("~~~++~~ 확인용 gobackURL : " + gobackURL);
 		
 		mav.addObject("gobackURL", gobackURL.replaceAll("&", " "));
 		// ==== 페이징 처리를 한 검색어가 있는 전체 글목록 보여주기 끝 ====
@@ -456,9 +460,400 @@ public class EdmsController {
 		return mav;		
 	}
 	
+	
+	// === 대기중인 보기 페이지 요청 === //
+	@RequestMapping(value="/edms/wait/list.bts")
+	public ModelAndView list_wait(ModelAndView mav, HttpServletRequest request) {
+		
+		getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출
+		
+		List<ApprVO> edmsList = null;
+		
+		HttpSession session = request.getSession();
+		session.setAttribute("readCountPermission", "yes");
+		
+		String status = request.getParameter("status");
+		String searchType = request.getParameter("searchType");
+		String searchWord = request.getParameter("searchWord");
+		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
+		
+		System.out.println("~~~ searchWord : " + searchWord);
+		
+		if(searchType == null || (!"title".equals(searchType) && !"emp_name".equals(searchType)) ) {
+			searchType = "";
+		}
+		
+		if(searchWord == null || "".equals(searchWord) || searchWord.trim().isEmpty() ) {
+			searchWord = "";
+		}
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("status", status);
+		paraMap.put("searchType", searchType);
+		paraMap.put("searchWord", searchWord);
+		
+		// 먼저 총 게시물 건수(totalCount)를 구해와야 한다.
+		// 총 게시물 건수(totalCount)는 검색조건이 있을 때와 없을때로 나뉘어진다. 
+		int totalCount = 0;			// 총 게시물 건수
+		int sizePerPage = 10;		// 한 페이지당 보여줄 게시물 건수 
+		int currentShowPageNo = 0;	// 현재 보여주는 페이지번호로서, 초기치로는 1페이지로 설정함.
+		int totalPage = 0;			// 총 페이지수(웹브라우저상에서 보여줄 총 페이지 개수, 페이지바)
+		
+		int startRno = 0;			// 시작 행번호
+		int endRno = 0;				// 끝 행번호
+		
+		// 총 게시물 건수(totalCount)
+		totalCount = service.getTotalCount(paraMap);
+		System.out.println("~~~~~ 확인용 totalCount : " + totalCount);
+		
+		// 만약에 총 게시물 건수(totalCount)가 127개 이라면 총 페이지수(totalPage)는 13개가 되어야 한다.
+		
+		totalPage = (int) Math.ceil((double)totalCount/sizePerPage);
+		
+		if(str_currentShowPageNo == null) { // 게시판에 보여지는 초기화면
+			currentShowPageNo = 1;
+		}
+		else {
+			try {
+				currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+				if( currentShowPageNo < 1 || currentShowPageNo > totalPage) { currentShowPageNo = 1; }
+			} catch(NumberFormatException e) {
+				currentShowPageNo = 1;
+			}
+		}
+		
+		// *** 가져올 게시글의 범위 구하기 시작 *** //		
+		startRno = ((currentShowPageNo - 1) * sizePerPage) + 1;
+		endRno = startRno + sizePerPage - 1;
+		
+		paraMap.put("startRno", String.valueOf(startRno));
+		paraMap.put("endRno", String.valueOf(endRno));		
+		
+		edmsList = service.edmsListSearchWithPaging_wait(paraMap);
+		// 페이징한 대기문서 목록 가져오기(검색유무 상관없이 모두 가져온다.)
+		
+		// 검색대상 컬럼과 검색어 유지
+		if( !"".equals(searchType) && !"".equals(searchWord) ) {
+			mav.addObject("paraMap", paraMap);
+		}
+		
+		// 페이지바 만들기
+		int blockSize = 10; // 1개의 블록마다 보여질 페이지번호의 개수 1 2 3 ... 10 [다음] 이런 식!
+		int loop = 1;
+		
+		int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+		
+		String pageBar = "<ul style='list-style: none;'>";
+		String url = "list.bts";
+		
+		// === [맨처음][이전] 만들기 === //
+		if(pageNo != 1) {
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1'>[맨처음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+		}
+		while( !(loop > blockSize || pageNo > totalPage) ) {
+			if(pageNo == currentShowPageNo) {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";  
+			}
+			else {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>"; 
+			}
+			
+			loop++;
+			pageNo++;
+			
+		}// end of while-----------------------
+		
+		// === [다음][마지막] 만들기 === //
+		if( pageNo <= totalPage ) {
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>"; 
+		}
+		
+		pageBar += "</ul>";
+		mav.addObject("pageBar", pageBar);
+		
+		String gobackURL = MyUtil.getCurrentURL(request);
+		
+		mav.addObject("gobackURL", gobackURL.replaceAll("&", " "));
+		// ==== 페이징 처리를 한 검색어가 있는 전체 글목록 보여주기 끝 ====
+		
+		mav.addObject("edmsList", edmsList);
+		mav.setViewName("wait/list.edms");
+		
+		return mav;		
+	}
+	
+	
+	
+	
+	
+	// === 승인인 보기 페이지 요청 === //
+	@RequestMapping(value="/edms/accept/list.bts")
+	public ModelAndView list_accept(ModelAndView mav, HttpServletRequest request) {
+		
+		getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출
+		
+		List<ApprVO> edmsList = null;
+		
+		HttpSession session = request.getSession();
+		session.setAttribute("readCountPermission", "yes");
+		
+		String status = request.getParameter("status");
+		String searchType = request.getParameter("searchType");
+		String searchWord = request.getParameter("searchWord");
+		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
+		
+		System.out.println("~~~ searchWord : " + searchWord);
+		
+		if(searchType == null || (!"title".equals(searchType) && !"emp_name".equals(searchType)) ) {
+			searchType = "";
+		}
+		
+		if(searchWord == null || "".equals(searchWord) || searchWord.trim().isEmpty() ) {
+			searchWord = "";
+		}
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("status", status);
+		paraMap.put("searchType", searchType);
+		paraMap.put("searchWord", searchWord);
+		
+		// 먼저 총 게시물 건수(totalCount)를 구해와야 한다.
+		// 총 게시물 건수(totalCount)는 검색조건이 있을 때와 없을때로 나뉘어진다. 
+		int totalCount = 0;			// 총 게시물 건수
+		int sizePerPage = 10;		// 한 페이지당 보여줄 게시물 건수 
+		int currentShowPageNo = 0;	// 현재 보여주는 페이지번호로서, 초기치로는 1페이지로 설정함.
+		int totalPage = 0;			// 총 페이지수(웹브라우저상에서 보여줄 총 페이지 개수, 페이지바)
+		
+		int startRno = 0;			// 시작 행번호
+		int endRno = 0;				// 끝 행번호
+		
+		// 총 게시물 건수(totalCount)
+		totalCount = service.getTotalCount(paraMap);
+		System.out.println("~~~~~ 확인용 totalCount : " + totalCount);
+		
+		// 만약에 총 게시물 건수(totalCount)가 127개 이라면 총 페이지수(totalPage)는 13개가 되어야 한다.
+		
+		totalPage = (int) Math.ceil((double)totalCount/sizePerPage);
+		
+		if(str_currentShowPageNo == null) { // 게시판에 보여지는 초기화면
+			currentShowPageNo = 1;
+		}
+		else {
+			try {
+				currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+				if( currentShowPageNo < 1 || currentShowPageNo > totalPage) { currentShowPageNo = 1; }
+			} catch(NumberFormatException e) {
+				currentShowPageNo = 1;
+			}
+		}
+		
+		// *** 가져올 게시글의 범위 구하기 시작 *** //		
+		startRno = ((currentShowPageNo - 1) * sizePerPage) + 1;
+		endRno = startRno + sizePerPage - 1;
+		
+		paraMap.put("startRno", String.valueOf(startRno));
+		paraMap.put("endRno", String.valueOf(endRno));		
+		
+		edmsList = service.edmsListSearchWithPaging_accept(paraMap);
+		// 페이징한 대기문서 목록 가져오기(검색유무 상관없이 모두 가져온다.)
+		
+		// 검색대상 컬럼과 검색어 유지
+		if( !"".equals(searchType) && !"".equals(searchWord) ) {
+			mav.addObject("paraMap", paraMap);
+		}
+		
+		// 페이지바 만들기
+		int blockSize = 10; // 1개의 블록마다 보여질 페이지번호의 개수 1 2 3 ... 10 [다음] 이런 식!
+		int loop = 1;
+		
+		int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+		
+		String pageBar = "<ul style='list-style: none;'>";
+		String url = "list.bts";
+		
+		// === [맨처음][이전] 만들기 === //
+		if(pageNo != 1) {
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1'>[맨처음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+		}
+		while( !(loop > blockSize || pageNo > totalPage) ) {
+			if(pageNo == currentShowPageNo) {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";  
+			}
+			else {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>"; 
+			}
+			
+			loop++;
+			pageNo++;
+			
+		}// end of while-----------------------
+		
+		// === [다음][마지막] 만들기 === //
+		if( pageNo <= totalPage ) {
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>"; 
+		}
+		
+		pageBar += "</ul>";
+		mav.addObject("pageBar", pageBar);
+		
+		String gobackURL = MyUtil.getCurrentURL(request);
+		
+		mav.addObject("gobackURL", gobackURL.replaceAll("&", " "));
+		// ==== 페이징 처리를 한 검색어가 있는 전체 글목록 보여주기 끝 ====
+		
+		mav.addObject("edmsList", edmsList);
+		mav.setViewName("accept/list.edms");
+		
+		return mav;		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// === 반려문서 보기 페이지 요청 === //
+	@RequestMapping(value="/edms/reject/list.bts")
+	public ModelAndView list_reject(ModelAndView mav, HttpServletRequest request) {
+		
+		getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출
+		
+		List<ApprVO> edmsList = null;
+		
+		HttpSession session = request.getSession();
+		session.setAttribute("readCountPermission", "yes");
+		
+		String status = request.getParameter("status");
+		String searchType = request.getParameter("searchType");
+		String searchWord = request.getParameter("searchWord");
+		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
+		
+		System.out.println("~~~ searchWord : " + searchWord);
+		
+		if(searchType == null || (!"title".equals(searchType) && !"emp_name".equals(searchType)) ) {
+			searchType = "";
+		}
+		
+		if(searchWord == null || "".equals(searchWord) || searchWord.trim().isEmpty() ) {
+			searchWord = "";
+		}
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("status", status);
+		paraMap.put("searchType", searchType);
+		paraMap.put("searchWord", searchWord);
+		
+		// 먼저 총 게시물 건수(totalCount)를 구해와야 한다.
+		// 총 게시물 건수(totalCount)는 검색조건이 있을 때와 없을때로 나뉘어진다. 
+		int totalCount = 0;			// 총 게시물 건수
+		int sizePerPage = 10;		// 한 페이지당 보여줄 게시물 건수 
+		int currentShowPageNo = 0;	// 현재 보여주는 페이지번호로서, 초기치로는 1페이지로 설정함.
+		int totalPage = 0;			// 총 페이지수(웹브라우저상에서 보여줄 총 페이지 개수, 페이지바)
+		
+		int startRno = 0;			// 시작 행번호
+		int endRno = 0;				// 끝 행번호
+		
+		// 총 게시물 건수(totalCount)
+		totalCount = service.getTotalCount(paraMap);
+		System.out.println("~~~~~ 확인용 totalCount : " + totalCount);
+		
+		// 만약에 총 게시물 건수(totalCount)가 127개 이라면 총 페이지수(totalPage)는 13개가 되어야 한다.
+		
+		totalPage = (int) Math.ceil((double)totalCount/sizePerPage);
+		
+		if(str_currentShowPageNo == null) { // 게시판에 보여지는 초기화면
+			currentShowPageNo = 1;
+		}
+		else {
+			try {
+				currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+				if( currentShowPageNo < 1 || currentShowPageNo > totalPage) { currentShowPageNo = 1; }
+			} catch(NumberFormatException e) {
+				currentShowPageNo = 1;
+			}
+		}
+		
+		// *** 가져올 게시글의 범위 구하기 시작 *** //		
+		startRno = ((currentShowPageNo - 1) * sizePerPage) + 1;
+		endRno = startRno + sizePerPage - 1;
+		
+		paraMap.put("startRno", String.valueOf(startRno));
+		paraMap.put("endRno", String.valueOf(endRno));		
+		
+		edmsList = service.edmsListSearchWithPaging_reject(paraMap);
+		// 페이징한 대기문서 목록 가져오기(검색유무 상관없이 모두 가져온다.)
+		
+		// 검색대상 컬럼과 검색어 유지
+		if( !"".equals(searchType) && !"".equals(searchWord) ) {
+			mav.addObject("paraMap", paraMap);
+		}
+		
+		// 페이지바 만들기
+		int blockSize = 10; // 1개의 블록마다 보여질 페이지번호의 개수 1 2 3 ... 10 [다음] 이런 식!
+		int loop = 1;
+		
+		int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+		
+		String pageBar = "<ul style='list-style: none;'>";
+		String url = "list.bts";
+		
+		// === [맨처음][이전] 만들기 === //
+		if(pageNo != 1) {
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1'>[맨처음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+		}
+		while( !(loop > blockSize || pageNo > totalPage) ) {
+			if(pageNo == currentShowPageNo) {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";  
+			}
+			else {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>"; 
+			}
+			
+			loop++;
+			pageNo++;
+			
+		}// end of while-----------------------
+		
+		// === [다음][마지막] 만들기 === //
+		if( pageNo <= totalPage ) {
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>"; 
+		}
+		
+		pageBar += "</ul>";
+		mav.addObject("pageBar", pageBar);
+		
+		String gobackURL = MyUtil.getCurrentURL(request);
+		
+		mav.addObject("gobackURL", gobackURL.replaceAll("&", " "));
+		// ==== 페이징 처리를 한 검색어가 있는 전체 글목록 보여주기 끝 ====
+		
+		mav.addObject("edmsList", edmsList);
+		mav.setViewName("reject/list.edms");
+		
+		return mav;		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	// === 전자결재 대기문서 상세보기 페이지 === //
 	@RequestMapping(value="/edms/view.bts", produces="text/plain;charset=UTF-8")
-	public ModelAndView view(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView requiredLogin_view(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		getCurrentURL(request); // 로그아웃을 했을 때  현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
 		// 위의 문장을 주석처리하고 게시판 - 글쓰기 - 로그인 - 로그아웃 을 하면  goBackURL이 없으므로 시작페이지로 간다!
@@ -467,12 +862,13 @@ public class EdmsController {
 	 	String pk_appr_no = request.getParameter("pk_appr_no");
 	 	// 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다. 
 
-	 	
 	 	String fk_emp_no = request.getParameter("fk_emp_no");
 	 	System.out.println("~~~~~ view.bts에서 확인용 fk_emp_no " + fk_emp_no);
 //	 	System.out.println("~~~~~ view.bts에서 확인용 apprvo.getFk_emp_no => " + apprvo.getFk_emp_no());
 	 	
-	 	
+
+	 	String fk_mid_empno = request.getParameter("fk_mid_empno");
+	 	System.out.println("~~~~~ view.bts에서 확인용 중간결재자 " + fk_mid_empno);
 	 	
 	 	
 	 	String searchType = request.getParameter("searchType");
@@ -561,7 +957,7 @@ public class EdmsController {
 		 	
 		 	mav.addObject("apprvo", apprvo);
 		 	
-		 	System.out.println("확인용 apprvo 작성일자 => " + apprvo.getWriteday());
+		 	// System.out.println("확인용 apprvo 작성일자 => " + apprvo.getWriteday());
 		 	
 		 	//////////////////////////////////////////
 		 	
@@ -728,12 +1124,11 @@ public class EdmsController {
 			// 글작성자인지 확인하기 위해 사번을 입력받는 del.jsp 페이지를 띄우도록 한다. 
 			mav.addObject("pk_appr_no", pk_appr_no);
 			mav.setViewName("del.edms");
+			mav.addObject("apprvo", apprvo);
+			// ****** 오류 = if 문 안에 들어가서 널값이 뜬 것이었다
+			// ****** 오류 이게 없어서 del에서 삭제가 되지 않았다. 뷰단에서 apprvo 에서 fk_emp_no가 없어서				
+
 		}
-		
-		
-		// 오류 = if 문 안에 안 들어가서 자꾸 널값이 뜬 것이었다
-		mav.addObject("apprvo", apprvo);						// 오류 이게 없어서 del에서 삭제가 되지 않았다. 뷰단에서 apprvo 에서 fk_emp_
-		
 		
 		return mav;
 	}
@@ -783,8 +1178,6 @@ public class EdmsController {
 		return mav;
 	}
 	
-	
-	
 	// === 승인하기 페이지 요청하기 === //
 	@RequestMapping(value="/edms/appr/accept.bts")
 	public ModelAndView requiredLogin_accept(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
@@ -792,9 +1185,17 @@ public class EdmsController {
 		// 승인하기 할 글번호 가져오기
 		String pk_appr_no = request.getParameter("pk_appr_no");
 		
+		// 결재자 사번 가져오기
+		String fk_mid_empno = request.getParameter("fk_mid_empno");
+		String fk_fin_empno = request.getParameter("fk_fin_empno");
+		
 		// 승인해야 할 글1개 내용을 가져와서 로그인+중간결재자인 사람이라면 승인이 가능하지만 다른 사람은 승인이 불가능하도록 해야 한다.
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("pk_appr_no", pk_appr_no);
+		paraMap.put("fk_mid_empno", fk_mid_empno);
+		paraMap.put("fk_fin_empno", fk_fin_empno);
+		
+		System.out.println("중간결재 paraMap 확인용 " + pk_appr_no);
 				
 		ApprVO apprvo = service.getViewWithNoAddCount(paraMap);
 		// 글조회수(readCount) 증가 없이 단순히 글1개만 조회해주는 것이다.
@@ -804,10 +1205,11 @@ public class EdmsController {
 
 		System.out.println("승인- 확인용 pk_appr_no " + pk_appr_no);
 		System.out.println("승인- 확인용 apprvo.getTitle() " + apprvo.getTitle());
-		System.out.println("승인- 확인용 apprvo.getFk_emp_no() " + apprvo.getFk_emp_no());
+		System.out.println("중간결재 apprvo 확인용 empno " + apprvo.getFk_mid_empno());
 		
-		/* if( loginuser.getPk_emp_no() != apprvo.getFk_emp_no() ) { */
-		if( loginuser.getPk_emp_no() != apprvo.getFk_emp_no() ) {
+		// 로그인한 사용자가 1. mid_emp_no 이거나 2. fin_emp_no일 때만 가능하도록 막아주기 
+		if( loginuser.getPk_emp_no() != apprvo.getFk_mid_empno() ||
+				loginuser.getPk_emp_no() != apprvo.getFk_mid_empno() ) { 
 			
 			String message = "승인할 수 있는 권한이 없습니다.";
 			String loc = "javascript:history.back()";
@@ -817,51 +1219,145 @@ public class EdmsController {
 			mav.setViewName("msg");
 		}
 		
-		else {
-			// 자신의 글을 삭제할 경우
-			// 글작성자인지 확인하기 위해 사번을 입력받는 del.jsp 페이지를 띄우도록 한다. 
+		// 중간 결재자인 경우
+		else if( loginuser.getPk_emp_no() == apprvo.getFk_mid_empno() ) {
 			mav.addObject("pk_appr_no", pk_appr_no);
-			mav.setViewName("accept.edms");
+			mav.addObject("fk_mid_empno", apprvo.getFk_mid_empno());
+			mav.setViewName("appr/accept.edms");
+			
+			System.out.println("중간결재 mav 확인용 empno " + apprvo.getFk_mid_empno());			
 		}
 		
+		// 최종결재자인 경우
+		else if( loginuser.getPk_emp_no() == apprvo.getFk_fin_empno() ) {
+			mav.addObject("pk_appr_no", pk_appr_no);
+			mav.addObject("fk_fin_empno", apprvo.getFk_fin_empno());
+			mav.setViewName("appr/accept.edms");
+			
+			System.out.println("최종결재 mav 확인용 empno " + apprvo.getFk_fin_empno());	
+		}
 		
-		// 오류 = if 문 안에 안 들어가서 자꾸 널값이 뜬 것이었다
-		mav.addObject("apprvo", apprvo);						// 오류 이게 없어서 del에서 삭제가 되지 않았다. 뷰단에서 apprvo 에서 fk_emp_
-		
+		mav.addObject("apprvo", apprvo);
 		
 		return mav;
 	}
 
-		// === 글승인 페이지 완료하기 === //
-		@RequestMapping(value="/edms/appr/acceptEnd.bts", method= {RequestMethod.POST})
-		public ModelAndView acceptEnd(ModelAndView mav, HttpServletRequest request) {
-			
-			String pk_appr_no = request.getParameter("pk_appr_no");
-			
-			Map<String, String> paraMap = new HashMap<>();
-			paraMap.put("pk_appr_no", pk_appr_no);
-			
-			ApprVO apprvo = service.getViewWithNoAddCount(paraMap);
-			
-			int n = service.accept(apprvo);
-			
-			if(n==1) {
-				mav.addObject("message", "승인 성공!!");
-				mav.addObject("loc", request.getContextPath()+"/edms/list.bts");
-			}
-			else {
-				mav.addObject("message", "승인 실패!!");
-				mav.addObject("loc", "javascript:history.back()");
-			}
-			
-			mav.setViewName("msg");
-			
-			return mav;
+	// === 승인하기 페이지 완료하기 === //
+	@RequestMapping(value="/edms/appr/acceptEnd.bts", method= {RequestMethod.POST})
+	public ModelAndView acceptEnd(ModelAndView mav, HttpServletRequest request) {
+		
+		String pk_appr_no = request.getParameter("pk_appr_no");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("pk_appr_no", pk_appr_no);
+		
+		ApprVO apprvo = service.getViewWithNoAddCount(paraMap);
+		int n = service.accept(apprvo);
+		
+		if(n==1) {
+			mav.addObject("message", "승인 성공!!");
+			mav.addObject("loc", request.getContextPath()+"/edms/list.bts");
 		}
+		else {
+			mav.addObject("message", "승인 실패!!");
+			mav.addObject("loc", "javascript:history.back()");
+		}
+		
+		mav.setViewName("msg");
+		
+		return mav;
+	}
 	
 	
 	
-	
+	// === 반려하기 페이지 요청하기 === //
+	@RequestMapping(value="/edms/appr/reject.bts")
+	public ModelAndView requiredLogin_reject(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
+		
+		// 승인하기 할 글번호 가져오기
+		String pk_appr_no = request.getParameter("pk_appr_no");
+		
+		// 결재자 사번 가져오기
+		String fk_mid_empno = request.getParameter("fk_mid_empno");
+		String fk_fin_empno = request.getParameter("fk_fin_empno");
+		
+		// 승인해야 할 글1개 내용을 가져와서 로그인+중간결재자인 사람이라면 승인이 가능하지만 다른 사람은 승인이 불가능하도록 해야 한다.
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("pk_appr_no", pk_appr_no);
+		paraMap.put("fk_mid_empno", fk_mid_empno);
+		paraMap.put("fk_fin_empno", fk_fin_empno);
+		
+		System.out.println("중간결재 paraMap 확인용 " + pk_appr_no);
+				
+		ApprVO apprvo = service.getViewWithNoAddCount(paraMap);
+		// 글조회수(readCount) 증가 없이 단순히 글1개만 조회해주는 것이다.
+		
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+
+		System.out.println("승인- 확인용 pk_appr_no " + pk_appr_no);
+		System.out.println("승인- 확인용 apprvo.getTitle() " + apprvo.getTitle());
+		System.out.println("중간결재 apprvo 확인용 empno " + apprvo.getFk_mid_empno());
+		
+		// 로그인한 사용자가 1. mid_emp_no 이거나 2. fin_emp_no일 때만 가능하도록 막아주기 
+		if( loginuser.getPk_emp_no() != apprvo.getFk_mid_empno() ||
+				loginuser.getPk_emp_no() != apprvo.getFk_mid_empno() ) { 
+			
+			String message = "승인할 수 있는 권한이 없습니다.";
+			String loc = "javascript:history.back()";
+			
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+			mav.setViewName("msg");
+		}
+		
+		// 중간 결재자인 경우
+		else if( loginuser.getPk_emp_no() != apprvo.getFk_mid_empno() ) {
+			mav.addObject("pk_appr_no", pk_appr_no);
+			mav.addObject("fk_mid_empno", apprvo.getFk_mid_empno());
+			mav.setViewName("appr/accept.edms");
+			
+			System.out.println("중간결재 mav 확인용 empno " + apprvo.getFk_mid_empno());			
+		}
+		
+		// 최종결재자인 경우
+		else if( loginuser.getPk_emp_no() != apprvo.getFk_fin_empno() ) {
+			mav.addObject("pk_appr_no", pk_appr_no);
+			mav.addObject("fk_mid_empno", apprvo.getFk_fin_empno());
+			mav.setViewName("appr/accept.edms");
+		}
+		
+		mav.addObject("apprvo", apprvo);
+		
+		return mav;
+	}
+
+	// === 반려하기 페이지 완료하기 === //
+	@RequestMapping(value="/edms/appr/rejectEnd.bts", method= {RequestMethod.POST})
+	public ModelAndView rejectEnd(ModelAndView mav, HttpServletRequest request) {
+		
+		String pk_appr_no = request.getParameter("pk_appr_no");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("pk_appr_no", pk_appr_no);
+		
+		ApprVO apprvo = service.getViewWithNoAddCount(paraMap);
+		
+		int n = service.reject(apprvo);
+		
+		if(n==1) {
+			mav.addObject("message", "반려 성공!!");
+			mav.addObject("loc", request.getContextPath()+"/edms/list.bts");
+		}
+		else {
+			mav.addObject("message", "반려 실패!!");
+			mav.addObject("loc", "javascript:history.back()");
+		}
+		
+		mav.setViewName("msg");
+		
+		return mav;
+	}
 	
 	
 	
@@ -891,6 +1387,7 @@ public class EdmsController {
 		String searchWord = request.getParameter("searchWord");
 		
 		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("emp_name", emp_name);
 		paraMap.put("searchType", searchType);
 		paraMap.put("searchWord", searchWord);
 		
@@ -929,8 +1426,8 @@ public class EdmsController {
 	@RequestMapping(value="/edms/download.bts")
 	public void requiredLogin_download(HttpServletRequest request, HttpServletResponse response) {
 		
-		String pk_appr_vo = request.getParameter("pk_appr_vo");
-		System.out.println("++ 다운로드 확인용 pk_appr_vo : "+pk_appr_vo);
+		String pk_appr_no = request.getParameter("pk_appr_no");
+		System.out.println("++ 다운로드 확인용 pk_appr_no : "+pk_appr_no);
 		// 첨부파일이 있는 글번호 
 		
 		/*
@@ -943,7 +1440,7 @@ public class EdmsController {
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("searchType", "");
 		paraMap.put("searchWord", "");
-		paraMap.put("pk_appr_vo", pk_appr_vo);
+		paraMap.put("pk_appr_no", pk_appr_no);
 		
 		System.out.println("++ 다운로드 확인용 searchType : "+ paraMap.get("searchType"));
 		System.out.println("++ 다운로드 확인용 searchWord : "+ paraMap.get("searchWord"));
@@ -953,7 +1450,7 @@ public class EdmsController {
 		// out 은 웹브라우저에 기술하는 대상체라고 생각하자.
 		
 		try {
-			Integer.parseInt(pk_appr_vo);
+			Integer.parseInt(pk_appr_no);
 			ApprVO apprvo = service.getViewWithNoAddCount(paraMap);
 			
 			if(apprvo == null || (apprvo != null && apprvo.getFilename() == null ) ) {
@@ -966,21 +1463,22 @@ public class EdmsController {
 			else {
 				// 정상적으로 다운로드를 할 경우
 				
-				String filename = apprvo.getFilename();
+				String fileName = apprvo.getFilename();
 				// 20220429141939883981362180900.jpg  이것인 바로 WAS(톰캣) 디스크에 저장된 파일명이다. 
 				
-				String orgfilename = apprvo.getOrgfilename();
+				String orgFilename = apprvo.getOrgfilename();
 				// 쉐보레전면.jpg  다운로드시 보여줄 파일명 
 				
 				
 				// 첨부파일이 저장되어 있는 WAS(톰캣)의 디스크 경로명을 알아와야만 다운로드를 해줄수 있다. 
-	            // 이 경로는 우리가 파일첨부를 위해서 /addEnd.action 에서 설정해두었던 경로와 똑같아야 한다.
+	            // 이 경로는 우리가 파일첨부를 위해서 /edmsAddEnd.bts 에서 설정해두었던 경로와 똑같아야 한다.
 	            // WAS 의 webapp 의 절대경로를 알아와야 한다.
 				HttpSession session = request.getSession();
 				String root = session.getServletContext().getRealPath("/");
 				
 				System.out.println("++ 다운로드 확인용  webapp 의 절대경로 => " + root);
-				// ~~~~ 확인용  webapp 의 절대경로 => C:\NCS\workspace(spring)\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Board\ 
+				// C:\NCS\workspace(spring)\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Board\ 
+				// C:\NCS\workspace(spring)\.metadata\.plugins\org.eclipse.wst.server.core\tmp1\wtpwebapps\BTSGroupWare\
 				
 				String path = root+"resources"+File.separator+"files";
 				/* File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
@@ -990,11 +1488,12 @@ public class EdmsController {
 				
 				// path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다.
 				System.out.println("++ 다운로드 확인용  path => " + path);
-				// ~~~~ 확인용  path => C:\NCS\workspace(spring)\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Board\resources\files 
+				// C:\NCS\workspace(spring)\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Board\resources\files
+				// C:\NCS\workspace(spring)\.metadata\.plugins\org.eclipse.wst.server.core\tmp1\wtpwebapps\BTSGroupWare\resources\files 
 				
 				// **** file 다운로드 하기 **** //
 				boolean flag = false; // file 다운로드 성공, 실패를 알려주는 용도
-				flag = fileManager.doFileDownload(filename, orgfilename, path, response);
+				flag = fileManager.doFileDownload(fileName, orgFilename, path, response);
 				// file 다운로드 성공시 flag 는 true, 
 				// file 다운로드 실패시 flag 는 false 를 가진다. 
 				
@@ -1105,21 +1604,24 @@ public class EdmsController {
 	// === 전자결재 홈 페이지 === //
 	// 주소록 연락처 추가 페이지 
    @RequestMapping(value="/edms/modal.bts")
-   public ModelAndView modal(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+   public ModelAndView modal(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, ApprVO apprvo) {
       
       /* 유리 줄 부분 시작 */
       List<EmployeeVO> empList = service.addBook_depInfo_select();
       
       mav.addObject("empList", empList);
       
-      System.out.println(request.getParameter("middle_empno"));
-      System.out.println(request.getParameter("middle_name"));
-      System.out.println(request.getParameter("middle_rank"));
-      System.out.println(request.getParameter("middle_dept"));
-      System.out.println(request.getParameter("last_empno"));
-      System.out.println(request.getParameter("last_name"));
-      System.out.println(request.getParameter("last_rank"));
-      System.out.println(request.getParameter("last_dept"));
+      System.out.println("모달창 확인용 => " + request.getParameter("middle_empno"));
+      System.out.println("모달창 확인용 => " + request.getParameter("middle_name"));
+      System.out.println("모달창 확인용 => " + request.getParameter("middle_rank"));
+      System.out.println("모달창 확인용 => " + request.getParameter("middle_dept"));
+      System.out.println("모달창 확인용 => " + request.getParameter("last_empno"));
+      System.out.println("모달창 확인용 => " + request.getParameter("last_name"));
+      System.out.println("모달창 확인용 => " + request.getParameter("last_rank"));
+      System.out.println("모달창 확인용 => " + request.getParameter("last_dept"));
+      
+      System.out.println("모달창 확인용 => " + apprvo.getFk_mid_empno());
+      System.out.println("모달창 확인용 => " + apprvo.getFk_fin_empno());
       
       /* 유리 줄 부분 끝 */
       

@@ -159,7 +159,7 @@ margin: 10px;
 
 	<form name="ko_depname" style="float: right; margin-right: 8%; margin-bottom: 10px; margin-top: 10px;">
 		<select name="ko_depname" id="ko_depname"  onchange="formChange(this.form)" style="height: 26px;">
-				<option value="" selected disabled>==부서 선택==</option>	
+				<option value="" selected disabled>ㅡ부서 선택ㅡ</option>	
 				<option value="">전체</option>	
 				<option value="공통">공통</option>
 				<option value="영업">영업</option>				 								
@@ -175,14 +175,11 @@ margin: 10px;
 		<table class="table table-hover" style="width: 85%; margin-left: auto; margin-right: auto;">
 		<thead>
 			<tr>
-				<th scope="col" class="text-center" style="width: 40px;">번호</th>	
-				<th scope="col" class="text-center" style="width: 11px;"></th>	
-				<th scope="col" class="text-center" style="width: 11px;"></th>	
-				<th scope="col" class="text-center" style="width: 40px;"></th>
-				<th scope="col" class="text-center" style="width: 170px;">제목</th>
-				<th scope="col" class="text-center" style="width: 90px;">글쓴이</th>
-				<th scope="col" class="text-center" style="width: 150px;">작성일</th>
-				<th scope="col" class="text-center" style="width: 70px;">조회수</th>
+				<th scope="col" class="text-center" style="width: 90px;">번호</th>	
+				<th scope="col" class="text-center" colspan="4" style="width: 200px;">제목</th>
+				<th scope="col" class="text-center" style="width: 120px;">글쓴이</th>
+				<th scope="col" class="text-center" style="width: 250px;">작성일</th>
+				<th scope="col" class="text-center" style="width: 100px;">조회수</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -192,13 +189,13 @@ margin: 10px;
 			          ${fileboardvo.pk_seq}
 			      </td>
 		
-				  <td align="center">
+				  <td align="center" style="width: 25px;">
 			         <c:if test="${not empty fileboardvo.filename}">
-			         <img src="<%= ctxPath%>/resources/images/disk.gif" />	
+			         <img style="width: 12px;" src="<%= ctxPath%>/resources/images/disk.gif" />	
 			         </c:if>          
 			      </td>
 		
-				  <td>
+				  <td align="center" style="width: 25px;">
 				  <c:set var="text" value="${fileboardvo.content}"/>
 
 				  <c:if test="${fn:contains(text, 'img src')}">
@@ -206,7 +203,7 @@ margin: 10px;
 				  </c:if>
 				  </td>
 		
-					<td align="center" style="font-size: 9pt; color: gray;">[${fileboardvo.ko_depname}]</td>
+					<td align="center" style="font-size: 9pt; color: gray; width: 60px; ">[${fileboardvo.ko_depname}]</td>
 		
 					<td style="text-align: left;">
 						
@@ -255,7 +252,7 @@ margin: 10px;
 		</select>
 		<input type="text" name="searchWord" id="searchWord" size="40" autocomplete="off" /> 
 		<input type="text" style="display: none;"/> <%-- form 태그내에 input 태그가 오로지 1개 뿐일경우에는 엔터를 했을 경우 검색이 되어지므로 이것을 방지하고자 만든것이다. --%> 
-		<button type="button" style="width: 30px" onclick="goSearch()">
+		<button type="button" style="width: 30px; border:none;" onclick="goSearch()">
 		<i class="fa fa-search fa-fw" aria-hidden="true"></i>
 		
 		</button>

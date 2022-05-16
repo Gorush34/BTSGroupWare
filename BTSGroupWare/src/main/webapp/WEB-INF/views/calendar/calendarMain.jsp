@@ -177,8 +177,8 @@
 	      	    $("form > input[name=chooseDate]").val(info.dateStr);
 	      	    
 	      	    var frm = document.dateFrm;
-	      	    frm.method="POST";
 	      	    frm.action="<%= ctxPath%>/calendar/scheduleRegister.bts";
+	      	    frm.method="POST";
 	      	    frm.submit();
 	      	  }, 
 	      	// === 사내캘린더, 내캘린더, 공유받은캘린더의 체크박스에 체크유무에 따라 일정을 보여주거나 일정을 숨기게 하는 것이다. ===

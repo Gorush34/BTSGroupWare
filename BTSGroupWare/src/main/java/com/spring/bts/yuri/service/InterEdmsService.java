@@ -50,5 +50,17 @@ public interface InterEdmsService {
 	// 승인하기
 	int accept(ApprVO apprvo);
 	
+	// 반려하기
+	int reject(ApprVO apprvo);
+
+	// 대기목록 보기
+	List<ApprVO> edmsListSearchWithPaging_wait(Map<String, String> paraMap);
+
+	// 승인 목록 보기
+	List<ApprVO> edmsListSearchWithPaging_accept(Map<String, String> paraMap);
+
+	// 반려 목록 보기
+	List<ApprVO> edmsListSearchWithPaging_reject(Map<String, String> paraMap);
+	
 	
 }

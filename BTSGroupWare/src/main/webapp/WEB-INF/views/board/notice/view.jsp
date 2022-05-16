@@ -128,6 +128,26 @@
  <script>
  $(document).ready(function(){
 
+	/// 글삭제
+	 $("button#btnDelete").click(function(){
+		  
+		 if( "${noticevo.pw}" != $("input#pw").val() ) {
+			 alert("글암호가 일치하지 않습니다.");
+			 return;
+		 } 
+		 else {
+			// 폼(form)을 전송(submit)
+			const frm = document.delFrm;
+			frm.method = "POST";
+			frm.action = "<%= ctxPath%>/notice/delEnd.bts";
+			frm.submit();
+		 }
+		 
+	 });
+
+	 
+	 ////////////////////////////////////////////
+	 
 		
 		$("span.move").hover(function(){
 			                   $(this).addClass("moveColor");
@@ -150,14 +170,14 @@
 		<div id="smallHeader">	
 		<c:if test="${sessionScope.loginuser.fk_rank_id >= 50}">
 			<span onclick="javascript:location.href='<%= request.getContextPath()%>/notice/write.bts?fk_seq=${requestScope.noticevo.pk_seq}&groupno=${requestScope.noticevo.groupno}&depthno=${requestScope.noticevo.depthno}&subject=${requestScope.noticevo.subject}'"><button type="button" class="btn btn-outline-primary">답글쓰기</button></span>
-			<span onclick="javascript:location.href='<%= request.getContextPath()%>/notice/del.bts?pk_seq=${requestScope.noticevo.pk_seq}'"><button type="button" class="btn btn-outline-danger">삭제하기</button></span>
+			<span data-toggle="modal" data-target="#myModal"><button type="button" class="btn btn-outline-danger">삭제하기</button></span>
 			<span onclick="javascript:location.href='<%= request.getContextPath()%>/notice/edit.bts?pk_seq=${requestScope.noticevo.pk_seq}'"><button type="button" class="btn btn-outline-warning">수정하기</button></span>
 		</c:if>	
 			
 		</div>
 		
 		<div id="smallHeader_right">
-			<span onclick="javascript:location.href='<%= request.getContextPath()%>${requestScope.gobackURL}'"><button type="button" class="btn btn-outline-success">목록</button></span>
+			<span onclick="javascript:location.href='<%= request.getContextPath()%>${requestScope.gobackURL}'"><button type="button" class="btn btn-secondary">목록</button></span>
 		</div>
 	</div>
 	 
@@ -235,5 +255,50 @@
     	</c:if>	
 	 
 </div>
+
+<div class="modal fade" id="myModal" role="dialog"> 
+<div class="modal-dialog"> 
+<div class="modal-content"> 
+<div class="modal-header"> 
+
+<h2 class="modal-title">
+글삭제
+</h2> 
+
+<button type="button" class="close" data-dismiss="modal">
+×
+</button> 
+
+</div> 
+<div class="modal-body"> 
+<div style="display: flex;">
+<div style="margin: auto; padding-left: 3%;">
+
+
+<form name="delFrm">
+	<table style="width: 455px" class="table table-bordered">
+		<tr>
+			<th style="width: 22%; background-color: #DDDDDD;">글암호</th>
+			<td>
+				<input style="width: 100%;" type="password" id="pw" />
+				<input type="hidden" name="pk_seq" value="${noticevo.pk_seq}" readonly />
+				<input type="hidden" name="filename" value="${noticevo.filename}" readonly />
+				<input type="hidden" name="fk_emp_no" value="${noticevo.fk_emp_no}" readonly />
+				
+			</td>
+		</tr>
+	</table>
 	
+	<div style="margin: 20px;">
+		<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnDelete">글삭제완료</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">글삭제취소</button>
+	</div>
+	
+</form>   
+</div>
+</div>    
+</div> 
+</div> 
+</div> 
+</div>	
 	

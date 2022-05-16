@@ -116,7 +116,7 @@
 					<td>
 						<select id="ko_depname" name="ko_depname" style="height: 30px;">
 						
-							<option value="" selected disabled>==부서 선택==</option>	
+							<option value="" selected disabled>ㅡ부서 선택ㅡ</option>	
 							
 							<c:if test="${fileboardvo.ko_depname eq '공통'}">
 								<option value="공통" selected>공통</option>

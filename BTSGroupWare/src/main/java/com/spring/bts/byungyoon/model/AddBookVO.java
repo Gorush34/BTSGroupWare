@@ -10,6 +10,7 @@ public class AddBookVO {
 
 	private EmployeeVO evo;
 	
+	private int registeruser;			// 등록자 번호
 	private int pk_addbook_no;			// 주소록 구분번호
 	private int fk_emp_no;				// 사원 번호
 	private int fk_dept_no;			// 부서 구분번호
@@ -34,13 +35,14 @@ public class AddBookVO {
 	
 	public AddBookVO() {}
 	
-	public AddBookVO(int pk_addbook_no, int fk_emp_no, int fk_dept_no, int fk_rank_no, String addb_name, String com_tel,
+	public AddBookVO(int registeruser, int pk_addbook_no, int fk_emp_no, int fk_dept_no, int fk_rank_no, String addb_name, String com_tel,
 			String postcode, String address, String detailaddress,
 			String referenceaddress, String phone, String email,
 			String photofilepath, String photofilename, String companyname, String memo, String ko_rankname, String ko_depname, String company_address, EmployeeVO evo) {
 		super();
 		this.evo = evo;
 		
+		this.registeruser= registeruser;
 		this.pk_addbook_no= pk_addbook_no;
 		this.fk_emp_no= fk_emp_no;
 		this.fk_dept_no= fk_dept_no;
@@ -69,6 +71,14 @@ public class AddBookVO {
 
 	public void setEvo(EmployeeVO evo) {
 		this.evo = evo;
+	}
+	
+	public int getRegisteruser() {
+		return registeruser;
+	}
+
+	public void setRegisteruser(int registeruser) {
+		this.registeruser = registeruser;
 	}
 
 	public int getPk_addbook_no() {
