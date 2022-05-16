@@ -192,13 +192,14 @@ public class MailDAO implements InterMailDAO {
 	// ==== 예약메일함 끝 ==== //
 
 	
+	// ==== 임시보관함 시작 ==== //
+	
 	// 총 임시보관함 메일 건수 구해오기
 	@Override
 	public int getTotalCount_temporary(Map<String, String> paraMap) {
 		int n = sqlsession.selectOne("minjeong.getTotalCount_temporary", paraMap);
 		return n;
 	}
-
 	
 	// 페이징처리 한 임시보관함 메일목록 (검색 있든, 없든 모두 다 포함) 
 	@Override
@@ -207,6 +208,67 @@ public class MailDAO implements InterMailDAO {
 		return TemporaryMailList;
 	}
 
+	/*수정함
+	// 임시보관함에서 제목 클릭했을 때 넘어왔을 경우 받아온 글번호인 pk_mail_num 의 temp_status 를 update (수정함)
+	@Override
+	public int updateFromTbltemp(Map<String, String> paraMap) {
+		int n = sqlsession.update("minjeong.updateFromTbltemp", paraMap);
+		return n;
+	}
+	*/
+
+	// 임시보관함에서 제목 클릭했을 때 넘어왔을 경우 받아온 글번호인 pk_mail_num 를 delete
+
+	@Override
+	public int deleteFromTbltemp(Map<String, String> paraMap) {
+		int n = sqlsession.delete("minjeong.deleteFromTbltemp", paraMap);
+		return n;
+	}
+
+	// ==== 임시보관함 끝 ==== //
+
+	// 총 중요 메일 건수 구해오기
+	@Override
+	public int getTotalCount_important(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("minjeong.getTotalCount_important", paraMap);
+		return n;
+	}
+
+	// 페이징처리 한 중요메일함 목록 (검색 있든, 없든 모두 다 포함) 
+	@Override
+	public List<MailVO> ImportantMailListSearchWithPaging(Map<String, String> paraMap) {
+		List<MailVO> ImportantMailList = sqlsession.selectList("minjeong.ImportantMailListSearchWithPaging", paraMap);
+		return ImportantMailList;
+	}
+
+	// 중요 메일 1개 상세내용을 읽어오기
+	@Override
+	public MailVO getImportantMailView(Map<String, String> paraMap) {
+		MailVO ImportantMailView = sqlsession.selectOne("minjeong.getImportantMailView", paraMap);
+		return ImportantMailView;
+	}
+
+	// pk_mail_num 를 통해서 temp_status 조회해오기
+	@Override
+	public Map<String, String> getTempStatus(String pk_mail_num) {
+		Map<String, String> getTempStatus = sqlsession.selectOne("minjeong.getTempStatus", pk_mail_num);
+		return getTempStatus;
+	}
+
+
+	// updateImportance_star_rec Update 를 통해 값을 0,1로 변경해주기
+	@Override
+	public int updateImportance_star_rec(Map<String, String> paraMap) {
+		int n = sqlsession.update("minjeong.updateImportance_star_rec", paraMap);
+		return n;
+	}
+
+	// updateImportance_star_send Update 를 통해 값을 0,1로 변경해주기
+	@Override
+	public int updateImportance_star_send(Map<String, String> paraMap) {
+		int n = sqlsession.update("minjeong.updateImportance_star_send", paraMap);
+		return n;
+	}
 
 
 

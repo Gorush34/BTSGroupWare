@@ -43,8 +43,7 @@
 			}
 			
 		});
-		
-		
+				
 	}); // end of $(document).ready(function(){})----------------------------------
 
 	
@@ -68,7 +67,7 @@
 	}
 	
 
-	// 삭제버튼 클릭 시 휴지통으로 이동하기 (ajax)
+	// 삭제버튼 클릭 시 휴지통으로 이동하기 (Ajax)
 	function goMailDelRecyclebin() {
 		
 		// 체크된 갯수 세기
@@ -95,7 +94,7 @@
 				type:"GET",
 				data: {"pk_mail_num":JSON.stringify(arrChk),
 							   "cnt":chkCnt,
-							   "fk_senduser_num":${fk_senduser_num} },
+							   "fk_receiveuser_num":${fk_receiveuser_num} },
 				dataType:"JSON",
 				success:function(json){
 					
@@ -121,7 +120,52 @@
 			
 		}
 		
-	}
+	}// end of function goMailDelRecyclebin() {}-----------------------------
+	
+
+	// 메일함 목록에서 별모양 클릭 시 중요메일함으로 이동하기 (Ajax)
+	function goImportantList(pk_mail_num) {
+
+	//	$("span#importance_star").click(function () {
+			// 별모양을 클릭했을 때, importance_star 에 1 값을 준다.
+		//	var pk_mail_num = $(this).next().val();
+			// 중요메일함은 목록에서 제외하기 위해 isRec 값을 보내지 않는다.
+			console.log(pk_mail_num);
+				
+			$.ajax({				
+		 	    url:"<%= ctxPath%>/mail/MailMoveToImportantList.bts", 
+				type:"GET",
+				data: {"pk_mail_num":pk_mail_num},
+				dataType:"JSON",
+				success:function(json){
+					
+					var result = json.result;
+					
+					if(result == 1) {
+					//	alert("중요메일함 이동에 성공했습니다!!");
+						window.location.reload();
+					}
+					else {
+						alert("중요메일함 이동에 실패했습니다.");
+						window.location.reload();
+					}
+					
+				},
+				
+				error: function(request, status, error) {
+					alert("code:"+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+					
+				}
+				
+			});					
+			
+		
+	//	}); // end of $("span#importance_star").click(function () {}----------		
+		
+	}// end of function goImportantList() {}----------------------------
+	
+	
+	
 		
 </script>
 
@@ -178,12 +222,12 @@
 									<input type="checkbox" id="checkAll" />
 								</th>
 								<th style="width: 2%;">
-									<span class="fa fa-star-o"></span>
+									<span class="fa fa-star"></span>
 								</th>
 									<th style="width: 2%;">
 										<span class="fa fa-paperclip"></span>
 									</th>
-								<th style="width: 10%;" class="text-center">받는이</th>
+								<th style="width: 10%;" class="text-center">보낸이</th>
 								<th style="width: 70%;">제목</th>
 								<th style="width: 20%;" class="text-left">날짜</th>
 							</tr>
@@ -196,32 +240,40 @@
 									<input type="checkbox" id="${ImportantMailList.pk_mail_num}" name="chkBox" class="text-center"/>
 								</td>
 								<td style="width: 40px;">
-									<span class="fa fa-star-o" class="text-center"></span>
+									<%-- 별모양(☆) 클릭 시 importance_star를 1(★)로 바꾼다. (중요메일함 = importance_star=1인 목록) --%>
+									<c:if test="${ImportantMailList.importance_star_send == '1'}">
+										<span class="fa fa-star" id="importance_star" style="cursor: pointer;" onclick="goImportantList('${ImportantMailList.pk_mail_num}')"></span>
+									</c:if>
 								</td>
 								<td style="width: 40px;">
 									<c:if test="${not empty ImportantMailList.filename}">
 										<span class="fa fa-paperclip" class="text-center"></span>
 									</c:if>
 								</td>							
-								<td class="text-center">${ImportantMailList.recempname}</td>
+								<td class="text-center">${ImportantMailList.sendempname}</td>
 								<td>
 								<%--
 								<a href="<%= ctxPath%>/mail/mailImportantDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${ImportantMailList.subject}</a>
 								--%>
-								<span class="subject" onclick="goImportantMailView('${ImportantMailList.pk_mail_num}')">${ImportantMailList.subject}</span>
+									<span class="subject" onclick="goImportantMailView('${ImportantMailList.pk_mail_num}')">
+											<c:if test="${ImportantMailList.importance == '1'}">
+												<span class="fa fa-exclamation" style="color: red;" class="text-center"></span>
+											</c:if>	
+											${ImportantMailList.subject}
+									</span>
 								</td>
 								<td class="text-left">${ImportantMailList.reg_date}</td>
 							</tr>	
 						</c:forEach>																				
 						</tbody>
 					</table>
-				</div>	
+				</div>
 				
 				<%-- 페이징 처리하기 --%>
 				<div align="center" style="border: solid 0px gray; width: 70%; margin: 20px auto;" >
 					${requestScope.pageBar}
 				</div>							
 			</div>
-		</div>	
+		</div>
 	</div>
 </div>

@@ -63,7 +63,7 @@
 		const searchType = $("select#searchType").val();
 		const searchWord = $("input#searchWord").val();
 		
-		location.href = "<%= ctxPath%>/mail/mailReservationDetail.bts?pk_mail_num="+pk_mail_num+"&searchType="+searchType+"&searchWord="+searchWord;
+		location.href = "<%= ctxPath%>/mail/mailSendDetail.bts?pk_mail_num="+pk_mail_num+"&searchType="+searchType+"&searchWord="+searchWord;
 <%-- 	<a href="<%= ctxPath%>/mail/mailSendDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${mailvo.subject}</a> --%>
 	}
 	
@@ -121,7 +121,51 @@
 			
 		}
 		
-	}
+	}// end of function goMailDelRecyclebin() {}-----------------------------
+	
+
+	// 메일함 목록에서 별모양 클릭 시 중요메일함으로 이동하기 (Ajax)
+	function goImportantList(pk_mail_num) {
+
+	//	$("span#importance_star").click(function () {
+			// 별모양을 클릭했을 때, importance_star 에 1 값을 준다.
+		//	var pk_mail_num = $(this).next().val();
+			console.log(pk_mail_num);
+				
+			$.ajax({				
+		 	    url:"<%= ctxPath%>/mail/MailMoveToImportantList.bts", 
+				type:"GET",
+				data: {"pk_mail_num":pk_mail_num,
+					   "isRec":0},
+				dataType:"JSON",
+				success:function(json){
+					
+					var result = json.result;
+					
+					if(result == 1) {
+					//	alert("중요메일함 이동에 성공했습니다!!");
+						window.location.reload();
+					}
+					else {
+						alert("중요메일함 이동에 실패했습니다.");
+						window.location.reload();
+					}
+					
+				},
+				
+				error: function(request, status, error) {
+					alert("code:"+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+					
+				}
+				
+			});					
+			
+		
+	//	}); // end of $("span#importance_star").click(function () {}----------		
+		
+	}// end of function goImportantList() {}----------------------------
+	
+	
 		
 </script>
 
@@ -180,9 +224,9 @@
 								<th style="width: 2%;">
 									<span class="fa fa-star-o"></span>
 								</th>
-									<th style="width: 2%;">
-										<span class="fa fa-paperclip"></span>
-									</th>
+								<th style="width: 2%;">
+									<span class="fa fa-paperclip"></span>
+								</th>
 								<th style="width: 10%;" class="text-center">받는이</th>
 								<th style="width: 70%;">제목</th>
 								<th style="width: 20%;" class="text-left">날짜</th>
@@ -196,7 +240,13 @@
 									<input type="checkbox" id="${SendMailList.pk_mail_num}" name="chkBox" class="text-center"/>
 								</td>
 								<td style="width: 40px;">
-									<span class="fa fa-star-o" class="text-center"></span>
+									<%-- 별모양(☆) 클릭 시 importance_star를 1(★)로 바꾼다. (중요메일함 = importance_star=1인 목록) --%>
+									<c:if test="${SendMailList.importance_star_send == '0'}">
+										<span class="fa fa-star-o" id="importance_star" style="cursor: pointer;" onclick="goImportantList('${SendMailList.pk_mail_num}')"></span>
+									</c:if>
+									<c:if test="${SendMailList.importance_star_send == '1'}">
+										<span class="fa fa-star" id="importance_star" style="cursor: pointer;" onclick="goImportantList('${SendMailList.pk_mail_num}')"></span>
+									</c:if>
 								</td>
 								<td style="width: 40px;">
 									<c:if test="${not empty SendMailList.filename}">
@@ -208,11 +258,16 @@
 								<%--
 								<a href="<%= ctxPath%>/mail/mailSendDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${sendMailList.subject}</a>
 								--%>
-								<span class="subject" onclick="goSendMailView('${SendMailList.pk_mail_num}')">${SendMailList.subject}</span>
+									<span class="subject" onclick="goSendMailView('${SendMailList.pk_mail_num}')">
+										<c:if test="${SendMailList.importance == '1'}">
+											<span class="fa fa-exclamation" style="color: red;" class="text-center"></span>
+										</c:if>	
+										${SendMailList.subject}
+									</span>
 								</td>
 								<td class="text-left">									
 									<c:if test="${not empty SendMailList.reservation_date}">
-											${SendMailList.reservation_date}:00
+											${SendMailList.reservation_date}
 									</c:if>
 									<c:if test="${empty SendMailList.reservation_date}">
 											${SendMailList.reg_date}

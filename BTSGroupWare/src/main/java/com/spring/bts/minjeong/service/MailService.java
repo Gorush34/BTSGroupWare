@@ -289,6 +289,7 @@ public class MailService implements InterMailService {
 
 	// === 예약메일함 끝 === //
 
+	// === 임시보관함 시작 === //
 	// 총 임시보관함 메일 건수 구해오기 (service 단으로 보내기) 
 	@Override
 	public int getTotalCount_temporary(Map<String, String> paraMap) {
@@ -302,6 +303,65 @@ public class MailService implements InterMailService {
 		List<MailVO> TemporaryMailList = dao.getTemporaryMailListWithPaging(paraMap);
 		return TemporaryMailList;
 	}
+
+
+	// 임시보관함에서 제목 클릭했을 때 넘어왔을 경우 받아온 글번호인 pk_mail_num 를 delete
+	@Override
+	public int deleteFromTbltemp(Map<String, String> paraMap) {
+		int n = dao.deleteFromTbltemp(paraMap);
+		return n;
+	}
+
+	
+	// === 임시보관함 끝 === //
+
+	
+	// 총 중요 메일 건수 구해오기
+	@Override
+	public int getTotalCount_important(Map<String, String> paraMap) {
+		int n = dao.getTotalCount_important(paraMap);
+		return n;
+	}
+
+	// 페이징처리 한 중요메일함 목록 (검색 있든, 없든 모두 다 포함) 
+	@Override
+	public List<MailVO> ImportantMailListSearchWithPaging(Map<String, String> paraMap) {
+		List<MailVO> ImportantMailList = dao.ImportantMailListSearchWithPaging(paraMap);
+		return ImportantMailList;
+	}
+
+	// 중요 메일 1개 상세내용을 읽어오기
+	@Override
+	public MailVO getImportantMailView(Map<String, String> paraMap) {
+		MailVO ImportantMailView = dao.getImportantMailView(paraMap);
+		return ImportantMailView;
+	}
+
+	// pk_mail_num 를 통해서 temp_status 조회해오기
+	@Override
+	public Map<String, String> getTempStatus(String pk_mail_num) {
+		Map<String, String> getTempStatus = dao.getTempStatus(pk_mail_num);
+		return getTempStatus;
+	}
+
+
+	// updateImportance_star_rec Update 를 통해 값을 0,1로 변경해주기
+	@Override
+	public int updateImportance_star_rec(Map<String, String> paraMap) {
+		int n = dao.updateImportance_star_rec(paraMap);
+		return n;
+	}
+
+	// updateImportance_star_send Update 를 통해 값을 0,1로 변경해주기
+	@Override
+	public int updateImportance_star_send(Map<String, String> paraMap) {
+		int n = dao.updateImportance_star_send(paraMap);
+		return n;
+	}
+
+
+	
+	
 
 	
 }

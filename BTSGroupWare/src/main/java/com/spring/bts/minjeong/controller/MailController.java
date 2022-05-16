@@ -23,13 +23,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.bts.common.AES256;
 import com.spring.bts.common.FileManager;
+import com.spring.bts.common.MyUtil;
 import com.spring.bts.hwanmo.model.EmployeeVO;
-import com.spring.bts.minjeong.model.MailTempVO;
 import com.spring.bts.minjeong.model.MailVO;
 import com.spring.bts.minjeong.service.InterMailService;
 
@@ -115,10 +114,37 @@ public class MailController {
 			확인용 mail_attach(첨부파일) :null
 			확인용 content(메일 내용) :메일쓰기 테스트 입니다.&nbsp;
 		 */
+
+		// ==== 임시보관함 경우의수 생각하기 ==== //
+		// 임시보관함에서 상세내용 보기 후 메일쓰기를 클릭했을 때 temp_status 가 1인 값들이 넘어온다.
+		// 해당 임시보관함에 있던 메일 번호를 받아온다.
+		String pk_mail_num = mrequest.getParameter("pk_mail_num");
+		HttpSession session_temp = mrequest.getSession();
+		session_temp.setAttribute("pk_mail_num", pk_mail_num);
 		
+		// 임시보관함 첨부파일 
+		String filename = mrequest.getParameter("filename");
+		String orgfilename = mrequest.getParameter("orgfilename");
+		String filesize = mrequest.getParameter("filesize");
+		
+		String importanceVal = mrequest.getParameter("importanceVal");
+		
+		String temp_status = mrequest.getParameter("temp_status");
+	//	System.out.println("확인용 temp_status : " + temp_status);
+		
+		// 메일쓰기 중요표시에 체크 후 importance 값 받아오기
+	//	String importance = mrequest.getParameter("importance");
+	//	importanceVal = mrequest.getParameter("importanceVal");
+		
+		// 확인용 importance : on
+		// 확인용 importanceVal : 1
+		
+	//	System.out.println("확인용 importance : " + importance);
+		System.out.println("확인용 importanceVal : " + importanceVal);
 		
 		String uq_email = "";	   /* 이메일 */
         try {
+        	// DB에 encrypt(암호화) 해서 보내주도록 한다.
 			uq_email = aes.encrypt(mrequest.getParameter("recemail"));
 		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
 			e.printStackTrace();
@@ -137,16 +163,14 @@ public class MailController {
         mailvo.setRecempname(emp_name);
         mailvo.setFk_receiveuser_num(pk_emp_no);
         
+        // importanceVal 값을 mailvo 에 있는 importance 에 넣어주기
+        mailvo.setImportance(importanceVal);
+        
    //   System.out.println("확인용 emp_name :" + emp_name);
    //   System.out.println("확인용 pk_emp_no :" + pk_emp_no);
    //   System.out.println("확인용 uq_email : " + uq_email);
                
-        /*
-        service.getRecEmpname(uq_email);
-   
-        mailvo.setRecempname(recempname);
-         */
-        
+
 		// 사용자가 쓴 메일에 파일이 첨부되어 있는지 아닌지를 구분지어준다.
 		
 		/////////////////// 첨부파일 있는 경우 시작 (스마트에디터 X) ///////////////////////
@@ -199,27 +223,84 @@ public class MailController {
 		}	
 		/////////////////// 첨부파일 있는 경우 끝 (스마트에디터 X) ///////////////////////
 		
+		// 여기서 일반 메일쓰기인지, 임시보관함을 통해 상세내용에서 메일쓰기를 실행한 것인지를 구분해야 한다.
+		// 임시보관함에서 제목 클릭했을 때 넘어온 경우
+	//	String temp_status = mrequest.getParameter("temp_status");
+	//	System.out.println("temp_status 값 받아오는지 확인용 : " + temp_status);		
+	//	System.out.println("pk_mail_num 값 받아오는지 확인용 : " + pk_mail_num);
+		// 일반 메일쓰기에서는 아래와 같이 값을 받아오지 않는다.
+		/*
+			확인용 temp_status : 
+			확인용 importanceVal : 0
+			pk_mail_num 값 받아오는지 확인용 : 
+		 */
+		// 임시보관함에서 상세내용 클릭 후 메일쓰기를 했을 때
+		/*
+			확인용 temp_status : 
+			확인용 importanceVal : [object HTMLInputElement]
+			pk_mail_num 값 받아오는지 확인용 : 149		 
+		 */
+		
+		// pk_mail_num 를 통해서 temp_status 조회해오기		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("pk_mail_num", pk_mail_num);
+	/*	
+		paraMap = service.getTempStatus(pk_mail_num);	// 1
+		String temp_status = paraMap.get("temp_status");
+		mailvo.setTemp_status(temp_status);
+	*/	
 		// 메일 data 를 DB 로 보낸다. (첨부파일 있을 때 / 첨부파일 없을 때)
 		int n = 0;
 		
 		if(attach.isEmpty()) {
 			// 첨부파일이 없을 때
-			mailvo.setReservation_status("0");
-			n = service.add(mailvo);
+//			mailvo.setTemp_status("0");			// 임시보관함 - 상세내용 보기 - 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
+			if("1".equals(temp_status)) {
+				mailvo.setReservation_status("0");
+				service.deleteFromTbltemp(paraMap);	
+			}
+			
+			else {
+				mailvo.setReservation_status("0");
+				mailvo.setTemp_status("0");			// 임시보관함 - 상세내용 보기 - 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
+				n = service.add(mailvo);
+			}	
 		}
 		else {
 			// 첨부파일 있을 때
 			mailvo.setReservation_status("0");
+			mailvo.setTemp_status("0");			// 임시보관함 - 상세내용 보기 - 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
 			n = service.add_withFile(mailvo);
 		}
 		
 		// 성공 시 보낸 메일함으로 이동 or 메일 발송 성공 페이지로 이동
 		// insert 가 성공적으로 됐을 때 / 실패했을 때
-		if(n==1) {
-			mav.setViewName("redirect:/mail/mailSendList.bts");
+		if(n==1) {			
+			
+			if(temp_status == "1") {
+				// insert 성공 후, 임시보관함에서 session 에 저장된 메일번호를 넘겨서 삭제하도록 한다.
+				String str_pk_mail_num = (String)session_temp.getAttribute("pk_mail_num");
+				
+				paraMap = new HashMap<>();
+				paraMap.put("pk_mail_num", str_pk_mail_num);
+				
+				// 임시보관함에서 메일 상세내용 보기 후 메일쓰기를 클릭 한 경우 임시보관함에 있던 해당 pk_mail_num 를 삭제한다.
+				
+				int m = service.deleteFromTbltemp(paraMap);			
+				
+				if(m==1) {
+					System.out.println("임시보관함에서 "+pk_mail_num+"번 글이 delete 되었습니다. ");
+				}
+				else {
+					System.out.println("임시보관함에서 "+pk_mail_num+"번 글이 delete 에 실패했습니다. ");
+	
+				}
+			}				
+			// 메일쓰기 성공적으로 됐다는 화면 보여주기.
+			mav.setViewName("mailSendSuccess.mail");		
 		}
 		else {// 실패 시 메일쓰기로 이동 (back)		
-	//		mav.setViewName("redirect:/mailReceiveList.bts");
+	//		mav.setViewName("redirect:/mailWriteList.bts");
 		}
 
 		return mav;
@@ -668,12 +749,163 @@ public class MailController {
 
 	
 	// =========================== 중요메일함  =========================== //
+	// 1) 중요 메일함은 메일쓰기에서 체크 후 체크박스 클릭 시, 
+	// 2) 임시보관함에서 상세버튼 클릭 후 중요 체크박스에 체크 후 메일쓰기 클릭 시 importance 값을 1로 만들어준다.
+	// 3) 각 메일함의 목록에서 ★ 표시 클릭 시 중요 메일함으로 보내준다. (Ajax, importance_star 값을 1로 만들어준다.)
+	// 4) 메일함 상세 보기 시, 제목 옆에 ★ 을 누르게 되면 중요 메일함으로 이동한다.
 	
-	// 중요메일함
+	// 중요 메일함 목록 보기 페이지 요청 (importance = 1 인 목록들)
 	@RequestMapping(value = "/mail/mailImportantList.bts")	
 	public ModelAndView mailImportant(HttpServletRequest request, ModelAndView mav) {
 		
+		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
+
+				
+		String fk_receiveuser_num = String.valueOf(loginuser.getPk_emp_no());
+		String empname = String.valueOf(loginuser.getEmp_name());
+				
+		List<MailVO> ImportantMailList = null;
 		
+		// 검색 목록
+		String searchType = request.getParameter("searchType");		// 사용자가 선택한 검색 타입
+		String searchWord = request.getParameter("searchWord");		// 사용자가 입력한 검색어
+		String str_currentShowPageNo = request.getParameter("currentShowPageNo");	// 현재 페이지 번호
+		
+		// searchType 에는 제목 및 사원명이 있는데, 이 외의 것들이 들어오게 되면 기본값으로 보여준다
+		if(searchType == null || (!"subject".equals(searchType)) && (!"sendempname".equals(searchType)) ) {
+			searchType = "";
+		}
+		
+		// 검색 입력창에 아무것도 입력하지 않았을 때 or 공백일 때 기본값을 보여주도록 한다.
+		if(searchWord == null || "".equals(searchWord) && searchWord.trim().isEmpty()) {
+			searchWord = "";
+		}
+		
+		// DB 로 보내기 위해 요청된 정보를 Map에 담는다.
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("searchType", searchType);
+		paraMap.put("searchWord", searchWord);
+
+		paraMap.put("fk_receiveuser_num",fk_receiveuser_num);	// 로그인한 사용자의 사원번호 map 에 담아서 보내주기
+		
+		// 먼저 총 중요 메일 수(totalCount)를 구해와야 한다.(importance = 1 인 값들)
+		// 총 게시물 건수는 검색조건이 있을 때와 없을 때로 나뉜다.
+		int totalCount = 0;
+		int sizePerPage = 10;
+		int currentShowPageNo = 0;
+		int totalPage = 0;
+		
+		int startRno = 0;
+		int endRno = 0;
+		
+		// 총 중요 메일 건수 구해오기 (service 단으로 보내기) 
+		totalCount = service.getTotalCount_important(paraMap); // 검색기능 포함시 paraMap 에 담아서 파라미터에 넣을 것
+		 		
+		totalPage = (int) Math.ceil((double)totalCount/sizePerPage);	// 총 페이지 수 (전체게시물 / 페이지당 보여줄 갯수)
+
+		if(str_currentShowPageNo == null) {
+			// 페이지바를 거치지 않은 맨 처음 화면
+			currentShowPageNo = 1;
+		}
+		else {	
+			try {	// 사용자가 페이지 넘버에 정수만 입력할 수 있도록 설정		
+				currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+				if(currentShowPageNo < 1 || currentShowPageNo > totalPage) {
+					// 1 미만의 페이지 또는 총 페이지 수를 넘어서는 페이지수 입력 시 기본페이지로
+					currentShowPageNo = 1;
+				}				
+			} catch (NumberFormatException e) {
+				currentShowPageNo = 1;
+			}
+		}
+		
+		startRno = ( (currentShowPageNo - 1) * sizePerPage ) + 1;
+		endRno = startRno + sizePerPage - 1;
+		
+		paraMap.put("startRno", String.valueOf(startRno));
+		paraMap.put("endRno", String.valueOf(endRno));
+		
+		 // 페이징처리 한 중요메일함 목록 (검색 있든, 없든 모두 다 포함) 
+		ImportantMailList = service.ImportantMailListSearchWithPaging(paraMap);
+		
+		// 검색대상 컬럼(searchType) 및 검색어(searchWord) 유지시키기 위함
+		if(!"".equals(searchType) && !"".equals(searchWord)) {
+			mav.addObject("paraMap", paraMap);
+		}
+		
+		
+		// === 페이지바 만들기 시작 === //
+		int blockSize = 3;
+		// blockSize 는 1개 블럭(토막) 당 보여지는 페이지번호의 개수이다.
+		/*
+	        		1  2  3  4  5  6  7  8  9 10 [다음][마지막]  -- 1개블럭
+			[맨처음][이전]  11 12 13 14 15 16 17 18 19 20 [다음][마지막]  -- 1개블럭
+			[맨처음][이전]  21 22 23
+		*/		
+		
+		int loop = 1;
+		/*
+    		loop는 1부터 증가하여 1개 블럭을 이루는 페이지번호의 개수[ 지금은 10개(== blockSize) ] 까지만 증가하는 용도이다.
+		*/		
+		
+		int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+		
+		String pageBar = "<ul style='list-style:none;'>";
+		String url = "mailImportantList.bts";	// 상대경로 mailRecyclebinList.bts	(앞에 /mail 붙이지 말고 맨 끝에 부분만 붙이도록 한다.)
+		
+		
+		// [맨처음][이전] 만들기
+		if(pageNo != 1) {
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1'>[맨처음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+		}
+		
+		while ( !(loop > blockSize || pageNo > totalPage) ) {
+			
+			if(pageNo == currentShowPageNo) {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; color:black; padding: 2px 4px;'>"+pageNo+"</li>";				
+			}
+			else {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";				
+			}
+			
+			loop++;
+			pageNo++;
+			
+		}// end of while------------------------------------------
+		
+		
+		// [다음][마지막] 만들기
+		if(pageNo <= totalPage) {
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>";	
+		}
+		
+		pageBar += "</ul>";
+		
+		mav.addObject("pageBar", pageBar);
+
+
+		// === 페이징 처리되어진 후 특정 글제목을 클릭하여 상세내용을 본 이후
+		//     사용자가 목록보기 버튼을 클릭했을때 돌아갈 페이지를 알려주기 위해
+		//     현재 페이지 주소를 뷰단으로 넘겨준다.
+	//	String goBackURL = MyUtil.getCurrnetURL(request);
+	//	System.out.println("*** 확인용 goBackURL : "+goBackURL);
+		/*
+			*** 확인용 goBackURL : /list.action
+			*** 확인용 goBackURL : /list.action?searchType= searchWord=%20 currentShowPageNo=2
+			*** 확인용 goBackURL : /list.action?searchType=subject searchWord=j
+			*** 확인용 goBackURL : /list.action?searchType=subject searchWord=j%20 currentShowPageNo=2
+		*/
+	//	mav.addObject("goBackURL", goBackURL.replaceAll("&", " "));		// view 단에 넘겨주자. & 을 " " 로 바꿔준 결과값들.
+		// === 페이징 처리를 한 검색어가 있는 전체 글목록 보여주기 끝 === //	
+		///////////////////////////////////////////////////////////////////////////////////////////
+
+					
+		mav.addObject("ImportantMailList", ImportantMailList);		
+		mav.addObject("fk_receiveuser_num", fk_receiveuser_num);		
 		
 		mav.setViewName("mailImportantList.mail");
 		return mav;
@@ -683,50 +915,273 @@ public class MailController {
 	@RequestMapping(value = "/mail/mailImportantDetail.bts")	
 	public ModelAndView mailImportantDetail(HttpServletRequest request, ModelAndView mav) {
 		
+
+		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
 		
+		// view 단에서 요청한 검색타입 및 검색어, 글번호 받아오기
+		String pk_mail_num = request.getParameter("pk_mail_num");	// 글번호
+		String searchType = request.getParameter("searchType");		// 검색타입
+		String searchWord = request.getParameter("searchWord");		// 검색어
+		
+		// 사용자가 검색타입 및 검색어를 입력하지 않았을 경우
+		if(searchType == null) {
+			searchType = "";
+		}
+		
+		if(searchWord == null) {
+			searchWord = "";
+		}
+		
+		// 사용자가 메일번호(pk_mail_num=?) 뒤에 정수외의 것을 입력하지 않도록 exception 처리를 한다.
+		try {
+			Integer.parseInt(pk_mail_num);			
+		
+			// 글 내용 한개 뿐만 아니라 검색도 해야하므로 Map 에 담는다.
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("pk_mail_num", pk_mail_num);
+			
+			// mapper 로 사용자가 입력한 검색타입과 검색어를 map 에 담아서 보낸다.
+			paraMap.put("searchType", searchType);
+			paraMap.put("searchWord", searchWord);
+			
+			// map 에 담은 검색타입과 검색어를 view 단으로 보낸다.
+			mav.addObject("paraMap", paraMap);
+			
+			// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
+			MailVO mailvo = null;
+			mailvo = service.getImportantMailView(paraMap);
+			mav.addObject("mailvo", mailvo);
+			
+			// 이전글 및 다음글 보여주기
+			
+			
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
 		
 		mav.setViewName("mailImportantDetail.mail");
 		return mav;
 	}		
-	
+
+	// 메일함 목록에서 별모양 클릭 시 중요메일함으로 이동하기 (Ajax)
+	@ResponseBody
+	@RequestMapping(value = "/mail/MailMoveToImportantList.bts", produces = "text/plain; charset=UTF-8")	
+	public String MailMoveToImportantList(HttpServletRequest request, MailVO mailvo) {
+
+
+		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
+		
+		//	System.out.println("보낸메일함 페이지에서 로그인한 사용자 id (사원번호) 받아오기 " + loginuser.getPk_emp_no());
+		
+		String fk_emp_num = String.valueOf(loginuser.getPk_emp_no());		
+		// 중요체크 표시한 pk_mail_num , Ajax로 보낸 데이터를 잘 받아오나 확인하자
+		String pk_mail_num = request.getParameter("pk_mail_num");
+	//	System.out.println("확인용 pk_mail_num : "+ pk_mail_num);
+		String isRec = request.getParameter("isRec");
+	//	System.out.println("확인용 isRec :" + isRec );	// 확인용 isRec :1
+		
+		// isRec : 1 이면 받은메일함 / 0이면 보낸메일함
+		// 삭제버튼을 누른 값
+		// String importance_star = request.getParameter("importance_star");
+		// System.out.println("확인용 importance_star : "+ importance_star);
+
+		
+		int n = 0;
+		int result = 0;
+		
+		Map<String, String> paraMap = new HashMap<>();			
+		paraMap.put("pk_mail_num",pk_mail_num);
+		paraMap.put("fk_emp_num", fk_emp_num);
+		
+	//	paraMap.put("importance_star", importance_star);
+		
+		// importance_star Update 를 통해 값을 0,1로 변경해주기
+		if("1".equals(isRec)) {
+			// isRec : 1 이면 받은메일함 
+		n = service.updateImportance_star_rec(paraMap);
+		}
+		else {
+			// isRec : 0 이면 보낸메일함 
+			n = service.updateImportance_star_send(paraMap);
+		}
+	//	String importance_star = paraMap.get("importance_star");
+	//	mailvo.setImportance_star(importance_star);
+		
+		JSONObject jsonObj = new JSONObject();
+		
+		// update 성공 시 메일 테이블에서 해당 importance_star 의 값을 1로 변경해준다.
+		if(n==1) {
+			result = 1;
+			jsonObj.put("result",result);
+		}
+		
+		return jsonObj.toString();
+	}		
 
 	// =========================== 임시보관함  =========================== //
 	
-	// 임시보관함 완료 페이지 요청 (MailTempVO 따로 사용)
+	// 임시보관함 완료 페이지 요청 (mailvo, temp_status = 1)
 	@RequestMapping(value = "/mail/mailTemporaryEnd.bts")	
-	public ModelAndView mailTemporaryEnd(MultipartHttpServletRequest mrequest, ModelAndView mav, MailTempVO mailtempvo) {
+	public ModelAndView mailTemporaryEnd(MultipartHttpServletRequest mrequest, ModelAndView mav, MailVO mailvo) {
 		
-		
-		  // 받는사원 ID 
-		  String fk_receiveuser_num = mrequest.getParameter("fk_receiveuser_num"); 
-		  System.out.println("확인용 fk_receiveuser_num(사원번호) :" + fk_receiveuser_num);
-		  
-		  // 받는사원 사원명 
-		  String empname = mrequest.getParameter("empname"); 
-		  System.out.println("확인용 empname(사원명) :" + empname);
 
-		  // 받는사원 이메일 
-		  String email = mrequest.getParameter("email"); 
-		  System.out.println("확인용 email(이메일) :" + email);
+		/*
+		  // 받는 사원 이메일 
+		  String recemail = mrequest.getParameter("recemail"); 
+		  System.out.println("확인용 recemail(받는 사원 이메일 ) :" + recemail);
+
+		  // 보내는 사원 이메일 
+		  String sendemail = mrequest.getParameter("sendemail"); 
+		  System.out.println("확인용 sendemail(보내는 사원 이메일 ) :" + sendemail);
+		  		  
+		  // 보내는 사원 사원번호
+		  String fk_senduser_num = mrequest.getParameter("fk_senduser_num"); 
+		  System.out.println("확인용 fk_senduser_num(보내는 사원 사원번호) :" + fk_senduser_num);
+		  		  		  
+		  // 보내는 사원 사원명
+		  String sendempname = mrequest.getParameter("sendempname"); 
+		  System.out.println("확인용 sendempname(보내는 사원 사원명) :" + sendempname);		  		  		  
 		  
 		  // 제목 
 		  String subject = mrequest.getParameter("subject"); 
 		  System.out.println("확인용 subject(제목) :" + subject);
 		  
 		  // 메일쓰기 시 체크박스 체크여부 (체크 :1, 체크X :0) 
-		  String importanceVal = mrequest.getParameter("importanceVal"); 
-		  System.out.println("확인용 importanceVal(중요체크박스 체크여부) :" + importanceVal);
+		  String importance = mrequest.getParameter("importance"); 
+		  System.out.println("확인용 importance(중요체크박스 체크여부) :" + importance);
 		  
 		  // 첨부 파일 
 		  String mail_attach = mrequest.getParameter("mail_attach"); 
 		  System.out.println("확인용 mail_attach(첨부파일) :" + mail_attach);
-		  
-		  
+		  		  
 		  // 메일 내용 
 		  String content = mrequest.getParameter("content"); 
 		  System.out.println("확인용 content(메일 내용) :" + content);
-		 			
-	//	mav.setViewName("mailTemporary.mail");
+		  
+		확인용 recemail(받는 사원 이메일 ) :kimsj@bts.com
+		확인용 sendemail(보내는 사원 이메일 ) :kimmj@bts.com
+		확인용 fk_senduser_num(보내는 사원 사원번호) :80000010
+		확인용 sendempname(보내는 사원 사원명) :김민정
+		확인용 subject(제목) :20220513 임시저장 메일 테스트입니다. 값보내기 테스트 22 / importance 값 보내기
+//다시 체크	확인용 importance(중요체크박스 체크여부) :on (또는 체크 안했을 때 null)
+		확인용 mail_attach(첨부파일) :null (받는 값을 filename)
+		확인용 content(메일 내용) :20220513 임시저장 메일 테스트입니다. 값보내기 테스트 22 / importance 값 보내기&nbsp;		  
+		*/  
+		
+		String uq_email = "";	   /* 이메일 */
+        try {
+        	// DB에 encrypt(암호화) 해서 보내주도록 한다.
+			uq_email = aes.encrypt(mrequest.getParameter("recemail"));
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+        
+        // 값을 1개만 보낼때에는 String 으로 보내고, 
+        // return 타입으로 받아올 때에는 List 또는 Map 으로 받아온다.
+        
+        Map<String, String> recEmpnameAndNum = new HashMap<>();
+        
+        recEmpnameAndNum = service.getEmpnameAndNum(uq_email);
+        
+        String emp_name = recEmpnameAndNum.get("emp_name");
+        String pk_emp_no = recEmpnameAndNum.get("pk_emp_no");
+        
+        // uq_email 을 통해 DB 에서 조회한 받는사원명 & 사원번호를 mailvo 의 recempname 및 fk_receiveuser_num 에 set 해주도록 한다.
+        mailvo.setRecempname(emp_name);
+        mailvo.setFk_receiveuser_num(pk_emp_no);
+        
+   //   System.out.println("확인용 emp_name :" + emp_name);
+   //   System.out.println("확인용 pk_emp_no :" + pk_emp_no);
+   //   System.out.println("확인용 uq_email : " + uq_email);
+               
+		String importanceVal = mrequest.getParameter("importanceVal");        
+		
+	//	System.out.println("확인용 importance : " + importance);
+	//	System.out.println("확인용 importanceVal : " + importanceVal);
+		
+        
+        // importanceVal 값을 mailvo 에 있는 importance 에 넣어주기
+        mailvo.setImportance(importanceVal);
+        
+        // 사용자가 쓴 메일에 파일이 첨부되어 있는지 아닌지를 구분지어준다.
+		
+		/////////////////// 첨부파일 있는 경우 시작 (스마트에디터 X) ///////////////////////
+		MultipartFile attach = mailvo.getAttach();		// 실제 첨부된 파일
+		
+		if( !attach.isEmpty() ) {	// 첨부파일 존재시 true, 존재X시 false
+			// 첨부파일이 존재한다면 (true) 업로드 해야한다.
+			// 1. 사용자가 보낸 첨부파일을 WAS(톰캣)의 특정 폴더에 저장해준다.
+			// WAS 의 절대경로를 알아와야 한다.
+			
+			HttpSession session = mrequest.getSession();
+			String root = session.getServletContext().getRealPath("/");
+			
+			String path = root+"resources"+File.separator+"files";
+			// path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다. --> path 에 파일을 업로드 한다.
+			
+			// 2. 파일첨부를 위한 변수 설정 및 값을 초기화 한 후 파일 업로드 하기
+			String newFileName = "";
+			// WAS(톰캣)의 디스크에 저장될 파일명
+
+			// 내용물을 읽어온다.
+			byte[] bytes = null;	// bytes 가 null 이라면 내용물이 없다는 것이다.
+			// 첨부파일의 내용물을 담는 것, return 타입은 byte 의 배열
+
+			long fileSize = 0;		// 첨부파일의 크기
+		
+			try {
+				bytes = attach.getBytes();	// 파일에서 내용물을 꺼내오자. 파일을 올렸을 때 깨진파일이 있다면 (입출력이 안된다!!) 그때 Exception 을 thorws 한다.
+				// 첨부파일의 내용물을 읽어오는 것. 그 다음, 첨부한 파일의 파일명을 알아와야 DB 에 넣을 수가 있다. 그러므로 파일명을 알아오도록 하자.
+				// 즉 파일을 올리고 성공해야 - 내용물을 읽어올 수 있고 - 파일명을 알아와서 DB 에 넣을 수가 있다.
+				
+				String originalFilename = attach.getOriginalFilename();
+				// attach.getOriginalFilename() 이 첨부파일의 파일명(예: 강아지.png) 이다.
+	
+				// 의존객체인 FileManager 를 불러온다. (String 타입으로 return 함.)
+				// 리턴값 : 서버에 저장된 새로운 파일명(예: 2022042912181535243254235235234.png)
+				newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
+				// 첨부된 파일을 업로드 한다.
+				
+				// 파일을 받아와야만 service 에 보낼 수 있다. (DB 에 보내도록 한다.)
+				mailvo.setFilename(newFileName);			// 톰캣(WAS)에 저장될 파일명
+				mailvo.setOrgfilename(originalFilename); 	// 사용자가 파일 다운로드시 사용되는 파일명
+				
+				fileSize = attach.getSize();					// 첨부파일의 크기
+				mailvo.setFilesize(String.valueOf(fileSize));	// long 타입인 fileSize 를 String 타입으로 바꾼 후 vo 에 set 한다.
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}	
+		/////////////////// 첨부파일 있는 경우 끝 (스마트에디터 X) ///////////////////////
+		
+		// 메일 data 를 DB 로 보낸다. (첨부파일 있을 때 / 첨부파일 없을 때)
+		int n = 0;
+		
+		if(attach.isEmpty()) {
+			// 첨부파일이 없을 때, DB 에 insert 성공 시 temp_status = 1 로 바꿔준다.
+			mailvo.setReservation_status("0");
+			mailvo.setTemp_status("1");
+			n = service.add(mailvo);
+		}
+		else {
+			// 첨부파일 있을 때, DB 에 insert 성공 시 temp_status = 1 로 바꿔준다.
+			mailvo.setReservation_status("0");
+			mailvo.setTemp_status("1");
+			n = service.add_withFile(mailvo);
+		}
+		
+		// 성공 시 임시보관함 목록으로 이동
+		// DB 에 insert 가 성공적으로 됐을 때 / 실패했을 때
+		if(n==1) {
+			mav.setViewName("mailTemporarySuccess.mail");
+		}
+		else {// 실패 시 메일쓰기로 이동 (back)		
+	//		mav.setViewName("redirect:/mailWriteList.bts");
+		}
+		
 		return mav;
 	}		
 	
@@ -891,11 +1346,57 @@ public class MailController {
 	}	
 
 	
-	// 임시보관함 내용 읽기 페이지 요청
+	// 임시보관함 내용 읽기 페이지 요청 (이전에 썼던 내용들을 갖고온다.)
 	@RequestMapping(value = "/mail/mailTemporaryDetail.bts")	
-	public ModelAndView mailTemporaryDetail(HttpServletRequest request, ModelAndView mav) {
+	public ModelAndView mailTemporaryEnd(HttpServletRequest request, ModelAndView mav) {
+		// 임시보관함 같은 경우에는 내용읽기를 요청 했을 때, 
+		// 1. 메일쓰기 form 이 떠야하고 & 이전에 입력했던 내용들이 모두 들어와 있어야 한다. (select 해오기)
+		// 2. 이전에 입력했던 내용들에서 다시 임시저장 클릭했을 때 임시보관함으로 이동할 수 있다.
+		
+		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+		
+		// view 단에서 요청한 검색타입 및 검색어, 글번호 받아오기
+		String pk_mail_num = request.getParameter("pk_mail_num");	// 글번호
+		String searchType = request.getParameter("searchType");		// 검색타입
+		String searchWord = request.getParameter("searchWord");		// 검색어
+		
+		// 사용자가 검색타입 및 검색어를 입력하지 않았을 경우
+		if(searchType == null) {
+			searchType = "";
+		}
+		
+		if(searchWord == null) {
+			searchWord = "";
+		}
+		
+		// 사용자가 메일번호(pk_mail_num=?) 뒤에 정수외의 것을 입력하지 않도록 exception 처리를 한다.
+		try {
+			Integer.parseInt(pk_mail_num);			
 
 		
+			// 글 내용 한개 뿐만 아니라 검색도 해야하므로 Map 에 담는다.
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("pk_mail_num", pk_mail_num);
+			
+			// mapper 로 사용자가 입력한 검색타입과 검색어를 map 에 담아서 보낸다.
+			paraMap.put("searchType", searchType);
+			paraMap.put("searchWord", searchWord);
+			
+			// map 에 담은 검색타입과 검색어를 view 단으로 보낸다.
+			mav.addObject("paraMap", paraMap);
+			
+			// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
+			MailVO mailvo = null;
+			mailvo = service.getSendMailView(paraMap);
+			mav.addObject("mailvo", mailvo);
+			
+			// 이전글 및 다음글 보여주기
+			
+			
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+						
 		mav.setViewName("mailTemporaryDetail.mail");
 		return mav;
 	}		
@@ -1044,8 +1545,10 @@ public class MailController {
 		// === 페이징 처리되어진 후 특정 글제목을 클릭하여 상세내용을 본 이후
 		//     사용자가 목록보기 버튼을 클릭했을때 돌아갈 페이지를 알려주기 위해
 		//     현재 페이지 주소를 뷰단으로 넘겨준다.
-	//	String goBackURL = MyUtil.getCurrnetURL(request);
-	//	System.out.println("*** 확인용 goBackURL : "+goBackURL);
+		
+		//	String goBackURL = MyUtil.getCurrnetURL(request);
+		//	System.out.println("*** 확인용 goBackURL : "+goBackURL);
+		
 		/*
 			*** 확인용 goBackURL : /list.action
 			*** 확인용 goBackURL : /list.action?searchType= searchWord=%20 currentShowPageNo=2
@@ -1157,7 +1660,12 @@ public class MailController {
 		확인용 content : 20220512 예약메일함 reservation_status = 1 업데이트 및 mail 테이블에 reservation_date 날짜 들어가는지 확인&nbsp;
 		확인용 reservation_date : 2022-05-19 16:35
 	*/
-		
+		String importanceVal = mrequest.getParameter("importanceVal");
+		System.out.println("확인용 importanceVal : " + importanceVal);
+        
+		// importanceVal 값을 mailvo 에 있는 importance 에 넣어주기
+        mailvo.setImportance(importanceVal);
+        
 		// VO 에 없는 컬럼들을 set 해주도록 한다.
 
 		String uq_email = "";	   /* 이메일 */
@@ -1255,6 +1763,7 @@ public class MailController {
 			// 첨부파일이 없을 때 & 		
 			// 예약발송버튼 눌렀을 때 예약테이블에서 reservation_status 를 1로 바꿔주기 (메일쓰기-발송예약 jsp 에서 넘어왔음)
 			mailvo.setReservation_status("1");
+			mailvo.setTemp_status("0");			// 임시보관함 - 상세내용 보기 - 발송예약 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
 			mailvo.setReservation_date(reservation_date);
 			
 			n = service.add(mailvo);
@@ -1263,6 +1772,7 @@ public class MailController {
 			// 첨부파일 있을 때
 			// 예약발송버튼 눌렀을 때 예약테이블에서 reservation_status 를 1로 바꿔주기 (메일쓰기-발송예약 jsp 에서 넘어왔음)
 			mailvo.setReservation_status("1");
+			mailvo.setTemp_status("0");			// 임시보관함 - 상세내용 보기 - 발송예약 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
 			mailvo.setReservation_date(reservation_date);
 			
 			n = service.add_withFile(mailvo);
@@ -1271,6 +1781,48 @@ public class MailController {
 		if(n==1) {
 			// 메일테이블에 발송예약글 reservation status 가 1에서 0으로 update 됐을 때 현재시간을 읽어서 mail 을 예정시간에 발송해주도록 하기 / 실패했을 때
 			service.reservationMailSendSchedular();	// 스프링 스케줄러를 이용해서 발송예약 실행하고 다시 reservation_status 를 0으로 바꿔주기.
+			mailvo.setTemp_status("0");				// 임시보관함 - 상세내용 보기 - 발송예약 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
+
+			// 임시보관함에서 메일 상세보기를 클릭(temp_status=1인 상태)한 후, '보내기'를 누른 경우 (즉 수정한 경우)
+			// 해당 글의 temp_status 를 1에서 다시 0으로 update 해줘야 한다.
+			
+			// 임시보관함에서 제목 클릭했을 때 발송예약 실행한 경우 경우 받아온 글번호인 pk_mail_num 의 temp_status 를 update 한다.
+			String pk_mail_num = mrequest.getParameter("pk_mail_num");
+			System.out.println("임시보관함에서 제목 클릭 후 상세내용 봤을 때 pk_mail_num 여기로 오는지 확인용 : "+pk_mail_num);
+		
+			/*
+				임시보관함에서 제목 클릭 후 상세내용 봤을 때 pk_mail_num 여기로 오93
+			 */			
+			
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("pk_mail_num", pk_mail_num);
+
+			/* 수정함
+			// 해당 글의 temp_status 를 1에서 다시 0으로 update 해줘야 한다.
+			int m = service.updateFromTbltemp(paraMap);			
+			
+			if(m==1) {
+				System.out.println("임시보관함에서 "+pk_mail_num+"의 temp_status 가 1에서 0으로 update 되었습니다. ");
+				// 					임시보관함에서 93의 temp_status 가 1에서 0으로 update 되었습니다. 
+			}
+			else {
+				System.out.println("임시보관함에서 "+pk_mail_num+"의 temp_status 가 1에서 0으로 update 실패했습니다. ");
+
+			}
+			*/
+			
+		//	int m = service.deleteFromTbltemp(paraMap);			
+	/*		
+			if(m==1) {
+				System.out.println("임시보관함에서 "+pk_mail_num+"번 글이 delete 되었습니다. ");
+			}
+			else {
+				System.out.println("임시보관함에서 "+pk_mail_num+"번 글이 delete 에 실패했습니다. ");
+
+			}
+	*/		
+			
+			
 			mav.setViewName("redirect:/mail/mailReservationList.bts");
 		}
 		else {// 실패 시 메일쓰기로 이동 (back)		
@@ -1598,7 +2150,7 @@ public class MailController {
 	@RequestMapping(value = "/mail/mailRecyclebinClear.bts", produces = "text/plain; charset=UTF-8")	
 	public String mailRecyclebinClear(HttpServletRequest request, MailVO mailvo) {
 			
-		// 삭제할 메일번호(문자열) , aJax로 보낸 데이터를 잘 받아오나 확인하자
+		// 삭제할 메일번호(문자열) , Ajax로 보낸 데이터를 잘 받아오나 확인하자
 		String pk_mail_num = request.getParameter("pk_mail_num");
 	//	System.out.println("휴지통 확인용 pk_mail_num : "+ pk_mail_num);
 		
@@ -1660,10 +2212,8 @@ public class MailController {
 		String pk_mail_num = request.getParameter("pk_mail_num");
 		
 		/*
-		 	첨부파일이 있는 글번호에서
-		 	202204291419371025088801698800.jpg 처럼
-		 	이러한 fileName 값을 DB 에서 가져와야 한다.
-		 	또한 orgFilename 값도 DB 에서 가져와야 한다.
+		 	첨부파일이 있는 글번호에서 202204291419371025088801698800.jpg 처럼
+		 	이러한 fileName 값을 DB 에서 가져와야 한다. 또한 orgFilename 값도 DB 에서 가져와야 한다.
 		 */
 
 		Map<String, String> paraMap = new HashMap<>();
@@ -1741,5 +2291,15 @@ public class MailController {
 		}
 				
 	}	
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////
+		
+	// === 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 생성 === //
+	public void getCurrentURL(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		session.setAttribute("goBackURL", MyUtil.getCurrentURL(request));
+	}
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////
 	
 }

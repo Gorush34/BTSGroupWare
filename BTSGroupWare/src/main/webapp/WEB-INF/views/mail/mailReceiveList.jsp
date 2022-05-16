@@ -69,7 +69,7 @@
 	}
 	
 
-	// 삭제버튼 클릭 시 휴지통으로 이동하기 (ajax)
+	// 삭제버튼 클릭 시 휴지통으로 이동하기 (Ajax)
 	function goMailDelRecyclebin() {
 		
 		// 체크된 갯수 세기
@@ -122,7 +122,51 @@
 			
 		}
 		
-	}
+	}// end of function goMailDelRecyclebin() {}-----------------------------
+	
+
+	// 메일함 목록에서 별모양 클릭 시 중요메일함으로 이동하기 (Ajax)
+	function goImportantList(pk_mail_num) {
+
+	//	$("span#importance_star").click(function () {
+			// 별모양을 클릭했을 때, importance_star 에 1 값을 준다.
+		//	var pk_mail_num = $(this).next().val();
+			console.log(pk_mail_num);
+				
+			$.ajax({				
+		 	    url:"<%= ctxPath%>/mail/MailMoveToImportantList.bts", 
+				type:"GET",
+				data: {"pk_mail_num":pk_mail_num,
+					   "isRec":1},
+				dataType:"JSON",
+				success:function(json){
+					
+					var result = json.result;
+					
+					if(result == 1) {
+					//	alert("중요메일함 이동에 성공했습니다!!");
+						window.location.reload();
+					}
+					else {
+						alert("중요메일함 이동에 실패했습니다.");
+						window.location.reload();
+					}
+					
+				},
+				
+				error: function(request, status, error) {
+					alert("code:"+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+					
+				}
+				
+			});					
+			
+		
+	//	}); // end of $("span#importance_star").click(function () {}----------		
+		
+	}// end of function goImportantList() {}----------------------------
+	
+	
 	
 </script>
 
@@ -191,28 +235,40 @@
 						</thead>
 						
 						<tbody>
-						<c:forEach items="${requestScope.receiveMailList}" var="receiveMailList">
+						<c:forEach items="${requestScope.receiveMailList}" var="receiveMailList" varStatus="status">
 							<tr>
 								<td style="width: 40px;">
 									<input type="checkbox" id="${receiveMailList.pk_mail_num}" name="chkBox" class="text-center"/>
 								</td>
 								<td style="width: 40px;">
-									<span class="fa fa-star-o" class="text-center"></span>
+									<%-- 별모양(☆) 클릭 시 importance_star를 1(★)로 바꾼다. (중요메일함 = importance_star=1인 목록) --%>
+									<c:if test="${receiveMailList.importance_star_rec == '0'}">
+										<span class="fa fa-star-o" id="importance_star" style="cursor: pointer;" onclick="goImportantList('${receiveMailList.pk_mail_num}')"></span>
+									</c:if>
+									<c:if test="${receiveMailList.importance_star_rec == '1'}">
+										<span class="fa fa-star" id="importance_star" style="cursor: pointer;" onclick="goImportantList('${receiveMailList.pk_mail_num}')"></span>
+									</c:if>									
 								</td>
 								<td style="width: 40px;">
 									<c:if test="${not empty receiveMailList.filename}">
 										<span class="fa fa-paperclip" class="text-center"></span>
-									</c:if>								</td>							
+									</c:if>								
+								</td>							
 								<td class="text-center">${receiveMailList.sendempname}</td>
 								<td>
 								<%--
 								<a href="<%= ctxPath%>/mail/mailReceiveDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${receiveMailList.subject}</a>
 								--%>
-								<span class="subject" onclick="goRecMailView('${receiveMailList.pk_mail_num}')">${receiveMailList.subject}</span>
+									<span class="subject" onclick="goRecMailView('${receiveMailList.pk_mail_num}')">
+											<c:if test="${receiveMailList.importance == '1'}">
+												<span class="fa fa-exclamation" style="color: red;" class="text-center"></span>
+											</c:if>	
+											${receiveMailList.subject}
+									</span>
 								</td>
 								<td class="text-left">									
 									<c:if test="${not empty receiveMailList.reservation_date}">
-										${receiveMailList.reservation_date}:00
+										${receiveMailList.reservation_date}
 									</c:if>
 									<c:if test="${empty receiveMailList.reservation_date}">
 										${receiveMailList.reg_date}
