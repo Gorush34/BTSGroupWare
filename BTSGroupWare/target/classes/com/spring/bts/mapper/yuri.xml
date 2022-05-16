@@ -43,7 +43,7 @@
 		tbl_appr(pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno, fk_fin_empno, emergency,
 		         title, contents,
 		         status, mid_accept, fin_accept,
-		         mid_opinion, fin_opinion, 
+		         mid_opinion, fin_opinion,
 		         writeday, viewcnt)
 		VALUES(seq_apprno.nextval, #{fk_appr_sortno}, #{fk_emp_no}, #{fk_mid_empno}, #{fk_fin_empno}, #{emergency},
 		       #{title}, #{contents},
@@ -56,18 +56,18 @@
 	<!-- 파일첨부가 있는 전자결재 문서작성 --> 
 	<insert id="edmsAdd_withFile" parameterType="com.spring.bts.yuri.model.ApprVO">
 		INSERT INTO
-		tbl_appr(   pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno, fk_fin_empno, emergency,
-		            title, contents,
-		            filename, orgfilename, fileSize,
-		            status, mid_accept, fin_accept,
-		            mid_opinion, fin_opinion, 
-		            writeday, viewcnt)
-		VALUES(     seq_apprno.nextval, #{fk_appr_sortno}, #{fk_emp_no}, #{fk_mid_empno}, #{fk_fin_empno}, #{emergency}, 
-		            #{title}, #{contents},
-		            #{filename}, #{orgfilename}, #{fileSize},
-		            default, default, default,
-		            null, null,
-		            default, default)
+		tbl_appr(pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno, fk_fin_empno, emergency,
+				 title, contents,
+				 filename, orgfilename, fileSize,
+				 status, mid_accept, fin_accept,
+				 mid_opinion, fin_opinion,
+				 writeday, viewcnt)
+		VALUES(seq_apprno.nextval, #{fk_appr_sortno}, #{fk_emp_no}, #{fk_mid_empno}, #{fk_fin_empno}, #{emergency},
+			   #{title}, #{contents},
+			   #{filename}, #{orgfilename}, #{fileSize},
+			   default, default, default,
+			   null, null,
+			   default, default)
 	</insert>
 
 
@@ -187,22 +187,25 @@
 	-->
 
 
-	<!-- 총 게시물 건수 구하기 -->
+	<!-- 총 게시물 건수 구하기 / 검색이 있을 때와 없을 때로 나눠야 된다. -->
+	<!-- 아래 세줄 때문에 오류 java.sql.SQLException: 부적합한 열 유형: 1111 <= 컨트롤러에서 searchWord를 안 줘서? -->
 	<select id="getTotalCount" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_appr
-		where status in(0, 1, 2)
-	</select>	
-	
-	<!-- 
-	<if test='searchType != ""'>
-		and lower(${searchType}) like '%'||lower(#{searchWord})||'%'
-	</if>
-	 -->
+		where 1=1
+		<if test='searchType != ""'>
+		and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+		</if>
+	</select>
+	<!--
+		오류 났던 이유 :
+		1. dao에서 paraMap을 안 넘겨줌
+		2. 오타났을까봐 강사님 코드 복붙하는 과정에서 tbl_appr 대신 tbl_board 가 들어감	
+	-->
 
 	<!-- // ==== 파일첨부가 있는 게시판의 페이징 처리한 글목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함한 것) ==== // -->		
 	<select id="edmsListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.yuri.model.ApprVO">
-		select  pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno,
+		select	pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno,
 		        fk_fin_empno, emergency, title, contents, filename,
 		        orgfilename, fileSize, status, mid_accept, fin_accept,
 		        mid_opinion, fin_opinion,
@@ -210,51 +213,241 @@
 		        emp_name
 		from 
 		(
-			select  rownum as rno, 
-			        pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno,
-			        fk_fin_empno, emergency, title, contents, filename,
-			        orgfilename, fileSize, status, mid_accept, fin_accept,
-			        NVL(mid_opinion, '중간결재자의견없음') AS mid_opinion, fin_opinion,
-			        to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') AS writeday, viewcnt,
-			        E.emp_name AS emp_name
-			from tbl_appr A
-			left join tbl_employees E
-			on A.fk_emp_no = E.pk_emp_no
-			where 1=1
-			
-			<if test=' searchType != "" and searchWord != "" '>
-			and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
-			</if>
-			order by pk_appr_no desc
-		)
-		where rno between #{startRno} and #{endRno}
+		    select  rownum as rno, 
+		            pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno,
+		            fk_fin_empno, emergency, title, contents, filename,
+		            orgfilename, fileSize, status, mid_accept, fin_accept,
+		            mid_opinion, fin_opinion,
+		            writeday, viewcnt,
+		            emp_name
+		    from(   
+		        select  pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno,
+		                fk_fin_empno, emergency, title, contents, filename,
+		                orgfilename, fileSize, status, mid_accept, fin_accept,
+		                NVL(mid_opinion, '중간결재자의견없음') AS mid_opinion, fin_opinion,
+		                to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') AS writeday, viewcnt,
+		                E.emp_name AS emp_name
+		        from tbl_appr A left join tbl_employees E
+		        ON A.fk_emp_no = E.pk_emp_no
+		        where 1 = 1
+		        <if test='searchType != "" and searchWord != ""'>
+				and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+				</if>
+		        order by pk_appr_no desc
+		    ) V
+		) T
+		where T.rno between #{startRno} and #{endRno}
 	</select>
-	<!-- order by pk_appr_no desc -->
 
 
 
 
+
+
+
+
+
+
+
+	<!-- // ==== 파일첨부가 있는 게시판의 페이징 처리한 대기목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함한 것) ==== // -->		
+	<select id="edmsListSearchWithPaging_wait" parameterType="HashMap" resultType="com.spring.bts.yuri.model.ApprVO">
+		select	pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno,
+		        fk_fin_empno, emergency, title, contents, filename,
+		        orgfilename, fileSize, status, mid_accept, fin_accept,
+		        mid_opinion, fin_opinion,
+		        writeday, viewcnt,
+		        emp_name
+		from 
+		(
+		    select  rownum as rno, 
+		            pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno,
+		            fk_fin_empno, emergency, title, contents, filename,
+		            orgfilename, fileSize, status, mid_accept, fin_accept,
+		            mid_opinion, fin_opinion,
+		            writeday, viewcnt,
+		            emp_name
+		    from(   
+		        select  pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno,
+		                fk_fin_empno, emergency, title, contents, filename,
+		                orgfilename, fileSize, status, mid_accept, fin_accept,
+		                NVL(mid_opinion, '중간결재자의견없음') AS mid_opinion, fin_opinion,
+		                to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') AS writeday, viewcnt,
+		                E.emp_name AS emp_name
+		        from tbl_appr A left join tbl_employees E
+		        ON A.fk_emp_no = E.pk_emp_no
+		        where 1 = 1
+		        and status = 0
+		        <if test='searchType != "" and searchWord != ""'>
+				and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+				</if>
+		        order by pk_appr_no desc
+		    ) V
+		) T
+		where T.rno between #{startRno} and #{endRno}
+	</select>
+
+
+
+	<!-- // ==== 파일첨부가 있는 게시판의 페이징 처리한 대기목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함한 것) ==== // -->		
+	<select id="edmsListSearchWithPaging_accept" parameterType="HashMap" resultType="com.spring.bts.yuri.model.ApprVO">
+		select	pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno,
+		        fk_fin_empno, emergency, title, contents, filename,
+		        orgfilename, fileSize, status, mid_accept, fin_accept,
+		        mid_opinion, fin_opinion,
+		        writeday, viewcnt,
+		        emp_name
+		from 
+		(
+		    select  rownum as rno, 
+		            pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno,
+		            fk_fin_empno, emergency, title, contents, filename,
+		            orgfilename, fileSize, status, mid_accept, fin_accept,
+		            mid_opinion, fin_opinion,
+		            writeday, viewcnt,
+		            emp_name
+		    from(   
+		        select  pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno,
+		                fk_fin_empno, emergency, title, contents, filename,
+		                orgfilename, fileSize, status, mid_accept, fin_accept,
+		                NVL(mid_opinion, '중간결재자의견없음') AS mid_opinion, fin_opinion,
+		                to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') AS writeday, viewcnt,
+		                E.emp_name AS emp_name
+		        from tbl_appr A left join tbl_employees E
+		        ON A.fk_emp_no = E.pk_emp_no
+		        where 1 = 1
+		        and status = 2
+		        <if test='searchType != "" and searchWord != ""'>
+				and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+				</if>
+		        order by pk_appr_no desc
+		    ) V
+		) T
+		where T.rno between #{startRno} and #{endRno}
+	</select>
+
+
+	<!-- 반려문서함 -->
+	<!-- // ==== 파일첨부가 있는 게시판의 페이징 처리한 대기목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함한 것) ==== // -->		
+	<select id="edmsListSearchWithPaging_reject" parameterType="HashMap" resultType="com.spring.bts.yuri.model.ApprVO">
+		select	pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno,
+		        fk_fin_empno, emergency, title, contents, filename,
+		        orgfilename, fileSize, status, mid_accept, fin_accept,
+		        mid_opinion, fin_opinion,
+		        writeday, viewcnt,
+		        emp_name
+		from 
+		(
+		    select  rownum as rno, 
+		            pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno,
+		            fk_fin_empno, emergency, title, contents, filename,
+		            orgfilename, fileSize, status, mid_accept, fin_accept,
+		            mid_opinion, fin_opinion,
+		            writeday, viewcnt,
+		            emp_name
+		    from(   
+		        select  pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno,
+		                fk_fin_empno, emergency, title, contents, filename,
+		                orgfilename, fileSize, status, mid_accept, fin_accept,
+		                NVL(mid_opinion, '중간결재자의견없음') AS mid_opinion, fin_opinion,
+		                to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') AS writeday, viewcnt,
+		                E.emp_name AS emp_name
+		        from tbl_appr A left join tbl_employees E
+		        ON A.fk_emp_no = E.pk_emp_no
+		        where 1 = 1
+		        and status = 3
+		        <if test='searchType != "" and searchWord != ""'>
+				and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+				</if>
+		        order by pk_appr_no desc
+		    ) V
+		) T
+		where T.rno between #{startRno} and #{endRno}
+	</select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- <choose>
+		<when test="">and status = #{status}</when>
+		</choose> -->
 
 	<!-- 상세부서정보 페이지 사원목록 불러오기 -->
-   <select id="addBook_depInfo_select" resultType="com.spring.bts.hwanmo.model.EmployeeVO">
-      select E.pk_emp_no, E.emp_name , R.ko_rankname , D.ko_depname , R.pk_rank_no
-      from tbl_employees E
-      join tbl_rank_sort R
-      on E.fk_rank_id = R.pk_rank_no
-      join tbl_dep_sort D
-      on E.fk_department_id = D.pk_dep_no
-      order by R.pk_rank_no
-   </select>
-
-
-	
-	<!-- 1개글 수정하기 -->
+	<select id="addBook_depInfo_select" resultType="com.spring.bts.hwanmo.model.EmployeeVO">
+		select E.pk_emp_no, E.emp_name , R.ko_rankname , D.ko_depname , R.pk_rank_no
+		from tbl_employees E
+		join tbl_rank_sort R
+		on E.fk_rank_id = R.pk_rank_no
+		join tbl_dep_sort D
+		on E.fk_department_id = D.pk_dep_no
+		order by R.pk_rank_no
+	</select>
+   
+   
+   <!-- 상태 - 0 대기중, 1 진행중, 2 승인됨, 3 반려됨 -->
+   
+   <!-- 문서 승인하기 -->
 	<update id="accept" parameterType="com.spring.bts.yuri.model.ApprVO">
-		update tbl_appr set status = 1
-		where pk_appr_vo = #{pk_appr_vo}
-	</update>
+		update tbl_appr
+		<!-- 중간결재자의 승인 -->
+		<choose>
+			<when test="mid_accept != null and mid_accept == 0 and status == 0">
+			set status = 1, mid_accept = 1
+			where pk_appr_no = #{pk_appr_no}
+				  and fk_emp_no = #{fk_mid_emp_no}
+			</when>
+		</choose>
+		
+		<!-- 최종결재자의 승인 -->
+		<choose>
+			<when test="fin_accept != null and mid_accept == 1 and fin_accept == 0 and status == 1">
+			set status = 2, fin_accept = 1
+			where pk_appr_no = #{pk_appr_no}
+				  and fk_emp_no = #{fk_fin_emp_no}
+			</when>
+		</choose>
+	</update>		  
+	<!--
+	<set>
+		<if test="status == 0 && mid_accept == 0">
+			status = 1, mid_accept = 1
+			where pk_appr_no = #{pk_appr_no}
+				  and fk_emp_no = #{fk_fin_emp_no}
+		</if>
+	</set> 
+	 -->
 
-
+	<!-- 문서 반려하기 -->
+	<update id="reject" parameterType="com.spring.bts.yuri.model.ApprVO">
+		update tbl_appr
+		<!-- 중간결재자의 반려 -->
+		<choose>
+			<when test="mid_accept != null and mid_accept == 0 and status == 0">
+			set status = 3, mid_accept = 1
+				where pk_appr_no = #{pk_appr_no}
+					  and fk_emp_no = #{fk_mid_emp_no}
+			</when>
+		</choose>
+		
+		<!-- 최종결재자의 반려 -->
+		<choose>
+			<when test="fin_accept != null and mid_accept == 1 and fin_accept == 0 and status == 1">
+			set status = 3, fin_accept = 1
+				where pk_appr_no = #{pk_appr_no}
+					  and fk_emp_no = #{fk_fin_emp_no}
+			</when>
+		</choose>
+	</update>	
 
 
 </mapper>

@@ -44,4 +44,16 @@ public interface InterEdmsDAO {
 	
 	// 승인하기
 	int accept(ApprVO apprvo);
+
+	// 반려하기
+	int reject(ApprVO apprvo);
+
+	// 대기문서 목록 페이징 처리
+	List<ApprVO> edmsListSearchWithPaging_wait(Map<String, String> paraMap);
+
+	// 승인문서 목록 페이징 처리
+	List<ApprVO> edmsListSearchWithPaging_accept(Map<String, String> paraMap);
+
+	// 반려문서 목록 페이징 처리
+	List<ApprVO> edmsListSearchWithPaging_reject(Map<String, String> paraMap);
 }
