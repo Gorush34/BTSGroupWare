@@ -155,7 +155,7 @@ public class MailService implements InterMailService {
 	
 	// 스프링 스케줄러를 이용해서 발송예약 실행하기	  
 	@Override	  
-//	@Scheduled(cron = "0 * * * * *") 
+	@Scheduled(cron = "0 * * * * *") 
 	public void reservationMailSendSchedular() throws Exception { 
 	  // ***주의*** 스케줄러로 사용되어지는 메소드는 반드시 파라미터는 없어야 한다.
 	  
