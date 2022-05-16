@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.mybatis.spring.SqlSessionTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import com.spring.bts.hwanmo.model.EmployeeVO;
@@ -13,7 +15,7 @@ import com.spring.bts.hwanmo.model.EmployeeVO;
 // === DAO 선언 === //
 @Repository
 public class EdmsDAO implements InterEdmsDAO {
-
+	private final Logger LOGGER = LoggerFactory.getLogger(EdmsDAO.class);
 	// === 의존객체 주입하기(DI: Dependency Injection) === //
 	/* 
 		>>> 의존 객체 자동 주입(Automatic Dependency Injection)은
@@ -126,6 +128,8 @@ public class EdmsDAO implements InterEdmsDAO {
 	// 승인하기
 	@Override
 	public int accept(ApprVO apprvo) {
+		System.out.println("accept(ApprVO apprvo)");
+		System.out.println(apprvo.toString());
 		int n = sqlsession.update("yuri.accept", apprvo);
 		return n;
 	}

@@ -141,7 +141,7 @@
 		<div class="divClear"></div>
 		
 		<div class="more">
-			<span class="more" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsMydoc_accepted.bts'">전체보기</span>
+			<span class="more" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/accept/list.bts'">전체보기</span>
 		</div>
 		
 		<div class="divClear"></div>
@@ -208,7 +208,7 @@
 		<div class="divClear"></div>
 		
 		<div class="more">
-			<span class="more" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edmsMydoc_rejected.bts'">전체보기</span>
+			<span class="more" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/reject/list.bts'">전체보기</span>
 		</div>
 		
 		<div class="divClear"></div>
