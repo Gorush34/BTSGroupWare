@@ -78,4 +78,25 @@ public class EmployeeService implements InterEmployeeService {
 		return n;
 	}
 
+	// 원시인(생일구하기)
+	@Override
+	public Map<String, String> getBirthday(int pk_emp_no) {
+		Map<String, String> paraMap = empDAO.getBirthday(pk_emp_no);
+		return paraMap;
+	}
+
+	// 프로필 사진 업데이트
+	@Override
+	public int updateEmpImg(EmployeeVO empVO) {
+		int n = empDAO.updateEmpImg(empVO);
+		return n;
+	}
+
+	// 회원정보 수정
+	@Override
+	public int updateMember(EmployeeVO empvo) {
+		int n = empDAO.updateMember(empvo);
+		return n;
+	}
+
 }

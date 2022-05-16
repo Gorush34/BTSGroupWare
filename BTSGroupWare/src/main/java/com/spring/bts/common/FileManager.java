@@ -9,6 +9,8 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
+import java.util.Iterator;
+import java.util.UUID;
 
 import javax.media.jai.JAI;
 import javax.media.jai.RenderedOp;
@@ -16,11 +18,14 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 // === #154. FileManager 클래스 생성하기 === 
 @Component 
 public class FileManager {
-
+	
+	
 	// == 파일 업로드 하기 첫번째 방법 ==
 	// byte[] bytes : 파일의 내용물
     // String originalFilename : 첨부된 파일의 원래이름
@@ -274,8 +279,8 @@ public class FileManager {
        height = bi.getHeight();		
 		
 	   return height;
-	}	
-		
+	}
+	
 }
 
 

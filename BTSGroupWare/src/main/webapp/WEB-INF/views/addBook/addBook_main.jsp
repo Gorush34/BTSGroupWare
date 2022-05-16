@@ -18,6 +18,12 @@ $( document ).ready( function() {
 	  $( "button#fastadd" ).click( function() {
 	    $( "div#fassadd_input" ).slideToggle();
 	  });
+
+	  // 유효성검사
+	  
+	  // 유효성검사
+	  
+
 	  
 }); // end of $( document ).ready( function()
 
@@ -59,21 +65,32 @@ $( document ).ready( function() {
 		    frm.method = "post"
 	    	frm.submit();
 		}
-
-		
-			
-	 	
-		
 		
 	}
 	
-	<%-- function updateFrm() {
+	/* 이메일 선택or직접입력 */
+	function selectEmail(ele){ 
+		var $ele = $(ele); 
+		var $email2 = $('input[name=email2]');
 		
-		const frm = document.updateFrm;
-	    frm.action = "<%=ctxPath%>/addBook/addBook_main_telUpdate_update.bts"
-	    frm.method = "POST"
-	    frm.submit();
-	} --%>	
+		// '1'인 경우 직접입력 
+		if($ele.val() == "1"){ 
+			$email2.attr('readonly', false); 
+			$email2.val(''); 
+		} else { 
+			$email2.attr('readonly', true); 
+			$email2.val($ele.val()); 
+		} 
+	}
+
+	/* 이메일 선택or직접입력 */
+	
+	function goSearch()	{
+		const frm = document.searchFrm;
+	    frm.action = "<%=ctxPath%>/addBook/addBook_main.bts"
+	    frm.method = "get"
+    	frm.submit();
+	}
 
 
 </script>
@@ -82,11 +99,11 @@ $( document ).ready( function() {
 
 	<table id="Main_main_tbl">
 		<tr>
-			<td colspan="8" style="text-align: left;"><br><h2>전체주소록</h2><br><br></td>
+			<td colspan="8" style="text-align: left;"><br><h2>${sessionScope.loginuser.emp_name} 의 주소록&nbsp;<button class="btn btn-info btn-sm" id="" style="border: solid lightgray 1.5px;" onclick="location.href='http://localhost:9090/bts/addBook/addBook_telAdd.bts'">추가</button></h2><br><br></td>
 			<td>
 				  <div class="d-flex align-items-center">
-				    <input class="form-control" type="search" id="searchText" value="" style="width:115px;" placeholder="주소록검색" aria-label="Search">
-				    <button id="searchBtn" class="btn btn-outline-success flex-shrink-0" type="submit" onclick="searchBtn()">검색</button>
+				    <form name="searchFrm"><input class="form-control" type="text" name="searchWord" id="searchWord" value="" style="width:115px;" placeholder="주소록검색" aria-label="Search"><input type="text" style="display: none;"/></form>
+				    <button id="searchBtn" class="btn btn-outline-success flex-shrink-0" type="button" style="margin-bottom:10%;" onclick="goSearch()">검색</button>
 				  </div>
 			</td>
 		</tr>
@@ -194,13 +211,13 @@ $( document ).ready( function() {
 		
 		<div class="form-group">
 		<label for="recipient-name" class="control-label"><strong>이름</strong></label>
-		<input type="text" class="form-control" id="name" name="name">
+		<input type="text" class="form-control" id="name" name="name" maxlength="6">
 		</div>
 		
 		<div class="form-group">
 		<label for="recipient-name" class="control-label"><strong>부서</strong></label>
 			<select id="department" name="department" class="form-control">
-			  <option selected >--</option>
+			  <option value="700" selected >&nbsp;</option>
 			  <option value="100">영업</option>
 			  <option value="200">마케팅</option>
 			  <option value="300">기획</option>
@@ -213,7 +230,7 @@ $( document ).ready( function() {
 		<div class="form-group">
 		<label for="recipient-name" class="control-label"><strong>직급</strong></label>
 			<select id="rank" name="rank" class="form-control">
-			  <option selected >--</option>
+			  <option value="90"selected >&nbsp;</option>
 			  <option value="10">사원</option>
 			  <option value="20">주임</option>
 			  <option value="30">대리</option>
@@ -227,12 +244,28 @@ $( document ).ready( function() {
 		
 		<div class="form-group">
 		<label for="recipient-name" class="control-label"><strong>이메일</strong></label>
-		<input type="text" class="form-control" id="email" name="email">
+		<p>
+			<input class="form-control" id="email1" name="email1" style="width:140px; display:inline;" type="text" maxlength="12">&nbsp;@
+			<input class="form-control" id="email2" name="email2" style="width:137px; display:inline;" type="text" maxlength="12" placeholder="직접입력">&nbsp;
+			<select class="form-control" name="select_email" style="width:150px; display:inline;" onChange="selectEmail(this)">
+				<option value="gmail.com">gmail.com</option>
+				<option value="naver.com">naver.com</option>
+				<option value="nate.com">nate.com</option>
+				<option value="hanmail.net">hanmail.net</option>
+				<option value="1" selected>직접입력</option>
+			</select>
+		</p>
 		</div>
 		
-		<div class="form-group">
+		<div class="form-group" style="display:inline;">
 		<label for="recipient-name" class="control-label"><strong>휴대폰</strong></label>
-		<input type="text" class="form-control" id="phone" name="phone">
+			<p>
+        	<select class="form-control" id="hp1" name="hp1" style="width:139px; display:inline;" >
+				<option value="010">010</option>
+			</select>&nbsp;-&nbsp;
+			<input class="form-control" id="hp2" name="hp2" style="width:140px; display:inline;" type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">&nbsp;-&nbsp; 
+			<input class="form-control" id="hp3" name="hp3" style="width:140px; display:inline;" type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+			</p>
 		</div>
 		
 		<div class="form-group">
@@ -240,9 +273,36 @@ $( document ).ready( function() {
 		<input type="text" class="form-control" id="company_name" name="company_name">
 		</div>
 		
-		<div class="form-group">
+		<div class="form-group" >
 		<label for="recipient-name" class="control-label"><strong>회사전화번호</strong></label>
-		<input type="text" class="form-control" id="company_tel" name="company_tel">
+		<div style="display:inline;">
+		<p>
+		<select class="form-control" id="num1" name="num1" style="width:139px; display:inline; ">
+					<option value="">선택</option>
+					<option value="02">02</option>
+					<option value="031">031</option>
+					<option value="032">032</option>
+					<option value="033">033</option>
+					<option value="041">041</option>
+					<option value="042">042</option>
+					<option value="043">043</option>
+					<option value="044">044</option>
+					<option value="051">051</option>
+					<option value="052">052</option>
+					<option value="053">053</option>
+					<option value="054">054</option>
+					<option value="055">055</option>
+					<option value="061">061</option>
+					<option value="062">062</option>
+					<option value="063">063</option>
+					<option value="064">064</option>
+					<option value="070">070</option>
+					<option value="010">010</option>
+				</select>&nbsp;-&nbsp;
+		<input class="form-control" id="num2" name="num2" style="width:140px; display:inline; " type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">&nbsp;-&nbsp; 
+		<input class="form-control" id="num3" name="num3" style="width:140px; display:inline; " type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+		</p>
+		</div>
 		</div>
 		
 		<div class="form-group">

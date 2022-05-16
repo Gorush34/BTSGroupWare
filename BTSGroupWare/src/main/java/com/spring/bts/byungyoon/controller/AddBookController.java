@@ -1,6 +1,5 @@
 package com.spring.bts.byungyoon.controller;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,7 +19,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.spring.bts.byungyoon.model.AddBookVO;
 import com.spring.bts.byungyoon.service.InterAddBookService;
 import com.spring.bts.hwanmo.model.EmployeeVO;
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 //=== 컨트롤러 선언 === //
 /* 
@@ -37,23 +36,34 @@ public class AddBookController {
 	
    // 주소록 메인페이지
    @RequestMapping(value="/addBook/addBook_main.bts")
-   public ModelAndView addBook_main(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+   public ModelAndView requiredLogin_requaddBook_main(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	   
+	   
+	   
+	   Map<String, String> paraMap = new HashMap<>();
 	   
 	   HttpSession session = request.getSession();
-	   EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+	   EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
 	   
 	   String str_currentShowPageNo = request.getParameter("currentShowPageNo");
+	   String searchWord = request.getParameter("searchWord");
+	   
+	   if(searchWord == null || "".equals(searchWord) || searchWord.trim().isEmpty() ) {
+			searchWord = "";
+		}
 	   
 	   int totalCount = 0;        // 총 게시물 건수
 	   int sizePerPage = 5;       // 한 페이지당 보여줄 게시물 건수 
 	   int currentShowPageNo = 0; // 현재 보여주는 페이지번호로서, 초기치로는 1페이지로 설정함.
 	   int totalPage = 0;         // 총 페이지수(웹브라우저상에서 보여줄 총 페이지 개수, 페이지바)
+	   int startRno = 0; 		  // 시작 행번호
+	   int endRno = 0;   		  // 끝 행번호
+	   int registeruser = loginuser.getPk_emp_no();
 	   
-	   int startRno = 0; // 시작 행번호
-	   int endRno = 0;   // 끝 행번호
+	   paraMap.put("registeruser", String.valueOf(registeruser));
+	   paraMap.put("searchWord", searchWord);
 	   
-	   
-	   totalCount = service.addBook_main_totalPage();
+	   totalCount = service.addBook_main_totalPage(paraMap);
 	   
 	   totalPage = (int) Math.ceil((double)totalCount/sizePerPage);
 	   
@@ -72,15 +82,24 @@ public class AddBookController {
 	   
 	   
 	   //DB에서 얼마나 가져올지 정하는거
-	   Map<String, String> paraMap = new HashMap<>();
 	   
 	   startRno = ((currentShowPageNo - 1) * sizePerPage) + 1;
 	   endRno = startRno + sizePerPage - 1;
 	   
+	   String message = "";
+	   String loc = "";
+	   
+	  int pk_emp_no = loginuser.getPk_emp_no();
+	   
 	   paraMap.put("startRno", String.valueOf(startRno));
 	   paraMap.put("endRno",  String.valueOf(endRno));
+	   paraMap.put("pk_emp_no",  String.valueOf(pk_emp_no));
 	   
 	   List<AddBookVO> adbList = service.addBook_main_select(paraMap);
+	   
+	   if( !"".equals(searchWord) ) {
+			mav.addObject("paraMap", paraMap);
+		}
 	   
 	   int blockSize = 10;
 	   int loop = 1;
@@ -91,8 +110,8 @@ public class AddBookController {
 	   String url = "addBook_main.bts";
 	   
 	   if(pageNo != 1) {
-			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?&currentShowPageNo=1'>[맨처음]</a></li>";
-			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchWord="+searchWord+"?&currentShowPageNo=1'>[맨처음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchWord="+searchWord+"?&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
 		}
 		
 		while( !(loop > blockSize || pageNo > totalPage) ) {
@@ -101,7 +120,7 @@ public class AddBookController {
 				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";  
 			}
 			else {
-				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>"; 
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>"; 
 			}
 			
 			loop++;
@@ -111,15 +130,19 @@ public class AddBookController {
 	   
 		// === [다음][마지막] 만들기 === //
 		if( pageNo <= totalPage ) {
-			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
-			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?&currentShowPageNo="+totalPage+"'>[마지막]</a></li>"; 
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchWord="+searchWord+"?&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchWord="+searchWord+"?&currentShowPageNo="+totalPage+"'>[마지막]</a></li>"; 
 		}
 		
 		pageBar += "</ul>";
+	
 		
+	   mav.addObject("message", message);
+	   mav.addObject("loc", loc);
 	   mav.addObject("pageBar", pageBar);	
-	   
 	   mav.addObject("adbList", adbList);
+	   mav.addObject("loginuser", loginuser);
+	   
 	   mav.setViewName("addBook_main.addBook");
 	   
       return mav;
@@ -128,14 +151,22 @@ public class AddBookController {
    
    // 주소록 연락처 추가 페이지 
    @RequestMapping(value="/addBook/addBook_telAdd.bts")
-   public ModelAndView addBook_telAdd(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
-      
-	   /* 유리 줄 부분 시작 */
+   public ModelAndView requiredLogin_addBook_telAdd(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	   
+	   HttpSession session = request.getSession();
+	   EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+	 
 	   List<EmployeeVO> empList = service.addBook_depInfo_select();
 	   
-	   mav.addObject("empList", empList);
+		
+		 String message = "";
+		 String loc = "";
+		   
 	   
-	   /* 유리 줄 부분 끝 */
+	   mav.addObject("loginuser", loginuser);
+	   mav.addObject("message", message);
+	   mav.addObject("loc", loc);
+	   mav.addObject("empList", empList);
 	   
 	   mav.setViewName("addBook_telAdd.addBook");
 	   
@@ -148,19 +179,34 @@ public class AddBookController {
    @RequestMapping(value="/addBook/addBook_telAdd_insert.bts" , method = {RequestMethod.POST}, produces="text/plain;charset=UTF-8")
    public ModelAndView addBook_telAdd_insert(HttpServletRequest request, ModelAndView mav) {
 	   
+	   HttpSession session = request.getSession();
+	   EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
 	   
+	   List<EmployeeVO> empList = service.addBook_depInfo_select();
+	   
+	   int registeruser = loginuser.getPk_emp_no();
 	   String addb_name = request.getParameter("addb_name");
 	   int fk_dept_no = Integer.parseInt(request.getParameter("department"));
 	   int fk_rank_no = Integer.parseInt(request.getParameter("rank"));
-	   String email = request.getParameter("email");
-	   String phone = request.getParameter("phone");
+	   String email1 = request.getParameter("email1");
+	   String email2 = request.getParameter("email2");
+	   String email = email1+"@"+email2;
+	   String hp1 = request.getParameter("hp1");
+	   String hp2 = request.getParameter("hp2");
+	   String hp3 = request.getParameter("hp3");
+	   String phone = hp1+"-"+hp2+"-"+hp3; 
+	   
 	   String companyname = request.getParameter("company");
-	   String com_tel = request.getParameter("com_tel");
+	   String num1 = request.getParameter("num1");												
+	   String num2 = request.getParameter("num2");												
+	   String num3 = request.getParameter("num3");
+	   String com_tel = num1+"-"+num2+"-"+num3;
 	   String company_address = request.getParameter("company_address");
 	   String memo = request.getParameter("memo");
 	   
 	   AddBookVO avo = new AddBookVO();
 	   
+	   avo.setRegisteruser(registeruser);
 	   avo.setAddb_name(addb_name);
 	   avo.setFk_dept_no(fk_dept_no);
 	   avo.setFk_rank_no(fk_rank_no);
@@ -188,6 +234,7 @@ public class AddBookController {
 		   loc =  request.getContextPath()+"/addBook/addBook_telAdd.bts"; 
 	   }
 		
+	    mav.addObject("empList", empList);
 		mav.addObject("message", message);
 		mav.addObject("loc", loc);
 		
@@ -204,6 +251,7 @@ public class AddBookController {
 	   Map<String,Object> updateMap = new HashMap<>();
 	   
 	   int pk_addbook_no = Integer.parseInt(request.getParameter("pk_addbook_no"));
+	   
 	   
 	   AddBookVO avo = service.addBook_main_telUpdate_select(pk_addbook_no);
 	   updateMap.put("pk_addbook_no", avo.getPk_addbook_no());
@@ -226,16 +274,26 @@ public class AddBookController {
    @RequestMapping(value="/addBook/addBook_main_telUpdate_update.bts" , method = {RequestMethod.POST}, produces="text/plain;charset=UTF-8")
    public ModelAndView addBook_main_telUpdate_update(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 	   
+	   
 	   int pk_addbook_no = Integer.parseInt(request.getParameter("pk_addbook_no"));
 	   String addb_name = request.getParameter("name");
 	   int fk_dept_no = Integer.parseInt(request.getParameter("department"));
 	   int fk_rank_no = Integer.parseInt(request.getParameter("rank"));
-	   String email = request.getParameter("email");
-	   String phone = request.getParameter("phone");
+	   String email1 = request.getParameter("email1");
+	   String email2 = request.getParameter("email2");
+	   String email = email1+"@"+email2;
+	   String hp1 = request.getParameter("hp1");												
+	   String hp2 = request.getParameter("hp2");												
+	   String hp3 = request.getParameter("hp3");
+	   String phone = hp1+"-"+hp2+"-"+hp3;
 	   String companyname = request.getParameter("company_name");
-	   String com_tel = request.getParameter("company_tel");
+	   String num1 = request.getParameter("num1");												
+	   String num2 = request.getParameter("num2");												
+	   String num3 = request.getParameter("num3");
+	   String com_tel = num1+"-"+num2+"-"+num3;
 	   String company_address  = request.getParameter("company_address");
 	   String memo = request.getParameter("memo");
+	   
 	   
 	   AddBookVO avo = new AddBookVO(); 
 	   
@@ -278,6 +336,9 @@ public class AddBookController {
    @RequestMapping(value="/addBook/addBook_depInfo.bts")
    public ModelAndView addBook_depInfo(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 	   
+	   HttpSession session = request.getSession();
+	   EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+	   
 	   List<EmployeeVO> empList = service.addBook_depInfo_select();
 	   
 	   mav.addObject("empList", empList);
@@ -291,6 +352,9 @@ public class AddBookController {
    // 상세부서정보 페이지에서 사원상세정보 ajax로 select 해오기
 	@RequestMapping(value="/addBook/addBook_depInfo_select_ajax.bts", produces = "application/json; charset=utf-8")
 	public Map<String,Object> addBook_depInfo_select_ajax(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
 		
 		Map<String,Object> depInfoMap = new HashMap<>();
 		
@@ -330,6 +394,61 @@ public class AddBookController {
 	      
 		return mav;
 	}
+	
+	
+	 // 실험용 페이지
+	   @RequestMapping(value="/addBook/orgChart_sample.bts")
+	   public ModelAndView orgChart_sample(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		   
+		   
+		   HttpSession session = request.getSession();
+		   EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+		 
+		   List<EmployeeVO> empList = service.addBook_depInfo_select();
+		   
+			
+			 String message = "";
+			 String loc = "";
+			   
+		   
+		   mav.addObject("loginuser", loginuser);
+		   mav.addObject("message", message);
+		   mav.addObject("loc", loc);
+		   mav.addObject("empList", empList);
+		   
+		   mav.setViewName("orgChart_sample.addBook");
+		   
+	      return mav;
+	   }
+	   
+	   
+	// 실험용 ajax 페이지
+	   @RequestMapping(value="/addBook/orgChart_sample_ajax.bts")
+	   public ModelAndView orgChart_sample_ajax(HttpServletRequest request, HttpServletResponse response, 
+			   @RequestParam(value="empno[]") List<String> empno,
+			   @RequestParam(value="name[]") List<String> name,
+			   @RequestParam(value="rank[]") List<String> rank,   
+			   @RequestParam(value="dept[]") List<String> dept) {
+		   
+		   
+		   System.out.println(empno);
+		   System.out.println(name);
+		   System.out.println(rank);
+		   System.out.println(dept);
+		   
+		   HttpSession session = request.getSession();
+		   EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+		 
+		   List<EmployeeVO> empList = service.addBook_depInfo_select();
+		   
+			
+			 String message = "";
+			 String loc = "";
+			   
+		   
+		   
+	      return null;
+	   }
 	
 
    

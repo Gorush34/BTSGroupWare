@@ -4,6 +4,7 @@ package com.spring.bts.jieun.controller;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,7 +19,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.spring.bts.common.MyUtil;
+import com.spring.bts.hwanmo.model.EmployeeVO;
 import com.spring.bts.jieun.model.CalendarVO;
+import com.spring.bts.jieun.model.ScheduleVO;
 import com.spring.bts.jieun.service.InterResourceService;
 
 
@@ -50,25 +54,6 @@ public class ResourceController {
 		return mav;
 	}
 
-	// === 예약 및 자원 관리자 페이지 === //	
-	@RequestMapping(value="/reservation/reservationAdmin.bts")
-	public ModelAndView reservationAdmin(ModelAndView mav) {
-		
-		mav.setViewName("reservationAdmin.resource");
-		
-		return mav;
-	}
-	
-	// === 자원등록 페이지 === //	
-	@RequestMapping(value="/reservation/resourceRegister.bts")
-	public ModelAndView resourceRegister(ModelAndView mav) {
-		
-		
-		
-		mav.setViewName("resourceRegister.resource");
-		
-		return mav;
-	}
 	
 	// === 예약 페이지에 띄울 자원 리스트 가져오기 === //
 	@ResponseBody
@@ -113,6 +98,7 @@ public class ResourceController {
 			jsonObj.addProperty("RSERSTARTDATE", map.get("RSERSTARTDATE"));
 			jsonObj.addProperty("RSERENDDATE", map.get("RSERENDDATE"));
 			jsonObj.addProperty("PK_RSERNO", map.get("PK_RSERNO"));
+			jsonObj.addProperty("COLOR", map.get("COLOR"));
 			
 			jsonArr.add(jsonObj);
 		}// end of for-------------------------------------------
@@ -157,7 +143,7 @@ public class ResourceController {
 		String fk_rno = request.getParameter("pk_rno");
 		String fk_classno = request.getParameter("pk_classno");
 		String rserusecase = request.getParameter("rserusecase");
-		
+		String color = request.getParameter("color");
 		
 		Map<String, String> paraMap = new HashMap<>();
 		
@@ -167,6 +153,7 @@ public class ResourceController {
 		paraMap.put("fk_rno", fk_rno);
 		paraMap.put("fk_classno", fk_classno);
 		paraMap.put("rserusecase", rserusecase);
+		paraMap.put("color", color);
 		
 		int n = service.addReservation(paraMap);
 		
@@ -220,5 +207,151 @@ public class ResourceController {
 		return jsonObj.toString();
 		
 	}
+	
+	
+	// === 예약 및 자원 관리자 페이지 === //	
+	@RequestMapping(value="/reservation/reservationAdmin.bts")
+	public ModelAndView reservationAdmin(ModelAndView mav) {
+		
+		List<Map<String, String>> resourceList = service.resourceReservation();
+		
+		mav.addObject("resourceList",resourceList);
+		mav.setViewName("reservationAdmin.resource");
+		
+		return mav;
+	}
+	
+	// === 자원등록 페이지 === //	
+	@RequestMapping(value="/reservation/resourceRegister.bts")
+	public ModelAndView resourceRegister(ModelAndView mav) {
+		
+		mav.setViewName("resourceRegister.resource");
+		
+		return mav;
+	}
+		
+	
+	// === 자원 등록 하기 : 관리자 === //
+	@RequestMapping(value="/resource/resourceRegister_end.bts", method= {RequestMethod.POST})
+	public ModelAndView resourceRegister_end(ModelAndView mav, HttpServletRequest request) throws Throwable {
+		
+		String rname = request.getParameter("rname");
+		String fk_classno = request.getParameter("fk_classno");
+		String rinfo = request.getParameter("rinfo");
+		
+		Map<String,String> paraMap = new HashMap<String, String>();
+		paraMap.put("rname", rname);
+		paraMap.put("fk_classno", fk_classno);
+		paraMap.put("rinfo", rinfo);
+		
+		int n = service.resourceRegister_end(paraMap);
+
+		if(n == 0) {
+			mav.addObject("message", "자원 등록에 실패하였습니다.");
+		}
+		else {
+			mav.addObject("message", "자원 등록에 성공하였습니다.");
+		}
+		
+		mav.addObject("loc", request.getContextPath()+"/reservation/reservationMain.bts");
+		
+		mav.setViewName("msg");
+		
+		return mav;
+	}
+	
+	// == 자원 수정 페이지 == //
+	@RequestMapping(value="/resource/resourceEdit.bts", method= {RequestMethod.POST})
+	public ModelAndView resourceEdit(ModelAndView mav, HttpServletRequest request) {
+		
+		String pk_rno = request.getParameter("pk_rno");
+		
+		try {
+			Integer.parseInt(pk_rno);			
+			
+			List<Map<String, String>> resourceList = service.resourceEdit(pk_rno);
+			mav.addObject("resourceList",resourceList);
+
+			
+		} catch (NumberFormatException e) {
+			mav.setViewName("redirect:/reservation/reservationAdmin.bts");
+		}
+		return mav;
+	}
+	
+	// == 자원 수정 == //
+	@RequestMapping(value="/resource/resourceEditEnd.bts", method= {RequestMethod.POST})
+	public ModelAndView resourceEditEnd( HttpServletRequest request, ModelAndView mav) {
+		
+		String pk_rno = request.getParameter("pk_rno");
+		
+		String rname = request.getParameter("rname");
+		String pk_classno = request.getParameter("pk_classno");
+		String rinfo = request.getParameter("rinfo");
+		
+		Map<String,String> paraMap = new HashMap<String, String>();
+		paraMap.put("pk_rno", pk_rno);
+		paraMap.put("rname", rname);
+		paraMap.put("pk_classno", pk_classno);
+		paraMap.put("rinfo", rinfo);
+		
+		
+		try {
+			
+			int n = service.resourceEditEnd(paraMap);
+			
+			if(n==1) {
+				mav.addObject("message", "자원을 수정하였습니다.");
+				mav.addObject("loc", request.getContextPath()+"/reservation/reservationAdmin.bts");
+			}
+			else {
+				mav.addObject("message", "자원 수정에 실패하였습니다.");
+				mav.addObject("loc", "javascript:history.back()");
+			}
+			
+			mav.setViewName("msg");
+		} catch (Throwable e) {	
+			e.printStackTrace();
+			mav.setViewName("redirect:/reservation/reservationAdmin.bts");
+		}
+		
+		return mav;
+	}
+	//
+	// == 자원 삭제 == //
+	@ResponseBody
+	@RequestMapping(value="/resource/deleteResource.bts", method= {RequestMethod.POST})
+	public String deleteResource(HttpServletRequest request) {
+		
+		String pk_rno = request.getParameter("pk_rno");
+		
+		int n = service.deleteResource(pk_rno);
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n);
+		
+		return jsonObj.toString();
+	}
+	
+	
+	// == 메인 페이지 예약 수 불러오기 == //
+		@ResponseBody
+		@RequestMapping(value="/reservation/reservationCount.bts")
+		public String reservationCount(HttpServletRequest request) {
+			
+			HttpSession session = request.getSession();
+			EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+			
+			
+			int pk_emp_no = loginuser.getPk_emp_no();
+			System.out.println("pk_emp_no" +pk_emp_no);
+			int n = service.reservationCount(pk_emp_no);
+			System.out.println(n);
+			
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("n", n);
+			
+			return jsonObj.toString();
+		}
 		
 }

@@ -1,16 +1,21 @@
 package com.spring.bts.controller;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.bts.common.MyUtil;
@@ -83,7 +88,7 @@ public class BtsController {
 	
 	// 메인 페이지 요청
 	@RequestMapping(value="/index.bts")
-	public ModelAndView index(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView requiredLogin_index(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		// getCurrentURL(request); // 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출 
 		
@@ -223,6 +228,130 @@ public class BtsController {
 		
 	}
 	
+	
+	// === #200. 기상청 공공데이터(오픈데이터)를 가져와서 날씨정보 보여주기 === //
+	@RequestMapping(value = "/opendata/weatherXML.bts", method = {RequestMethod.GET})	// default 가 GET.
+	public String weatherXML() {
+		
+		return "opendata/weatherXML";		// 접두어/접미어 기억하기
+		// /Board/src/main/webapp/WEB-INF/views/opendata/weatherXML.jsp 파일을 생성한다.
+	}
+		
+	//////////////////////////////////////////////////////
+	@ResponseBody
+	@RequestMapping(value="/opendata/weatherXMLtoJSON.bts", method= {RequestMethod.POST}, produces="text/plain;charset=UTF-8") 
+	public String weatherXMLtoJSON(HttpServletRequest request) { 
+	
+		String str_jsonObjArr = request.getParameter("str_jsonObjArr");
+		/*  확인용
+		//   System.out.println(str_jsonObjArr);
+		//  [{"locationName":"속초","ta":"2.4"},{"locationName":"북춘천","ta":"-2.3"},{"locationName":"철원","ta":"-2.0"},{"locationName":"동두천","ta":"-0.7"},{"locationName":"파주","ta":"-1.2"},{"locationName":"대관령","ta":"-3.0"},{"locationName":"춘천","ta":"-1.6"},{"locationName":"백령도","ta":"1.1"},{"locationName":"북강릉","ta":"3.4"},{"locationName":"강릉","ta":"4.3"},{"locationName":"동해","ta":"4.1"},{"locationName":"서울","ta":"-0.3"},{"locationName":"인천","ta":"-0.2"},{"locationName":"원주","ta":"-2.2"},{"locationName":"울릉도","ta":"4.2"},{"locationName":"수원","ta":"1.4"},{"locationName":"영월","ta":"-4.5"},{"locationName":"충주","ta":"-3.0"},{"locationName":"서산","ta":"2.5"},{"locationName":"울진","ta":"3.9"},{"locationName":"청주","ta":"-0.7"},{"locationName":"대전","ta":"2.9"},{"locationName":"추풍령","ta":"3.2"},{"locationName":"안동","ta":"-2.3"},{"locationName":"상주","ta":"1.5"},{"locationName":"포항","ta":"4.7"},{"locationName":"군산","ta":"2.6"},{"locationName":"대구","ta":"1.6"},{"locationName":"전주","ta":"5.7"},{"locationName":"울산","ta":"4.0"},{"locationName":"창원","ta":"4.4"},{"locationName":"광주","ta":"2.8"},{"locationName":"부산","ta":"4.3"},{"locationName":"통영","ta":"5.7"},{"locationName":"목포","ta":"4.5"},{"locationName":"여수","ta":"5.6"},{"locationName":"흑산도","ta":"7.8"},{"locationName":"완도","ta":"7.3"},{"locationName":"고창","ta":"3.5"},{"locationName":"순천","ta":"5.3"},{"locationName":"홍성","ta":"1.7"},{"locationName":"제주","ta":"8.5"},{"locationName":"고산","ta":"9.1"},{"locationName":"성산","ta":"7.5"},{"locationName":"서귀포","ta":"8.8"},{"locationName":"진주","ta":"3.5"},{"locationName":"강화","ta":"-0.9"},{"locationName":"양평","ta":"-1.3"},{"locationName":"이천","ta":"-2.0"},{"locationName":"인제","ta":"-0.5"},{"locationName":"홍천","ta":"-2.6"},{"locationName":"태백","ta":"-1.5"},{"locationName":"정선군","ta":"-1.9"},{"locationName":"제천","ta":"-4.4"},{"locationName":"보은","ta":"-1.2"},{"locationName":"천안","ta":"-1.0"},{"locationName":"보령","ta":"3.6"},{"locationName":"부여","ta":"0.6"},{"locationName":"금산","ta":"3.7"},{"locationName":"세종","ta":"-0.8"},{"locationName":"부안","ta":"5.8"},{"locationName":"임실","ta":"1.6"},{"locationName":"정읍","ta":"5.8"},{"locationName":"남원","ta":"0.1"},{"locationName":"장수","ta":"1.4"},{"locationName":"고창군","ta":"4.3"},{"locationName":"영광군","ta":"4.2"},{"locationName":"김해시","ta":"4.1"},{"locationName":"순창군","ta":"1.0"},{"locationName":"북창원","ta":"5.9"},{"locationName":"양산시","ta":"3.9"},{"locationName":"보성군","ta":"5.1"},{"locationName":"강진군","ta":"4.4"},{"locationName":"장흥","ta":"4.9"},{"locationName":"해남","ta":"6.2"},{"locationName":"고흥","ta":"5.4"},{"locationName":"의령군","ta":"5.7"},{"locationName":"함양군","ta":"4.9"},{"locationName":"광양시","ta":"5.4"},{"locationName":"진도군","ta":"7.0"},{"locationName":"봉화","ta":"-3.3"},{"locationName":"영주","ta":"-4.3"},{"locationName":"문경","ta":"-3.1"},{"locationName":"청송군","ta":"0.5"},{"locationName":"영덕","ta":"4.7"},{"locationName":"의성","ta":"-0.6"},{"locationName":"구미","ta":"2.3"},{"locationName":"영천","ta":"3.4"},{"locationName":"경주시","ta":"4.5"},{"locationName":"거창","ta":"0.8"},{"locationName":"합천","ta":"0.7"},{"locationName":"밀양","ta":"1.1"},{"locationName":"산청","ta":"4.2"},{"locationName":"거제","ta":"5.8"},{"locationName":"남해","ta":"6.2"}]  
+		*/
+		//   return str_jsonObjArr;  -- 지역 96개 모두 차트에 그리기에는 너무 많으므로 아래처럼 작업을 하여 지역을  21개(String[] locationArr 임)로 줄여서 나타내기로 하겠다.
+		
+		str_jsonObjArr = str_jsonObjArr.substring(1, str_jsonObjArr.length()-1);
+		
+		String[] arr_str_jsonObjArr = str_jsonObjArr.split("\\},");
+		
+		for(int i=0; i<arr_str_jsonObjArr.length; i++) {
+			arr_str_jsonObjArr[i] += "}";	//,"ta":"15.7"} 부분에서 '}' 부분 += 함.
+		}
+		
+		/*  확인용
+		for(String jsonObj : arr_str_jsonObjArr) {
+			System.out.println(jsonObj);
+		}
+		
+		*/ // jsonObj 객체 하나하나가 나온다.
+		// {"locationName":"속초","ta":"15.7"}
+		// {"locationName":"북춘천","ta":"24.9"}
+		// {"locationName":"철원","ta":"23.8"}
+		// {"locationName":"동두천","ta":"26.3"}
+		// {"locationName":"파주","ta":"25.5"}
+		// {"locationName":"대관령","ta":"10.8"}
+		// {"locationName":"춘천","ta":"26.7"}
+		// {"locationName":"백령도","ta":"13.8"}
+		// ........ 등등  
+		// {"locationName":"밀양","ta":"24.7"}
+		// {"locationName":"산청","ta":"24.2"}
+		// {"locationName":"거제","ta":"21.0"}
+		// {"locationName":"남해","ta":"22.7"}
+		
+		
+		String[] locationArr = {"서울","인천","수원","춘천","강릉","청주","홍성","대전","안동","포항","대구","전주","울산","부산","창원","여수","광주","목포","제주","울릉도","백령도"};
+		String result = "[";
+		
+		for(String jsonObj : arr_str_jsonObjArr) {
+		
+		for(int i=0; i<locationArr.length; i++) {
+			//  if( jsonObj.indexOf(locationArr[i]) >= 0 ) { // 북춘천,춘천,북강릉,강릉,북창원,창원이 있으므로  if(jsonObj.indexOf(locationArr[i]) >= 0) { 을 사용하지 않음 
+				if( jsonObj.substring(jsonObj.indexOf(":")+2, jsonObj.indexOf(",")-1).equals(locationArr[i]) ) { 
+					result += jsonObj+",";  // [{"locationName":"춘천","ta":"26.7"},{"locationName":"백령도","ta":"13.8"}, ..... {"locationName":"제주","ta":"18.9"}, 
+					break;
+				}
+			}
+		}// end of for------------------------------
+		
+			result = result.substring(0, result.length()-1);  // [{"locationName":"춘천","ta":"26.7"},{"locationName":"백령도","ta":"13.8"}, ..... {"locationName":"제주","ta":"18.9"}
+			result = result + "]";                            // [{"locationName":"춘천","ta":"26.7"},{"locationName":"백령도","ta":"13.8"}, ..... {"locationName":"제주","ta":"18.9"}]
+			
+			/*  확인용
+			System.out.println(result);
+			// [{"locationName":"춘천","ta":"26.7"},{"locationName":"백령도","ta":"13.8"},{"locationName":"강릉","ta":"18.4"},{"locationName":"서울","ta":"27.7"},{"locationName":"인천","ta":"23.8"},{"locationName":"울릉도","ta":"19.2"},{"locationName":"수원","ta":"26.5"},{"locationName":"청주","ta":"26.8"},{"locationName":"대전","ta":"26.4"},{"locationName":"안동","ta":"24.3"},{"locationName":"포항","ta":"19.4"},{"locationName":"대구","ta":"22.7"},{"locationName":"전주","ta":"26.3"},{"locationName":"울산","ta":"20.7"},{"locationName":"창원","ta":"21.9"},{"locationName":"광주","ta":"25.6"},{"locationName":"부산","ta":"22.0"},{"locationName":"목포","ta":"23.2"},{"locationName":"여수","ta":"23.0"},{"locationName":"홍성","ta":"25.0"},{"locationName":"제주","ta":"18.9"}]
+			
+			*/
+		return result;
+	}
+	
+	
+	
+	
+
+	 /*
+	    @ExceptionHandler 에 대해서..... (GET방식일때 유저가 URL 에 장난치는 것 방지하기)
+	    ==> 어떤 컨트롤러내에서 발생하는 익셉션이 있을시 익셉션 처리를 해주려고 한다면
+	        @ExceptionHandler 어노테이션을 적용한 메소드를 구현해주면 된다
+	         
+	       컨트롤러내에서 @ExceptionHandler 어노테이션을 적용한 메소드가 존재하면, 
+	       스프링은 익셉션 발생시 @ExceptionHandler 어노테이션을 적용한 메소드가 처리해준다.
+	       따라서, 컨트롤러에 발생한 익셉션을 직접 처리하고 싶다면 @ExceptionHandler 어노테이션을 적용한 메소드를 구현해주면 된다.
+	 */
+	/*
+	 @ExceptionHandler(java.lang.Throwable.class)	// exception 이나 error 가 발생되면 작동함. 에러 처리시 꼭 @ExceptionHandler 를 넣도록 하자!!
+	 public void handleThrowable(Throwable e, HttpServletRequest request, HttpServletResponse response) {
+	    
+	    e.printStackTrace(); // 콘솔에 에러메시지 나타내기
+	    
+	    try {
+	       // *** 웹브라우저에 출력하기 시작 *** //
+	       
+	       // HttpServletResponse response 객체는 넘어온 데이터를 조작해서 결과물을 나타내고자 할때 쓰인다. 
+	       response.setContentType("text/html; charset=UTF-8");
+	       
+	       PrintWriter out = response.getWriter();   // out 은 웹브라우저에 기술하는 대상체라고 생각하자.
+	       
+	       out.println("<html>");
+	       out.println("<head><title>오류메시지 출력하기</title></head>");
+	       out.println("<body>");
+	       out.println("<h1>오류발생</h1>");
+	       
+	  //   out.printf("<div><span style='font-weight: bold;'>오류메시지</span><br><span style='color: red;'>%s</span></div>", e.getMessage());
+	       
+	       String ctxPath = request.getContextPath();
+	       
+	       out.println("<div><img src='"+ctxPath+"/resources/images/error.gif'/></div>");
+	       out.printf("<div style='margin: 20px; color: blue; font-weight: bold; font-size: 26pt;'>%s</div>", "장난금지");
+	       out.println("<a href='"+ctxPath+"/index.bts'>홈페이지로 가기</a>");
+	       out.println("</body>");
+	       out.println("</html>");
+	       
+	       // *** 웹브라우저에 출력하기 끝 *** //
+	    } catch (IOException e1) {
+	       e1.printStackTrace();
+	    }
+	    
+	 } // 다하면 넣을 것
+	 */
 	
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////

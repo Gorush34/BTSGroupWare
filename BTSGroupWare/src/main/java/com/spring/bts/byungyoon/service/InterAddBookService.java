@@ -30,7 +30,7 @@ public interface InterAddBookService {
 	int addBook_main_telUpdate_update(AddBookVO avo);
 
 	// 주소록 메인에서 총 연락처 개수 가져오기
-	int addBook_main_totalPage();
+	int addBook_main_totalPage(Map<String, String> paraMap);
 
 	// 주소록 삭제하기
 	int addBook_delete(int pk_addbook_no);

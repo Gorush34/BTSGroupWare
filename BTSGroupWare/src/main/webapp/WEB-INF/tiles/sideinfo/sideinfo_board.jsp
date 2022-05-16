@@ -10,12 +10,21 @@
 
 <style type="text/css">
 
+h2#add{
+    font-size: 24pt;
+    font-weight: 800;
+    color: #000060;
+    margin-bottom: 20px;
+}
+
+#no > img{
+width: 70px;
+}
+
 td#no{
 	text-align: center;
-	font-weight: bold;
 	color: black !important;
-	padding: 20px 0 !important;
-	font-size: 13pt;
+	padding: 0 0 20px 0 !important;
 }
 
 #boardContentAll > table:nth-child(2) > tbody > tr > td > a{
@@ -115,7 +124,12 @@ function goReadBest() {
 			  }
 			  else {
 				  html += "<tr>";
-				  html += "<td colspan='3' class='board' id='no'>게시물이 없습니다.</td>";
+				  html += "<td colspan='3' class='board' id='no'><img src='<%= ctxPath%>/resources/images/board/d.png'/></td>";
+				  
+				  html += "</tr>";
+				  html += "<tr>";
+				  html += "<td colspan='3' class='board' id='no'><span>오늘 올라온 글이 없네요..</span></td>";
+				  
 				  html += "</tr>";
 			  }
 			  

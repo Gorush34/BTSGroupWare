@@ -8,6 +8,14 @@
 
 %>
 
+<style type="text/css">
+
+	th#th_title {
+		width: 120px;
+	
+	}
+
+</style>
 
 <script type="text/javascript">
 
@@ -19,6 +27,27 @@
 
 	$(document).ready(function() {
 		
+		// select 된 곳의 값들 넣어주기 시작
+		$("select[name=fk_department_id]").val((("${requestScope.loginuser.fk_department_id}" == '') ? "" : "${requestScope.loginuser.fk_department_id}")).prop("selected", true); 
+		$("select[name=fk_rank_id]").val((("${requestScope.loginuser.fk_rank_id}" == '') ? "" : "${requestScope.loginuser.fk_rank_id}")).prop("selected", true); 
+
+		$("input#postcode").val("${requestScope.loginuser.postal}");
+		
+		$("select[name=num1]").val((("${requestScope.loginuser.num1}" == '') ? "" : "${requestScope.loginuser.num1}")).prop("selected", true); 
+		$("input[name=num2]").val( ("${requestScope.loginuser.num2}" == '') ? "" : "${requestScope.loginuser.num2}" ); 
+		$("input[name=num3]").val( ("${requestScope.loginuser.num3}" == '') ? "" : "${requestScope.loginuser.num3}" ); 
+		
+		$("input[name=hp2]").val( ("${requestScope.loginuser.hp2}" == '') ? "" : "${requestScope.loginuser.hp2}" ); 
+		$("input[name=hp3]").val( ("${requestScope.loginuser.hp3}" == '') ? "" : "${requestScope.loginuser.hp3}" ); 
+		
+		if( $("input#gen").val() == "1") {
+			$("input#male").prop("checked", true);
+		}
+		else {
+			$("input#female").prop("checked", true);
+		}
+		
+		// select 된 곳의 값들 넣어주기 끝
 		
 		$("span.error").hide();	
 		$("input#emp_name").focus();
@@ -30,7 +59,7 @@
 			const name = $target.val().trim();
 			if(name == "" ){
 				// 입력하지 않거나 공백만 입력했을 경우
-			    $("table#tblEmpRegister :input").prop("disabled", true);
+			    $("table#tblEmpUpdate :input").prop("disabled", true);
 			    $target.prop("disabled", false);
 			//	$target.next().show();
 			// 	또는
@@ -41,7 +70,7 @@
 				
 			} else {
 				// 공백이 아닌 글자를 입력했을 경우
-				$("table#tblEmpRegister :input").prop("disabled", false);
+				$("table#tblEmpUpdate :input").prop("disabled", false);
 				//	$target.next().hide();
 				// 	또는
 				$target.parent().find(".error").hide();
@@ -59,7 +88,7 @@
 			
 			if(!bool){ // !bool == false 암호가 정규표현식에 위배된 경우
 				// 암호가 정규표현식에 위배된 경우 
-				  $("table#tblEmpRegister :input").prop("disabled", true);
+				  $("table#tblEmpUpdate :input").prop("disabled", true);
 				  $target.prop("disabled", false);
 				  
 			   // $target.next().show();
@@ -71,7 +100,7 @@
 				
 			} else {
 				// bool == true 암호가 정규표현식에 맞는 경우
-				$("table#tblEmpRegister :input").prop("disabled", false);
+				$("table#tblEmpUpdate :input").prop("disabled", false);
 				
 				$target.parent().find(".error").hide();
 			}
@@ -86,7 +115,7 @@
 			const pwdcheck = $target.val();
 			
 			if(pwd != pwdcheck){ // 암호와 암호확인값이 다른 경우 
-				$("table#tblEmpRegister :input").prop("disabled", true);
+				$("table#tblEmpUpdate :input").prop("disabled", true);
 				$target.prop("disabled", false);
 				$("input#emp_pwd").prop("disabled", false);
 				
@@ -97,7 +126,7 @@
 				
 			} else {
 				// 암호와 암호확인값이 같은 경우
-				$("table#tblEmpRegister :input").prop("disabled", false);
+				$("table#tblEmpUpdate :input").prop("disabled", false);
 				//	$target.next().hide();
 				// 	또는
 				$target.parent().find(".error").hide();
@@ -111,7 +140,7 @@
 			const name = $target.val().trim();
 			if(name == ""){
 				// 입력하지 않거나 공백만 입력했을 경우
-				$("table#tblEmpRegister :input").prop("disabled", true);
+				$("table#tblEmpUpdate :input").prop("disabled", true);
 				$target.prop("disabled", false);
 			//	$target.next().show();
 			// 	또는
@@ -122,7 +151,7 @@
 				
 			} else {
 				// 공백이 아닌 글자를 입력했을 경우
-				$("table#tblEmpRegister :input").prop("disabled", false);
+				$("table#tblEmpUpdate :input").prop("disabled", false);
 				//	$target.next().hide();
 				// 	또는
 				$target.parent().find(".error").hide();
@@ -140,7 +169,7 @@
 	        
 			if(!bool){ // !bool == false 이메일이 정규표현식에 위배된 경우
 				// 이메일이 정규표현식에 위배된 경우 
-				$("table#tblEmpRegister :input").prop("disabled", true);
+				$("table#tblEmpUpdate :input").prop("disabled", true);
 				$target.prop("disabled", false);
 				
 			//	$target.next().show();
@@ -151,7 +180,7 @@
 				
 			} else {
 				// bool == true 이메일이 정규표현식에 맞는 경우
-				$("table#tblEmpRegister :input").prop("disabled", false);
+				$("table#tblEmpUpdate :input").prop("disabled", false);
 				
 				//	$target.next().hide();
 				// 	또는
@@ -170,7 +199,7 @@
 	         const bool = regExp.test($target.val());  
 	        
 			if(!bool){ // !bool == false 국번이 정규표현식에 위배된 경우
-				$("table#tblEmpRegister :input").prop("disabled", true);
+				$("table#tblEmpUpdate :input").prop("disabled", true);
 				  $target.prop("disabled", false);
 			
 			//	$target.next().show();
@@ -180,7 +209,7 @@
 				$target.focus();
 			} else {
 				// bool == true 국번이 정규표현식에 맞는 경우
-				$("table#tblEmpRegister :input").prop("disabled", false);
+				$("table#tblEmpUpdate :input").prop("disabled", false);
 				
 				//	$target.next().hide();
 				// 	또는
@@ -199,7 +228,7 @@
 	         const bool = regExp.test($target.val());  
 	        
 			if(!bool){ // !bool == false 국번이 정규표현식에 위배된 경우
-				$("table#tblEmpRegister :input").prop("disabled", true);
+				$("table#tblEmpUpdate :input").prop("disabled", true);
 				  $target.prop("disabled", false);
 			
 			//	$target.next().show();
@@ -209,7 +238,7 @@
 				$target.focus();
 			} else {
 				// bool == true 국번이 정규표현식에 맞는 경우
-				$("table#tblEmpRegister :input").prop("disabled", false);
+				$("table#tblEmpUpdate :input").prop("disabled", false);
 				
 				//	$target.next().hide();
 				// 	또는
@@ -252,17 +281,17 @@
 	                        extraAddr = ' (' + extraAddr + ')';
 	                    }
 	                    // 조합된 참고항목을 해당 필드에 넣는다.
-	                    document.getElementById("extraAddress").value = extraAddr;
+	                    document.getElementById("extraaddress").value = extraAddr;
 	                
 	                } else {
-	                    document.getElementById("extraAddress").value = '';
+	                    document.getElementById("extraaddress").value = '';
 	                }
 
 	                // 우편번호와 주소 정보를 해당 필드에 넣는다.
 	                document.getElementById('postcode').value = data.zonecode;
 	                document.getElementById("address").value = addr;
 	                // 커서를 상세주소 필드로 이동한다.
-	                document.getElementById("detailAddress").focus();
+	                document.getElementById("detailaddress").focus();
 	            }
 	        }).open();
 	 			
@@ -288,101 +317,40 @@
 	 		}
 	 	});
 		
-	
+	 	// 사진변경버튼 클릭시
+	 	$("button#updateImage").on("click", function (event) {
+	 		/// event.preventDefault(); 
+	 		var url = $("#updateImgFrm").attr("action"); 
+	 		var form = $('#updateImgFrm')[0]; 
+	 		var formData = new FormData(form); 
+	 		$.ajax({ 
+	 			url: url
+	 		  , type: 'POST'
+	 		  , data: formData
+	 		  , dataType: "json"
+	 		  
+	 		  , success: function (json) { 
+	 			  alert(json.img_name );
+	 			 $("#empProfile").attr("src", "<%= ctxPath%>/resources/files/${json.img_name}");
+	 			 
+	 			 <%-- $("#empProfile").attr("src", json.path +"\\"+json.img_name);  --%>
+	 		  }, error: function (json) { 
+	 			  alert("실패!");
+	 		  }, 
+	 		    cache: false
+	 		  , contentType: false
+	 		  , processData: false 
+	 		  });
+	 	
+	 	}); // end of $("button#updateImage").on("click", function (event) {}---------------------------
+
+
 	}); // end of $(document).ready(function() {})---------------
 	
 	// 함수 정의
 	
-		// 아이디 중복 여부 검사하기		
-	function isExistIdCheck() {
-	
-		b_flagIdDuplicateClick = true;
-		// ==== jQuery 를 이용한 Ajax (Asynchronous JavaScript and XML)처리하기 ====
- 		$.ajax({
-	 			url:"<%= ctxPath%>/emp/idDuplicateCheck.bts",
-	 			data:{"pk_emp_no":$("input#pk_emp_no").val()}, // data 는 MyMVC/member/idDuplicateCheck.up로 전송해야할 데이터를 말한다.
-	 			type: "post" , // type 은 생략하면 "get" 이다.
-	 		//	async:false,   // 동기처리(지도는 동기처리로 해야한다.)
-	 		//	async:true,	   // 비동기처리(기본값)	
-	 			
-	 			success: function(text){
-	 				// console.log("확인용 : text => "+ text);
-	 				// 확인용 : text => {"isExist":false}    
-	 				// console.log("확인용 타입 typeof(text) : "+typeof(text))
-	 				// 확인용 타입 typeof(text) : string
-	 				
-	 				const json = JSON.parse(text);
-	 		
-	 				if(json.isExist) {	// 입력한 $("input#pk_emp_no").val() 값이 이미 사용중이라면
-	 					$("span#idcheckResult").html($("input#pk_emp_no").val()+"은 중복된 ID 이므로 사용 불가합니다.").css("color","red");
-	  	 				$("input#pk_emp_no").val("");
-	 				} else if($("input#pk_emp_no").val().length != 8 ) {
-	 					$("span#idcheckResult").html("사번은 8자리 숫자로 이루어져야 합니다.").css("color","red");
-	 				} else {	// 입력한 $("input#pk_emp_no").val() 값이 DB테이블(tbl_member)에 존재하지 않는 경우라면
-	 					$("span#idcheckResult").html($("input#pk_emp_no").val()+"은 사용 가능합니다.").css("color","green");
-	 				}
-		 		}, 
-		 		error: function (request, status, error) {
-	 				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-	 			}
-	 		})	
-	 		
-	}; // end of function isExistIdCheck() --------------------------------
-	
-	// 이메일 중복여부 검사하기
-	function isExistEmailCheck(){
-		b_flagEmailDuplicateClick = true;
-	 	// 가입하기 버튼 클릭시 "아이디중복확인" 을 클릭했는지 클릭안했는지를 알아보기 위한 용도이다.
-	 	
-	 	
-	 	// 입력하고자 하는 이메일이 데이터베이스 테이블에 존재하는지 존재하지 않는지 알아와야한다.
-	 	/*
-     	    Ajax (Asynchronous JavaScript and XML)란?
-       		==> 이름만 보면 알 수 있듯이 '비동기 방식의 자바스크립트와 XML' 로서
-       	    Asynchronous JavaScript + XML 인 것이다.
-       	    한마디로 말하면, Ajax 란? Client 와 Server 간에 XML 데이터를 JavaScript 를 사용하여 비동기 통신으로 주고 받는 기술이다.
-       	    하지만 요즘에는 데이터 전송을 위한 데이터 포맷방법으로 XML 을 사용하기 보다는 JSON 을 더 많이 사용한다.
-       	    참고로 HTML은 데이터 표현을 위한 포맷방법이다.
-       	    그리고, 비동기식이란 어떤 하나의 웹페이지에서 여러가지 서로 다른 다양한 일처리가 개별적으로 발생한다는 뜻으로서, 
-       	    어떤 하나의 웹페이지에서 서버와 통신하는 그 일처리가 발생하는 동안 일처리가 마무리 되기전에 또 다른 작업을 할 수 있다는 의미이다.
-        */
-		// ==== jQuery 를 이용한 Ajax (Asynchronous JavaScript and XML)처리하기 ====
-	 		$.ajax({
-	 			url:"<%= ctxPath%>/emp/emailDuplicateCheck.bts",
-	 			data:{"uq_email":$("input#uq_email").val()}, // data 는 MyMVC/member/emailDuplicateCheck.up로 전송해야할 데이터를 말한다.
-	 			type: "post" , // type 은 생략하면 "get" 이다.
-				dataType: "json",
-			//	async:false,   // 동기처리(지도는 동기처리로 해야한다.)
-       	 	//	async:true,	   // 비동기처리(기본값)	
-				success: function(json){
-	 			//	console.log("확인용 json =>"+ json);
-	 				//확인용 json =>[object Object]
-	 			//	console.log("확인용 typeof(json) =>"+ typeof(json));
-	 				// 확인용 typeof(json) =>object
-	 			
-	 			const regExp = new RegExp(/^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i); 
-	 			const bool = regExp.test($("input#uq_email").val());  	
-	 			
-	 				if(json.isExist) {	// 입력한 $("input#uq_email").val() 값이 이미 사용중이라면
-	 					$("span#emailCheckResult").html($("input#uq_email").val()+"은 중복된 ID 이므로 사용 불가합니다.").css("color","red");
-	 					$("input#uq_email").val("");
-	 				} else if( !bool ) {
-	 					
-	 				} else {	// 입력한 $("input#uq_email").val() 값이 DB테이블(tbl_member)에 존재하지 않는 경우라면
-	 					$("span#emailCheckResult").html($("input#uq_email").val()+"은 사용 가능합니다.").css("color","green");
-	 				}
-                   
-	 			}, 
-	 			error: function(request, status, error){
-	 				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-	 			}
-	 			
-	 		}); // end of $.ajax({})
-	 	
-	} // end of function isExistEmailCheck(){}---------------------------------------
-	
-	// 가입하기		
-	function goRegister() {
+	// 수정하기		
+	function goUpdate() {
 		
 		// *** 필수입력사항에 모두 입력이 되었는지 검사한다. *** //
 		let b_FlagRequiredInfo = false;
@@ -411,78 +379,59 @@
 			return; // 종료
 		}
 		
-		// *** 아이디 중복확인을 클릭했는지 검사한다. *** //
-		if(!b_flagIdDuplicateClick) {
-			// "아이디중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도임.
-			alert("아이디중복확인 클릭하여 ID중복검사를 하세요!!");
-			return; // 종료
-		}
-		  
-		  
-		// *** 이메일 중복확인을 클릭했는지 검사한다. *** //
-		if(!b_flagEmailDuplicateClick) {
-			// "이메일중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도임.
-			alert("이메일중복확인 클릭하여 email 중복검사를 하세요!!");
-			return; // 종료
-		}
 		
-		
-		const frm = document.registerFrm;
-		frm.action = "<%= ctxPath%>/emp/registerEmpSubmit.bts";
+		const frm = document.updateFrm;
+		frm.action = "<%= ctxPath%>/emp/updateEmpEnd.bts";
 		frm.method = "POST";
 		frm.submit();
 		
 		
-	}// end of 	function goRegister()--------------------------------
+	}// end of function goUpdate()--------------------------------
 	
 </script>
 
 <div id="tbl_regEmp">
-	<!-- 
-	<div class="settingItem">
-		<div id="settingItemTitle">배경화면</div>	
-		<form id="fileForm" name="fileForm" method="post"  enctype="multipart/form-data" onsubmit="return false;">
-			<label class="fileBtn" for="file">이미지 업로드</label>
-			<input type="file" name="file" id="file">
-			<span class="fileBtn" onclick="resetImage();">초기화</span>
-		</form>
-	</div>
-	 -->
-	<form name="registerFrm" >
-	<table id="tblEmpRegister">
+<c:set var="emp" value="${requestScope.loginuser}"/>
+	<form name="updateImgFrm" id="updateImgFrm" action="<%= ctxPath%>/emp/updateImg.bts" method="post" enctype="multipart/form-data" role="form">
+		<table id="tblEmpUpdate">
 		<tr>
-			<td><h2>사원 등록<br><br></h2></td>
+			<td><h2>내 정보수정<br><br></h2></td>
 		</tr>
-		
 		<tr>
 			<td><strong>사진</strong></td>
-			<td style="align:center;"><img id="empProfile" src="<%=ctxPath %>/resources/images/ques.png" alt="..." ><button class="btn btn-default" id="telAdd_mini_btn">삭제</button></td>
+			<td><input type="hidden" name="emp_no" id="emp_no" value="${emp.pk_emp_no}" /></td>
+			<td style="align:center;"><img id="empProfile" src="<%=ctxPath %>/resources/images/ques.png" alt="..." ></td>
+			<td style="padding-left: 20px;"><input type="file" name="attach" id="attach" />
+			<br><button type="button" style="margin-top: 30px;" id="updateImage" class="btn btn-primary">사진변경</button></td>
+		</tr>
+		</table>
+	</form>
+	<form name="updateFrm" enctype="multipart/form-data">
+	<table id="tblEmpUpdate">
+		<tr>
+			<td><input type="hidden" id="img_name" name="img_name" /></td>
 		</tr>
 		
 		<tr>
-			<td><strong>이름&nbsp;</strong><span id="star">*</span></td>
-			<td><input required type="text" class="requiredInfo" id="emp_name" name="emp_name" size="5" placeholder="이름" style="width: 100px;" /></td>
+			<th id="th_title"><strong>이름&nbsp;</strong><span id="star">*</span></th>
+			<td><input required type="text" class="requiredInfo" id="emp_name" name="emp_name" size="5" placeholder="이름" style="width: 100px;" value="${emp.emp_name}" /></td>
 		</tr>
 		<tr>
-			<th><label for="pk_emp_no">사번&nbsp;<span id="star">*</span></label></th>
+			<th id="th_title"><label for="pk_emp_no">사번&nbsp;<span id="star">*</span></label></th>
 			<td>
-				<input required type="text" class="requiredInfo" id="pk_emp_no" name="pk_emp_no" size="20"  maxlength='16' />
-				<span id="isExistIdCheck" class="duplicateCheck" onclick="isExistIdCheck();">&nbsp;사번중복확인&nbsp;&nbsp;<i class="fas fa-angle-right"></i>&nbsp;</span>
-				<br>
-				<span class="error">사번을 입력해주세요.</span> 
-				<span id="idcheckResult"></span>
+				<input required type="text" class="requiredInfo" id="pk_emp_no" name="pk_emp_no" size="20"  maxlength='16' value="${emp.pk_emp_no}" readonly/>
 			</td>    
 		</tr>
 		<tr>
-			<th><label for="emp_pwd">비밀번호&nbsp;<span id="star">*</span></label></th>
+			<th id="th_title"><label for="emp_pwd">비밀번호&nbsp;<span id="star">*</span></label></th>
 			<td><input type="password" class="requiredInfo" id="emp_pwd" name="emp_pwd" size="20" maxlength="20" required autoComplete="off" />&nbsp;(영문 대소문자/숫자/특수문자 모두 조합, 8자~16자)<br><span class="error" style="margin-left: 200px;">암호가 올바르지 않습니다.</span></td>
 		</tr>
 		<tr>
-			<th><label for="pwdCheck">비밀번호확인&nbsp;<span id="star">*</span></label></th>
+			<th id="th_title"><label for="pwdCheck">비밀번호확인&nbsp;<span id="star">*</span></label></th>
 			<td><input type="password" class="requiredInfo" id="pwdCheck" size="20" maxlength="20" required autoComplete="off" /><span class="error">암호가 일치하지 않습니다.</span></td>
 		</tr>
 		<tr>
-			<td><strong>부서</strong> &nbsp;<span id="star">*</span></td>
+			<th id="th_title"><strong>부서</strong> &nbsp;<span id="star">*</span></th>
 			<td>
 				<select name="fk_department_id" id="fk_department_id" style="height: 26px;" >
 			         <option value="">부서 선택</option>
@@ -496,7 +445,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td><strong>직위</strong> &nbsp;<span id="star">*</span></td>
+			<th id="th_title"><strong>직위</strong> &nbsp;<span id="star">*</span></th>
 			<td>
 				<select name="fk_rank_id" id="fk_rank_id" style="height: 26px;" >
 			         <option value="">직위 선택</option>
@@ -512,7 +461,7 @@
 			</td>
 		</tr>
 		<tr>
-			<th>우편번호 &nbsp;<span id="star">*</span></th>
+			<th id="th_title">우편번호 &nbsp;<span id="star">*</span></th>
 		    <td>
 		       <input required type="text" class="requiredInfo" id="postcode" name="postcode" size="5" placeholder="우편번호" values="addr" style="width: 100px;" />
 		       &nbsp;&nbsp;
@@ -520,15 +469,15 @@
 		    </td>
 		</tr>
 		<tr>
-			<th>주소 &nbsp;<span id="star">*</span></th>
+			<th id="th_title">주소 &nbsp;<span id="star">*</span></th>
 			<td>
-				<input class="my-1" class="requiredInfo" required type="text" id="address" name="address"  size="50" placeholder="주소" /><br>
-				<input class="my-1" type="text" id="detailAddress" name="detailAddress" size="50" placeholder="상세주소" /><br>
-				<input class="my-1" type="text" id="extraAddress" name="extraAddress" size="50" placeholder="참고항목" />                
+				<input class="my-1" class="requiredInfo" required type="text" id="address" name="address"  size="50" placeholder="주소" value="${emp.address}"/><br>
+				<input class="my-1" type="text" id="detailaddress" name="detailaddress" size="50" placeholder="상세주소" value="${emp.detailaddress}" /><br>
+				<input class="my-1" type="text" id="extraaddress" name="extraaddress" size="50" placeholder="참고항목" value="${emp.extraaddress}" />                
 			</td>
 		</tr>
 		<tr>
-			<th>일반전화</th>
+			<th id="th_title">일반전화</th>
 			<td>
 				<select id="num1" name="num1">
 					<option value="">선택</option>
@@ -552,12 +501,12 @@
 					<option value="070">070</option>
 					<option value="010">010</option>
 				</select>&nbsp;-&nbsp;
-				<input id="num2" name="num2" type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">&nbsp;-&nbsp; 
-				<input id="num3" name="num3" type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+				<input id="num2" name="num2" type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />&nbsp;-&nbsp; 
+				<input id="num3" name="num3" type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
 			</td>
 		</tr>
 		<tr>
-			<th>휴대전화 &nbsp;<span id="star">*</span></th>
+			<th id="th_title">휴대전화 &nbsp;<span id="star">*</span></th>
 	        <td>
 	        	<select id="hp1" name="hp1">
 					<option value="010">010</option>
@@ -566,39 +515,34 @@
 				<input class="requiredInfo" required id="hp3" name="hp3" type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
 			 	<span class="error">올바른 휴대전화 번호가 아닙니다.</span>
 			 </td>
-	    </tr>
+	     </tr>
 		<tr>
-			<th>이메일 &nbsp;<span id="star">*</span></th>
+			<th id="th_title">이메일 &nbsp;<span id="star">*</span></th>
 			<td>
-				<input type="email" class="requiredInfo" id="uq_email" name="uq_email" size="20" maxlength="20" required placeholder="example@gmail.com" />
-				<span id="isExistIdCheck" class="duplicateCheck" onclick="isExistEmailCheck();">&nbsp;이메일중복확인&nbsp;&nbsp;<i class="fas fa-angle-right"></i>&nbsp;</span>
-				<br>
-				<span class="error">올바른 이메일 양식이 아닙니다.</span>
-				<span id="emailCheckResult"></span>
+				<input type="email" class="requiredInfo" id="uq_email" name="uq_email" size="20" maxlength="20" required placeholder="example@gmail.com" value="${emp.uq_email }" readonly/>
 			</td>
 		</tr>            
 		 <tr>
-	        <th>생년월일&nbsp;<span id="star">*</span></th> 
+	        <th id="th_title">생년월일&nbsp;<span id="star">*</span></th> 
 	        <td>
-	           <input class="requiredInfo" type="text" id="datepicker" name="birthday">
+	           <input class="requiredInfo" type="text" id=birthday name="birthday" value="${emp.birthday}" readonly/>
 	        </td>
 	      </tr>
 		<tr>
-	        <th>성별&nbsp;<span id="star">*</span></th>
+	        <th id="th_title">성별&nbsp;<span id="star">*</span></th>
 	        <td>
 	           <input type="radio" id="male" name="gender" value="1" /><label for="male" style="margin-left: 2%;">남자</label>
 	           <input type="radio" id="female" name="gender" value="2" style="margin-left: 10%;" /><label for="female" style="margin-left: 2%;">여자</label>
+	           <input type="hidden" id="gen" name="gen" value="${emp.gender}" />
+	           <input type="hidden" id="img_name" name="img_name" value="${emp.img_name}" />
 	        </td>
 	    </tr>
 		
 	</table>
 	</form>
 	<div style="padding-left: 200px;">
-		<button class="btn btn-info" id="btn_register" style="border: solid lightgray 2px;" onclick="goRegister();">저장</button>
-		<!-- 
-		<button class="btn btn-default" id="btn_list" style="border: solid lightgray 2px;">목록으로 이동</button>
-		<button class="btn btn-default" id="btn_cancel" style="border: solid lightgray 2px;">취소</button>
-		 -->
+		<button class="btn btn-info" id="btn_register" style="border: solid lightgray 2px;" onclick="goUpdate();">저장</button>
+		<!-- <button class="btn btn-default" id="btn_cancel" style="border: solid lightgray 2px;">취소</button> -->
 	</div>
 	
 	 	

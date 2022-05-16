@@ -67,6 +67,9 @@ public interface InterCalendarDAO {
 	
 	// == 페이징 처리한 캘린더 가져오기(검색어가 없다라도 날짜범위 검색은 항시 포함된 것임) == //
 	List<Map<String, String>> scheduleListSearchWithPaging(Map<String, String> paraMap);
+	
+	// 오늘의 일정 수
+	int scheduleCount(int pk_emp_no);
 
 
 	
