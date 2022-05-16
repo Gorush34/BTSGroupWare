@@ -332,7 +332,7 @@
     
      	// 자원 select 유효성 검사
      	var calpk_rno = $("select[name=pk_rno]").val();
-        if (calpk_rno.trim() == "") {
+        if (calpk_rno == "") {
            alert("자원을 선택해주세요.");
            return false;
         }
@@ -371,14 +371,11 @@
                  window.closeModal();
                  calendar.refetchEvents();
                  
-              }else if (json.n == -1) {
+              }else{
                  // 중복된 예약(시간)으로 예약에 실패했을 때
                  alert("해당 시간에는 이미 예약이 되어있어 예약할 수 없습니다.");
               }
-              else{
-                 // db오류
-                 alert("DB 오류");
-              }
+              
               
            },
            error: function(request, status, error){
