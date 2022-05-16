@@ -569,7 +569,12 @@ td#no{
 	        	<div class="profile">
 	        		<span class="photo">
 	        			<span class="photo">
-	        				<img src="<%= ctxPath%>/resources/files/${sessionScope.loginuser.img_name}" title="" />
+	        				<c:if test="${sessionScope.loginuser.img_name ne null}">
+	        					<img src="<%= ctxPath%>/resources/files/${sessionScope.loginuser.img_name}" title="" />
+	        				</c:if>
+	        				<c:if test="${sessionScope.loginuser.img_name eq null}">
+	        					<img src="<%= ctxPath%>/resources/images/mu.png" id="memberProfile" />
+	        				</c:if>
 	        			</span>
 	        		</span>
 	        		<span class="info">
