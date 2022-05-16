@@ -180,6 +180,16 @@
 			   , #{sendempname}, #{recemail}, #{sendemail}, #{subject}, #{content}, default, #{filename}, #{orgfilename}, #{filesize}, #{importance}, to_date(#{reservation_date}, 'yyyy-mm-dd hh24:mi'), #{reservation_status}, default, #{temp_status})
 	</insert>
 
+
+	<!-- 메일 1개 상세내용을 읽어오기 (메일 전달 및 답장을 위함 - 검색타입과 검색명 없음) -->
+	<select id="getRecMailView_noSearch" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
+		select fk_senduser_num, fk_receiveuser_num, recemail, sendemail
+     		 , recempname, sendempname, subject, content, filename, orgfilename
+		from tbl_mail 
+		where pk_mail_num = to_number(#{pk_mail_num})
+	</select>
+
+
 	<!-- ===== 메일쓰기 끝 ===== -->
 
 
@@ -292,7 +302,7 @@
 		select row_number() over(order by pk_mail_num desc) AS rno,
 		       pk_mail_num, fk_senduser_num, fk_receiveuser_num, recempname, sendempname
 		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date, recemail, sendemail, subject, content, importance
-		       , filename, orgfilename, filesize, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+		       , filename, orgfilename, filesize, to_char(reservation_date, 'yyyy-mm-dd hh24:mi') as reservation_date
 		       , del_status, reservation_status, read_status, importance_star_send, importance_star_rec
 		from tbl_mail
 		where del_status = 0 and reservation_status = 1

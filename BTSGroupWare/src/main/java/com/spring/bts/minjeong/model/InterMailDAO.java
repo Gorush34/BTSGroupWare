@@ -108,6 +108,9 @@ public interface InterMailDAO {
 
 	// updateImportance_star_send Update 를 통해 값을 0,1로 변경해주기
 	int updateImportance_star_send(Map<String, String> paraMap);
+
+	// 메일 1개 상세내용을 읽어오기 (메일 전달 및 답장을 위함 - 검색타입과 검색명 없음)
+	MailVO getRecMailView_noSearch(Map<String, String> paraMap);
 	
 
 }

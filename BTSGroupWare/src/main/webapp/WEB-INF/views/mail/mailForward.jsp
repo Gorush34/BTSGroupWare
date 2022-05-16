@@ -414,7 +414,7 @@
 			<tr>
 				<th width="14%">받는 사람</th>
 				<td width="86%" data-toggle="tooltip" data-placement="top" title="">
-					<input type="text" id="recemail" name="recemail" value="${requestScope.mailvo.recemail}" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
+					<input type="text" id="recemail" name="recemail" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
 					
 					<%-- hidden 타입으로 데이터값 보내기 --%>
 			     	<input type="hidden" id="sendemail" name="sendemail" value="${sessionScope.loginuser.uq_email}" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " /> 
@@ -433,6 +433,7 @@
 						<input type="hidden" id="importanceVal" name="importanceVal" />
 				</th>
 				<td width="110%" >
+				<%-- 제목에 FW : 붙여주기 --%>
 					<input type="text" id="subject" name="subject" value="${requestScope.mailvo.subject}" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; display: inline-block;" />
 				</td>
 			</tr>		
@@ -458,7 +459,13 @@
 			<tr style="border: 0px;">
 				<td width="1200px;" style="border: 0px">
 					<textarea rows="20" cols="100" style="width: 1090px; border: solid 1px gray; height: 400px;" name="content" id="content" >					
-					${requestScope.mailvo.content}
+					<br><br><br>
+					-----Original Message----- <br>
+					From: <${requestScope.mailvo.sendemail}> <br>
+					To: <${requestScope.mailvo.recemail}> <br>
+					Sent:  <br>
+					Subject:  <br>
+					${requestScope.mailvo.content} <br>
 					</textarea>						
 				</td>
 			</tr>

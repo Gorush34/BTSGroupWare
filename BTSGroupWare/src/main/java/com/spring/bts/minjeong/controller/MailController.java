@@ -53,6 +53,8 @@ public class MailController {
 
 	@Autowired
     private AES256 aes;
+
+	// =========================== 메일쓰기  =========================== //
 	
 	// 메일 쓰기 폼페이지 요청 (추후 로그인 AOP 추가 requiredLogin_) 
 	@RequestMapping(value = "/mail/mailWrite.bts", produces = "text/plain; charset=UTF-8")	
@@ -68,10 +70,110 @@ public class MailController {
 		
 		return mav;
 	}
+
 	
-	// =========================== 메일쓰기  =========================== //
+	// 메일 답장 폼페이지 요청 (view 단에서 글번호를 받아와서 select 로 해당 글의 받는 사람 email, 받는 사람 사원명, 보낸사람 email, 보낸사람 사원명, 제목, 내용, 파일명?
+	// (이전에 썼던 내용들을 갖고온다. --> 메일쓰기로 보내서 insert 함.)
+	/*
+	 - 답장기능 (받는 사람에 보낸 사람의 메일이 저절로 value 값으로 들어가 있게끔 한다.)
+	      제목에는 원래 받았던 제목에 RE:________ 이런식으로 적어두도록 한다.
 	
-	// 메일 쓰기 완료 페이지 요청 (DB 에 글쓴 내용을 보내기)
+	 - 그리고 내용에는 아래와 같이 내용이 들어갈 수 있게끔 값을 미리 넣어두도록 한다. (임시보관함과 유사하다.)
+	 */
+
+	//  메일 답장쓰기 시 폼 페이지 요청 (이전에 썼던 내용들을 갖고온다.)
+	@RequestMapping(value = "/mail/mailReply.bts")	
+	public ModelAndView mailReply(HttpServletRequest request, ModelAndView mav) {
+		// 임시보관함 같은 경우에는 내용읽기를 요청 했을 때, 
+		// 1. 메일쓰기 form 이 떠야하고 & 이전에 입력했던 내용들이 모두 들어와 있어야 한다. (select 해오기)
+		// 2. 이전에 입력했던 내용들에서 다시 임시저장 클릭했을 때 임시보관함으로 이동할 수 있다.
+		
+		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+		
+		// view 단에서 요청한 검색타입 및 검색어, 글번호 받아오기
+		String pk_mail_num = request.getParameter("pk_mail_num");	// 글번호
+	//	System.out.println("확인용 pk_mail_num : " + pk_mail_num);
+		
+		// 사용자가 메일번호(pk_mail_num=?) 뒤에 정수외의 것을 입력하지 않도록 exception 처리를 한다.
+		try {
+			Integer.parseInt(pk_mail_num);			
+
+		
+			// 글 내용 한개 뿐만 아니라 검색도 해야하므로 Map 에 담는다.
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("pk_mail_num", pk_mail_num);
+			
+			// map 에 담은 pk_mail_num 을 view 단으로 보낸다.
+			mav.addObject("paraMap", paraMap);
+			
+			// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
+			MailVO mailvo = null;
+			mailvo = service.getRecMailView_noSearch(paraMap);
+			mav.addObject("mailvo", mailvo);
+			
+			// 이전글 및 다음글 보여주기
+			
+			
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+						
+		mav.setViewName("mailReply.mail");
+		return mav;
+	}			
+
+	
+	
+	
+	// 메일 전달 폼페이지 요청
+	/*
+	 - 받는사람 란은 비워두도록 한다.
+	 - 제목에는 FW: 제목 을 붙이도록 한다.
+	 - 내용은 아래와 같이 원래 값을 유지하도록 한다. (임시보관함과 유사하다.)
+	*/
+
+	//  메일 전달쓰기 시 폼 페이지 요청 (이전에 썼던 내용들을 갖고온다. --> 메일쓰기로 보내서 insert 함.)
+	@RequestMapping(value = "/mail/mailForward.bts")	
+	public ModelAndView mailForward(HttpServletRequest request, ModelAndView mav) {
+		// 임시보관함 같은 경우에는 내용읽기를 요청 했을 때, 
+		// 1. 메일쓰기 form 이 떠야하고 & 이전에 입력했던 내용들이 모두 들어와 있어야 한다. (select 해오기)
+		// 2. 이전에 입력했던 내용들에서 다시 임시저장 클릭했을 때 임시보관함으로 이동할 수 있다.
+		
+		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+		
+		// view 단에서 요청한 검색타입 및 검색어, 글번호 받아오기
+		String pk_mail_num = request.getParameter("pk_mail_num");	// 글번호
+		
+		// 사용자가 메일번호(pk_mail_num=?) 뒤에 정수외의 것을 입력하지 않도록 exception 처리를 한다.
+		try {
+			Integer.parseInt(pk_mail_num);			
+
+		
+			// 글 내용 한개 뿐만 아니라 검색도 해야하므로 Map 에 담는다.
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("pk_mail_num", pk_mail_num);
+			
+			// map 에 담은 pk_mail_num 을 view 단으로 보낸다.
+			mav.addObject("paraMap", paraMap);
+			
+			// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
+			MailVO mailvo = null;
+			mailvo = service.getRecMailView_noSearch(paraMap);
+			mav.addObject("mailvo", mailvo);
+			
+			// 이전글 및 다음글 보여주기
+			
+			
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+						
+		mav.setViewName("mailForward.mail");
+		return mav;
+	}	
+	
+	
+	// 메일 쓰기 완료 페이지 요청 (DB 에 글쓴 내용을 보내기 - 일반 메일쓰기, 답장, 전달 포함)
 	@RequestMapping(value = "/mail/mailWriteEnd.bts", method= {RequestMethod.POST})	
 	public ModelAndView mailWriteEnd(ModelAndView mav, MultipartHttpServletRequest mrequest, MailVO mailvo) {
 
@@ -82,6 +184,7 @@ public class MailController {
 	       request.getParameter("form 태그의 name명"); 을 사용하지 않더라도
 	              자동적으로 BoardVO boardvo 에 set 되어진다. (xml(Mapper)파일에서 일일이 set 을 해주지 않아도 된다.)
 	    */			
+		
 		
 		/*
 		 * // 제목 String subject = mrequest.getParameter("subject");
@@ -140,7 +243,7 @@ public class MailController {
 		// 확인용 importanceVal : 1
 		
 	//	System.out.println("확인용 importance : " + importance);
-		System.out.println("확인용 importanceVal : " + importanceVal);
+	//	System.out.println("확인용 importanceVal : " + importanceVal);
 		
 		String uq_email = "";	   /* 이메일 */
         try {
@@ -318,7 +421,7 @@ public class MailController {
 		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
 		HttpSession session = request.getSession();
 		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
-		
+
 		
 	//	System.out.println("받은메일함 페이지에서 로그인한 사용자 id (사원번호) 받아오기 " + loginuser.getPk_emp_no());
 		
@@ -396,7 +499,7 @@ public class MailController {
 		
 		
 		// === 페이지바 만들기 시작
-		int blockSize = 3;
+		int blockSize = 5;
 		// blockSize 는 1개 블럭(토막) 당 보여지는 페이지번호의 개수이다.
 		/*
 	        		1  2  3  4  5  6  7  8  9 10 [다음][마지막]  -- 1개블럭
@@ -619,7 +722,7 @@ public class MailController {
 		
 		
 		// === 페이지바 만들기 시작
-		int blockSize = 3;
+		int blockSize = 5;
 		// blockSize 는 1개 블럭(토막) 당 보여지는 페이지번호의 개수이다.
 		/*
 	        		1  2  3  4  5  6  7  8  9 10 [다음][마지막]  -- 1개블럭
@@ -837,7 +940,7 @@ public class MailController {
 		
 		
 		// === 페이지바 만들기 시작 === //
-		int blockSize = 3;
+		int blockSize = 5;
 		// blockSize 는 1개 블럭(토막) 당 보여지는 페이지번호의 개수이다.
 		/*
 	        		1  2  3  4  5  6  7  8  9 10 [다음][마지막]  -- 1개블럭
@@ -1179,7 +1282,7 @@ public class MailController {
 			mav.setViewName("mailTemporarySuccess.mail");
 		}
 		else {// 실패 시 메일쓰기로 이동 (back)		
-	//		mav.setViewName("redirect:/mailWriteList.bts");
+	//		mav.setViewName("redirect:/mailWrite.bts");
 		}
 		
 		return mav;
@@ -1272,7 +1375,7 @@ public class MailController {
 		
 		
 		// === 페이지바 만들기 시작
-		int blockSize = 3;
+		int blockSize = 5;
 		// blockSize 는 1개 블럭(토막) 당 보여지는 페이지번호의 개수이다.
 		/*
 	        		1  2  3  4  5  6  7  8  9 10 [다음][마지막]  -- 1개블럭
@@ -1491,7 +1594,7 @@ public class MailController {
 		
 		
 		// === 페이지바 만들기 시작
-		int blockSize = 3;
+		int blockSize = 5;
 		// blockSize 는 1개 블럭(토막) 당 보여지는 페이지번호의 개수이다.
 		/*
 	        		1  2  3  4  5  6  7  8  9 10 [다음][마지막]  -- 1개블럭
@@ -1788,7 +1891,7 @@ public class MailController {
 			
 			// 임시보관함에서 제목 클릭했을 때 발송예약 실행한 경우 경우 받아온 글번호인 pk_mail_num 의 temp_status 를 update 한다.
 			String pk_mail_num = mrequest.getParameter("pk_mail_num");
-			System.out.println("임시보관함에서 제목 클릭 후 상세내용 봤을 때 pk_mail_num 여기로 오는지 확인용 : "+pk_mail_num);
+		//	System.out.println("임시보관함에서 제목 클릭 후 상세내용 봤을 때 pk_mail_num 여기로 오는지 확인용 : "+pk_mail_num);
 		
 			/*
 				임시보관함에서 제목 클릭 후 상세내용 봤을 때 pk_mail_num 여기로 오93
@@ -1821,8 +1924,6 @@ public class MailController {
 
 			}
 	*/		
-			
-			
 			mav.setViewName("redirect:/mail/mailReservationList.bts");
 		}
 		else {// 실패 시 메일쓰기로 이동 (back)		
@@ -2018,7 +2119,7 @@ public class MailController {
 		
 		
 		// === 페이지바 만들기 시작
-		int blockSize = 3;
+		int blockSize = 5;
 		// blockSize 는 1개 블럭(토막) 당 보여지는 페이지번호의 개수이다.
 		/*
 	        		1  2  3  4  5  6  7  8  9 10 [다음][마지막]  -- 1개블럭

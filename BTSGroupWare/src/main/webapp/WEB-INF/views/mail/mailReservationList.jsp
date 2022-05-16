@@ -228,12 +228,18 @@
 										<span class="fa fa-paperclip"></span>
 									</th>
 								<th style="width: 10%;" class="text-center">받는이</th>
-								<th style="width: 70%;">제목</th>
-								<th style="width: 20%;" class="text-left">예약발송일자</th>
+								<th style="width: 68%;">제목</th>
+								<th style="width: 22%;" class="text-left">예약발송일자</th>
 							</tr>
 						</thead>
 						
 						<tbody>
+						<c:if test="${empty requestScope.ReservationMailList}">
+							<tr>
+								<td colspan="10" style="text-align: center; width: 1000px;">메일이 존재하지 않습니다.</td>
+							</tr>							
+						</c:if>
+						<c:if test="${not empty requestScope.ReservationMailList}">
 						<c:forEach items="${requestScope.ReservationMailList}" var="ReservationMailList" varStatus="status">
 							<tr>
 								<td style="width: 40px;">
@@ -241,10 +247,10 @@
 								</td>
 								<td style="width: 40px;">
 									<%-- 별모양(☆) 클릭 시 importance_star를 1(★)로 바꾼다. (중요메일함 = importance_star=1인 목록) --%>
-									<c:if test="${ReservationMailList.importance_star == '0'}">
+									<c:if test="${ReservationMailList.importance_star_send == '0'}">
 										<span class="fa fa-star-o" id="importance_star" style="cursor: pointer;" onclick="goImportantList('${ReservationMailList.pk_mail_num}')"></span>
 									</c:if>
-									<c:if test="${ReservationMailList.importance_star == '1'}">
+									<c:if test="${ReservationMailList.importance_star_send == '1'}">
 										<span class="fa fa-star" id="importance_star" style="cursor: pointer;" onclick="goImportantList('${ReservationMailList.pk_mail_num}')"></span>
 									</c:if>
 								</td>
@@ -267,7 +273,8 @@
 								</td>
 								<td class="text-left">${ReservationMailList.reservation_date}</td>
 							</tr>	
-						</c:forEach>																				
+						</c:forEach>	
+						</c:if>																			
 						</tbody>
 					</table>
 				</div>	

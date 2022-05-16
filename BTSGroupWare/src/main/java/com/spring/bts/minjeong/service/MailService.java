@@ -360,6 +360,13 @@ public class MailService implements InterMailService {
 		return n;
 	}
 
+	// 메일 1개 상세내용을 읽어오기 (메일 전달 및 답장을 위함 - 검색타입과 검색명 없음)
+	@Override
+	public MailVO getRecMailView_noSearch(Map<String, String> paraMap) {
+		MailVO recMailView_noSearch = dao.getRecMailView_noSearch(paraMap);
+		return recMailView_noSearch;
+	}
+
 
 	
 	

@@ -221,9 +221,11 @@
 								<th style="width: 2%;">
 									<input type="checkbox" id="checkAll" />
 								</th>
+								<%--
 								<th style="width: 2%;">
 									<span class="fa fa-star-o"></span>
 								</th>
+								 --%>
 									<th style="width: 2%;">
 										<span class="fa fa-paperclip"></span>
 									</th>
@@ -234,13 +236,20 @@
 						</thead>
 						
 						<tbody>
+						<c:if test="${empty requestScope.TemporaryMailList}">
+							<tr>
+								<td colspan="10" style="text-align: center; width: 1000px;">메일이 존재하지 않습니다.</td>
+							</tr>							
+						</c:if>
+						<c:if test="${not empty requestScope.TemporaryMailList}">
 						<c:forEach items="${requestScope.TemporaryMailList}" var="TemporaryMailList" varStatus="status">
 							<tr>
 								<td style="width: 40px;">
 									<input type="checkbox" id="${TemporaryMailList.pk_mail_num}" name="chkBox" class="text-center"/>
 								</td>
+								<%--
 								<td style="width: 40px;">
-									<%-- 별모양(☆) 클릭 시 importance_star를 1(★)로 바꾼다. (중요메일함 = importance_star=1인 목록) --%>
+									<%-- 별모양(☆) 클릭 시 importance_star를 1(★)로 바꾼다. (중요메일함 = importance_star=1인 목록) 
 									<c:if test="${TemporaryMailList.importance_star_send == '0'}">
 										<span class="fa fa-star-o" id="importance_star" style="cursor: pointer;" onclick="goImportantList('${TemporaryMailList.pk_mail_num}')"></span>
 									</c:if>
@@ -248,6 +257,7 @@
 										<span class="fa fa-star" id="importance_star" style="cursor: pointer;" onclick="goImportantList('${TemporaryMailList.pk_mail_num}')"></span>
 									</c:if>
 								</td>
+								 --%>
 								<td style="width: 40px;">
 									<c:if test="${not empty TemporaryMailList.filename}">
 										<span class="fa fa-paperclip" class="text-center"></span>
@@ -264,7 +274,8 @@
 								</td>
 								<td class="text-left">${TemporaryMailList.reg_date}</td>
 							</tr>	
-						</c:forEach>																				
+						</c:forEach>	
+						</c:if>																			
 						</tbody>
 					</table>
 				</div>	

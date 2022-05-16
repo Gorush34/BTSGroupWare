@@ -229,53 +229,60 @@
 									<span class="fa fa-paperclip"></span>
 								</th>
 								<th style="width: 10%;" class="text-center">보낸이</th>
-								<th style="width: 70%;">제목</th>
-								<th style="width: 20%;" class="text-left">날짜</th>
+								<th style="width: 68%;">제목</th>
+								<th style="width: 22%;" class="text-left">날짜</th>
 							</tr>
 						</thead>
 						
 						<tbody>
-						<c:forEach items="${requestScope.receiveMailList}" var="receiveMailList" varStatus="status">
+						<c:if test="${empty requestScope.receiveMailList}">
 							<tr>
-								<td style="width: 40px;">
-									<input type="checkbox" id="${receiveMailList.pk_mail_num}" name="chkBox" class="text-center"/>
-								</td>
-								<td style="width: 40px;">
-									<%-- 별모양(☆) 클릭 시 importance_star를 1(★)로 바꾼다. (중요메일함 = importance_star=1인 목록) --%>
-									<c:if test="${receiveMailList.importance_star_rec == '0'}">
-										<span class="fa fa-star-o" id="importance_star" style="cursor: pointer;" onclick="goImportantList('${receiveMailList.pk_mail_num}')"></span>
-									</c:if>
-									<c:if test="${receiveMailList.importance_star_rec == '1'}">
-										<span class="fa fa-star" id="importance_star" style="cursor: pointer;" onclick="goImportantList('${receiveMailList.pk_mail_num}')"></span>
-									</c:if>									
-								</td>
-								<td style="width: 40px;">
-									<c:if test="${not empty receiveMailList.filename}">
-										<span class="fa fa-paperclip" class="text-center"></span>
-									</c:if>								
-								</td>							
-								<td class="text-center">${receiveMailList.sendempname}</td>
-								<td>
-								<%--
-								<a href="<%= ctxPath%>/mail/mailReceiveDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${receiveMailList.subject}</a>
-								--%>
-									<span class="subject" onclick="goRecMailView('${receiveMailList.pk_mail_num}')">
-											<c:if test="${receiveMailList.importance == '1'}">
-												<span class="fa fa-exclamation" style="color: red;" class="text-center"></span>
-											</c:if>	
-											${receiveMailList.subject}
-									</span>
-								</td>
-								<td class="text-left">									
-									<c:if test="${not empty receiveMailList.reservation_date}">
-										${receiveMailList.reservation_date}
-									</c:if>
-									<c:if test="${empty receiveMailList.reservation_date}">
-										${receiveMailList.reg_date}
-									</c:if>	
-								</td>
-							</tr>	
-						</c:forEach>																				
+								<td colspan="10" style="text-align: center; width: 1000px;">메일이 존재하지 않습니다.</td>
+							</tr>							
+						</c:if>
+						<c:if test="${not empty requestScope.receiveMailList}">
+							<c:forEach items="${requestScope.receiveMailList}" var="receiveMailList" varStatus="status">
+								<tr>
+									<td style="width: 40px;">
+										<input type="checkbox" id="${receiveMailList.pk_mail_num}" name="chkBox" class="text-center"/>
+									</td>
+									<td style="width: 40px;">
+										<%-- 별모양(☆) 클릭 시 importance_star를 1(★)로 바꾼다. (중요메일함 = importance_star=1인 목록) --%>
+										<c:if test="${receiveMailList.importance_star_rec == '0'}">
+											<span class="fa fa-star-o" id="importance_star" style="cursor: pointer;" onclick="goImportantList('${receiveMailList.pk_mail_num}')"></span>
+										</c:if>
+										<c:if test="${receiveMailList.importance_star_rec == '1'}">
+											<span class="fa fa-star" id="importance_star" style="cursor: pointer;" onclick="goImportantList('${receiveMailList.pk_mail_num}')"></span>
+										</c:if>									
+									</td>
+									<td style="width: 40px;">
+										<c:if test="${not empty receiveMailList.filename}">
+											<span class="fa fa-paperclip" class="text-center"></span>
+										</c:if>								
+									</td>							
+									<td class="text-center">${receiveMailList.sendempname}</td>
+									<td>
+									<%--
+									<a href="<%= ctxPath%>/mail/mailReceiveDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${receiveMailList.subject}</a>
+									--%>
+										<span class="subject" onclick="goRecMailView('${receiveMailList.pk_mail_num}')">
+												<c:if test="${receiveMailList.importance == '1'}">
+													<span class="fa fa-exclamation" style="color: red;" class="text-center"></span>
+												</c:if>	
+												${receiveMailList.subject}
+										</span>
+									</td>
+									<td class="text-left">									
+										<c:if test="${not empty receiveMailList.reservation_date}">
+											${receiveMailList.reservation_date}
+										</c:if>
+										<c:if test="${empty receiveMailList.reservation_date}">
+											${receiveMailList.reg_date}
+										</c:if>	
+									</td>
+								</tr>	
+							</c:forEach>																				
+						</c:if>
 						</tbody>
 					</table>
 				</div>	
