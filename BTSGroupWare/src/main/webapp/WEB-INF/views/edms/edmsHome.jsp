@@ -33,14 +33,6 @@
 		
 	<div class="divClear"></div>
 				
-	<%-- 결재대기 문서가 없는 경우 시작 --%>
-	<%-- <c:if test="${empty requestScope.edmsList}"> --%>
-	<div name="">	
-	<%-- </c:if> --%>
-	<%-- 결재대기 문서가 없는 경우 종료 --%>
-		
-	<%-- 결재대기 문서가 있는 경우 시작 --%>
-	<%-- <c:if test="${not empty requestScope.edmsList}"> --%>
 		<%-- 반응형 웹(카드) 시작 --%>
 		<div class="row">
 			<%-- 반복문 시작 --%>
@@ -61,51 +53,13 @@
 			</c:forEach>
 		</div>
 		<%-- 반응형 웹(카드) 종료 --%>
-	<%-- </c:if> --%>
-	<%-- 결재대기 문서가 있는 경우 종료 --%>
+	<!-- 결재대기 목록 시작 -->
+	<div id="edms_all">
+		<span class="edms_title">결재대기 목록보기</span>
 		
-		<!-- 결재대기 문서 종료 -->
-	
-	<!-- 반응형 웹 종료 -->
-		
+		<%-- 결재대기 목록이 있을 때 시작 --%>
 		<div class="divClear"></div>
-		
-		<div class="more">
-			<span class="more" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/list.bts'">전체보기</span>
-		</div>
-		
-		<div class="divClear"></div>
-		<%-- 결재 대기 중인 문서가 있을 때 종료 --%>
-		<!-- 나의현황 카드 종료 -->
-
-		<%-- 결재 대기 중인 문서가 없을 때 시작 --%>
- 		<div class="divClear"></div>
-		<table class="table table-sm table-light">
-			<tr>
-				<td style="border-top: solid 1px #D3D3D3;">&nbsp;</td>
-			</tr>
-			<tr>
-				<td style="text-align: center; font-size: 12pt;">결재대기 문서가 없습니다.</td>
-			</tr>
-			<tr>
-				<td style="border-bottom: solid 1px #D3D3D3;">&nbsp;</td>
-			</tr>
-		</table>
-		<%-- 결재 대기 중인 문서가 없을 때 종료 --%>
-	</div>
-	<!-- 나의 현황 종료 -->
-	
-	
-	
-	<div class="divClear"></div>
-
-	<!-- 결재승인 문서목록 시작 -->
-	<div id="edms_accepted">
-		<span class="edms_title">결재승인 목록보기</span>
-		
-		<%-- 결재승인 목록이 있을 때 시작 --%>
-		<div class="divClear"></div>
-		
+		<c:if test="${ not empty requestScope.all}">
 		<table class="table table-sm table-hover table-light">
 		<!-- <table class="table table-sm table-hover tbl_edms_list" style="background-color: #fff"> -->
 			<thead class="thead-light">
@@ -122,59 +76,88 @@
 			</thead>
 			<tbody>
 				<%-- 나중에 forEach문 사용해서 뿌려주기 시작 --%>
- 				<c:forEach var="i" begin="1" end="5">
+ 				<c:forEach var="all" items="${requestScope.all}" begin="0" end="4" step="1">
 				<tr>
-					<th scope="row"><p><c:out value="${i}" /></p></th>
-					<td>2022.02.02</td>
-					<td>업무기안</td>
-					<td><button id="btn_emergency" class="btn btn-outline-danger" style="height: 100%; line-height: 9pt; font-size: 9pt;">긴급</button></td>
-					<td>(신규)휴가신청-연차관리연동</td>
-					<td><img src="<%= ctxPath%>/resources/images/disk.gif" style="height: 16px; width: 16px;"></td>
-					<td>20220428-000001</td>
-					<td>승인됨</td>
+					<th scope="row"><p><c:out value="1" /></p></th>
+					<td>${all.writeday}</td>
+					<td>${all.appr_name}</td>
+					<td>
+						<c:if test="${all.emergency ne 0}">
+						<button id="btn_emergency" class="btn btn-outline-danger" style="height: 100%; line-height: 9pt; font-size: 9pt;">긴급</button>
+						</c:if>
+					</td>
+					<td>${all.title}</td>
+					<td>
+						<c:if test="${all.filename ne null}">
+						<img src="<%= ctxPath%>/resources/images/disk.gif" style="height: 16px; width: 16px;">
+						</c:if>
+					</td>
+					<td>알아서 넣어라</td>
+					<td>
+						<c:if test="${reject.mid_accept eq 0 and reject.fin_accept eq 0}">
+							대기중
+						</c:if>
+						<c:if test="${reject.mid_accept eq 1 and reject.fin_accept eq 0}">
+							대기중
+						</c:if>
+						<c:if test="${reject.fin_accept eq 1}">
+							승인됨
+						</c:if>
+						<c:if test="${reject.mid_accept eq 2 and reject.fin_accept eq 0}">
+							반려됨
+						</c:if>
+						<c:if test="${reject.mid_accept eq 1 and reject.fin_accept eq 2}">
+							반려됨
+						</c:if>
+					</td>
 				</tr>
 				</c:forEach>
-				<%-- 나중에 forEach문 사용해서 뿌려주기 시작 --%>
 			</tbody>
 		</table>
-		
+		</c:if>
 		<div class="divClear"></div>
 		
 		<div class="more">
-			<span class="more" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/accept/list.bts'">전체보기</span>
+			<span class="more" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/list.bts'">전체보기</span>
 		</div>
 		
 		<div class="divClear"></div>
-		<%-- 결재승인 목록이 있을 때 종료 --%>
-		
-		<%-- 결재승인 목록이 없을 때 시작 --%>
+		<%-- 결재대기 목록이 있을 때 종료 --%>
+		<c:if test="${ empty requestScope.all}">
+		<%-- 결재대기 목록이 없을 때 시작 --%>
 		<div class="divClear"></div>
 		<table class="table table-sm table-light">
 			<tr>
 				<td style="border-top: solid 1px #D3D3D3;">&nbsp;</td>
 			</tr>
 			<tr>
-				<td style="text-align: center; font-size: 12pt;">결재승인 문서가 없습니다.</td>
+				<td style="text-align: center; font-size: 12pt;">결재대기 문서가 없습니다.</td>
 			</tr>
 			<tr>
 				<td style="border-bottom: solid 1px #D3D3D3;">&nbsp;</td>
 			</tr>
 		</table>
-		<%-- 결재승인 목록이 없을 때 종료 --%>
+		</c:if>
+		<%-- 결재대기 목록이 없을 때 종료 --%>
 		
 	</div>
-	<!-- 결재승인 문서목록 종료 -->
+	<!-- 결재대기 문서목록 종료 -->
+	</div>
+	<!-- 나의 현황 종료 -->
+	
+	
 	
 	<div class="divClear"></div>
 
-	<!-- 결재반려 문서목록 시작 -->
-	<div id="edms_rejected">
-		<span class="edms_title">결재반려 목록보기</span>
+	<!-- 결재승인 목록 시작 -->
+	<div id="edms_accept">
+		<span class="edms_title">결재승인 목록보기</span>
 		
-		<%-- 결재반려 목록이 있을 때 시작 --%>
+		<%-- 결재승인 목록이 있을 때 시작 --%>
 		<div class="divClear"></div>
-		
+		<c:if test="${ not empty requestScope.accept}">
 		<table class="table table-sm table-hover table-light">
+		<!-- <table class="table table-sm table-hover tbl_edms_list" style="background-color: #fff"> -->
 			<thead class="thead-light">
 				<tr>
 					<th scope="col" width="3%">#</th>
@@ -189,33 +172,147 @@
 			</thead>
 			<tbody>
 				<%-- 나중에 forEach문 사용해서 뿌려주기 시작 --%>
- 				<c:forEach var="i" begin="1" end="5">
+ 				<c:forEach var="accept" items="${requestScope.accept}" begin="0" end="4" step="1">
 				<tr>
-					<th scope="row"><p><c:out value="${i}" /></p></th>
-					<td>2022.02.02</td>
-					<td>업무기안</td>
-					<td>&nbsp;</td>
-					<td>(신규)휴가신청-연차관리연동</td>
-					<td><img src="<%= ctxPath%>/resources/images/disk.gif" style="height: 16px; width: 16px;"></td>
-					<td>20220428-000001</td>
-					<td>반려됨</td>
+					<th scope="row"><p><c:out value="1" /></p></th>
+					<td>${accept.writeday}</td>
+					<td>${accept.appr_name}</td>
+					<td>
+						<c:if test="${accept.emergency ne 0}">
+						<button id="btn_emergency" class="btn btn-outline-danger" style="height: 100%; line-height: 9pt; font-size: 9pt;">긴급</button>
+						</c:if>
+					</td>
+					<td>${accept.title}</td>
+					<td>
+						<c:if test="${accept.filename ne null}">
+						<img src="<%= ctxPath%>/resources/images/disk.gif" style="height: 16px; width: 16px;">
+						</c:if>
+					</td>
+					<td>알아서 넣어라</td>
+					<td>
+						<c:if test="${reject.mid_accept eq 0 and reject.fin_accept eq 0}">
+							대기중
+						</c:if>
+						<c:if test="${reject.mid_accept eq 1 and reject.fin_accept eq 0}">
+							대기중
+						</c:if>
+						<c:if test="${reject.fin_accept eq 1}">
+							승인됨
+						</c:if>
+						<c:if test="${reject.mid_accept eq 2 and reject.fin_accept eq 0}">
+							반려됨
+						</c:if>
+						<c:if test="${reject.mid_accept eq 1 and reject.fin_accept eq 2}">
+							반려됨
+						</c:if>
+					</td>
 				</tr>
 				</c:forEach>
-				<%-- 나중에 forEach문 사용해서 뿌려주기 시작 --%>
 			</tbody>
 		</table>
-		
+		</c:if>
 		<div class="divClear"></div>
 		
 		<div class="more">
-			<span class="more" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/reject/list.bts'">전체보기</span>
+			<span class="more" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/accept/list.bts'">전체보기</span>
 		</div>
 		
 		<div class="divClear"></div>
-		<%-- 결재반려 목록이 있을 때 종료 --%>
+		<%-- 결재승인 목록이 있을 때 종료 --%>
+		<c:if test="${ empty requestScope.accept}">
+		<%-- 결재승인 목록이 없을 때 시작 --%>
+		<div class="divClear"></div>
+		<table class="table table-sm table-light">
+			<tr>
+				<td style="border-top: solid 1px #D3D3D3;">&nbsp;</td>
+			</tr>
+			<tr>
+				<td style="text-align: center; font-size: 12pt;">결재승인 문서가 없습니다.</td>
+			</tr>
+			<tr>
+				<td style="border-bottom: solid 1px #D3D3D3;">&nbsp;</td>
+			</tr>
+		</table>
+		</c:if>
+		<%-- 결재승인 목록이 없을 때 종료 --%>
 		
+	</div>
+	<!-- 결재승인 문서목록 종료 -->
+	
+	<div class="divClear"></div>
+	
+
+	<!-- 결재반려 목록 시작 -->
+	<div id="edms_all">
+		<span class="edms_title">결재반려 목록보기</span>
+		
+		<%-- 결재반려 목록이 있을 때 시작 --%>
+		<div class="divClear"></div>
+		<c:if test="${ not empty requestScope.reject}">
+		<table class="table table-sm table-hover table-light">
+		<!-- <table class="table table-sm table-hover tbl_edms_list" style="background-color: #fff"> -->
+			<thead class="thead-light">
+				<tr>
+					<th scope="col" width="3%">#</th>
+					<th scope="col" width="13%">기안일</th>
+					<th scope="col" width="10%">결재양식</th>
+					<th scope="col" width="9%">긴급</th>
+					<th scope="col" width="31%">제목</th>
+					<th scope="col" width="6%">첨부</th>
+					<th scope="col" width="20%">문서번호</th>
+					<th scope="col" width="8%">상태</th>
+				</tr>
+			</thead>
+			<tbody>
+				<%-- 나중에 forEach문 사용해서 뿌려주기 시작 --%>
+ 				<c:forEach var="reject" items="${requestScope.reject}" begin="0" end="4" step="1">
+				<tr>
+					<th scope="row"><p><c:out value="1" /></p></th>
+					<td>${reject.writeday}</td>
+					<td>${reject.appr_name}</td>
+					<td>
+						<c:if test="${reject.emergency ne 0}">
+						<button id="btn_emergency" class="btn btn-outline-danger" style="height: 100%; line-height: 9pt; font-size: 9pt;">긴급</button>
+						</c:if>
+					</td>
+					<td>${reject.title}</td>
+					<td>
+						<c:if test="${reject.filename ne null}">
+						<img src="<%= ctxPath%>/resources/images/disk.gif" style="height: 16px; width: 16px;">
+						</c:if>
+					</td>
+					<td>알아서 넣어라</td>
+					<td>
+						<c:if test="${reject.mid_accept eq 0 and reject.fin_accept eq 0}">
+							대기중
+						</c:if>
+						<c:if test="${reject.mid_accept eq 1 and reject.fin_accept eq 0}">
+							대기중
+						</c:if>
+						<c:if test="${reject.fin_accept eq 1}">
+							승인됨
+						</c:if>
+						<c:if test="${reject.mid_accept eq 2 and reject.fin_accept eq 0}">
+							반려됨
+						</c:if>
+						<c:if test="${reject.mid_accept eq 1 and reject.fin_accept eq 2}">
+							반려됨
+						</c:if>
+					</td>
+				</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+		</c:if>
+		<div class="divClear"></div>
+		
+		
+		
+		<div class="divClear"></div>
+		<%-- 결재반려 목록이 있을 때 종료 --%>
+		<c:if test="${ empty requestScope.reject}">
 		<%-- 결재반려 목록이 없을 때 시작 --%>
- 		<div class="divClear"></div>
+		<div class="divClear"></div>
 		<table class="table table-sm table-light">
 			<tr>
 				<td style="border-top: solid 1px #D3D3D3;">&nbsp;</td>
@@ -227,9 +324,10 @@
 				<td style="border-bottom: solid 1px #D3D3D3;">&nbsp;</td>
 			</tr>
 		</table>
+		</c:if>
 		<%-- 결재반려 목록이 없을 때 종료 --%>
-		
+		<div class="more">
+			<span class="more" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/reject/list.bts'">전체보기</span>
+		</div>
 	</div>
 	<!-- 결재반려 문서목록 종료 -->
-	</div>
-	<div class="divClear"></div>

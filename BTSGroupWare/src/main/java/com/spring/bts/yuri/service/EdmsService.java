@@ -198,6 +198,27 @@ public class EdmsService implements InterEdmsService {
 		List<ApprVO> edmsList = dao.edmsListSearchWithPaging_reject(paraMap);
 		return edmsList;
 	}
+
+	// 상태 상관없이 전체 리스트 불러오기
+	@Override
+	public List<Map<String, Object>> getAllList() {
+		List<Map<String, Object>> allList = dao.getAllList();
+		return allList;
+	}
+
+	// 상태가 승인됨인 리스트 불러오기
+	@Override
+	public List<Map<String, Object>> getAcceptList() {
+		List<Map<String, Object>> acceptList = dao.getAcceptList();
+		return acceptList;
+	}
+
+	// 상태가 반려됨인 리스트 불러오기
+	@Override
+	public List<Map<String, Object>> getRejectList() {
+		List<Map<String, Object>> rejectList = dao.getRejectList();
+		return rejectList;
+	}
 	
 	
 	

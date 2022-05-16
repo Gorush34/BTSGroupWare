@@ -161,4 +161,25 @@ public class EdmsDAO implements InterEdmsDAO {
 		List<ApprVO> edmsList = sqlsession.selectList("yuri.edmsListSearchWithPaging_reject", paraMap);
 		return edmsList;
 	}
+
+	// 상태 상관없이 전체 리스트 불러오기
+	@Override
+	public List<Map<String, Object>> getAllList() {
+		List<Map<String, Object>> allList = sqlsession.selectList("yuri.getAllList");
+		return allList;
+	}
+
+	// 상태가 승인됨인 리스트 불러오기
+	@Override
+	public List<Map<String, Object>> getAcceptList() {
+		List<Map<String, Object>> acceptList = sqlsession.selectList("yuri.getAcceptList");
+		return acceptList;
+	}
+
+	// 상태가 반려됨인 리스트 불러오기
+	@Override
+	public List<Map<String, Object>> getRejectList() {
+		List<Map<String, Object>> rejectList = sqlsession.selectList("yuri.getRejectList");
+		return rejectList;
+	}
 }
