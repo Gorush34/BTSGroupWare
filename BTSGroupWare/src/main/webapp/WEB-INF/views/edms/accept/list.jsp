@@ -158,7 +158,7 @@
 		<div class="divClear"></div>
 
 		<%-- 결재승인 목록이 없을 때 시작 --%>
-		<c:if test="${empty requestScope.edmsList}">
+		<c:if test="${empty requestScope.acceptList}">
 		<table class="table table-sm table-light">
 			<tr>
 				<td style="border-top: solid 1px #D3D3D3;">&nbsp;</td>
@@ -174,7 +174,7 @@
 		<%-- 결재승인 목록이 없을 때 종료 --%>
 		
 		<%-- 결재승인 목록이 있을 때 종료 --%>
-		<c:if test="${not empty requestScope.edmsList}">
+		<c:if test="${not empty requestScope.acceptList}">
 		<table class="table table-sm table-hover table-light edmsTable">
 			<thead class="thead-light">
 				<tr>
@@ -188,15 +188,15 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="apprvo" items="${requestScope.edmsList}">
-				<tr onclick="goView('${apprvo.pk_appr_no}')" style="cursor: pointer;">
+				<c:forEach var="accept" items="${requestScope.acceptList}">
+				<tr onclick="goView('${accept.pk_appr_no}')" style="cursor: pointer;">
 					
-					<td>${apprvo.pk_appr_no}</td>
+					<td>${accept.pk_appr_no}</td>
 					
-					<td>${apprvo.writeday}</td>
+					<td>${accept.writeday}</td>
 					
 					<td>
-						${appr_name}
+						${accept.pk_appr_no}
 						<%-- <c:if test="${apprvo.fk_appr_sortno eq 1}">
 							<span>업무기안서</span>
 						</c:if>
@@ -212,42 +212,42 @@
 					</td> <%-- ${apprvo.fk_appr_sortno} --%>
 					
 					<td>
-					<c:if test="${apprvo.emergency == 1}">
+					<c:if test="${accept.emergency == 1}">
 						<button id="btn_emergency" class="btn btn-danger edmsBtn">긴급</button>
 					</c:if>
-					<c:if test="${apprvo.emergency == 0}">
+					<c:if test="${accept.emergency == 0}">
 						&nbsp;
 					</c:if>
 					</td>
 					
 					<td>
-						<span class="title" onclick="goView('${apprvo.pk_appr_no}')" style="cursor: pointer;">${apprvo.title}</span>
+						<span class="title" onclick="goView('${accept.pk_appr_no}')" style="cursor: pointer;">${accept.title}</span>
 						
 					</td>
 					
 					<td>
 						<%-- 첨부파일이 있는 경우 --%>
-						<c:if test="${not empty apprvo.filename}">
+						<c:if test="${not empty accept.filename}">
 							<img src="<%= ctxPath%>/resources/images/disk.gif" style="height: 16px; width: 16px;">
 						</c:if>
 						<%-- 첨부파일이 없는 경우 --%>
-						<c:if test="${empty apprvo.filename}">&nbsp;</c:if>
+						<c:if test="${empty accept.filename}">&nbsp;</c:if>
 					</td>
 					
 					<td>
-						<c:if test="${apprvo.mid_accept eq 0 and apprvo.fin_accept eq 0}">
+						<c:if test="${accept.mid_accept eq 0 and accept.fin_accept eq 0}">
 							<button class="btn btn-secondary edmsBtn">대기</button>
 						</c:if>
-						<c:if test="${apprvo.mid_accept eq 1 and apprvo.fin_accept eq 0}">
+						<c:if test="${accept.mid_accept eq 1 and accept.fin_accept eq 0}">
 							<button class="btn btn-warning edmsBtn">진행중</button>
 						</c:if>
-						<c:if test="${apprvo.mid_accept eq 1 and apprvo.fin_accept eq 1}">
+						<c:if test="${accept.mid_accept eq 1 and accept.fin_accept eq 1}">
 							<button class="btn btn-info edmsBtn">승인됨</button>
 						</c:if>
-						<c:if test="${apprvo.mid_accept eq 2}">
+						<c:if test="${accept.mid_accept eq 2}">
 							<button class="btn btn-dark edmsBtn">반려됨</button>
 						</c:if>
-						<c:if test="${apprvo.mid_accept eq 1 and apprvo.fin_accept eq 2}">
+						<c:if test="${accept.mid_accept eq 1 and accept.fin_accept eq 2}">
 							<button class="btn btn-dark edmsBtn">반려됨</button>
 						</c:if>
 					</td>
