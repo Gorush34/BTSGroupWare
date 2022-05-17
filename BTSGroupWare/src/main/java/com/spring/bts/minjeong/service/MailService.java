@@ -359,7 +359,40 @@ public class MailService implements InterMailService {
 		return n;
 	}
 
+   // 메일 1개 상세내용을 읽어오기 (메일 전달 및 답장을 위함 - 검색타입과 검색명 없음)
+   @Override
+   public MailVO getRecMailView_noSearch(Map<String, String> paraMap) {
+      MailVO recMailView_noSearch = dao.getRecMailView_noSearch(paraMap);
+      return recMailView_noSearch;
+   }
 
+   // 각 메일함 상세보기에서 삭제버튼 클릭 (글 1개)시 해당 글번호 글 휴지통으로 이동하기 (del_status = 1)
+   @Override
+   public int updateTblMailDelStatus_one(Map<String, String> paraMap) {
+      int n = dao.updateTblMailDelStatus_one(paraMap);
+      return n;
+   }
+
+   // 총 내게 쓴 메일 건수 구해오기
+   @Override
+   public int getTotalCount_sendToMe(Map<String, String> paraMap) {
+      int n = dao.getTotalCount_sendToMe(paraMap);
+      return n;
+   }
+
+   // 페이징처리 한 내게쓴 메일목록 (검색 있든, 없든 모두 다 포함) 
+   @Override
+   public List<MailVO> sendToMeListSearchWithPaging(Map<String, String> paraMap) {
+      List<MailVO> sendToMeList = dao.sendToMeListSearchWithPaging(paraMap);
+      return sendToMeList;
+   }
+
+   // 내게쓴 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
+   @Override
+   public MailVO getSendToMeMailView(Map<String, String> paraMap) {
+      MailVO mailvo = dao.getSendToMeMailView(paraMap);      
+      return mailvo;
+   }
 	
 	
 
