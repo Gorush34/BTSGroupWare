@@ -437,7 +437,7 @@
 						<input type="hidden" id="importanceVal" name="importanceVal" />
 				</th>
 				<td width="110%" >
-					<input type="text" id="subject" name="subject" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; display: inline-block;" />
+					<input type="text" id="subject" name="subject" value="${requestScope.mailvo.subject}" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; display: inline-block;" />
 				</td>
 			</tr>		
 			<tr>
@@ -455,6 +455,7 @@
 			<tr style="border: 0px;">
 				<td width="1200px;" style="border: 0px">
 					<textarea rows="20" cols="100" style="width: 1090px; border: solid 1px gray; height: 400px;" name="content" id="content" >					
+					${requestScope.mailvo.content}
 					</textarea>						
 				</td>
 			</tr>

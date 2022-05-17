@@ -375,6 +375,19 @@
 		
 		$('.modal').modal('hide');	// 확인버튼 클릭 후 모달창 숨기기
 	}
+
+	// function declaration
+	function sendToMe() {
+
+		var con = $("textarea#content").val();
+		$("input#con").val(con);
+		var frm = document.mailWriteFrm;
+      	frm.importanceVal.value = importanceVal;
+      	frm.method = "POST";
+      	frm.action = "<%= ctxPath%>/mail/mailSendToMeWrite.bts";
+        frm.submit();
+		
+	}
 	
 </script>
 
@@ -399,7 +412,7 @@
 			</button>
 		</li>	
 		<li class="buttonList">
-			<button type="button" id="writeToMe" class="btn btn-secondary btn-sm" onclick="location.href='/bts/mail/mailSendToMeWrite.bts'">
+			<button type="button" id="writeToMe" class="btn btn-secondary btn-sm" onclick="sendToMe()">
 			<i class="fa fa-pencil-square-o fa-fw" aria-hidden="true"></i>
 			내게쓰기
 			</button>
@@ -456,6 +469,7 @@
 				<td width="1200px;" style="border: 0px">
 					<textarea rows="20" cols="100" style="width: 1090px; border: solid 1px gray; height: 400px;" name="content" id="content" >					
 					</textarea>						
+					<input type="hidden" id="con" name="con">
 				</td>
 			</tr>
 		</table>

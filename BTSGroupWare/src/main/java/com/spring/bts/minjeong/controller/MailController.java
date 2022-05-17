@@ -1951,13 +1951,19 @@ public class MailController {
 	
 	// 내게쓴메일함 폼페이지 요청
 	@RequestMapping(value = "/mail/mailSendToMeWrite.bts", produces = "text/plain; charset=UTF-8")	
-	public ModelAndView requiredLogin_mailSendToMeWrite(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView requiredLogin_mailSendToMeWrite(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, MailVO mailvo) {
 		
 		 // 로그인 세션 요청하기 
 		 HttpSession session = request.getSession(); 
 		 EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
+
+		 
+		 String content = request.getParameter("con");
+		 mailvo.setContent(content);
+		 System.out.println("확인용 content : " + mailvo.getContent());
 		 
 		 mav.addObject("loginuser", loginuser);
+		 mav.addObject("mailvo", mailvo);
 		 
 		// 내게 쓰기 폼 띄우기		
 		mav.setViewName("mailSendToMeWrite.mail");	// view 단
