@@ -320,7 +320,12 @@
 </script>
 
 <div id="calendarMain">
-	<h4 style="margin: 0 80px">일정관리</h4>
+<div class="d-flex align-items-center p-3 my-3 text-white bg-purple shadow-sm" style="background-color: #6F42C1;">
+    <div class="lh-1" style="text-align: center; width: 100%;">
+      <h1 class="h6 mb-0 text-white lh-1" style="font-size:22px; font-weight: bold; ">일정관리</h1>
+    </div>
+  </div>
+
 	<%-- 검색바를 보여주는 곳 --%>
 	<div id="calendarSearch">
 		<form name="calendarSearchFrm">
@@ -337,7 +342,7 @@
 	<%-- 캘린더를 보여주는 곳 --%>
 	<input type="hidden" value="${sessionScope.loginuser.pk_emp_no}" id="fk_emp_no"/>
 	<input type="hidden" value="${sessionScope.loginuser.emp_name}" id="emp_name"/>
-	<div id="calendar" style="margin: 60px 30px 50px 60px;"></div>
+	<div id="calendar" style="margin: 60px 30px 50px 30px;"></div>
 
 </div>
 
