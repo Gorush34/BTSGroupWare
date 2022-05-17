@@ -23,6 +23,15 @@
 
   $(document).ready(function(){
 	  
+	  $('#content').on('keyup', function() {
+	        $('#content_cnt').html("("+$(this).val().length+" / 100)");
+	 
+	        if($(this).val().length > 100) {
+	            $(this).val($(this).val().substring(0, 100));
+	            $('#content_cnt').html("(100 / 100)");
+	        }
+	    });
+	  
 	  
 	  $("span.subject").bind("mouseover", function(event){
 			var $target = $(event.target);
@@ -66,6 +75,7 @@
 		  const subject = $("input#subject").val().trim();
 		  if(subject == "") {
 			  alert("글제목을 입력하세요!!");
+			  $("input#subject").focus();
 			  return;
 		  }
 		  
@@ -76,6 +86,7 @@
 
 	           if(contentval == "" || contentval == "<p>&nbsp;</p>") {
 	              alert("글내용을 입력하세요!!");
+	              $("textarea#content").focus();
 	              return;
 	           }
 	           
@@ -85,7 +96,18 @@
 	           contentval = contentval.replace(/<\/p><p>/gi, "<br>"); //</p><p> -> <br>로 변환  
 	           contentval = contentval.replace(/(<\/p><br>|<p><br>)/gi, "<br><br>"); //</p><br>, <p><br> -> <br><br>로 변환
 	           contentval = contentval.replace(/(<p>|<\/p>)/gi, ""); //<p> 또는 </p> 모두 제거시
-	       
+	       	
+	           var len = contentval.length; 
+
+	           document.querySelector(".count span").innerHTML = len; 
+	           if(len > 4000) { 
+	        	   alert("최대 4000글자 까지 입력 가능합니다."); 
+	        	   $("textarea#content").focus();
+	        	   return;
+	        	}
+
+
+	           
 	           $("textarea#content").val(contentval);
 	        
 	           // alert(contentval);
@@ -133,6 +155,16 @@
 	           contentval = contentval.replace(/(<\/p><br>|<p><br>)/gi, "<br><br>"); //</p><br>, <p><br> -> <br><br>로 변환
 	           contentval = contentval.replace(/(<p>|<\/p>)/gi, ""); //<p> 또는 </p> 모두 제거시
 	       
+	           
+	           var len = contentval.length; 
+
+	           document.querySelector(".count span").innerHTML = len; 
+	           if(len > 4000) { 
+	        	   alert("최대 4000글자 까지 입력 가능합니다."); 
+	        	   $("textarea#content").focus();
+	        	   return;
+	        	}
+	           
 	           $("textarea#content").val(contentval);
 	        
 	           // alert(contentval);
@@ -217,6 +249,8 @@
 			<th style="width: 15%; background-color: #DDDDDD; text-align: right;">내용</th>
 			<td>
 				<textarea style="width: 100%; height: 612px;" name="content" id="content"></textarea>
+				<p class="count"><span>0</span> / 4000</p>
+
 			</td>
 		</tr>
 		
