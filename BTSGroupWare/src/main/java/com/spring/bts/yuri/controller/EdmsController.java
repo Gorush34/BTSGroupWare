@@ -58,14 +58,20 @@ public class EdmsController {
 	@RequestMapping(value="/edms/edmsHome.bts")
 	public ModelAndView requiredLogin_edmsHome(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("searchType", "");
+		paraMap.put("searchWord", "");
+		paraMap.put("startRno", "1");
+		paraMap.put("endRno", "5");
+		
 		// 상태 상관없이 전체 리스트 불러오기
-		List<Map<String, Object>> allList = service.getAllList();
+		List<Map<String, Object>> allList = service.getAllList(paraMap);
 		
 		// 상태가 승인됨인 리스트 불러오기
-		List<Map<String, Object>> acceptList = service.getAcceptList();
+		List<Map<String, Object>> acceptList = service.getAcceptList(paraMap);
 		
 		// 상태가 반려됨인 리스트 불러오기
-		List<Map<String, Object>> rejectList = service.getRejectList();
+		List<Map<String, Object>> rejectList = service.getRejectList(paraMap);
 		
 		
 		mav.addObject("all", allList);				// 전체목록 넣어줌
@@ -328,7 +334,7 @@ public class EdmsController {
 		String searchWord = request.getParameter("searchWord");
 		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
 		
-		System.out.println("~~~ searchWord : " + searchWord);
+		// System.out.println("~~~ searchWord : " + searchWord);
 		
 		if(searchType == null || (!"title".equals(searchType) && !"emp_name".equals(searchType)) ) {
 			searchType = "";
@@ -377,7 +383,7 @@ public class EdmsController {
 		
 		// 총 게시물 건수(totalCount)
 		totalCount = service.getTotalCount(paraMap);
-		System.out.println("~~~~~ 확인용 totalCount : " + totalCount);
+		// System.out.println("~~~~~ 확인용 totalCount : " + totalCount);
 		
 		// 만약에 총 게시물 건수(totalCount)가 127개 이라면
 		// 총 페이지수(totalPage)는 13개가 되어야 한다.
@@ -516,7 +522,7 @@ public class EdmsController {
 		
 		// 내문서함 - 대기문서함 총 게시물 건수(totalCount)
 		totalCount = service.getTotalCount_wait(paraMap);
-		System.out.println("~~~~~ 내문서함 - 대기문서함 totalCount : " + totalCount);
+		// System.out.println("~~~~~ 내문서함 - 대기문서함 totalCount : " + totalCount);
 		
 		totalPage = (int) Math.ceil((double)totalCount/sizePerPage);
 		
@@ -598,25 +604,18 @@ public class EdmsController {
 	
 	
 	
-	// === 승인인 보기 페이지 요청 === //
+	// === 내문서함-승인문서함 페이지 요청 === //
 	@RequestMapping(value="/edms/accept/list.bts")
 	public ModelAndView list_accept(ModelAndView mav, HttpServletRequest request) {
 		
 		getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출
 		
-		List<ApprVO> edmsList = null;
-		
 		HttpSession session = request.getSession();
 		session.setAttribute("readCountPermission", "yes");
 		
-		String status = request.getParameter("status");
 		String searchType = request.getParameter("searchType");
 		String searchWord = request.getParameter("searchWord");
 		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
-		
-		
-		
-		System.out.println("~~~ searchWord : " + searchWord);
 		
 		if(searchType == null || (!"title".equals(searchType) && !"emp_name".equals(searchType)) ) {
 			searchType = "";
@@ -627,7 +626,6 @@ public class EdmsController {
 		}
 		
 		Map<String, String> paraMap = new HashMap<>();
-		paraMap.put("status", status);
 		paraMap.put("searchType", searchType);
 		paraMap.put("searchWord", searchWord);
 		
@@ -641,9 +639,9 @@ public class EdmsController {
 		int startRno = 0;			// 시작 행번호
 		int endRno = 0;				// 끝 행번호
 		
-		// 총 게시물 건수(totalCount)
-		totalCount = service.getTotalCount(paraMap);
-		System.out.println("~~~~~ 확인용 totalCount : " + totalCount);
+		// 내문서함 - 승인문서함 총 게시물 건수(totalCount)
+		totalCount = service.getTotalCount_accept(paraMap);
+		// System.out.println("~~~~~ 내문서함 - 승인문서함 totalCount : " + totalCount);
 		
 		// 만약에 총 게시물 건수(totalCount)가 127개 이라면 총 페이지수(totalPage)는 13개가 되어야 한다.
 		
@@ -668,7 +666,7 @@ public class EdmsController {
 		paraMap.put("startRno", String.valueOf(startRno));
 		paraMap.put("endRno", String.valueOf(endRno));		
 		
-		edmsList = service.edmsListSearchWithPaging_accept(paraMap);
+		List<Map<String, Object>> acceptList = service.getAcceptList(paraMap);
 		// 페이징한 대기문서 목록 가져오기(검색유무 상관없이 모두 가져온다.)
 		
 		// 검색대상 컬럼과 검색어 유지
@@ -717,18 +715,11 @@ public class EdmsController {
 		mav.addObject("gobackURL", gobackURL.replaceAll("&", " "));
 		// ==== 페이징 처리를 한 검색어가 있는 전체 글목록 보여주기 끝 ====
 		
-		mav.addObject("edmsList", edmsList);
+		mav.addObject("acceptList", acceptList);
 		mav.setViewName("accept/list.edms");
 		
 		return mav;		
 	}
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
@@ -739,17 +730,12 @@ public class EdmsController {
 		
 		getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출
 		
-		List<ApprVO> edmsList = null;
-		
 		HttpSession session = request.getSession();
 		session.setAttribute("readCountPermission", "yes");
 		
-		String status = request.getParameter("status");
 		String searchType = request.getParameter("searchType");
 		String searchWord = request.getParameter("searchWord");
 		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
-		
-		System.out.println("~~~ searchWord : " + searchWord);
 		
 		if(searchType == null || (!"title".equals(searchType) && !"emp_name".equals(searchType)) ) {
 			searchType = "";
@@ -760,7 +746,6 @@ public class EdmsController {
 		}
 		
 		Map<String, String> paraMap = new HashMap<>();
-		paraMap.put("status", status);
 		paraMap.put("searchType", searchType);
 		paraMap.put("searchWord", searchWord);
 		
@@ -774,9 +759,9 @@ public class EdmsController {
 		int startRno = 0;			// 시작 행번호
 		int endRno = 0;				// 끝 행번호
 		
-		// 총 게시물 건수(totalCount)
-		totalCount = service.getTotalCount(paraMap);
-		System.out.println("~~~~~ 확인용 totalCount : " + totalCount);
+		// 내문서함 - 반려문서함 총 게시물 건수(totalCount)
+		totalCount = service.getTotalCount_reject(paraMap);
+		// System.out.println("~~~~~ 내문서함 - 반려문서함 totalCount : " + totalCount);
 		
 		// 만약에 총 게시물 건수(totalCount)가 127개 이라면 총 페이지수(totalPage)는 13개가 되어야 한다.
 		
@@ -801,7 +786,7 @@ public class EdmsController {
 		paraMap.put("startRno", String.valueOf(startRno));
 		paraMap.put("endRno", String.valueOf(endRno));		
 		
-		edmsList = service.edmsListSearchWithPaging_reject(paraMap);
+		List<Map<String, Object>> rejectList = service.getRejectList(paraMap);
 		// 페이징한 대기문서 목록 가져오기(검색유무 상관없이 모두 가져온다.)
 		
 		// 검색대상 컬럼과 검색어 유지
@@ -850,7 +835,7 @@ public class EdmsController {
 		mav.addObject("gobackURL", gobackURL.replaceAll("&", " "));
 		// ==== 페이징 처리를 한 검색어가 있는 전체 글목록 보여주기 끝 ====
 		
-		mav.addObject("edmsList", edmsList);
+		mav.addObject("rejectList", rejectList);
 		mav.setViewName("reject/list.edms");
 		
 		return mav;		

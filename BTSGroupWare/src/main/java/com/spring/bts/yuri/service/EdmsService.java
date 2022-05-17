@@ -201,22 +201,22 @@ public class EdmsService implements InterEdmsService {
 
 	// 상태 상관없이 전체 리스트 불러오기
 	@Override
-	public List<Map<String, Object>> getAllList() {
-		List<Map<String, Object>> allList = dao.getAllList();
+	public List<Map<String, Object>> getAllList(Map<String, String> paraMap) {
+		List<Map<String, Object>> allList = dao.getAllList(paraMap);
 		return allList;
 	}
 	
 	// 상태가 승인됨인 리스트 불러오기
 	@Override
-	public List<Map<String, Object>> getAcceptList() {
-		List<Map<String, Object>> acceptList = dao.getAcceptList();
+	public List<Map<String, Object>> getAcceptList(Map<String, String> paraMap) {
+		List<Map<String, Object>> acceptList = dao.getAcceptList(paraMap);
 		return acceptList;
 	}
 
 	// 상태가 반려됨인 리스트 불러오기
 	@Override
-	public List<Map<String, Object>> getRejectList() {
-		List<Map<String, Object>> rejectList = dao.getRejectList();
+	public List<Map<String, Object>> getRejectList(Map<String, String> paraMap) {
+		List<Map<String, Object>> rejectList = dao.getRejectList(paraMap);
 		return rejectList;
 	}
 
@@ -267,6 +267,20 @@ public class EdmsService implements InterEdmsService {
 	public List<ApprVO> getEdmsListWithPaging_wait(Map<String, String> paraMap) {
 		List<ApprVO> edmsList = dao.getEdmsListWithPaging_wait(paraMap);
 		return edmsList;
+	}
+
+	// 내문서함 - 승인문서함 총 게시물 건수(totalCount)
+	@Override
+	public int getTotalCount_accept(Map<String, String> paraMap) {
+		int totalCount = dao.getTotalCount_accept(paraMap);
+		return totalCount;
+	}
+
+	// 내문서함 - 반려문서함 총 게시물 건수(totalCount)
+	@Override
+	public int getTotalCount_reject(Map<String, String> paraMap) {
+		int totalCount = dao.getTotalCount_reject(paraMap);
+		return totalCount;
 	}
 
 

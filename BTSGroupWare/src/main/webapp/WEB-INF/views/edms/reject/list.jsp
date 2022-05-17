@@ -182,13 +182,13 @@
 		<div class="divClear"></div>
 
 		<%-- 결재대기 목록이 없을 때 시작 --%>
-		<c:if test="${empty requestScope.edmsList}">
+		<c:if test="${empty requestScope.rejectList}">
 		<table class="table table-sm table-light">
 			<tr>
 				<td style="border-top: solid 1px #D3D3D3;">&nbsp;</td>
 			</tr>
 			<tr>
-				<td style="text-align: center; font-size: 12pt;">대기 중인 문서가 없습니다.</td>
+				<td style="text-align: center; font-size: 12pt;">결재반려 문서가 없습니다.</td>
 			</tr>
 			<tr>
 				<td style="border-bottom: solid 1px #D3D3D3;">&nbsp;</td>
@@ -198,7 +198,7 @@
 		<%-- 결재대기 목록이 없을 때 종료 --%>
 		
 		<%-- 결재대기 목록이 있을 때 종료 --%>
-		<c:if test="${not empty requestScope.edmsList}">
+		<c:if test="${not empty requestScope.rejectList}">
 		<table class="table table-sm table-hover table-light">
 			<thead class="thead-light">
 				<tr>
@@ -213,53 +213,48 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="apprvo" items="${requestScope.edmsList}" varStatus="status">
+				<c:forEach var="reject" items="${requestScope.rejectList}" varStatus="status">
 				<tr>
-					<th scope="row">${apprvo.pk_appr_no}</th>
+					<th scope="row">${reject.pk_appr_no}</th>
 					
-					<td>${apprvo.writeday}</td>
+					<td>${reject.writeday}</td>
 					
-					<td>${apprvo.fk_appr_sortno}</td> <%-- ${apprvo.fk_appr_sortno} --%>
+					<td>${reject.appr_name}</td> <%-- ${apprvo.fk_appr_sortno} --%>
 					
 					<td>
-					<c:if test="${apprvo.emergency == 1}">
-						<button id="btn_emergency" class="btn btn-outline-danger disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">긴급</button>
-					</c:if>
-					<c:if test="${apprvo.emergency == 0}">
-						&nbsp;
-					</c:if>
+						<c:if test="${reject.emergency ne 0}">
+							<button id="btn_emergency" class="btn btn-danger edmsHomeBtn">긴급</button>
+						</c:if>
 					</td>
 					
 					<td>
-						<span class="title" onclick="goView('${apprvo.pk_appr_no}')" style="cursor: pointer;">${apprvo.title}</span>
+						<span class="title" onclick="goView('${reject.pk_appr_no}')" style="cursor: pointer;">${apprvo.title}</span>
 						
 					</td>
 					
 					<td>
-						<%-- 첨부파일이 있는 경우 --%>
-						<c:if test="${not empty apprvo.filename}">
+						<c:if test="${reject.filename ne null}">
 							<img src="<%= ctxPath%>/resources/images/disk.gif" style="height: 16px; width: 16px;">
 						</c:if>
-						<%-- 첨부파일이 없는 경우 --%>
-						<c:if test="${empty apprvo.filename}">&nbsp;</c:if>
 					</td>
 					
-					<td>${apprvo.pk_appr_no}</td>
+					<td>${reject.pk_appr_no}</td>
 					<td>
-						<c:choose>
-							<c:when test="${apprvo.status == 0}">
-							<button class="btn btn-outline-secondary disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">대기중</button>
-							</c:when>
-							<c:when test="${apprvo.status == 1}">
-							<button class="btn btn-outline-info disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">진행중</button>
-							</c:when>
-							<c:when test="${apprvo.status == 2}">
-							<button class="btn btn-info disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">승인됨</button>
-							</c:when>
-							<c:when test="${apprvo.status == 3}">
-							<button class="btn btn-secondary disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">반려됨</button>
-							</c:when>
-						</c:choose>
+						<c:if test="${reject.mid_accept eq 0 and reject.fin_accept eq 0}">
+							<button class="btn btn-secondary edmsHomeBtn disabled">대기중</button>
+						</c:if>
+						<c:if test="${reject.mid_accept eq 1 and reject.fin_accept eq 0}">
+							<button class="btn btn-info edmsHomeBtn  disabled">진행중</button>
+						</c:if>
+						<c:if test="${reject.mid_accept eq 1 and reject.fin_accept eq 1}">
+							<button class="btn btn-success edmsHomeBtn  disabled">승인됨</button>
+						</c:if>
+						<c:if test="${reject.mid_accept eq 2}">
+							<button class="btn btn-dark edmsHomeBtn  disabled">반려됨</button>
+						</c:if>
+						<c:if test="${reject.mid_accept eq 1 and reject.fin_accept eq 2}">
+							<button class="btn btn-dark edmsHomeBtn  disabled">반려됨</button>
+						</c:if>
 					</td>
 				</tr>
 				</c:forEach>

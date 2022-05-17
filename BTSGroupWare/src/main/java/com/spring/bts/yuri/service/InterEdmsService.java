@@ -63,13 +63,13 @@ public interface InterEdmsService {
 	List<ApprVO> edmsListSearchWithPaging_reject(Map<String, String> paraMap);
 
 	// 상태 상관없이 전체 리스트 불러오기
-	List<Map<String, Object>> getAllList();
+	List<Map<String, Object>> getAllList(Map<String, String> paraMap);
 	
 	// 상태가 승인됨인 리스트 불러오기
-	List<Map<String, Object>> getAcceptList();
+	List<Map<String, Object>> getAcceptList(Map<String, String> paraMap);
 
 	// 상태가 반려됨인 리스트 불러오기
-	List<Map<String, Object>> getRejectList();
+	List<Map<String, Object>> getRejectList(Map<String, String> paraMap);
 
 	// 로그인유저의 결재대기문서 가져오기
 	int getTotalCountWaitingSign(Map<String, String> paraMap);
@@ -91,6 +91,12 @@ public interface InterEdmsService {
 
 	// 상태가 대기중인 모든 결재문서 불러오기
 	List<ApprVO> getEdmsListWithPaging_wait(Map<String, String> paraMap);
+
+	// 내문서함 - 승인문서함 총 게시물 건수(totalCount)
+	int getTotalCount_accept(Map<String, String> paraMap);
+
+	// 내문서함 - 반려문서함 총 게시물 건수(totalCount)
+	int getTotalCount_reject(Map<String, String> paraMap);
 
 
 	
