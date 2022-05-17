@@ -439,6 +439,7 @@
 		from tbl_appr A JOIN tbl_appr_sort S
 		ON A.fk_appr_sortno = S.pk_appr_sortno
 		where A.mid_accept = 0
+		order by pk_appr_no desc
 	</select>
 	
 	<!-- // 상태가 승인됨인 리스트 불러오기 -->
@@ -459,6 +460,7 @@
 		from tbl_appr A JOIN tbl_appr_sort S
 		ON A.fk_appr_sortno = S.pk_appr_sortno
 		where A.fin_accept = 1
+		order by pk_appr_no desc
 	</select>
 	
 	<!-- // 상태가 반려됨인 리스트 불러오기 -->
@@ -479,6 +481,7 @@
 		from tbl_appr A JOIN tbl_appr_sort S
 		ON A.fk_appr_sortno = S.pk_appr_sortno
 		where mid_accept = 2 or fin_accept = 2
+		order by pk_appr_no desc
 	</select>
 	
 	<!-- === // 로그인유저의 결재대기문서 총 갯수 가져오기 === -->

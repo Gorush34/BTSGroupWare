@@ -223,7 +223,7 @@
 					
 					<td>
 					<c:if test="${apprvo.emergency == 1}">
-						<button id="btn_emergency" class="btn btn-outline-danger disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">긴급</button>
+						<button id="btn_emergency" class="btn btn-danger disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">긴급</button>
 					</c:if>
 					<c:if test="${apprvo.emergency == 0}">
 						&nbsp;
@@ -232,7 +232,6 @@
 					
 					<td>
 						<span class="title" onclick="goView('${apprvo.pk_appr_no}')" style="cursor: pointer;">${apprvo.title}</span>
-						
 					</td>
 					
 					<td>
@@ -247,16 +246,13 @@
 					<td>${apprvo.pk_appr_no}</td>
 					<td>
 						<c:choose>
-							<c:when test="${apprvo.status == 0}">
-							<button class="btn btn-outline-secondary disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">대기중</button>
+							<c:when test="${apprvo.mid_accept == 0}">
+							<button class="btn btn-secondary disabled">대기중</button>
 							</c:when>
-							<c:when test="${apprvo.status == 1}">
-							<button class="btn btn-outline-info disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">진행중</button>
-							</c:when>
-							<c:when test="${apprvo.status == 2}">
+							<c:when test="${apprvo.mid_accept == 1 and apprvo.fin_accept == 1}">
 							<button class="btn btn-info disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">승인됨</button>
 							</c:when>
-							<c:when test="${apprvo.status == 3}">
+							<c:when test="${apprvo.mid_accept == 2 or apprvo.fin_accept == 2}">
 							<button class="btn btn-secondary disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">반려됨</button>
 							</c:when>
 						</c:choose>
