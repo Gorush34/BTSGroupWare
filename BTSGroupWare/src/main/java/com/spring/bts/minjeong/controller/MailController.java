@@ -1776,7 +1776,7 @@ public class MailController {
 		확인용 reservation_date : 2022-05-19 16:35
 	*/
 		String importanceVal = mrequest.getParameter("importanceVal");
-		System.out.println("확인용 importanceVal : " + importanceVal);
+	//	System.out.println("확인용 importanceVal : " + importanceVal);
         
 		// importanceVal 값을 mailvo 에 있는 importance 에 넣어주기
         mailvo.setImportance(importanceVal);
@@ -1960,7 +1960,7 @@ public class MailController {
 		 
 		 String content = request.getParameter("con");
 		 mailvo.setContent(content);
-		 System.out.println("확인용 content : " + mailvo.getContent());
+	//	 System.out.println("확인용 content : " + mailvo.getContent());
 		 
 		 mav.addObject("loginuser", loginuser);
 		 mav.addObject("mailvo", mailvo);

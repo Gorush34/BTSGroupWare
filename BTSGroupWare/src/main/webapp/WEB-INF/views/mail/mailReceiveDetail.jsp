@@ -53,6 +53,22 @@ $(document).ready(function (){
 	
 });
 
+	// function declaration
+	// '답장' 버튼 클릭 시 해당 글의 번호를 보내고, 그 글의 글제목, 내용을 가져와서 글 수정후 메일쓰기 가능하도록 하기. (+"&searchType="+searchType+"&searchWord="+searchWord)
+	function btnGoReply(pk_mail_num) {		
+		location.href="<%= ctxPath%>/mail/mailReply.bts?pk_mail_num="+pk_mail_num;
+	}
+	// '전달' 버튼 클릭 시 해당 글의 번호를 보내고, 그 글의 글제목, 내용을 가져와서 글 수정후 메일쓰기 가능하도록 하기. (+"&searchType="+searchType+"&searchWord="+searchWord)
+	// /bts/mail/mailReceiveDetail.bts?pk_mail_num=141&searchType=subject&searchWord=
+	function btnGoForward(pk_mail_num){		
+		location.href="<%= ctxPath%>/mail/mailForward.bts?pk_mail_num="+pk_mail_num;
+	}
+	
+	// 메일 상세내용에서 삭제버튼 클릭 시 휴지통으로 이동하기 (?pk_mail_num="+pk_mail_num;)
+	function btnGodeleteOne(pk_mail_num) {
+		location.href="<%= ctxPath%>/mail/mailMoveToRecyclebin_one.bts?pk_mail_num="+pk_mail_num;
+	}
+		
 </script>
 
 <div class="container" style="width: 100%; margin: 50px;">
@@ -61,8 +77,19 @@ $(document).ready(function (){
 				<h4 class="page-title" style="color: black;">받은 메일함</h4>
 			</div>	
 			<div id="goList">
-				<button type="button" id="btnGoList" class="btn btn-secondary btn-sm" onclick="location.href='<%= ctxPath%>/mail/mailReceiveList.bts'" style="margin-left: 1070px; margin-bottom:10px ">
-				<i class="fa fa-reorder"></i>
+				<%-- 답장 클릭 시, 보낸 사람 및 내용에 이전에 썼던 내용을 유지해야 함. --%>
+				<button type="button" id="btnGoReply" class="btn btn-secondary btn-sm" style="margin-bottom: 5px;" onclick="btnGoReply('${requestScope.mailvo.pk_mail_num}')">
+				답장
+				</button>
+				<%-- 전달 클릭 시, 이전에 썼던 내용을 유지해야 함. --%>
+				<button type="button" id="btnGoForward" class="btn btn-secondary btn-sm" style="margin-bottom: 5px;" onclick="btnGoForward('${requestScope.mailvo.pk_mail_num}')">
+				전달
+				</button>	
+				<%-- 글 1개 삭제하기 --%>	
+				<button type="button" id="btnGodeleteOne" class="btn btn-secondary btn-sm" style="margin-bottom: 5px;" onclick="btnGodeleteOne('${requestScope.mailvo.pk_mail_num}')">
+				삭제
+				</button>					
+				<button type="button" id="btnGoList" class="btn btn-secondary btn-sm" onclick="location.href='<%= ctxPath%>/mail/mailReceiveList.bts'" style="margin-left: 950px; margin-bottom: 5px; ">
 				목록
 				</button>
 			</div>	
