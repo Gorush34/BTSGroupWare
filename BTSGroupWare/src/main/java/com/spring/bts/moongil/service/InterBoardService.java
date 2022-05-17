@@ -35,8 +35,6 @@ public interface InterBoardService {
 
 	int addComment(CommentVO commentvo) throws Throwable;
 
-	List<CommentVO> getCommentList(String fk_seq);
-
 	List<BoardVO> temp_list(Map<String, String> paraMap);
 
 	int tmp_write(BoardVO boardvo);

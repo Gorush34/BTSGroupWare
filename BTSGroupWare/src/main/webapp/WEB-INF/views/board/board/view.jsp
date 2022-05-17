@@ -111,8 +111,8 @@
 	}	 
 	
 	td.comment_content{
-	min-width:740px;
-	max-width:740px;
+	min-width:690px;
+	max-width:690px;
 	word-break:break-all;
 	padding-right: 25px;
 	}	 
@@ -208,6 +208,14 @@
 				goAddWrite();	
 			}
 		});
+	 
+	 $("input#pw").keydown(function(event){
+			
+			if(event.keyCode == 13) { // 엔터를 했을 경우
+				 $("button#btnDelete").click();
+			}
+		});
+	 
 	 
 	 /// 글삭제
 	 $("button#btnDelete").click(function(){
@@ -342,7 +350,7 @@
 						  html += "<tr>";
 						  html += "<td class='comment_index'>"+(index+1)+"</td>";
 						  html += "<td class='comment_content'>"+item.content+"</td>";
-						  html += "<td class='comment_name'>"+item.name+"</td>";
+						  html += "<td class='comment_name'>"+item.name+" "+item.ko_rankname+"</td>";
 						  html += "<td class='comment_regDate'>"+item.regDate+"</td>";
 						  if( writeuser == loginuser ) {
 							  html += "<td style='text-align: center;' onclick='goDelComment(\""+item.pk_seq+"\")'><span style='cursor: pointer; color: gray; margin-left: 10px;'>X</span></td>";

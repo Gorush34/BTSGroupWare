@@ -195,11 +195,6 @@ public class BoardService implements InterBoardService {
 		return m;
 	}
 
-	@Override
-	public List<CommentVO> getCommentList(String fk_seq) {
-		List<CommentVO> commentList = dao.getCommentList(fk_seq);
-		return commentList;
-	}
 
 	@Override
 	public List<BoardVO> temp_list(Map<String, String> paraMap) {
