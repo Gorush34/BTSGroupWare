@@ -219,6 +219,20 @@ public class EdmsService implements InterEdmsService {
 		List<Map<String, Object>> rejectList = dao.getRejectList();
 		return rejectList;
 	}
+
+	// 로그인유저의 결재대기문서 가져오기
+	@Override
+	public int getTotalCountWaitingSign(Map<String, String> paraMap) {
+		int totalCount = dao.getTotalCountWaitingSign(paraMap);
+		return totalCount;
+	}
+
+	// 페이징 처리한 로그인유저의 결재대기목록 가져오기
+	@Override
+	public List<Map<String, Object>> waitingSignListWithPaging(Map<String, String> paraMap) {
+		List<Map<String, Object>> waitingList = dao.waitingSignListWithPaging(paraMap);
+		return waitingList;
+	}
 	
 	
 	

@@ -121,6 +121,11 @@
 								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/edmsAdd.bts'">add</span></label>
 							</td>
 						</tr>
+						<tr>
+							<td>
+								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/waitingSignList.bts'">결재대기목록</span></label>
+							</td>
+						</tr>
 					</table>
 				</div>
 				<!-- 부서 문서함 종료 -->
