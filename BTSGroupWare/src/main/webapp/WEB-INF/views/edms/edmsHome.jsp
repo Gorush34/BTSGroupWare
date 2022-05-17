@@ -94,19 +94,19 @@
 					</td>
 					<td>알아서 넣어라</td>
 					<td>
-						<c:if test="${reject.mid_accept eq 0 and reject.fin_accept eq 0}">
+						<c:if test="${all.mid_accept eq 0 and all.fin_accept eq 0}">
 							대기중
 						</c:if>
-						<c:if test="${reject.mid_accept eq 1 and reject.fin_accept eq 0}">
+						<c:if test="${all.mid_accept eq 1 and all.fin_accept eq 0}">
 							대기중
 						</c:if>
-						<c:if test="${reject.fin_accept eq 1}">
+						<c:if test="${all.fin_accept eq 1}">
 							승인됨
 						</c:if>
-						<c:if test="${reject.mid_accept eq 2 and reject.fin_accept eq 0}">
+						<c:if test="${all.mid_accept eq 2 and all.fin_accept eq 0}">
 							반려됨
 						</c:if>
-						<c:if test="${reject.mid_accept eq 1 and reject.fin_accept eq 2}">
+						<c:if test="${all.mid_accept eq 1 and all.fin_accept eq 2}">
 							반려됨
 						</c:if>
 					</td>
@@ -190,19 +190,19 @@
 					</td>
 					<td>알아서 넣어라</td>
 					<td>
-						<c:if test="${reject.mid_accept eq 0 and reject.fin_accept eq 0}">
+						<c:if test="${accept.mid_accept eq 0 and accept.fin_accept eq 0}">
 							대기중
 						</c:if>
-						<c:if test="${reject.mid_accept eq 1 and reject.fin_accept eq 0}">
+						<c:if test="${accept.mid_accept eq 1 and accept.fin_accept eq 0}">
 							대기중
 						</c:if>
-						<c:if test="${reject.fin_accept eq 1}">
+						<c:if test="${accept.fin_accept eq 1}">
 							승인됨
 						</c:if>
-						<c:if test="${reject.mid_accept eq 2 and reject.fin_accept eq 0}">
+						<c:if test="${accept.mid_accept eq 2 and accept.fin_accept eq 0}">
 							반려됨
 						</c:if>
-						<c:if test="${reject.mid_accept eq 1 and reject.fin_accept eq 2}">
+						<c:if test="${accept.mid_accept eq 1 and accept.fin_accept eq 2}">
 							반려됨
 						</c:if>
 					</td>

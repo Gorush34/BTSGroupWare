@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.bts.hwanmo.model.EmployeeVO;
+import com.spring.bts.moongil.model.BoardVO;
 import com.spring.bts.yuri.model.ApprVO;
 import com.spring.bts.common.FileManager;
 import com.spring.bts.common.MyUtil;
@@ -1665,7 +1666,139 @@ public class EdmsController {
    }
 */	
 
+	///////////////////////////////////////////////////////////////////////////////////////
+	// 정환모 작업공간 끝
 	
+	// === 로그인유저의 결재대기목록 페이지 === //
+	@RequestMapping(value="/edms/waitingSignList.bts")
+	public ModelAndView requiredLogin_waitingSignList(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+
+		getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출
+		
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+		String pk_emp_no = String.valueOf(loginuser.getPk_emp_no());
+		
+		String searchType = request.getParameter("searchType");
+		String searchWord = request.getParameter("searchWord");
+		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
+		
+		if(searchType == null || (!"title".equals(searchType) && !"emp_name".equals(searchType)) ) {
+			searchType = "";
+		}
+		
+		if(searchWord == null || "".equals(searchWord) || searchWord.trim().isEmpty() ) {
+			searchWord = "";
+		}
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("searchType", searchType);
+		paraMap.put("searchWord", searchWord);
+		paraMap.put("pk_emp_no", pk_emp_no);
+		
+		int totalCount = 0;        // 총 게시물 건수
+		int sizePerPage = 10;       // 한 페이지당 보여줄 게시물 건수 
+		int currentShowPageNo = 0; // 현재 보여주는 페이지번호로서, 초기치로는 1페이지로 설정함.
+		int totalPage = 0;         // 총 페이지수(웹브라우저상에서 보여줄 총 페이지 개수, 페이지바)
+		
+		int startRno = 0; // 시작 행번호
+		int endRno = 0;   // 끝 행번호
+		 
+		// System.out.println(" 결재대기 searchType : " + searchType);
+		// System.out.println(" 결재대기 searchWord : " + searchWord);
+		
+		// 로그인유저의 결재대기문서 총 갯수  가져오기
+		totalCount = service.getTotalCountWaitingSign(paraMap);
+		
+		totalPage = (int) Math.ceil((double)totalCount/sizePerPage);
+		
+		if(str_currentShowPageNo == null) {
+			currentShowPageNo = 1;
+		}
+		else {
+			try {
+				currentShowPageNo = Integer.parseInt(str_currentShowPageNo); 
+				if( currentShowPageNo < 1 || currentShowPageNo > totalPage) {
+					currentShowPageNo = 1;
+				}
+			} catch(NumberFormatException e) {
+				currentShowPageNo = 1;
+			}
+		}
+		
+		startRno = ((currentShowPageNo - 1) * sizePerPage) + 1;
+		endRno = startRno + sizePerPage - 1;
+
+		
+		paraMap.put("startRno", String.valueOf(startRno));
+		paraMap.put("endRno", String.valueOf(endRno));
+		
+		// 페이징 처리한 로그인유저의 결재대기목록 가져오기
+		List<Map<String, Object>> waitingList = service.waitingSignListWithPaging(paraMap);
+		
+		// 아래는 검색대상 컬럼과 검색어를 유지시키기 위한 것임.
+		if( !"".equals(searchType) && !"".equals(searchWord)) {
+			mav.addObject("paraMap", paraMap);
+		}
+		
+		// === 페이지바 만들기 === //
+		int blockSize = 10;
+		
+		int loop = 1;
+		
+		int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+		
+		String pageBar = "<ul style='list-style: none;'>";
+		String url = "waitingSignList.bts";
+		
+		// === [맨처음][이전] 만들기 === //
+		if(pageNo != 1) {
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1'>[맨처음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+		}
+		
+		while( !(loop > blockSize || pageNo > totalPage) ) {
+			
+			if(pageNo == currentShowPageNo) {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";  
+			}
+			else {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a style='color: black;' href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>"; 
+			}
+			
+			loop++;
+			pageNo++;
+			
+		}// end of while-----------------------
+		
+		
+		// === [다음][마지막] 만들기 === //
+		if( pageNo <= totalPage ) {
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>"; 
+		}
+		
+		pageBar += "</ul>";
+		
+		mav.addObject("pageBar", pageBar);
+		
+		String gobackURL = MyUtil.getCurrentURL(request);
+
+		mav.addObject("gobackURL", gobackURL.replaceAll("&", " "));
+		mav.addObject("waitingList", waitingList);
+		
+		/////////////////////////////////////
+		
+		mav.setViewName("waitingSignList.edms");
+		
+		return mav;		
+	} // end of public ModelAndView requiredLogin_waitingSignList(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {-------------
+	
+	
+	
+	
+	// 정환모 작업공간 끝
+	////////////////////////////////////////////////////////////////////////////////////////
 	
 	
 	
