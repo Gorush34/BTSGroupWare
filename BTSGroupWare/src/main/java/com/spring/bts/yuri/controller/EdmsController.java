@@ -488,12 +488,9 @@ public class EdmsController {
 		HttpSession session = request.getSession();
 		session.setAttribute("readCountPermission", "yes");
 		
-		String status = request.getParameter("status");
 		String searchType = request.getParameter("searchType");
 		String searchWord = request.getParameter("searchWord");
 		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
-		
-		System.out.println("~~~ searchWord : " + searchWord);
 		
 		if(searchType == null || (!"title".equals(searchType) && !"emp_name".equals(searchType)) ) {
 			searchType = "";
@@ -504,7 +501,6 @@ public class EdmsController {
 		}
 		
 		Map<String, String> paraMap = new HashMap<>();
-		paraMap.put("status", status);
 		paraMap.put("searchType", searchType);
 		paraMap.put("searchWord", searchWord);
 		
@@ -518,11 +514,9 @@ public class EdmsController {
 		int startRno = 0;			// 시작 행번호
 		int endRno = 0;				// 끝 행번호
 		
-		// 총 게시물 건수(totalCount)
-		totalCount = service.getTotalCount(paraMap);
-		System.out.println("~~~~~ 확인용 totalCount : " + totalCount);
-		
-		// 만약에 총 게시물 건수(totalCount)가 127개 이라면 총 페이지수(totalPage)는 13개가 되어야 한다.
+		// 내문서함 - 대기문서함 총 게시물 건수(totalCount)
+		totalCount = service.getTotalCount_wait(paraMap);
+		System.out.println("~~~~~ 내문서함 - 대기문서함 totalCount : " + totalCount);
 		
 		totalPage = (int) Math.ceil((double)totalCount/sizePerPage);
 		
@@ -545,8 +539,8 @@ public class EdmsController {
 		paraMap.put("startRno", String.valueOf(startRno));
 		paraMap.put("endRno", String.valueOf(endRno));		
 		
-		edmsList = service.edmsListSearchWithPaging_wait(paraMap);
-		// 페이징한 대기문서 목록 가져오기(검색유무 상관없이 모두 가져온다.)
+		// 상태가 대기중인 모든 결재문서 불러오기
+		edmsList = service.getEdmsListWithPaging_wait(paraMap);
 		
 		// 검색대상 컬럼과 검색어 유지
 		if( !"".equals(searchType) && !"".equals(searchWord) ) {
@@ -560,7 +554,7 @@ public class EdmsController {
 		int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
 		
 		String pageBar = "<ul style='list-style: none;'>";
-		String url = "list.bts";
+		String url = "wait/list.bts";
 		
 		// === [맨처음][이전] 만들기 === //
 		if(pageNo != 1) {
@@ -1461,7 +1455,17 @@ public class EdmsController {
 			apprvo.setFin_opinion("의견없음");
 		}
 		
-		apprvo.setFin_accept("2"); // 반려 값 넣어줌
+		
+		if(pk_emp_no == apprvo.getFk_mid_empno() && "0".equals(apprvo.getFin_accept()) ) {
+			// 중간관리자라면
+			apprvo.setMid_accept("2"); // 반려 값 넣어줌
+		}
+		
+		if(pk_emp_no == apprvo.getFk_fin_empno() && "1".equals(apprvo.getMid_accept()) ) {
+			// 최종관리자라면
+			apprvo.setFin_accept("2"); // 반려 값 넣어줌
+		}
+		
 		
 		System.out.println("최종반려 : " + apprvo.getFin_accept());
 		

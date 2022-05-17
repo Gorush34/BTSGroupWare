@@ -205,7 +205,7 @@ public class EdmsService implements InterEdmsService {
 		List<Map<String, Object>> allList = dao.getAllList();
 		return allList;
 	}
-
+	
 	// 상태가 승인됨인 리스트 불러오기
 	@Override
 	public List<Map<String, Object>> getAcceptList() {
@@ -254,6 +254,22 @@ public class EdmsService implements InterEdmsService {
 		Map<String, String> signMap = dao.getApprSignInfo(pk_appr_no);
 		return signMap;
 	}
+
+	// 내문서함 - 대기문서함 총 게시물 건수(totalCount)
+	@Override
+	public int getTotalCount_wait(Map<String, String> paraMap) {
+		int totalCount = dao.getTotalCount_wait(paraMap);
+		return totalCount;
+	}
+
+	// 상태가 대기중인 모든 결재문서 불러오기
+	@Override
+	public List<ApprVO> getEdmsListWithPaging_wait(Map<String, String> paraMap) {
+		List<ApprVO> edmsList = dao.getEdmsListWithPaging_wait(paraMap);
+		return edmsList;
+	}
+
+
 	
 	
 	

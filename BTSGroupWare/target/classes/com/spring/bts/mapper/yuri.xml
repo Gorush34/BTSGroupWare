@@ -523,6 +523,7 @@
 				<if test='searchType !="" and searchWord != "" '>
 		        and lower(${searchType}) like '%'||lower(#{searchWord}) ||'%'
 		        </if>
+		        order by A.pk_appr_no desc
 		    ) V
 	)T
 	where rno between #{startRno} and #{endRno}
@@ -553,6 +554,52 @@
 			 , (select emp_name from tbl_employees where pk_emp_no = fk_fin_empno) AS fk_fin_empname
 		from tbl_appr
 		where pk_appr_no = #{pk_appr_no}
+	</select>
+	
+	<!-- // 내문서함 - 대기문서함 총 게시물 건수(totalCount) -->
+	<select id="getTotalCount_wait" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_appr
+		where ( mid_accept = 0 or ( mid_accept = 1 and fin_accept = 0 ) )
+		<if test='searchType != ""'>
+		and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+		</if>
+	</select>
+	
+	
+	<!-- // 상태 상관없이 전체 리스트 불러오기 -->
+	<resultMap type="Map" id="getEdmsListWithPaging_wait_map">
+		<result property="appr_name" 				column="appr_name" 				javaType="String" />
+		<result property="emergency" 				column="emergency" 				javaType="String" />
+		<result property="title" 					column="title" 					javaType="String" />
+		<result property="filename" 				column="filename" 				javaType="String" />
+		<result property="pk_appr_no" 				column="pk_appr_no" 			javaType="String" />
+		<result property="writeday" 				column="writeday" 				javaType="String" />
+		<result property="mid_accept" 				column="mid_accept" 			javaType="String" />
+		<result property="fin_accept" 				column="fin_accept" 			javaType="String" />
+	</resultMap>
+	<select id="getEdmsListWithPaging_wait" resultMap="getEdmsListWithPaging_wait_map" parameterType="HashMap">
+	select appr_name, emergency, title , filename
+		 , pk_appr_no, writeday, mid_accept, fin_accept
+	from
+	(		
+			select rownum AS rno, appr_name, emergency, title , filename
+				 , pk_appr_no, writeday, mid_accept, fin_accept
+			from
+			(
+				select S.appr_name AS appr_name, A.emergency AS emergency, A.title AS title , A.filename as filename
+				    , A.pk_appr_no AS pk_appr_no, to_char(A.writeday, 'yyyy-mm-dd') AS writeday
+				    , A.mid_accept AS mid_accept, A.fin_accept AS fin_accept
+				from tbl_appr A JOIN tbl_appr_sort S
+				ON A.fk_appr_sortno = S.pk_appr_sortno
+				where ( mid_accept = 0 or ( mid_accept = 1 and fin_accept = 0 ) )
+				<if test='searchType !="" and searchWord != "" '>
+		        and lower(${searchType}) like '%'||lower(#{searchWord}) ||'%'
+		        </if>
+		        order by A.pk_appr_no desc
+		    ) V
+	)T
+	where rno between #{startRno} and #{endRno}
 	</select>
 
 </mapper>

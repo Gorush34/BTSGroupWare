@@ -217,4 +217,18 @@ public class EdmsDAO implements InterEdmsDAO {
 		Map<String, String> signMap = sqlsession.selectOne("yuri.getApprSignInfo", pk_appr_no);
 		return signMap;
 	}
+
+	// 내문서함 - 대기문서함 총 게시물 건수(totalCount)
+	@Override
+	public int getTotalCount_wait(Map<String, String> paraMap) {
+		int totalCount = sqlsession.selectOne("yuri.getTotalCount_wait", paraMap);
+		return totalCount;
+	}
+
+	// 상태가 대기중인 모든 결재문서 불러오기
+	@Override
+	public List<ApprVO> getEdmsListWithPaging_wait(Map<String, String> paraMap) {
+		List<ApprVO> edmsList = sqlsession.selectList("yuri.getEdmsListWithPaging_wait", paraMap);
+		return edmsList;
+	}
 }

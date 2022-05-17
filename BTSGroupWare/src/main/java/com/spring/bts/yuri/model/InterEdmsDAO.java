@@ -80,4 +80,10 @@ public interface InterEdmsDAO {
 
 	// 문서번호로 결재자 이름 알아오기
 	Map<String, String> getApprSignInfo(String pk_appr_no);
+
+	// 내문서함 - 대기문서함 총 게시물 건수(totalCount)
+	int getTotalCount_wait(Map<String, String> paraMap);
+
+	// 상태가 대기중인 모든 결재문서 불러오기
+	List<ApprVO> getEdmsListWithPaging_wait(Map<String, String> paraMap);
 }
