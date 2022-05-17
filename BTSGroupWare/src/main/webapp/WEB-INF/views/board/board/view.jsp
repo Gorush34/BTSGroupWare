@@ -144,6 +144,15 @@
 	
 	}
 	
+	#mycontent > div:nth-child(3) > div:nth-child(8) > span{
+		font-size: 12pt;
+		cursor: pointer;
+	}
+	
+	#mycontent > div:nth-child(3) > div:nth-child(8) > span:hover{
+		font-weight: bold;
+	}
+	
 	#mycontent > div > div:nth-child(9) > span{
 		font-size: 12pt;
 		cursor: pointer;
@@ -453,11 +462,13 @@
 	 <hr>
 	 
 	 <!-- 게시글 내용 시작-------------------------------------------- -->
+	  <div id="boardContentAll">		
+	 <c:if test="${not empty requestScope.boardvo}">
 	 <div>
 	 	<h2 style="margin:10px;">${boardvo.subject}</h2>
 	 </div>
 	 		
-	 <div id="boardContentAll">		
+	
 	 
 	 	<table>
 	 		<thead style="font-size: 12pt;">
@@ -503,7 +514,10 @@
 			</c:if>
 			
 	 	</table>
-
+	</c:if>
+	<c:if test="${empty requestScope.boardvo}">
+    	<div style="padding: 73px 300px; font-size: 16pt; font-weight: bold;" > 삭제되었거나 존재하지 않는 글입니다.</div>
+    </c:if>
 	<%-- <button style="border:none; background-color: white; font-weight: bold;" type="button" id="like_btn" onclick="updateLike(); return false;">좋아요</button>
 	<span style="color: white;
     font-size: 15pt;
@@ -518,7 +532,7 @@
     </c:if>
     
     <c:if test="${likevo2.fk_seq <= 0 || likevo2.fk_seq == null}">
-    <button type="button" class="btn btn-outline-secondary" id="like_btn" onclick="updateLike(); return false;">추천${boardvo.like_cnt}</button>
+    <button type="button" class="btn btn-outline-secondary" id="like_btn" onclick="updateLike(); return false;">추천 ${boardvo.like_cnt}</button>
     </c:if>
     
 	<span style="width: 800px; margin-left: 5px;">
