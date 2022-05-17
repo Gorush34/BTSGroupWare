@@ -169,7 +169,33 @@ public class CalendarDAO implements InterCalendarDAO {
 		return n;
 	}
 	
+	// == 메인페이지 : 임직원 생일 가져오기 == //
+	@Override
+	public List<Map<String, String>> employeeBirthIndex() {
+		List<Map<String, String>> birthIndexList = sqlsession.selectList("jieun.employeeBirthIndex");
+		return birthIndexList;
+	}
+/*	
+	// 총 생일 건수(totalCount)
+	@Override
+	public int getTotaBirthCount() {
+		int n = sqlsession.selectOne("jieun.getTotaBirthCount");
+		return n;
+	}
+*/	
+	// == 메인페이지 : 임직원 생일 가져오기 :전월 == //
+	@Override
+	public List<Map<String, String>> preMonthBirthIndex(String month) {
+		List<Map<String, String>> birthIndexList1 = sqlsession.selectList("jieun.preMonthBirthIndex", month);
+		return birthIndexList1;
+	}
 	
+	// == 메인페이지 : 임직원 생일 가져오기 :이월 == //
+	@Override
+	public List<Map<String, String>> nextMonthBirthIndex(String month) {
+		List<Map<String, String>> birthIndexList2 = sqlsession.selectList("jieun.nextMonthBirthIndex", month);
+		return birthIndexList2;
+	}
 	
 	
 

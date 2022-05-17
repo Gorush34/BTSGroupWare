@@ -68,8 +68,17 @@ public interface InterCalendarService {
 	// 오늘의 일정 수
 	int scheduleCount(int pk_emp_no);
 
-	
-	
+	// == 메인페이지 : 임직원 생일 가져오기 == //
+	List<Map<String, String>> employeeBirthIndex();
+
+	// 총 생일 건수
+	//int getTotaBirthCount();
+
+	// == 메인페이지 : 임직원 생일 가져오기 :전월 == //
+	List<Map<String, String>> preMonthBirthIndex(String month);
+
+	// == 메인페이지 : 임직원 생일 가져오기 :이월 == //
+	List<Map<String, String>> nextMonthBirthIndex(String month);
 	
 	
 

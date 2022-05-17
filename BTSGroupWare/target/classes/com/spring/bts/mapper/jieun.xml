@@ -411,10 +411,46 @@
 		from tbl_schedule
 		where fk_emp_no = #{pk_emp_no} and (startdate = to_date(sysdate, 'yy/mm/dd') or enddate = to_date(sysdate, 'yy/mm/dd'))
 	</select>
+	
 	<!-- 나의 예약현황 -->
 	<select id="reservationCount" parameterType="int" resultType="int">
 		select count(*)
 		from tbl_reservation
 		where fk_emp_no = #{pk_emp_no} and to_date(sysdate, 'yy/mm/dd') <![CDATA[ < ]]> rserenddate
+	</select>
+	
+	<!-- 메인페이지 : 임직원 생일 가져오기 -->
+	<resultMap type="HashMap" id="employeeBirthIndex_Map">
+		<result property="EMP_NAME" column="emp_name" javaType="String"/>
+		<result property="BIRTHDAY" column="ebirthday" javaType="String"/>
+		<result property="MONTH"    column="month"    javaType="String"/>
+	</resultMap>
+	<select id="employeeBirthIndex" resultMap="employeeBirthIndex_Map">
+		select emp_name, birthday, substr(replace(to_char(birthday),'-','/'),6) as ebirthday, substr(to_char(sysdate, 'yyyy.mm.dd'),3,5) as month
+		from tbl_employees
+		where substr(to_char(sysdate, 'yyyy-mm-dd'),6,2) = substr(to_char(birthday),6,2)
+		order by ebirthday asc
+	</select>
+	
+	<!-- 해당 월 총 생일 건수
+	<select id="getTotaBirthCount" resultType="int">
+		select count(*)
+		from tbl_employees
+		where substr(to_char(sysdate, 'yyyy-mm-dd'),6,2) = substr(to_char(birthday),6,2)
+	</select>
+	 -->
+	<!-- 메인페이지 : 임직원 생일 가져오기 : 전월 -->
+	<select id="preMonthBirthIndex" resultMap="employeeBirthIndex_Map" parameterType="String">
+		select emp_name, birthday, substr(replace(to_char(birthday),'-','/'),6) as ebirthday, substr(to_char(add_months(to_date(replace(#{month}, '.', '') || '01', 'yy.mm.dd'), -1), 'yy.mm.dd'),1,5) as month
+		from tbl_employees
+		where substr(add_months(to_date(replace(#{month}, '.', '') || '01', 'yy/mm/dd'), -1), 4, 2) = substr(to_char(birthday),6,2)
+		order by ebirthday asc
+	</select>
+	<!-- 메인페이지 : 임직원 생일 가져오기 : 이월 -->
+	<select id="nextMonthBirthIndex" resultMap="employeeBirthIndex_Map" parameterType="String">
+		select emp_name, birthday, substr(replace(to_char(birthday),'-','/'),6) as ebirthday, substr(to_char(add_months(to_date(replace(#{month}, '.', '') || '01', 'yy.mm.dd'), +1), 'yy.mm.dd'),1,5) as month
+		from tbl_employees
+		where substr(add_months(to_date(replace(#{month}, '.', '') || '01', 'yy/mm/dd'), +1), 4, 2) = substr(to_char(birthday),6,2)
+		order by ebirthday asc
 	</select>
 </mapper>

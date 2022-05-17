@@ -95,7 +95,7 @@
 		          , lag(title,1) over(order by pk_appr_no desc) as previoussubject
 		          , pk_appr_no, fk_appr_sortno, A.fk_emp_no AS fk_emp_no, NVL(fk_mid_empno, -1) AS fk_mid_empno, fk_fin_empno, emergency
 		          , title, contents, filename, orgfilename, fileSize, status, NVL(mid_accept, -1) AS mid_accept, fin_accept
-		          , NVL(mid_opinion, '중간결재자의견없음') AS mid_opinion, fin_opinion, to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') as writeday, viewcnt
+		          , NVL(mid_opinion, '') AS mid_opinion, fin_opinion, to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') as writeday, viewcnt
 		          , lead(pk_appr_no,1) over(order by pk_appr_no desc) as nextseq
 		          , lead(title,1) over(order by pk_appr_no desc) as nextsubject
 		          , E.EMP_NAME AS emp_name
@@ -224,7 +224,7 @@
 		        select  pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno,
 		                fk_fin_empno, emergency, title, contents, filename,
 		                orgfilename, fileSize, status, mid_accept, fin_accept,
-		                NVL(mid_opinion, '중간결재자의견없음') AS mid_opinion, fin_opinion,
+		                NVL(mid_opinion, '') AS mid_opinion, fin_opinion,
 		                to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') AS writeday, viewcnt,
 		                E.emp_name AS emp_name
 		        from tbl_appr A left join tbl_employees E
@@ -270,7 +270,7 @@
 		        select  pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno,
 		                fk_fin_empno, emergency, title, contents, filename,
 		                orgfilename, fileSize, status, mid_accept, fin_accept,
-		                NVL(mid_opinion, '중간결재자의견없음') AS mid_opinion, fin_opinion,
+		                NVL(mid_opinion, '') AS mid_opinion, fin_opinion,
 		                to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') AS writeday, viewcnt,
 		                E.emp_name AS emp_name
 		        from tbl_appr A left join tbl_employees E
@@ -309,7 +309,7 @@
 		        select  pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno,
 		                fk_fin_empno, emergency, title, contents, filename,
 		                orgfilename, fileSize, status, mid_accept, fin_accept,
-		                NVL(mid_opinion, '중간결재자의견없음') AS mid_opinion, fin_opinion,
+		                NVL(mid_opinion, '') AS mid_opinion, fin_opinion,
 		                to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') AS writeday, viewcnt,
 		                E.emp_name AS emp_name
 		        from tbl_appr A left join tbl_employees E
@@ -348,7 +348,7 @@
 		        select  pk_appr_no, fk_appr_sortno, fk_emp_no, fk_mid_empno,
 		                fk_fin_empno, emergency, title, contents, filename,
 		                orgfilename, fileSize, status, mid_accept, fin_accept,
-		                NVL(mid_opinion, '중간결재자의견없음') AS mid_opinion, fin_opinion,
+		                NVL(mid_opinion, '') AS mid_opinion, fin_opinion,
 		                to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') AS writeday, viewcnt,
 		                E.emp_name AS emp_name
 		        from tbl_appr A left join tbl_employees E
@@ -432,13 +432,27 @@
 		<result property="mid_accept" 				column="mid_accept" 			javaType="String" />
 		<result property="fin_accept" 				column="fin_accept" 			javaType="String" />
 	</resultMap>
-	<select id="getAllList" resultMap="getAllList_map">
-		select S.appr_name AS appr_name, A.emergency AS emergency, A.title AS title , A.filename as filename
-		    , A.pk_appr_no AS pk_appr_no, to_char(A.writeday, 'yyyy-mm-dd') AS writeday
-		    , A.mid_accept AS mid_accept, A.fin_accept AS fin_accept
-		from tbl_appr A JOIN tbl_appr_sort S
-		ON A.fk_appr_sortno = S.pk_appr_sortno
-		where A.mid_accept = 0
+	<select id="getAllList" resultMap="getAllList_map" parameterType="HashMap">
+	select appr_name, emergency, title , filename
+	 	 , pk_appr_no, writeday, mid_accept, fin_accept
+	from
+	(		
+			select rownum AS rno, appr_name, emergency, title , filename
+			 	 , pk_appr_no, writeday, mid_accept, fin_accept
+			from
+			(
+			select S.appr_name AS appr_name, A.emergency AS emergency, A.title AS title , A.filename as filename
+			    , A.pk_appr_no AS pk_appr_no, to_char(A.writeday, 'yyyy-mm-dd') AS writeday
+			    , A.mid_accept AS mid_accept, A.fin_accept AS fin_accept
+			from tbl_appr A JOIN tbl_appr_sort S
+			ON A.fk_appr_sortno = S.pk_appr_sortno
+			<if test='searchType !="" and searchWord != "" '>
+	        where lower(${searchType}) like '%'||lower(#{searchWord}) ||'%'
+	        </if>
+			order by A.pk_appr_no desc
+			) V
+	)T
+	where rno between #{startRno} and #{endRno}
 	</select>
 	
 	<!-- // 상태가 승인됨인 리스트 불러오기 -->
@@ -452,13 +466,28 @@
 		<result property="mid_accept" 				column="mid_accept" 			javaType="String" />
 		<result property="fin_accept" 				column="fin_accept" 			javaType="String" />
 	</resultMap>
-	<select id="getAcceptList" resultMap="getAcceptList_map">
-		select S.appr_name AS appr_name, A.emergency AS emergency, A.title AS title , A.filename as filename
-		    , A.pk_appr_no AS pk_appr_no, to_char(A.writeday, 'yyyy-mm-dd') AS writeday
-		    , A.mid_accept AS mid_accept, A.fin_accept AS fin_accept
-		from tbl_appr A JOIN tbl_appr_sort S
-		ON A.fk_appr_sortno = S.pk_appr_sortno
-		where A.fin_accept = 1
+	<select id="getAcceptList" resultMap="getAcceptList_map" parameterType="HashMap">
+	select appr_name, emergency, title , filename
+	 	 , pk_appr_no, writeday, mid_accept, fin_accept
+	from
+	(		
+			select rownum AS rno, appr_name, emergency, title , filename
+			 	 , pk_appr_no, writeday, mid_accept, fin_accept
+			from
+			(
+			select S.appr_name AS appr_name, A.emergency AS emergency, A.title AS title , A.filename as filename
+			    , A.pk_appr_no AS pk_appr_no, to_char(A.writeday, 'yyyy-mm-dd') AS writeday
+			    , A.mid_accept AS mid_accept, A.fin_accept AS fin_accept
+			from tbl_appr A JOIN tbl_appr_sort S
+			ON A.fk_appr_sortno = S.pk_appr_sortno
+			where A.fin_accept = 1
+			<if test='searchType !="" and searchWord != "" '>
+	        and lower(${searchType}) like '%'||lower(#{searchWord}) ||'%'
+	        </if>
+			order by A.pk_appr_no desc
+			) V
+	)T
+	where rno between #{startRno} and #{endRno}
 	</select>
 	
 	<!-- // 상태가 반려됨인 리스트 불러오기 -->
@@ -472,13 +501,168 @@
 		<result property="mid_accept" 				column="mid_accept" 			javaType="String" />
 		<result property="fin_accept" 				column="fin_accept" 			javaType="String" />
 	</resultMap>
-	<select id="getRejectList" resultMap="getRejectList_map">
+	<select id="getRejectList" resultMap="getRejectList_map" parameterType="HashMap">
+	select appr_name, emergency, title , filename
+	 	 , pk_appr_no, writeday, mid_accept, fin_accept
+	from
+	(		
+		select rownum AS rno, appr_name, emergency, title , filename
+			 , pk_appr_no, writeday, mid_accept, fin_accept
+		from
+		(
 		select S.appr_name AS appr_name, A.emergency AS emergency, A.title AS title , A.filename as filename
 		    , A.pk_appr_no AS pk_appr_no, to_char(A.writeday, 'yyyy-mm-dd') AS writeday
 		    , A.mid_accept AS mid_accept, A.fin_accept AS fin_accept
 		from tbl_appr A JOIN tbl_appr_sort S
 		ON A.fk_appr_sortno = S.pk_appr_sortno
 		where mid_accept = 2 or fin_accept = 2
+		<if test='searchType !="" and searchWord != "" '>
+        and lower(${searchType}) like '%'||lower(#{searchWord}) ||'%'
+        </if>
+		order by A.pk_appr_no desc
+		) V
+	)T
+	where rno between #{startRno} and #{endRno}
+	</select>
+	
+	<!-- === // 로그인유저의 결재대기문서 총 갯수 가져오기 === -->
+    <select id="getTotalCountWaitingSign" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_appr
+		where ( ( fk_mid_empno = #{pk_emp_no} and mid_accept = 0 and fin_accept = 0) or ( mid_accept = 1 and fk_fin_empno = #{pk_emp_no} and fin_accept = 0 ) )
+		<if test='searchType != ""'>
+		and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+		</if>
+    </select> 
+	
+	
+	<!-- // 페이징 처리한 로그인유저의 결재대기목록 가져오기 -->
+	<resultMap type="Map" id="waitingSignListWithPaging_map">
+		<result property="appr_name" 				column="appr_name" 				javaType="String" />
+		<result property="emergency" 				column="emergency" 				javaType="String" />
+		<result property="title" 					column="title" 					javaType="String" />
+		<result property="filename" 				column="filename" 				javaType="String" />
+		<result property="pk_appr_no" 				column="pk_appr_no" 			javaType="String" />
+		<result property="writeday" 				column="writeday" 				javaType="String" />
+		<result property="mid_accept" 				column="mid_accept" 			javaType="String" />
+		<result property="fin_accept" 				column="fin_accept" 			javaType="String" />
+	</resultMap>
+	<select id="waitingSignListWithPaging" resultMap="waitingSignListWithPaging_map">
+	select appr_name, emergency, title , filename
+		 , pk_appr_no, writeday, mid_accept, fin_accept
+	from
+	(		
+			select rownum AS rno, appr_name, emergency, title , filename
+				 , pk_appr_no, writeday, mid_accept, fin_accept
+			from
+			(
+				select S.appr_name AS appr_name, A.emergency AS emergency, A.title AS title , A.filename as filename
+				    , A.pk_appr_no AS pk_appr_no, to_char(A.writeday, 'yyyy-mm-dd') AS writeday
+				    , A.mid_accept AS mid_accept, A.fin_accept AS fin_accept
+				from tbl_appr A JOIN tbl_appr_sort S
+				ON A.fk_appr_sortno = S.pk_appr_sortno
+				where ( ( fk_mid_empno = #{pk_emp_no} and mid_accept = 0 and fin_accept = 0) or ( mid_accept = 1 and fk_fin_empno = #{pk_emp_no} and fin_accept = 0 ) )
+				<if test='searchType !="" and searchWord != "" '>
+		        and lower(${searchType}) like '%'||lower(#{searchWord}) ||'%'
+		        </if>
+		        order by A.pk_appr_no desc
+		    ) V
+	)T
+	where rno between #{startRno} and #{endRno}
+	</select>
+	
+	<!-- // 문서번호 통해 문서정보 가져오기 -->
+	<select id="getApprInfo" resultType="com.spring.bts.yuri.model.ApprVO" parameterType="String">
+		select pk_appr_no, mid_accept, mid_opinion, fk_mid_empno, fin_accept, fin_opinion, fk_fin_empno
+		from tbl_appr
+		where pk_appr_no = #{pk_appr_no}
+	</select>
+
+	<!-- // 승인, 반려 처리하기 -->
+	<update id="updateAppr" parameterType="com.spring.bts.yuri.model.ApprVO">
+		update tbl_appr set mid_accept = #{mid_accept}, mid_opinion = #{mid_opinion}
+			 , fin_accept = #{fin_accept}, fin_opinion = #{fin_opinion}
+		where pk_appr_no = #{pk_appr_no}
+	</update>
+
+	<!-- 문서번호로 결재자 이름 받아오기 -->
+	<resultMap type="Map" id="getApprSignInfo_map">
+		<result property="fk_mid_empname" 				column="fk_mid_empname" 				javaType="String" />
+		<result property="fk_fin_empname" 				column="fk_fin_empname" 				javaType="String" />
+	</resultMap>
+
+	<select id="getApprSignInfo" parameterType="String" resultMap="getApprSignInfo_map">
+		select (select emp_name from tbl_employees where pk_emp_no = fk_mid_empno) AS fk_mid_empname
+			 , (select emp_name from tbl_employees where pk_emp_no = fk_fin_empno) AS fk_fin_empname
+		from tbl_appr
+		where pk_appr_no = #{pk_appr_no}
+	</select>
+	
+	<!-- // 내문서함 - 대기문서함 총 게시물 건수(totalCount) -->
+	<select id="getTotalCount_wait" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_appr
+		where ( mid_accept = 0 or ( mid_accept = 1 and fin_accept = 0 ) )
+		<if test='searchType != ""'>
+		and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+		</if>
+	</select>
+	
+	<!-- // 내문서함 - 대기문서함 모든 게시물 불러오기 -->
+	<resultMap type="Map" id="getEdmsListWithPaging_wait_map">
+		<result property="appr_name" 				column="appr_name" 				javaType="String" />
+		<result property="emergency" 				column="emergency" 				javaType="String" />
+		<result property="title" 					column="title" 					javaType="String" />
+		<result property="filename" 				column="filename" 				javaType="String" />
+		<result property="pk_appr_no" 				column="pk_appr_no" 			javaType="String" />
+		<result property="writeday" 				column="writeday" 				javaType="String" />
+		<result property="mid_accept" 				column="mid_accept" 			javaType="String" />
+		<result property="fin_accept" 				column="fin_accept" 			javaType="String" />
+	</resultMap>
+	<select id="getEdmsListWithPaging_wait" resultMap="getEdmsListWithPaging_wait_map" parameterType="HashMap">
+	select appr_name, emergency, title , filename
+		 , pk_appr_no, writeday, mid_accept, fin_accept
+	from
+	(		
+			select rownum AS rno, appr_name, emergency, title , filename
+				 , pk_appr_no, writeday, mid_accept, fin_accept
+			from
+			(
+				select S.appr_name AS appr_name, A.emergency AS emergency, A.title AS title , A.filename as filename
+				    , A.pk_appr_no AS pk_appr_no, to_char(A.writeday, 'yyyy-mm-dd') AS writeday
+				    , A.mid_accept AS mid_accept, A.fin_accept AS fin_accept
+				from tbl_appr A JOIN tbl_appr_sort S
+				ON A.fk_appr_sortno = S.pk_appr_sortno
+				where ( mid_accept = 0 or ( mid_accept = 1 and fin_accept = 0 ) )
+				<if test='searchType !="" and searchWord != "" '>
+		        and lower(${searchType}) like '%'||lower(#{searchWord}) ||'%'
+		        </if>
+		        order by A.pk_appr_no desc
+		    ) V
+	)T
+	where rno between #{startRno} and #{endRno}
+	</select>
+	
+	
+	<!-- // 내문서함 - 승인문서함 총 게시물 건수(totalCount) -->
+	<select id="getTotalCount_accept" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_appr
+		where fin_accept = 1
+		<if test='searchType != ""'>
+		and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+		</if>
+	</select>
+	
+	
+	<!-- // 내문서함 - 반려문서함 총 게시물 건수(totalCount) -->
+	<select id="getTotalCount_reject" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_appr
+		where mid_accept = 2 or fin_accept = 2
+		<if test='searchType != ""'>
+		and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+		</if>
 	</select>
 
 </mapper>

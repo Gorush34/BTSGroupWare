@@ -91,12 +91,17 @@
 </script>
 
 <div id="detailSchedule">
-<h4 style="margin: 0 80px">일정상세</h4>
+<div class="d-flex align-items-center p-3 my-3 text-white bg-purple shadow-sm" style="background-color: #6F42C1;">
+    <div class="lh-1" style="text-align: center; width: 100%;">
+      <h1 class="h6 mb-0 text-white lh-1" style="font-size:22px; font-weight: bold; ">일정상세</h1>
+    </div>
+  </div>
 	<div style="margin:50px 100px;">
 			<div style="margin-bottom: 30px;">
-				<span id="subject" style="font-weight: bold; font-size: 15pt; color: #007acc;">${requestScope.map.SUBJECT}</span>&nbsp;&nbsp;
+				<span id="subject" style="font-weight: bold; font-size: 16pt; color: #007acc;">${requestScope.map.SUBJECT}</span>&nbsp;&nbsp;
 			</div>
-			<table id="detailScheduleContent">
+			<hr />
+			<table id="detailScheduleContent" class="table table-striped" style="font-size: 14pt;">
 				<tr>
 					<th>일자</th>
 					<td>
