@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -54,6 +55,25 @@ public class MailController {
 	@Autowired
     private AES256 aes;
 
+/*	
+	// =========================== 메인페이지 받은메일함   =========================== //
+	// 메인페이지에서 로그인한 사용자의 받은메일함 목록 보여주기
+	@ResponseBody
+	@RequestMapping(value = "/mail/mailWrite.bts", produces = "text/plain; charset=UTF-8")	
+	public String mailReceive_main(HttpServletRequest request, HttpServletResponse response) {
+		
+		List<Map<String, String>> mailReceive_main = service.mailReceive_main();
+		
+		JSONArray jsonArr = new JSONArray();
+		
+		if(mailReceive_main != null && mailReceive_main.size() > 0) {
+			
+		}
+		return jsonArr.toString();
+	}
+*/	
+	
+	
 	// =========================== 메일쓰기  =========================== //
 	
 	// 메일 쓰기 폼페이지 요청 (추후 로그인 AOP 추가 requiredLogin_) 
