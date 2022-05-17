@@ -135,8 +135,7 @@
 			$.ajax({				
 		 	    url:"<%= ctxPath%>/mail/MailMoveToImportantList.bts", 
 				type:"GET",
-				data: {"pk_mail_num":pk_mail_num,
-					   "isRec":0},
+				data: {"pk_mail_num":pk_mail_num},
 				dataType:"JSON",
 				success:function(json){
 					
@@ -229,18 +228,12 @@
 										<span class="fa fa-paperclip"></span>
 									</th>
 								<th style="width: 10%;" class="text-center">보낸이</th>
-								<th style="width: 68%;">제목</th>
-								<th style="width: 22%;" class="text-left">날짜</th>
+								<th style="width: 70%;">제목</th>
+								<th style="width: 20%;" class="text-left">날짜</th>
 							</tr>
 						</thead>
 						
 						<tbody>
-						<c:if test="${empty requestScope.ImportantMailList}">
-							<tr>
-								<td colspan="10" style="text-align: center; width: 1000px;">메일이 존재하지 않습니다.</td>
-							</tr>							
-						</c:if>
-						<c:if test="${not empty requestScope.ImportantMailList}">
 						<c:forEach items="${requestScope.ImportantMailList}" var="ImportantMailList" varStatus="status">
 							<tr>
 								<td style="width: 40px;">
@@ -248,7 +241,7 @@
 								</td>
 								<td style="width: 40px;">
 									<%-- 별모양(☆) 클릭 시 importance_star를 1(★)로 바꾼다. (중요메일함 = importance_star=1인 목록) --%>
-									<c:if test="${ImportantMailList.importance_star_send == '1' or ImportantMailList.importance_star_rec == '1'}">
+									<c:if test="${ImportantMailList.importance_star_send == '1'}">
 										<span class="fa fa-star" id="importance_star" style="cursor: pointer;" onclick="goImportantList('${ImportantMailList.pk_mail_num}')"></span>
 									</c:if>
 								</td>
@@ -271,8 +264,7 @@
 								</td>
 								<td class="text-left">${ImportantMailList.reg_date}</td>
 							</tr>	
-						</c:forEach>
-						</c:if>																				
+						</c:forEach>																				
 						</tbody>
 					</table>
 				</div>

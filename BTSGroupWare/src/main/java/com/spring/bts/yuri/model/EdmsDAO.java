@@ -164,22 +164,85 @@ public class EdmsDAO implements InterEdmsDAO {
 
 	// 상태 상관없이 전체 리스트 불러오기
 	@Override
-	public List<Map<String, Object>> getAllList() {
-		List<Map<String, Object>> allList = sqlsession.selectList("yuri.getAllList");
+	public List<Map<String, Object>> getAllList(Map<String, String> paraMap) {
+		List<Map<String, Object>> allList = sqlsession.selectList("yuri.getAllList", paraMap);
 		return allList;
 	}
 
 	// 상태가 승인됨인 리스트 불러오기
 	@Override
-	public List<Map<String, Object>> getAcceptList() {
-		List<Map<String, Object>> acceptList = sqlsession.selectList("yuri.getAcceptList");
+	public List<Map<String, Object>> getAcceptList(Map<String, String> paraMap) {
+		List<Map<String, Object>> acceptList = sqlsession.selectList("yuri.getAcceptList", paraMap);
 		return acceptList;
 	}
 
 	// 상태가 반려됨인 리스트 불러오기
 	@Override
-	public List<Map<String, Object>> getRejectList() {
-		List<Map<String, Object>> rejectList = sqlsession.selectList("yuri.getRejectList");
+	public List<Map<String, Object>> getRejectList(Map<String, String> paraMap) {
+		List<Map<String, Object>> rejectList = sqlsession.selectList("yuri.getRejectList", paraMap);
 		return rejectList;
+	}
+
+	// 로그인유저의 결재대기문서 가져오기
+	@Override
+	public int getTotalCountWaitingSign(Map<String, String> paraMap) {
+		int totalCount = sqlsession.selectOne("yuri.getTotalCountWaitingSign", paraMap);
+		return totalCount;
+	}
+
+	// 페이징 처리한 로그인유저의 결재대기목록 가져오기
+	@Override
+	public List<Map<String, Object>> waitingSignListWithPaging(Map<String, String> paraMap) {
+		List<Map<String, Object>> waitingList = sqlsession.selectList("yuri.waitingSignListWithPaging", paraMap);
+		return waitingList;
+	}
+
+	// 문서번호 통해 문서정보 가져오기
+	@Override
+	public ApprVO getApprInfo(String pk_appr_no) {
+		ApprVO apprvo = sqlsession.selectOne("yuri.getApprInfo", pk_appr_no);
+		return apprvo;
+	}
+
+	// 승인 처리하기
+	@Override
+	public int updateAppr(ApprVO apprvo) {
+		int n = sqlsession.update("yuri.updateAppr", apprvo);
+		return n;
+	}
+
+	// 문서번호로 결재자 이름 알아오기
+	@Override
+	public Map<String, String> getApprSignInfo(String pk_appr_no) {
+		Map<String, String> signMap = sqlsession.selectOne("yuri.getApprSignInfo", pk_appr_no);
+		return signMap;
+	}
+
+	// 내문서함 - 대기문서함 총 게시물 건수(totalCount)
+	@Override
+	public int getTotalCount_wait(Map<String, String> paraMap) {
+		int totalCount = sqlsession.selectOne("yuri.getTotalCount_wait", paraMap);
+		return totalCount;
+	}
+
+	// 상태가 대기중인 모든 결재문서 불러오기
+	@Override
+	public List<ApprVO> getEdmsListWithPaging_wait(Map<String, String> paraMap) {
+		List<ApprVO> edmsList = sqlsession.selectList("yuri.getEdmsListWithPaging_wait", paraMap);
+		return edmsList;
+	}
+
+	// 내문서함 - 승인문서함 총 게시물 건수(totalCount)
+	@Override
+	public int getTotalCount_accept(Map<String, String> paraMap) {
+		int totalCount = sqlsession.selectOne("yuri.getTotalCount_accept", paraMap);
+		return totalCount;
+	}
+
+	// 내문서함 - 반려문서함 총 게시물 건수(totalCount)
+	@Override
+	public int getTotalCount_reject(Map<String, String> paraMap) {
+		int totalCount = sqlsession.selectOne("yuri.getTotalCount_reject", paraMap);
+		return totalCount;
 	}
 }

@@ -62,6 +62,8 @@ td#no{
 		goReadFileboard();	
 		scheduleCount();
 		reservationCount();
+		employeeBirth();
+		
 	});// end of $(document).ready(function(){})----------------------
 
 // Function
@@ -553,8 +555,103 @@ td#no{
 	
 	// 기상 관련함수 끝
 		
-		
-		
+	// 임직원 생일 관련 함수
+	function employeeBirth(){
+		   $.ajax({
+			   url:"<%= ctxPath%>/calendar/employeeBirthIndex.bts",
+			   dataType:"JSON",
+			   success:function(json){
+				    let html = "";
+				    let html_1 = "";
+				   		html +="<tr style='border-top:solid 1px #dee2e6;'></tr>";
+					  if(json.length > 0) {
+						  $.each(json, function(index, item){
+							  html +="<tr id='birth_person' style='width:100%;'>";
+							  html +="<td id='date' style='width:40%; text-align: center;'>"+item.BIRTHDAY+"</td>";
+							  html +="<td id='name' style='width:60%; text-align: center;'>"+item.EMP_NAME+"</td>";
+							  html +="</tr>";
+							  
+							  if(item.MONTH == item.MONTH){
+								  html_1 = item.MONTH+"<input id='sysMonth' type='hidden' value='"+item.MONTH+"' />";
+							  }
+						  });
+					  } 
+					  
+					  
+					  $("span#today_month").html(html_1);
+					  $("tbody#employeeBirthday").html(html);
+			   },
+			   error: function(request, status, error){
+	                  alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	           }
+		   });
+	}// end of function employeeBirth(){}---------------------------------
+	
+	// 전월 생일자
+	function preMonth(){
+		$.ajax({
+			url:"<%= ctxPath%>/calendar/preMonthBirthIndex.bts",
+			data:{"month": $('input#sysMonth').val()},
+			dataType:"JSON",
+			success:function(json){
+				let html = "";
+			    let html_1 = "";
+			   		html +="<tr style='border-top:solid 1px #dee2e6;'></tr>";
+				  if(json.length > 0) {
+					  $.each(json, function(index, item){
+						  html +="<tr id='birth_person' style='width:100%;'>";
+						  html +="<td id='date' style='width:40%; text-align: center;'>"+item.BIRTHDAY+"</td>";
+						  html +="<td id='name' style='width:60%; text-align: center;'>"+item.EMP_NAME+"</td>";
+						  html +="</tr>";
+						  
+						  if(item.MONTH == item.MONTH){
+							  html_1 = item.MONTH+"<input id='sysMonth' type='hidden' value='"+item.MONTH+"' />";
+						  }
+					  });
+				  } 
+				  
+				  
+				  $("span#today_month").html(html_1);
+				  $("tbody#employeeBirthday").html(html);
+			},
+			error: function(request, status, error){
+                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+         	}
+		});
+	}// end of function preMonth(){}---------------------------------
+	
+	// 전월 생일자
+	function nextMonth(){
+		$.ajax({
+			url:"<%= ctxPath%>/calendar/nextMonthBirthIndex.bts",
+			data:{"month": $('input#sysMonth').val()},
+			dataType:"JSON",
+			success:function(json){
+				let html = "";
+			    let html_1 = "";
+			   		html +="<tr style='border-top:solid 1px #dee2e6;'></tr>";
+				  if(json.length > 0) {
+					  $.each(json, function(index, item){
+						  html +="<tr id='birth_person' style='width:100%;'>";
+						  html +="<td id='date' style='width:40%; text-align: center;'>"+item.BIRTHDAY+"</td>";
+						  html +="<td id='name' style='width:60%; text-align: center;'>"+item.EMP_NAME+"</td>";
+						  html +="</tr>";
+						  
+						  if(item.MONTH == item.MONTH){
+							  html_1 = item.MONTH+"<input id='sysMonth' type='hidden' value='"+item.MONTH+"' />";
+						  }
+					  });
+				  } 
+				  
+				  
+				  $("span#today_month").html(html_1);
+				  $("tbody#employeeBirthday").html(html);
+			},
+			error: function(request, status, error){
+                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+         	}
+		});
+	}// end of function preMonth(){}---------------------------------
 		
 </script>
 
@@ -701,10 +798,10 @@ td#no{
 		        		<span id="title">임직원 생일</span>
 		        	</div>
 		        	<div class="birth_month" style="border-bottom: solid 1px dee2e6;">
-	        			<span style="font-size:20px; font-weight:bold;">2022.04</span>
+	        			<span id="today_month" style="font-size:20px; font-weight:bold;"></span>
         				<div id="birth_prevenext">
-        					<a href=""><i class="fas fa-angle-left"></i></a>&nbsp;&nbsp;
-        					<a href=""><i class="fas fa-angle-right"></i></a>
+        					<a onclick="preMonth()"><i class="fas fa-angle-left"></i></a>&nbsp;&nbsp;
+        					<a onclick="nextMonth()"><i class="fas fa-angle-right"></i></a>
         				</div>
         			</div>
         		</div>
@@ -714,24 +811,7 @@ td#no{
 	        	<br>
 	        	<div id="birthList">
 		        	<table id="todayBirthday">
-		        	<tbody style="text-align: center;">
-		        		<tr style="border-top:solid 1px #dee2e6;"></tr>
-		        		<tr id="birth_person" style="width:100%;">
-		        			<td id="date" style="width:40%; text-align: center;">
-		        				04 / 30
-		        			</td>
-		        			<td id="name" style="width:60%; text-align: center;">
-		        				정환모 사원
-		        			</td>
-		        		</tr>
-		        		<tr id="birth_person" style="width:100%;">
-		        			<td id="date" style="width:40%; text-align: center;">
-		        				04 / 30
-		        			</td>
-		        			<td id="name" style="width:60%; text-align: center;">
-		        				정환모 대리
-		        			</td>
-		        		</tr>
+		        	<tbody id="employeeBirthday" style="text-align: center;">
 		        	</tbody>
 		        	</table>
 		        </div>	

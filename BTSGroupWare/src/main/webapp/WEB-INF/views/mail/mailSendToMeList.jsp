@@ -228,53 +228,46 @@
 										<span class="fa fa-paperclip"></span>
 									</th>
 								<th style="width: 10%;" class="text-center">받는이</th>
-								<th style="width: 68%;">제목</th>
-								<th style="width: 22%;" class="text-left">날짜</th>
+								<th style="width: 70%;">제목</th>
+								<th style="width: 20%;" class="text-left">날짜</th>
 							</tr>
 						</thead>
 						
 						<tbody>
-						<c:if test="${empty requestScope.SendToMeMailList}">
+						<c:forEach items="${requestScope.SendToMeMailList}" var="SendToMeMailList" varStatus="status">
 							<tr>
-								<td colspan="10" style="text-align: center; width: 1000px;">메일이 존재하지 않습니다.</td>
-							</tr>							
-						</c:if>
-						<c:if test="${not empty requestScope.SendToMeMailList}">						
-							<c:forEach items="${requestScope.SendToMeMailList}" var="SendToMeMailList" varStatus="status">
-								<tr>
-									<td style="width: 40px;">
-										<input type="checkbox" id="${SendToMeMailList.pk_mail_num}" name="chkBox" class="text-center"/>
-									</td>
-									<td style="width: 40px;">
-										<%-- 별모양(☆) 클릭 시 importance_star를 1(★)로 바꾼다. (중요메일함 = importance_star=1인 목록) --%>
-										<c:if test="${SendToMeMailList.importance_star_send == '0'}">
-											<span class="fa fa-star-o" id="importance_star" style="cursor: pointer;" onclick="goImportantList('${SendToMeMailList.pk_mail_num}')"></span>
-										</c:if>
-										<c:if test="${SendToMeMailList.importance_star_send == '1'}">
-											<span class="fa fa-star" id="importance_star" style="cursor: pointer;" onclick="goImportantList('${SendToMeMailList.pk_mail_num}')"></span>
-										</c:if>
-									</td>
-									<td style="width: 40px;">
-										<c:if test="${not empty SendToMeMailList.filename}">
-											<span class="fa fa-paperclip" class="text-center"></span>
-										</c:if>
-									</td>							
-									<td class="text-center">${SendToMeMailList.recempname}</td>
-									<td>
-									<%--
-									<a href="<%= ctxPath%>/mail/mailSendToMeDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${SendToMeMailList.subject}</a>
-									--%>
-									<span class="subject" onclick="goSendToMeMailView('${SendToMeMailList.pk_mail_num}')">
-											<c:if test="${SendToMeMailList.importance == '1'}">
-												<span class="fa fa-exclamation" style="color: red;" class="text-center"></span>
-											</c:if>	
-											${SendToMeMailList.subject}
-									</span>
-									</td>
-									<td class="text-left">${SendToMeMailList.reg_date}</td>
-								</tr>	
-							</c:forEach>	
-						</c:if>																			
+								<td style="width: 40px;">
+									<input type="checkbox" id="${SendToMeMailList.pk_mail_num}" name="chkBox" class="text-center"/>
+								</td>
+								<td style="width: 40px;">
+									<%-- 별모양(☆) 클릭 시 importance_star를 1(★)로 바꾼다. (중요메일함 = importance_star=1인 목록) --%>
+									<c:if test="${SendToMeMailList.importance_star == '0'}">
+										<span class="fa fa-star-o" id="importance_star" style="cursor: pointer;" onclick="goImportantList('${SendToMeMailList.pk_mail_num}')"></span>
+									</c:if>
+									<c:if test="${SendToMeMailList.importance_star == '1'}">
+										<span class="fa fa-star" id="importance_star" style="cursor: pointer;" onclick="goImportantList('${SendToMeMailList.pk_mail_num}')"></span>
+									</c:if>
+								</td>
+								<td style="width: 40px;">
+									<c:if test="${not empty SendToMeMailList.filename}">
+										<span class="fa fa-paperclip" class="text-center"></span>
+									</c:if>
+								</td>							
+								<td class="text-center">${SendToMeMailList.recempname}</td>
+								<td>
+								<%--
+								<a href="<%= ctxPath%>/mail/mailSendToMeDetail.bts?searchType=${}&searchWord=${}&pk_mail_num=${}">${SendToMeMailList.subject}</a>
+								--%>
+								<span class="subject" onclick="goSendToMeMailView('${SendToMeMailList.pk_mail_num}')">
+										<c:if test="${SendToMeMailList.importance == '1'}">
+											<span class="fa fa-exclamation" style="color: red;" class="text-center"></span>
+										</c:if>	
+										${SendToMeMailList.subject}
+								</span>
+								</td>
+								<td class="text-left">${SendToMeMailList.reg_date}</td>
+							</tr>	
+						</c:forEach>																				
 						</tbody>
 					</table>
 				</div>	

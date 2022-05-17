@@ -170,6 +170,34 @@ public class CalendarService implements InterCalendarService {
 		return n;
 	}
 
+	// == 메인페이지 : 임직원 생일 가져오기 == //
+	@Override
+	public List<Map<String, String>> employeeBirthIndex() {
+		List<Map<String, String>> birthIndexList = dao.employeeBirthIndex();
+		return birthIndexList;
+	}
+/*
+	// 총 생일 건수(totalCount)
+	@Override
+	public int getTotaBirthCount() {
+		int n = dao.getTotaBirthCount();
+		return n;
+	}
+*/
+	// == 메인페이지 : 임직원 생일 가져오기 :전월 == //
+	@Override
+	public List<Map<String, String>> preMonthBirthIndex(String month) {
+		List<Map<String, String>> birthIndexList1 = dao.preMonthBirthIndex(month);
+		return birthIndexList1;
+	}
+	
+	// == 메인페이지 : 임직원 생일 가져오기 :이월 == //
+	@Override
+	public List<Map<String, String>> nextMonthBirthIndex(String month) {
+		List<Map<String, String>> birthIndexList2 = dao.nextMonthBirthIndex(month);
+		return birthIndexList2;
+	}
+
 	
 	
 

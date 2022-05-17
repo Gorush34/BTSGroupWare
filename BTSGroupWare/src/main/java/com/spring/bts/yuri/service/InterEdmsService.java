@@ -63,13 +63,42 @@ public interface InterEdmsService {
 	List<ApprVO> edmsListSearchWithPaging_reject(Map<String, String> paraMap);
 
 	// 상태 상관없이 전체 리스트 불러오기
-	List<Map<String, Object>> getAllList();
-
+	List<Map<String, Object>> getAllList(Map<String, String> paraMap);
+	
 	// 상태가 승인됨인 리스트 불러오기
-	List<Map<String, Object>> getAcceptList();
+	List<Map<String, Object>> getAcceptList(Map<String, String> paraMap);
 
 	// 상태가 반려됨인 리스트 불러오기
-	List<Map<String, Object>> getRejectList();
+	List<Map<String, Object>> getRejectList(Map<String, String> paraMap);
+
+	// 로그인유저의 결재대기문서 가져오기
+	int getTotalCountWaitingSign(Map<String, String> paraMap);
+
+	// 페이징 처리한 로그인유저의 결재대기목록 가져오기
+	List<Map<String, Object>> waitingSignListWithPaging(Map<String, String> paraMap);
+
+	// 문서번호 통해 문서정보 가져오기
+	ApprVO getApprInfo(String pk_appr_no);
+
+	// 승인,반려 처리하기
+	int updateAppr(ApprVO apprvo);
+
+	// 문서번호로 결재자 이름 알아오기
+	Map<String, String> getApprSignInfo(String pk_appr_no);
+
+	// 내문서함 - 대기문서함 총 게시물 건수(totalCount)
+	int getTotalCount_wait(Map<String, String> paraMap);
+
+	// 상태가 대기중인 모든 결재문서 불러오기
+	List<ApprVO> getEdmsListWithPaging_wait(Map<String, String> paraMap);
+
+	// 내문서함 - 승인문서함 총 게시물 건수(totalCount)
+	int getTotalCount_accept(Map<String, String> paraMap);
+
+	// 내문서함 - 반려문서함 총 게시물 건수(totalCount)
+	int getTotalCount_reject(Map<String, String> paraMap);
+
+
 	
 	
 }
