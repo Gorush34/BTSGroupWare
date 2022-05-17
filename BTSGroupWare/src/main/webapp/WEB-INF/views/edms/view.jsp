@@ -233,9 +233,17 @@
 			
 			<%-- 1. 중간결재자가 로그인 한 경우 - 중간버튼만 보인다. --%>
 			<c:if test="${ requestScope.apprvo.fk_mid_empno eq sessionScope.loginuser.pk_emp_no and requestScope.apprvo.mid_accept eq 0 }">
+				<%-- 중간결재자 버튼 시작 --%>
 				<button type="button" class="btn btn-success btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">중간결재1</button>
 				<button type="button" class="btn btn-success btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">중간반려</button>
+				<%-- 중간결재자 버튼 종료 --%>
+				
+				<%-- 중간결재자 의견 시작 --%>
+				
+				<%-- 중간결재자 의견 종료 --%>
 			</c:if>
+			
+			
 			
 			<%-- 2.최종결재자가 로그인 한 경우 - 최종버튼만 보인다. --%>
 			<input type="text" class="form-control" value="1. sqlsession의 empno = 원글의 mid_emp_no인 경우 && mid_accept 0인 경우 && status = 1/ 2. sqlsession의 empno = 원글의 fin_emp_no인 경우 && mid_accept 1인 경우" readonly ><br/>
