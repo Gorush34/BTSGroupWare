@@ -7,22 +7,6 @@
 
 <!-- style_edms.css 는 이미 layout-tiles_edms.jsp 에 선언되어 있으므로 쓸 필요 X! -->
 
-<style type="text/css">
-	
-	table.edmsHomeTable {
-		width: 100%;
-	}
-	
-	table.edmsHomeTable > tbody > tr > th, table.edmsHomeTable > tbody > tr > td, table.edmsHomeTable > thead > tr {
- 	vertical-align: middle;
- 	text-align: center;
- 	
- 	table.edmsHomeTable > tbody > tr > td >	button.edmsHomeBtn {
- 		height: 100%; line-height: 9pt; font-size: 9pt;
- 	}
- }
-</style>
-
 <script type="text/javascript">
 	
 	$(document).ready(function() {
@@ -51,6 +35,7 @@
 
 <%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
 	
+	
 	<div class="edmsHome">
 	
 	<div class="edmsHomeTitle">
@@ -65,34 +50,6 @@
 	</span>
 		
 	<div class="divClear"></div>
-		
-		<%-- 
-		<c:if test="${requestScope.waitList ne null}"></c:if> 
-		--%>
-		<!-- <span class="edms_title">결재대기 목록보기</span> -->
-		
-		<div>
-		<%-- 반응형 웹(카드) 시작 --%>
- 		<div class="row">
-			<c:forEach var="all" items="${requestScope.allList}" varStatus="status">
-			<div class="col-2">
-				<div class="card-body">
-					<p style="display: none;"><c:out value="${status.count}" /></p>
-					<span style="border: none; background-color: #A6C76C; width: 32px; color: #fff;">${all.status}</span>&nbsp;<span><c:out value="${i}" />&nbsp;(나중에 hidden 처리하기)</span>
-					<h5 class="card-title">${all.title}</h5>
-					<h6 class="card-subtitle mb-2 text-muted">
-						기안자 : ${all.pk_appr_no}
-					</h6>
-					<hr>
-					<!-- <a href="/bts/edms/edmsMydoc.bts" class="stretched-link btn btn-sm text-primary" class="card-link">자세히 보기</a> -->
-					<span onclick="javascript:location.href='<%= request.getContextPath()%>/edms/view.bts'" class="stretched-link btn btn-sm text-primary" class="card-link">자세히 보기</span>
-				</div>
-			</div>
-			</c:forEach>
-		</div>
-		<%-- 반응형 웹(카드) 종료 --%>
-		</div>
-	<!-- 결재대기 목록 시작 -->
 	
 	<div id="edms_all">
 		<span class="edms_title">모든문서 목록보기</span>
@@ -101,7 +58,7 @@
 		<div class="divClear"></div>
 		<c:if test="${not empty requestScope.all}">
 		<table class="table table-sm table-hover table-light edmsHomeTable">
-			<thead class="thead-light" style="vertical-align: middle;">
+			<thead class="thead-light">
 				<tr>
 					<th scope="col" width="4%">#</th>
 					<th scope="col" width="13%">기안일</th>
@@ -114,9 +71,9 @@
 				</tr>
 			</thead>
 			<tbody>
-				<%-- 나중에 forEach문 사용해서 뿌려주기 시작 --%>
+				<%-- forEach문 사용해서 뿌려주기 시작 --%>
  				<c:forEach var="all" items="${requestScope.all}" begin="0" end="4" step="1" varStatus="status">
-				<tr>
+				<tr onclick="goView('${all.pk_appr_no}')" style="cursor: pointer;">
 					<th scope="row"><p><c:out value="${status.count}" /></p></th>
 					
 					<td>${all.writeday}</td>
@@ -125,12 +82,12 @@
 					
 					<td>
 						<c:if test="${all.emergency ne 0}">
-							<button id="btn_emergency" class="btn btn-danger edmsHomeBtn" style="height: 100%; line-height: 9pt; font-size: 9pt;">긴급</button>
+							<button id="btn_emergency" class="btn btn-danger edmsHomeBtn">긴급</button>
 						</c:if>
 					</td>
 					
 					<td>
-						<span class="title" onclick="goView('${all.pk_appr_no}')" style="cursor: pointer;">${all.title}</span>
+						<span class="title">${all.title}</span>
 					</td>
 					
 					<td>
@@ -143,19 +100,19 @@
 					
 					<td>
 						<c:if test="${all.mid_accept eq 0 and all.fin_accept eq 0}">
-							<button id="btn_emergency" class="btn btn-danger edmsHomeBtn" style="height: 100%; line-height: 9pt; font-size: 9pt;">대기중</button>
+							<button class="btn btn-secondary edmsHomeBtn disabled">대기중</button>
 						</c:if>
 						<c:if test="${all.mid_accept eq 1 and all.fin_accept eq 0}">
-							대기중
+							<button class="btn btn-info edmsHomeBtn  disabled">진행중</button>
 						</c:if>
-						<c:if test="${all.fin_accept eq 1}">
-							승인됨
+						<c:if test="${all.mid_accept eq 1 and all.fin_accept eq 1}">
+							<button class="btn btn-success edmsHomeBtn  disabled">승인됨</button>
 						</c:if>
-						<c:if test="${all.mid_accept eq 2 and all.fin_accept eq 0}">
-							반려됨
+						<c:if test="${all.mid_accept eq 2}">
+							<button class="btn btn-dark edmsHomeBtn  disabled">반려됨</button>
 						</c:if>
 						<c:if test="${all.mid_accept eq 1 and all.fin_accept eq 2}">
-							반려됨
+							<button class="btn btn-dark edmsHomeBtn  disabled">반려됨</button>
 						</c:if>
 					</td>
 				</tr>
@@ -180,7 +137,7 @@
 				<td style="border-top: solid 1px #D3D3D3;">&nbsp;</td>
 			</tr>
 			<tr>
-				<td style="text-align: center; font-size: 12pt; height: 600px;">결재대기 문서가 없습니다.</td>
+				<td class="edmsListNone">결재대기 문서가 없습니다.</td>
 			</tr>
 			<tr>
 				<td style="border-bottom: solid 1px #D3D3D3;">&nbsp;</td>
@@ -204,7 +161,7 @@
 		
 		<%-- 결재승인 목록이 있을 때 시작 --%>
 		<div class="divClear"></div>
-		<c:if test="${ not empty requestScope.accept}">
+		<c:if test="${not empty requestScope.accept}">
 		<table class="table table-sm table-hover table-light edmsHomeTable">
 			<thead class="thead-light">
 				<tr>
@@ -218,9 +175,10 @@
 					<th scope="col" width="8%">상태</th>
 				</tr>
 			</thead>
-			<%-- 나중에 forEach문 사용해서 뿌려주기 시작 --%>
+			<%-- forEach문 사용해서 뿌려주기 시작 --%>
+			<tbody>
  				<c:forEach var="accept" items="${requestScope.accept}" begin="0" end="4" step="1"  varStatus="status">
-				<tr>
+				<tr onclick="goView('${accept.pk_appr_no}')" style="cursor: pointer;">
 					<th scope="row"><p><c:out value="${status.count}" /></p></th>
 					<td>${accept.writeday}</td>
 					<td>${accept.appr_name}</td>
@@ -243,20 +201,11 @@
 					<td>${accept.pk_appr_no}</td>
 
 					<td>
-						<c:if test="${accept.mid_accept eq 0 and accept.fin_accept eq 0}">
-							대기중
-						</c:if>
 						<c:if test="${accept.mid_accept eq 1 and accept.fin_accept eq 0}">
-							대기중
+							<button class="btn btn-info edmsHomeBtn  disabled">승인중</button>
 						</c:if>
-						<c:if test="${accept.fin_accept eq 1}">
-							승인됨
-						</c:if>
-						<c:if test="${accept.mid_accept eq 2 and accept.fin_accept eq 0}">
-							반려됨
-						</c:if>
-						<c:if test="${accept.mid_accept eq 1 and accept.fin_accept eq 2}">
-							반려됨
+						<c:if test="${accept.fin_accept eq 1 and accept.fin_accept eq 1}">
+							<button class="btn btn-info edmsHomeBtn  disabled">승인됨</button>
 						</c:if>
 					</td>
 				</tr>
@@ -272,15 +221,17 @@
 		
 		<div class="divClear"></div>
 		<%-- 결재승인 목록이 있을 때 종료 --%>
-		<c:if test="${ empty requestScope.accept}">
+		
+		
 		<%-- 결재승인 목록이 없을 때 시작 --%>
+		<c:if test="${ empty requestScope.accept}">
 		<div class="divClear"></div>
 		<table class="table table-sm table-light">
 			<tr>
 				<td style="border-top: solid 1px #D3D3D3;">&nbsp;</td>
 			</tr>
 			<tr>
-				<td style="text-align: center; font-size: 12pt;">결재승인 문서가 없습니다.</td>
+				<td class="edmsListNone">결재승인 문서가 없습니다.</td>
 			</tr>
 			<tr>
 				<td style="border-bottom: solid 1px #D3D3D3;">&nbsp;</td>
@@ -316,15 +267,15 @@
 				</tr>
 			</thead>
 			<tbody>
-				<%-- 나중에 forEach문 사용해서 뿌려주기 시작 --%>
+				<%-- forEach문 사용해서 뿌려주기 시작 --%>
  				<c:forEach var="reject" items="${requestScope.reject}" begin="0" end="4" step="1" varStatus="status">
-				<tr>
+				<tr onclick="goView('${reject.pk_appr_no}')" style="cursor: pointer;">
 					<th scope="row"><p><c:out value="${status.count}" /></p></th>
 					<td>${reject.writeday}</td>
 					<td>${reject.appr_name}</td>
 					<td>
 						<c:if test="${reject.emergency ne 0}">
-						<button id="btn_emergency" class="btn btn-outline-danger edmsHomeBtn" style="height: 100%; line-height: 9pt; font-size: 9pt;">긴급</button>
+						<button id="btn_emergency" class="btn btn-outline-danger edmsHomeBtn">긴급</button>
 						</c:if>
 					</td>
 					<td>
@@ -337,21 +288,7 @@
 					</td>
 					<td>${reject.pk_appr_no}</td>
 					<td>
-						<c:if test="${reject.mid_accept eq 0 and reject.fin_accept eq 0}">
-							대기중
-						</c:if>
-						<c:if test="${reject.mid_accept eq 1 and reject.fin_accept eq 0}">
-							대기중
-						</c:if>
-						<c:if test="${reject.fin_accept eq 1}">
-							승인됨
-						</c:if>
-						<c:if test="${reject.mid_accept eq 2 and reject.fin_accept eq 0}">
-							반려됨
-						</c:if>
-						<c:if test="${reject.mid_accept eq 1 and reject.fin_accept eq 2}">
-							반려됨
-						</c:if>
+						<button class="btn btn-dark edmsHomeBtn">반려됨</button>
 					</td>
 				</tr>
 				</c:forEach>
@@ -372,7 +309,7 @@
 				<td style="border-top: solid 1px #D3D3D3;">&nbsp;</td>
 			</tr>
 			<tr>
-				<td style="text-align: center; font-size: 12pt;">결재반려 문서가 없습니다.</td>
+				<td class="edmsListNone">결재반려 문서가 없습니다.</td>
 			</tr>
 			<tr>
 				<td style="border-bottom: solid 1px #D3D3D3;">&nbsp;</td>

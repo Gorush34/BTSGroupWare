@@ -17,8 +17,8 @@
 			}
 		});
 		
-		// 검색시 검색조건 및 검색어 값 유지시키기
-		if( ${not empty requestScope.paraMap} ) {
+		// 검색시 검색조건 및 검색어 값 유지시키기 << 왜 주석처리 해뒀더라..?
+		if( ${ not empty requestScope.paraMap} ) {
 			$("select#searchType").val("${requestScope.paraMap.searchType}");
 			$("input#searchWord").val("${requestScope.paraMap.searchWord}");
 		}
@@ -42,11 +42,9 @@
 						 ,"searchWord":$("input#searchWord").val()},
 					dataType:"JSON",
 					success:function(json) {
-						// json => [{"word":"Korea VS Japan 라이벌 축구대결"},{"word":"JSP 가 뭔가요?"},{"word":"프로그램은 JAVA 가 쉬운가요?"},{"word":"java가 재미 있나요?"}]
 						
 						<%-- === 검색어 입력시 자동글 완성하기 === --%>
-						if(json.length > 0) {
-							// 검색된 데이터가 있는 경우임
+						if(json.length > 0) { // 검색된 데이터가 있는 경우
 							let html = "";
 							$.each(json, function(index, item) { // item ==> {"word":"프로그램은 JAVA 가 쉬운가요?"}, key값은 word
 								const word = item.word;
@@ -147,26 +145,19 @@
 </script>
 
 <%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
-
-<div class="edmslist">
+	
+	<div class="edmsList">
+	
 	<div class="edmsHomeTitle">
-		<%-- <c:if test="${requestScope.apprvo.status eq 0}">
-			<span class="edms_maintitle">대기문서함</span>
-		</c:if>
-		<c:if test="${requestScope.apprvo.status eq 1}">
-			<span class="edms_maintitle">승인문서함</span>
-		</c:if>
-		<c:if test="${requestScope.apprvo.status eq 2}">
-			<span class="edms_maintitle">반려문서함</span>
-		</c:if> --%>
-		
+		<span class="edms_maintitle">${sessionScope.loginuser.emp_name}님의 문서함</span>
 		<p style="margin-bottom: 10px;"></p>
 	</div>
 
+	<div class="divClear"></div>
 
 	<!-- 문서목록 시작 -->
 	<div id="edmsList">
-		<span class="edms_title">문서목록보기</span>
+		<span class="edms_title">전체문서 목록보기</span>
 		<!--
 		<div class="dropdown">
 			<button class="btn btn-primart-outline dropdown-toggle" type="button" data-toggle="dropdown"
@@ -181,32 +172,33 @@
 			
 		<div class="divClear"></div>
 
-		<%-- 결재대기 목록이 없을 때 시작 --%>
+		<%-- 목록이 없을 때 시작 --%>
 		<c:if test="${empty requestScope.edmsList}">
+		<div class="divClear"></div>
 		<table class="table table-sm table-light">
 			<tr>
 				<td style="border-top: solid 1px #D3D3D3;">&nbsp;</td>
 			</tr>
 			<tr>
-				<td style="text-align: center; font-size: 12pt;">대기 중인 문서가 없습니다.</td>
+				<td class="edmsListNone">문서가 없습니다.</td>
 			</tr>
 			<tr>
 				<td style="border-bottom: solid 1px #D3D3D3;">&nbsp;</td>
 			</tr>
 		</table>
 		</c:if>
-		<%-- 결재대기 목록이 없을 때 종료 --%>
+		<%-- 목록이 없을 때 종료 --%>
 		
-		<%-- 결재대기 목록이 있을 때 종료 --%>
+		<%-- 목록이 있을 때 시작 --%>
 		<c:if test="${not empty requestScope.edmsList}">
-		<table class="table table-sm table-hover table-light">
+		<table class="table table-sm table-hover table-light edmsHomeTable">
 			<thead class="thead-light">
 				<tr>
-					<th scope="col" width="3%">#</th>
+					<th scope="col" width="4%">#</th>
 					<th scope="col" width="13%">기안일</th>
 					<th scope="col" width="10%">결재양식</th>
 					<th scope="col" width="9%">긴급</th>
-					<th scope="col" width="31%">제목</th>
+					<th scope="col" width="30%">제목</th>
 					<th scope="col" width="6%">첨부</th>
 					<th scope="col" width="20%">문서번호</th>
 					<th scope="col" width="8%">상태</th>
@@ -223,7 +215,7 @@
 					
 					<td>
 					<c:if test="${apprvo.emergency == 1}">
-						<button id="btn_emergency" class="btn btn-danger disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">긴급</button>
+						<button id="btn_emergency" class="btn btn-danger edmsHomeBtn">긴급</button>
 					</c:if>
 					<c:if test="${apprvo.emergency == 0}">
 						&nbsp;
@@ -246,14 +238,17 @@
 					<td>${apprvo.pk_appr_no}</td>
 					<td>
 						<c:choose>
-							<c:when test="${apprvo.mid_accept == 0}">
-							<button class="btn btn-secondary disabled">대기중</button>
+							<c:when test="${apprvo.mid_accept eq 0 and apprvo.fin_accept eq 0}">
+							<button class="btn btn-secondary edmsHomeBtn">대기중</button>
 							</c:when>
-							<c:when test="${apprvo.mid_accept == 1 and apprvo.fin_accept == 1}">
-							<button class="btn btn-info disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">승인됨</button>
+							<c:when test="${apprvo.mid_accept eq 1 and apprvo.fin_accept eq 0}">
+							<button class="btn btn-secondary edmsHomeBtn">진행중</button>
 							</c:when>
-							<c:when test="${apprvo.mid_accept == 2 or apprvo.fin_accept == 2}">
-							<button class="btn btn-secondary disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">반려됨</button>
+							<c:when test="${apprvo.mid_accept eq 1 and apprvo.fin_accept eq 1}">
+							<button class="btn btn-info edmsHomeBtn">승인됨</button>
+							</c:when>
+							<c:when test="${apprvo.mid_accept eq 2 or apprvo.fin_accept eq 2}">
+							<button class="btn btn-dark edmsHomeBtn">반려됨</button>
 							</c:when>
 						</c:choose>
 					</td>
@@ -264,7 +259,7 @@
 		
 		<div class="divClear"></div>
 		</c:if>
-		<%-- 결재대기 목록이 있을 때 종료 --%>
+		<%-- 목록이 있을 때 종료 --%>
 		
 		<div class="divClear"></div>
 		

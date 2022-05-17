@@ -141,6 +141,30 @@ div.edmsSideMenu{cursor: pointer;}
 	}
 	
 	
+	/* 전자결재 테이블 */
+	table.edmsHomeTable {
+		width: 100%;
+	}
+	
+	table.edmsHomeTable > tbody > tr > th, table.edmsHomeTable > tbody > tr > td, table.edmsHomeTable > thead > tr {
+	 	vertical-align: middle;
+	 	text-align: center;
+ 	}
+ 	
+ 	table.edmsHomeTable > tbody > tr > td >	button.edmsHomeBtn {
+ 		height: 100%; line-height: 9pt; font-size: 9pt;
+ 	}
+ 	
+ 	/* 테이블에 아무것도 없을 때 */
+ 	td.edmsListNone {
+ 		text-align: center; font-size: 14pt;
+ 	}
+	
+	
+	
+	
+	
+	
 	
 	/* highcharts 한달간 내문서 차트 시작 ************************************************************* */
 	
