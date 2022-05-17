@@ -366,6 +366,12 @@ public class BoardDAO implements InterBoardDAO {
 		return boardMap;
 	}
 
+	@Override
+	public LikeVO getlikeuser(Map<String, String> paraMap) {
+		LikeVO likevo = sqlsession.selectOne("moongil.getlikeuser", paraMap);
+		return likevo;
+	}
+
 
 
 	

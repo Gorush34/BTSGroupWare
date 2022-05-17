@@ -57,6 +57,20 @@ public class EdmsController {
 	@RequestMapping(value="/edms/edmsHome.bts")
 	public ModelAndView requiredLogin_edmsHome(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 
+		// 상태 상관없이 전체 리스트 불러오기
+		List<Map<String, Object>> allList = service.getAllList();
+		
+		// 상태가 승인됨인 리스트 불러오기
+		List<Map<String, Object>> acceptList = service.getAcceptList();
+		
+		// 상태가 반려됨인 리스트 불러오기
+		List<Map<String, Object>> rejectList = service.getRejectList();
+		
+		
+		mav.addObject("all", allList);				// 전체목록 넣어줌
+		mav.addObject("accept", acceptList);		// 승인목록 넣어줌
+		mav.addObject("reject", rejectList);	// 반려목록 넣어줌
+		
 		mav.setViewName("edmsHome.edms");
 		// /WEB-INF/views/edms/{1}.jsp
 		// /WEB-INF/views/edms/edmsHome.jsp 페이지를 만들어야 한다.
