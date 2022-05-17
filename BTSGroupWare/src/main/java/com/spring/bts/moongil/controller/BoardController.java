@@ -19,7 +19,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -360,7 +360,7 @@ public class BoardController {
 	
 	// --- 게시판 시작 ---  -----------------
 	@RequestMapping(value = "/board/list.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
-	public ModelAndView list(ModelAndView mav, HttpServletRequest request, BoardVO boardvo) {
+	public ModelAndView requiredLogin_list_board(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		///////////////////////////////////
 		
@@ -742,7 +742,7 @@ public class BoardController {
 	// == 게시판 글 보기 == //
 	// === #62. 글1개를 보여주는 페이지 요청 === //
 	@RequestMapping(value="/board/view.bts")
-	public ModelAndView view(ModelAndView mav, HttpServletRequest request, LikeVO likevo) {
+	public ModelAndView requiredLogin_view(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출 
 		
@@ -800,7 +800,8 @@ public class BoardController {
 	//	 	System.out.println(login_userid);
 		 	
 		 	paraMap.put("login_userid", login_userid);
-
+		 	
+		 	LikeVO likevo2 = null;
 		 	BoardVO boardvo = null;
 		 	
 		 	if( "yes".equals(session.getAttribute("readCountPermission")) ) {
@@ -817,8 +818,9 @@ public class BoardController {
 		 		boardvo = service.getViewWithNoAddCount(paraMap);
 			 	// 글조회수 증가는 없고 단순히 글1개 조회만을 해주는 것이다.  
 		 	}
+		 	likevo2 = service.getlikeuser(paraMap);
 		 	
-		 	
+		 	mav.addObject("likevo2", likevo2);
 		 	mav.addObject("likeList", likeList);
 		 	mav.addObject("boardvo", boardvo);
 	 	} catch(NumberFormatException e) {
@@ -1001,20 +1003,9 @@ public class BoardController {
 	 	}
 
 	 	String login_userid = Integer.toString(login_userid1);
+//	 	System.out.println("login_userid =>"+login_userid);
 	 	
-	 	
-	 	
-		if( !login_userid.equals(fk_emp_no) ) {
-			String message = "다른 사용자의 글은 삭제가 불가합니다.";
-			String loc = "javascript:history.back()";
-			
-			mav.addObject("message", message);
-			mav.addObject("loc", loc);
-			mav.setViewName("msg");
-		}
-		
-		
-		else {
+		if( login_userid.equals(fk_emp_no) || login_userid.equals("80000001")) {
 			boardvo = service.getViewWithNoAddCount(paraMap);
 			String filename = boardvo.getFilename();
 			
@@ -1044,6 +1035,16 @@ public class BoardController {
 			
 			mav.setViewName("msg");
 		}	
+	 	
+	 	else {
+			String message = "다른 사용자의 글은 삭제가 불가합니다.";
+			String loc = "javascript:history.back()";
+			
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+			mav.setViewName("msg");
+		}
+	 	
 		return mav;
 	}	
 	
@@ -1469,7 +1470,7 @@ public class BoardController {
 
 		// --- 공지 게시판 시작 ---  -----------------
 		@RequestMapping(value = "/notice/list.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
-		public ModelAndView list_fileboard(ModelAndView mav, HttpServletRequest request, NoticeVO noticevo) {
+		public ModelAndView requiredLogin_list_notice(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 			
 			///////////////////////////////////
 			
@@ -1725,7 +1726,7 @@ public class BoardController {
 			}
 		
 			@RequestMapping(value="/notice/view.bts")
-			public ModelAndView view_notice(ModelAndView mav, HttpServletRequest request) {
+			public ModelAndView view_notice(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 				
 				getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출 
 				
@@ -1950,18 +1951,8 @@ public class BoardController {
 		 	
 		 	
 		 	
-			if( !login_userid.equals(fk_emp_no) ) {
-				String message = "다른 사용자의 글은 삭제가 불가합니다.";
-				String loc = "javascript:history.back()";
-				
-				mav.addObject("message", message);
-				mav.addObject("loc", loc);
-				mav.setViewName("msg");
-			}
-			
-			
-			else {
-				noticevo = service.getViewWithNoAddCount_notice(paraMap);
+		 	if( login_userid.equals(fk_emp_no) || login_userid.equals("80000001")) {
+		 		noticevo = service.getViewWithNoAddCount_notice(paraMap);
 				String filename = noticevo.getFilename();
 				
 				if( filename != null && !"".equals(filename)) {
@@ -1977,7 +1968,7 @@ public class BoardController {
 				// === 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파이을 삭제해주어야 한다. 끝 === //
 				////////////////////////////////////////////////////////////
 				
-				int n = service.del_notice(paraMap);
+				int n = service.del(paraMap);
 				
 				if(n==1) {
 					mav.addObject("message", "글 삭제 성공!!");
@@ -1990,6 +1981,16 @@ public class BoardController {
 				
 				mav.setViewName("msg");
 			}	
+		 	
+		 	else {
+				String message = "다른 사용자의 글은 삭제가 불가합니다.";
+				String loc = "javascript:history.back()";
+				
+				mav.addObject("message", message);
+				mav.addObject("loc", loc);
+				mav.setViewName("msg");
+			}
+		 	
 			return mav;
 		}
 		
@@ -2000,7 +2001,7 @@ public class BoardController {
 		
 	// --- 자료 게시판 시작 ---  -----------------
 	@RequestMapping(value = "/fileboard/list.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
-	public ModelAndView list_fileboard(ModelAndView mav, HttpServletRequest request, FileboardVO fileboardvo) {
+	public ModelAndView requiredLogin_list_fileboard(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		///////////////////////////////////
 		
@@ -2258,7 +2259,7 @@ public class BoardController {
 	
 		
 		@RequestMapping(value="/fileboard/view.bts")
-		public ModelAndView view_fileboard(ModelAndView mav, HttpServletRequest request) {
+		public ModelAndView requiredLogin_view_fileboard(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 			
 			getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출 
 			
@@ -2482,18 +2483,8 @@ public class BoardController {
 			 	
 			 	
 			 	
-				if( !login_userid.equals(fk_emp_no) ) {
-					String message = "다른 사용자의 글은 삭제가 불가합니다.";
-					String loc = "javascript:history.back()";
-					
-					mav.addObject("message", message);
-					mav.addObject("loc", loc);
-					mav.setViewName("msg");
-				}
-				
-				
-				else {
-					fileboardvo = service.getViewWithNoAddCount_fileboard(paraMap);
+			 	if( login_userid.equals(fk_emp_no) || login_userid.equals("80000001")) {
+			 		fileboardvo = service.getViewWithNoAddCount_fileboard(paraMap);
 					String filename = fileboardvo.getFilename();
 					
 					if( filename != null && !"".equals(filename)) {
@@ -2501,7 +2492,7 @@ public class BoardController {
 						session = request.getSession();
 						String root = session.getServletContext().getRealPath("/");
 						String path = root+"resources"+File.separator+"files";
-	
+
 						paraMap.put("path", path); // 삭제해야 할 파일이 저장된 경로
 						paraMap.put("filename", filename);// 삭제해야할 파일명
 						
@@ -2509,7 +2500,7 @@ public class BoardController {
 					// === 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파이을 삭제해주어야 한다. 끝 === //
 					////////////////////////////////////////////////////////////
 					
-					int n = service.del_fileboard(paraMap);
+					int n = service.del(paraMap);
 					
 					if(n==1) {
 						mav.addObject("message", "글 삭제 성공!!");
@@ -2521,15 +2512,15 @@ public class BoardController {
 					}
 					
 					mav.setViewName("msg");
-				}	
-				return mav;
+			 	}
+			 	return mav;
 			}	
 		
 	// --- 자료 게시판 끝 --- -------------------
 	
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
-	/*
+
 	// 오류발생시
 	@ExceptionHandler(java.lang.Throwable.class)
 	public void handleThrowable(Throwable e, HttpServletRequest request, HttpServletResponse response) {
@@ -2553,7 +2544,7 @@ public class BoardController {
 	   
 	   String ctxPath = request.getContextPath();
 	   
-	   out.println("<div><img src='"+ctxPath+"/resources/images/error.gif'/></div>");
+	   out.println("<div><img src='"+ctxPath+"/resources/images/board/error.gif'/></div>");
 	   out.printf("<div style='margin: 20px; color: blue; font-weight: bold; font-size: 26pt;'>%s</div>", "장난금지");
 	   out.println("<a href='"+ctxPath+"/index.action'>홈페이지로 가기</a>");
 	   out.println("</body>");
@@ -2566,7 +2557,7 @@ public class BoardController {
 
 	}
 	
-	*/
+	
 	
 	// === 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 생성 === //
 		public void getCurrentURL(HttpServletRequest request) {

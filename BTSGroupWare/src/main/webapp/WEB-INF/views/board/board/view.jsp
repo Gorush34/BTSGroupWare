@@ -210,6 +210,7 @@
 		 
 	 });
 
+ 
 	 
 	 ////////////////////////////////////////////
 	 
@@ -282,7 +283,7 @@
 	                  dataType:"JSON",
 	                  success:function(json){
 	                     alert("댓글이 삭제되었습니다.")
-                  
+	                     goViewComment("1");
 	                  },
 	                  error: function(request, status, error){
 	                     alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -512,8 +513,14 @@
     border-radius: 100%;
     width: 20px !important;
     height: 20px !important;">${boardvo.like_cnt}</span> --%>
+    <c:if test="${likevo2.fk_seq > 0}">
+    <button type="button" class="btn btn-outline-secondary" id="like_btn" onclick="updateLike(); return false;">추천 완료 ${boardvo.like_cnt}</button>
+    </c:if>
     
-    <button type="button" class="btn btn-outline-secondary" id="like_btn" onclick="updateLike(); return false;">추천 ${boardvo.like_cnt}</button>
+    <c:if test="${likevo2.fk_seq <= 0 || likevo2.fk_seq == null}">
+    <button type="button" class="btn btn-outline-secondary" id="like_btn" onclick="updateLike(); return false;">추천${boardvo.like_cnt}</button>
+    </c:if>
+    
 	<span style="width: 800px; margin-left: 5px;">
 		<c:forEach var="likevo" items="${requestScope.likeList}" varStatus="status">
 				   <tr>
@@ -606,6 +613,7 @@
 <div class="modal-content"> 
 <div class="modal-header"> 
 
+
 <h2 class="modal-title">
 글삭제
 </h2> 
@@ -619,26 +627,45 @@
 <div style="display: flex;">
 <div style="margin: auto; padding-left: 3%;">
 
-
-<form name="delFrm">
-	<table style="width: 455px" class="table table-bordered">
-		<tr>
-			<th style="width: 22%; background-color: #DDDDDD;">글암호</th>
-			<td>
-				<input style="width: 100%;" type="password" id="pw" />
-				<input type="hidden" name="pk_seq" value="${boardvo.pk_seq}" readonly />
-				<input type="hidden" name="filename" value="${boardvo.filename}" readonly />
-				<input type="hidden" name="fk_emp_no" value="${boardvo.fk_emp_no}" readonly />
-			</td>
-		</tr>
-	</table>
-	
-	<div style="margin: 20px;">
-		<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnDelete">글삭제완료</button>
+<c:if test="${sessionScope.loginuser.pk_emp_no == 80000001}">
+	<form name="delFrm">
+		<h4>관리자의 권한으로</h4>
+		<h4 style="margin-bottom: 30px;">글삭제를 하시겠습니까?</h4>
+		
+		<input type="hidden" name="pk_seq" value="${boardvo.pk_seq}" readonly />
+		<input type="hidden" name="filename" value="${boardvo.filename}" readonly />
+		<input type="hidden" name="fk_emp_no" value="${boardvo.fk_emp_no}" readonly />
+		<input type="hidden" name="pw" id="pw" value="${boardvo.pw}" readonly />
+		<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnDelete" style="margin-right: 30px !important;">글삭제완료</button>
 		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">글삭제취소</button>
-	</div>
-	
-</form>   
+	</form>	
+</c:if>
+
+
+<c:if test="${sessionScope.loginuser.pk_emp_no != 80000001}">
+
+	<form name="delFrm">
+		<table style="width: 455px" class="table table-bordered">
+			<tr>
+				<th style="width: 22%; background-color: #DDDDDD;">글암호</th>
+				<td>
+					<input style="width: 100%;" type="password" id="pw" />
+					<input type="hidden" name="pk_seq" value="${boardvo.pk_seq}" readonly />
+					<input type="hidden" name="filename" value="${boardvo.filename}" readonly />
+					<input type="hidden" name="fk_emp_no" value="${boardvo.fk_emp_no}" readonly />
+				</td>
+			</tr>
+		</table>
+		
+		<div style="margin: 20px;">
+			<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnDelete">글삭제완료</button>
+			<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">글삭제취소</button>
+		</div>
+		
+	</form>   
+</c:if>
+
+
 </div>
 </div>    
 </div> 

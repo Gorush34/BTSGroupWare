@@ -271,26 +271,41 @@
 <div style="display: flex;">
 <div style="margin: auto; padding-left: 3%;">
 
-
-<form name="delFrm">
-	<table style="width: 455px" class="table table-bordered">
-		<tr>
-			<th style="width: 22%; background-color: #DDDDDD;">글암호</th>
-			<td>
-				<input style="width: 100%;" type="password" id="pw" />
-				<input type="hidden" name="pk_seq" value="${fileboardvo.pk_seq}" readonly />
-				<input type="hidden" name="pk_seq" value="${fileboardvo.filename}" readonly />
-				<input type="hidden" name="fk_emp_no" value="${fileboardvo.fk_emp_no}" readonly />
-			</td>
-		</tr>
-	</table>
-	
-	<div style="margin: 20px;">
+<c:if test="${sessionScope.loginuser.pk_emp_no == 80000001}">
+	<form name="delFrm">
+		<h3>관리자의 권한으로</h3>
+		<h3>글삭제를 하시겠습니까?</h3>
+		<input type="hidden" name="pk_seq" value="${fileboardvo.pk_seq}" readonly />
+		<input type="hidden" name="filename" value="${fileboardvo.filename}" readonly />
+		<input type="hidden" name="fk_emp_no" value="${fileboardvo.fk_emp_no}" readonly />
+		<input type="hidden" name="pw" id="pw" value="${fileboardvo.pw}" readonly />
 		<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnDelete">글삭제완료</button>
 		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">글삭제취소</button>
-	</div>
-	
-</form>   
+	</form>	
+</c:if>
+
+
+<c:if test="${sessionScope.loginuser.pk_emp_no != 80000001}">
+	<form name="delFrm">
+		<table style="width: 455px" class="table table-bordered">
+			<tr>
+				<th style="width: 22%; background-color: #DDDDDD;">글암호</th>
+				<td>
+					<input style="width: 100%;" type="password" id="pw" />
+					<input type="hidden" name="pk_seq" value="${fileboardvo.pk_seq}" readonly />
+					<input type="hidden" name="pk_seq" value="${fileboardvo.filename}" readonly />
+					<input type="hidden" name="fk_emp_no" value="${fileboardvo.fk_emp_no}" readonly />
+				</td>
+			</tr>
+		</table>
+		
+		<div style="margin: 20px;">
+			<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnDelete">글삭제완료</button>
+			<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">글삭제취소</button>
+		</div>
+		
+	</form> 
+</c:if>  
 </div>
 </div>    
 </div> 
