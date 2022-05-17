@@ -2545,8 +2545,7 @@ public class BoardController {
 	   String ctxPath = request.getContextPath();
 	   
 	   out.println("<div><img src='"+ctxPath+"/resources/images/board/error.gif'/></div>");
-	   out.printf("<div style='margin: 20px; color: blue; font-weight: bold; font-size: 26pt;'>%s</div>", "장난금지");
-	   out.println("<a href='"+ctxPath+"/index.action'>홈페이지로 가기</a>");
+	   out.println("<a href='"+ctxPath+"/index.bts'>홈페이지로 가기</a>");
 	   out.println("</body>");
 	   out.println("</html>");
 	   
