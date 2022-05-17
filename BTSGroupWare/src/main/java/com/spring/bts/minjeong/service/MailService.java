@@ -245,7 +245,8 @@ public class MailService implements InterMailService {
 				  mailvo.setOrgfilename(reservationList.get(i).getOrgfilename());
 				  mailvo.setFilesize(reservationList.get(i).getFilesize());
 				  mailvo.setReg_date(reservationList.get(i).getReg_date());
-				  mailvo.setImportance(reservationList.get(i).getImportance());
+				  mailvo.setImportance(reservationList.get(i).getImportance_star_send());
+				  mailvo.setImportance(reservationList.get(i).getImportance_star_rec());
 				  mailvo.setRead_status(reservationList.get(i).getRead_status());
 				  mailvo.setReservation_date(reservationList.get(i).getReservation_date());
 				  mailvo.setReservation_status(reservationList.get(i).getReservation_status());

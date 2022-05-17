@@ -199,31 +199,31 @@
 		
 		<%-- 결재대기 목록이 있을 때 종료 --%>
 		<c:if test="${not empty requestScope.waitingList}">
-		<table class="table table-sm table-hover table-light">
+		<table class="table table-sm table-hover table-light edmsTable">
 			<thead class="thead-light">
 				<tr>
-					<th scope="col" width="3%">#</th>
+					<th scope="col" width="4%">#</th>
 					<th scope="col" width="13%">기안일</th>
 					<th scope="col" width="10%">결재양식</th>
 					<th scope="col" width="9%">긴급</th>
-					<th scope="col" width="31%">제목</th>
+					<th scope="col" width="30%">제목</th>
 					<th scope="col" width="6%">첨부</th>
 					<th scope="col" width="20%">문서번호</th>
 					<th scope="col" width="8%">상태</th>
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="waiting" items="${requestScope.waitingList}">
-				<tr>
-					<th scope="row">${waiting.pk_appr_no}</th>
+				<c:forEach var="waiting" items="${requestScope.waitingList}" varStatus="status">
+				<tr onclick="goView('${waiting.pk_appr_no}')" style="cursor: pointer;">
+					<th scope="row" style="vertical-align: middle;"><c:out value="${status.count}" /></th>
 					
 					<td>${waiting.writeday}</td>
 					
-					<td>${waiting.appr_name}</td> <%-- ${apprvo.fk_appr_sortno} --%>
+					<td>${waiting.appr_name}</td>
 					
 					<td>
 					<c:if test="${waiting.emergency == 1}">
-						<button id="btn_emergency" class="btn btn-outline-danger disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">긴급</button>
+						<button id="btn_emergency" class="btn btn-outline-danger edmsBtn">긴급</button>
 					</c:if>
 					<c:if test="${waiting.emergency == 0}">
 						&nbsp;
@@ -232,7 +232,6 @@
 					
 					<td>
 						<span class="title" onclick="goView('${waiting.pk_appr_no}')" style="cursor: pointer;">${waiting.title}</span>
-						
 					</td>
 					
 					<td>
@@ -248,26 +247,12 @@
 					<td>
 						<c:choose>
 							<c:when test="${waiting.mid_accept eq 0 and waiting.fin_accept eq 0}">
-							<button class="btn btn-outline-secondary disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">중간결재대기중</button>
+							<button class="btn btn-secondary edmsBtn">대기중</button>
 							</c:when>
 							<c:when test="${waiting.mid_accept eq 1 and waiting.fin_accept eq 0}">
-							<button class="btn btn-outline-info disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">최종결재대기중</button>
+							<button class="btn btn-warning edmsBtn">진행중</button>
 							</c:when>
 						</c:choose>
-						<%-- <c:choose>
-							<c:when test="${apprvo.status == 0}">
-							<button class="btn btn-outline-secondary disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">대기중</button>
-							</c:when>
-							<c:when test="${apprvo.status == 1}">
-							<button class="btn btn-outline-info disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">진행중</button>
-							</c:when>
-							<c:when test="${apprvo.status == 2}">
-							<button class="btn btn-info disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">승인됨</button>
-							</c:when>
-							<c:when test="${apprvo.status == 3}">
-							<button class="btn btn-secondary disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">반려됨</button>
-							</c:when>
-						</c:choose> --%>
 					</td>
 				</tr>
 				</c:forEach>

@@ -98,50 +98,7 @@
       });
       <%-- === 스마트 에디터 구현 끝 === --%>
       
-      
-      
-<%--    
-      // 결재선 지정하기
-      $("input#apprMidEmpDep").bind("keyup", function() {
-         var apprMidEmpDep = $(this).val();
-         console.log("확인용 apprMidEmpDep : " + apprMidEmpDep);
-         $.ajax({
-            url:"<%= ctxPath%>/edms/insertSchedule/searchJoinUserList.action",
-            data:{"joinUserName":joinUserName},
-            dataType:"json",
-            success : function(json){
-               var joinUserArr = [];
-         
-         //      console.log("이:"+json.length);
-               if(json.length > 0){
-                  
-                  $.each(json, function(index,item){
-                     var name = item.name;
-                     if(name.includes(joinUserName)){ // name 이라는 문자열에 joinUserName 라는 문자열이 포함된 경우라면 true , 
-                                                     // name 이라는 문자열에 joinUserName 라는 문자열이 포함되지 않은 경우라면 false 
-                        joinUserArr.push(name+"("+item.userid+")");
-                     }
-                  });
-                  
-                  $("input#joinUserName").autocomplete({  // 참조 https://jqueryui.com/autocomplete/#default
-                     source:joinUserArr,
-                     select: function(event, ui) {       // 자동완성 되어 나온 공유자이름을 마우스로 클릭할 경우 
-                        add_joinUser(ui.item.value);    // 아래에서 만들어 두었던 add_joinUser(value) 함수 호출하기 
-                                                        // ui.item.value 이  선택한이름 이다.
-                        return false;
-                       },
-                       focus: function(event, ui) {
-                           return false;
-                       }
-                  }); 
-                  
-               }// end of if------------------------------------
-            }// end of success-----------------------------------
-         });
-         
-      });
---%>
-      
+            
       // 글쓰기 버튼
       $("button#btnWrite").click(function() {
       
@@ -161,47 +118,17 @@
             alert("양식을 입력하세요!!");
             return;
          }
-                  
-         // 카테고리 선택값 받아오기
-         /* $("select#fk_appr_sortno").on("change", function() {      // select문의 이벤트는 change라는 것을 기억하자!   
-               const docform = $(this).val();
-            // let docform = $("select#docform > option:selected").attr("value");
-             $("input#docformName").val(docform);
-            
-            });//end of $("select#docform").on("change", function()  */
-         
-         
-          /* $("input#emg").click(function () {
-             
-             // 긴급버튼 체크 시 값 전달(긴급이면 1을, 아니면 0을 전달, default값은 0이다.) 
-            let flag = $('input:checkbox[name="emg"]').is(':checked');
-            
-             let emergency = "";
-             // 여기서 값이 넘어가지 않음 - 
-             
-            if (flag == true) { // 체크된 경우
-               console.log("true");
-               emergency = "1";
-            } else {         // 안된 경우
-               console.log("false");
-               emergency = "0";
-            }
-            
-            $("input#emergency").val(emergency);
-             console.log($("input#emergency").val());
-          }) */
-          
-          
-/*           <input type="checkbox" name="emg" id="emg">&nbsp;긴급
-         <input type="hidden" name="emergency" id="emergency"> */
-          
-          
+        
          // 제목 유효성 검사
          const title = $("input#title").val().trim();
          if(title == "") {
             alert("글제목을 입력하세요!!");
             return;
          }
+         if(title.size() >= 66) {
+        	 alert("제목이 너무 깁니다!!");
+         }
+         // 제목에 script 막기 및 break-all
          
          // 내용 유효성 검사(스마트 에디터 사용 안 할 시)
          <%--
@@ -509,7 +436,6 @@
                <option value="1">업무기안서</option>
                <option value="2">증명서신청</option>
                <option value="3">사유서</option>
-               <option value="4">휴가신청서</option>
             </select>
          </td>
       </tr>
@@ -530,23 +456,27 @@
          <td colspan="4">
             <label class="switch-button">
                <input type="checkbox" name="emg" id="emg">&nbsp;긴급
-               <input type="text" name="emergency" id="emergency">
+               <input type="hidden" name="emergency" id="emergency">
                <%-- name 전달할 값의 이름, value 전달될 값 --%>
             </label>
          </td>
       </tr>
       
       <tr>
-         <th class="edmsView_th" rowspan="2">결재정보</th>
-         <td style="width: 20%;">중간결재자</td>
-         <td><input type="hidden" name="fk_mid_empno" id="fk_mid_empno" class="form-control" placeholder="중간결재자 정보" value="" readonly /></td>
-         <td><input type="text" name="fk_mid_empno2" id="fk_mid_empno2" class="form-control" placeholder="중간결재자 정보" value="" readonly /></td>
+         <th class="edmsView_th" rowspan="2" style="vertical-align: middle;">결재정보</th>
+         <td style="width: 10%;" colspan="2">중간결재자</td>
+         <td>
+         	<input type="hidden" name="fk_mid_empno" id="fk_mid_empno" class="form-control" placeholder="중간결재자 정보" value="" readonly />
+         	<input type="text" name="fk_mid_empno2" id="fk_mid_empno2" class="form-control" placeholder="중간결재자 정보" value="" readonly />
+         </td>
       </tr>
       
       <tr>
-         <td style="width: 20%;">최종결재자</td>
-         <td><input type="hidden" name="fk_fin_empno" id="fk_fin_empno" class="form-control" placeholder="최종결재자 정보" value="" readonly /></td>
-         <td><input type="text" name="fk_fin_empno2" id="fk_fin_empno2" class="form-control" placeholder="최종결재자 정보" value="" readonly /></td>
+         <td style="width: 10%;" colspan="2">최종결재자</td>
+         <td>
+         	<input type="hidden" name="fk_fin_empno" id="fk_fin_empno" class="form-control" placeholder="최종결재자 정보" value="" readonly />
+         	<input type="text" name="fk_fin_empno2" id="fk_fin_empno2" class="form-control" placeholder="최종결재자 정보" value="" readonly />
+        </td>
       </tr>
    
 
@@ -572,7 +502,6 @@
          </td>
       </tr>
       
-
       <tr>
          <th class="edmsView_th">파일첨부</th>
          <td colspan="4">
@@ -582,20 +511,16 @@
    </table>
    </div>
 
-   <div>
+    <div>
       <button type="button" class="btn btn-secondary btn-sm mr-3" id="btnWrite">결재요청</button>
       <button type="button" class="btn btn-secondary btn-sm" onclick="javascript:history.back()">작성취소</button>
    </div>
    </form>
    
-   
-   
-   
-      
-      
+   <div class="divclear"></div>
 
       
-   <!-- ---------------------------------------------------------------------------------------------------- -->
+   <%-- ---------------------------------------------------------------------------------------------------- --%>
       
    
    

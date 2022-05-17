@@ -53,6 +53,11 @@ $(document).ready(function (){
 	
 });
 
+	//메일 상세내용에서 삭제버튼 클릭 시 휴지통으로 이동하기 (?pk_mail_num="+pk_mail_num;)
+	function btnGodeleteOne(pk_mail_num) {
+		location.href="<%= ctxPath%>/mail/mailMoveToRecyclebin_one.bts?pk_mail_num="+pk_mail_num;
+	}
+
 </script>
 
 <div class="container" style="width: 100%; margin: 50px;">
@@ -61,8 +66,10 @@ $(document).ready(function (){
 				<h4 class="page-title" style="color: black;">예약 메일함</h4>
 			</div>	
 			<div id="goList">
-				<button type="button" id="btnGoList" class="btn btn-secondary btn-sm" onclick="location.href='<%= ctxPath%>/mail/mailReservationList.bts'" style="margin-left: 1070px; margin-bottom:10px ">
-				<i class="fa fa-reorder"></i>
+				<button type="button" id="btnGodeleteOne" class="btn btn-secondary btn-sm" style="margin-bottom: 5px;" onclick="btnGodeleteOne('${requestScope.mailvo.pk_mail_num}')">
+				삭제
+				</button>	
+				<button type="button" id="btnGoList" class="btn btn-secondary btn-sm" onclick="location.href='<%= ctxPath%>/mail/mailReservationList.bts'" style="margin-left: 1040px; margin-bottom: 5px; ">
 				목록
 				</button>
 			</div>	

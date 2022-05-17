@@ -92,18 +92,18 @@
           		&nbsp; <%-- 큰구분선1 --%>
           	</td>
           	
-          	<td rowspan="4" style="valign: center;">#</td>
+          	<td rowspan="4" style="vertical-align : center;">#</td>
           	<td style="background-color: #F7F7F7;">중간결재자</td>
              
-			<td rowspan="4" style="valign: center;">#</td>
+			<td rowspan="4" style="vertical-align: center;">#</td>
           	<td style="background-color: #F7F7F7;">최종결재자</td>
 		</tr>
 		
 		<tr>
 			<th>작성자 <input type="hidden" value="${requestScope.apprvo.fk_emp_no}"></th>
           	<td style="background-color: #F7F7F7;">${requestScope.apprvo.emp_name}&nbsp;[${requestScope.apprvo.ko_rankname}]</td>
-          	<td rowspan="2" style="background-color: #F7F7F7; valign: middle;">${requestScope.apprname.fk_mid_empname}<br/>&nbsp;[${requestScope.apprvo.fk_mid_empno}]</td>
-			<td rowspan="2" style="background-color: #F7F7F7;">${requestScope.apprname.fk_fin_empname}<br/>&nbsp;[${requestScope.apprvo.fk_fin_empno}]</td>
+          	<td rowspan="2" style="background-color: #F7F7F7; vertical-align: middle; text-align: center;">${requestScope.apprname.fk_mid_empname}<br/>[${requestScope.apprvo.fk_mid_empno}]</td>
+			<td rowspan="2" style="background-color: #F7F7F7; vertical-align: middle; text-align: center;">${requestScope.apprname.fk_fin_empname}<br/>[${requestScope.apprvo.fk_fin_empno}]</td>
 		</tr>
 		
         <tr>
@@ -114,12 +114,12 @@
 		<tr>
 			<th>작성일자</th>
           	<td style="background-color: #F7F7F7;">${requestScope.apprvo.writeday}</td>
-          	<td style="background-color: #F7F7F7;">
+          	<td style="background-color: #F7F7F7; text-align: center;">
           		<c:if test="${requestScope.apprvo.mid_accept eq 0}">대기중</c:if>
           		<c:if test="${requestScope.apprvo.mid_accept eq 1}"><span style="color:blue;">결재완료</span></c:if>
           		<c:if test="${requestScope.apprvo.mid_accept eq 2}"><span style="color:red;">반려</span><</c:if>
           	</td>
-			<td style="background-color: #F7F7F7;">
+			<td style="background-color: #F7F7F7; text-align: center;">
           		<c:if test="${requestScope.apprvo.mid_accept ne 2 and requestScope.apprvo.fin_accept eq 0}">대기중</c:if>
           		<c:if test="${requestScope.apprvo.fin_accept eq 1}"><span style="color:blue;">결재완료</span></c:if>
           		<c:if test="${requestScope.apprvo.mid_accept eq 2 or requestScope.apprvo.fin_accept eq 2}"><span style="color:red;">반려</span></c:if>
@@ -136,9 +136,9 @@
 				<col style="width: 16%; background-color: #e8e8e8;" />
 			</colgroup>
 			
-			<tr style="width: 16%;">
-				<th class="edmsView_th">제목</th>
-				<td style="width: 75%;">
+			<tr>
+				<th>제목</th>
+				<td>
 					<c:if test="${requestScope.apprvo.emergency == 1}">
 						<span style="color: red; font-weight: bold;">[긴급]</span>&nbsp;
 					</c:if>
@@ -154,16 +154,14 @@
 			</tr> -->
 			
 			<tr>
-				<th class="edmsView_th">내용</th>
+				<th>내용</th>
 				<td colspan="2">
-					<p style="word-break: break-all;">
-						${requestScope.apprvo.contents}
-					<br/>
+					<p style="word-break: break-all;">${requestScope.apprvo.contents}</p>
 				</td>
 			</tr>
 			
 			<tr>
-				<th class="edmsView_th">첨부파일</th>
+				<th>첨부파일</th>
 				<!-- 첨부파일이 있는 경우 시작 -->
 				<c:if test="${requestScope.filename ne '' || requestScope.filename ne null }"> 
 					<td>
@@ -189,16 +187,16 @@
 				</td>
 			</tr>
 			<tr>
-					<th>중간결재자 의견</th>
-					<td>
-						<input type="text" id="mid_opinion" name="mid_opinion" value="${requestScope.apprvo.mid_opinion}" readonly/>
-					</td>
+				<th>중간결재자 의견</th>
+				<td>
+					<input type="text" id="mid_opinion" name="mid_opinion" class="form-control-plaintext" value="${requestScope.apprvo.mid_opinion}" readonly/>
+				</td>
 			</tr>
 			<tr>
-					<th>최종결재자 의견</th>
-					<td>
-						<input type="text" id="fin_opinion" name="fin_opinion" value="${requestScope.apprvo.fin_opinion}" readonly/>
-					</td>
+				<th>최종결재자 의견</th>
+				<td>
+					<input type="text" id="fin_opinion" name="fin_opinion" class="form-control-plaintext" value="${requestScope.apprvo.fin_opinion}" readonly/>
+				</td>
 			</tr>
 			
 			
@@ -207,32 +205,36 @@
 		<c:set var="v_gobackURL" value='${ fn:replace(requestScope.gobackURL, "&", " ") }' />
 		
 		<div style="margin-bottom: 1%;">
-				이전글제목&nbsp;&nbsp;
-				<span class="move" style="cursor: pointer;" onclick="javascript:location.href='/bts/edms/view.bts?pk_appr_no=${requestScope.apprvo.previousseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.apprvo.previoussubject}</span>
-			</div>
-			<div style="margin-bottom: 1%;">
-				다음글제목&nbsp;&nbsp;
-				<span class="move" style="cursor: pointer;" onclick="javascript:location.href='/bts/edms/view.bts?pk_appr_no=${requestScope.apprvo.nextseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.apprvo.nextsubject}</span>
-			</div>
+			<span style="font-size: 11pt;">이전글</span>&nbsp;&nbsp;
+			<span class="move" style="cursor: pointer;" onclick="javascript:location.href='/bts/edms/view.bts?pk_appr_no=${requestScope.apprvo.previousseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.apprvo.previoussubject}</span>
+		</div>
+		<div style="margin-bottom: 1%;">
+			<span style="font-size: 11pt;">다음글</span>&nbsp;&nbsp;
+			<span class="move" style="cursor: pointer; font-size: 12pt;" onclick="javascript:location.href='/bts/edms/view.bts?pk_appr_no=${requestScope.apprvo.nextseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.apprvo.nextsubject}</span>
+		</div>
+		
 			
-			<br />
-			
-			
-			<br/><hr>
-			
-			<input type="hidden" class="form-control" value="1. loginuser != null && 글쓴 사람이 아니고 승인자도 아닌 경우" readonly ><br/>
-			<%-- 페이징 처리되어진 후 특정 글제목을 클릭하여 상세내용을 본 이후 사용자가 목록보기 버튼을 클릭했을 때 돌아갈 페이지를 알려주기 위해 현재 페이지 주소를 뷰단으로 넘겨준다. --%>
-			
-			<button type="button" class="btn btn-dark btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/list.bts'">목록으로 돌아가기</button>
-			<button type="button" class="btn btn-dark btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>${requestScope.gobackURL}'">검색결과 목록으로</button>
-			<br/><hr>
-			
-			<c:if test="${sessionScope.loginuser != null and sessionScope.loginuser.pk_emp_no eq apprvo.getFk_emp_no()}">
-			<button type="button" class="btn btn-dark btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edit.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">글수정하기</button>
-			<button type="button" class="btn btn-dark btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/del.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">글삭제하기</button>
-			</c:if>
-			<br/><hr>
-			
+		<br/>
+		
+		<!-- 1. loginuser != null && 글쓴 사람이 아니고 승인자도 아닌 경우" -->
+		<%-- 페이징 처리되어진 후 특정 글제목을 클릭하여 상세내용을 본 이후 사용자가 목록보기 버튼을 클릭했을 때 돌아갈 페이지를 알려주기 위해 현재 페이지 주소를 뷰단으로 넘겨준다. --%>
+		
+		<%-- 원래 있던 곳이 wait.bts인 경우 어떻게 받아오는지? --%>
+		<c:if test="">
+		</c:if>
+		
+		<button type="button" class="btn btn-dark btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>${requestScope.gobackURL}'">목록으로 돌아가기</button>
+		
+		
+		<button type="button" class="btn btn-dark btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>${requestScope.gobackURL}'">검색결과 목록으로</button>
+		<br/>
+		
+		<c:if test="${sessionScope.loginuser != null and sessionScope.loginuser.pk_emp_no eq apprvo.getFk_emp_no() and requestScope.apprvo.mid_accept eq 0}">
+		<button type="button" class="btn btn-dark btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edit.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">글수정하기</button>
+		<button type="button" class="btn btn-dark btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/del.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">글삭제하기</button>
+		</c:if>
+		<br/>
+		
 <%-- 			<input type="text" class="form-control" value="1. sqlsession의 empno = 원글의 mid_emp_no인 경우 && mid_accept 0인 경우 && status = 1/ 2. sqlsession의 empno = 원글의 fin_emp_no인 경우 && mid_accept 1인 경우" readonly ><br/>
 			<c:if test="${ requestScope.apprvo.fk_mid_empno eq sessionScope.loginuser.pk_emp_no
 					   and requestScope.apprvo.mid_accept == 0
@@ -240,34 +242,30 @@
 				<button type="button" class="btn btn-success btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">문서승인</button>
 				<button type="button" class="btn btn-danger btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">문서반려</button>
 			</c:if> --%>
+		
+		
+		<input type="hidden" value="${requestScope.apprvo.mid_accept }">
+		<input type="hidden" value="${requestScope.apprvo.fin_accept }">
+		
+		<%-- 1. 중간결재자가 로그인 한 경우 - 중간버튼만 보인다. --%>
+		<c:if test="${ requestScope.apprvo.fk_mid_empno eq sessionScope.loginuser.pk_emp_no and requestScope.apprvo.mid_accept eq 0 and requestScope.apprvo.fin_accept eq 0 }">
+			<%-- 중간결재자 버튼 시작 --%>
+			<button type="button" class="btn btn-success btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">중간결재1</button>
+			<button type="button" class="btn btn-success btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">중간반려</button>
+			<%-- 중간결재자 버튼 종료 --%>
 			
+			<%-- 중간결재자 의견 시작 --%>
 			
-			<input type="hidden" value="${requestScope.apprvo.mid_accept }">
-			<input type="hidden" value="${requestScope.apprvo.fin_accept }">
-			
-			<%-- 1. 중간결재자가 로그인 한 경우 - 중간버튼만 보인다. --%>
-			<c:if test="${ requestScope.apprvo.fk_mid_empno eq sessionScope.loginuser.pk_emp_no and requestScope.apprvo.mid_accept eq 0 and requestScope.apprvo.fin_accept eq 0 }">
-				<%-- 중간결재자 버튼 시작 --%>
-				<button type="button" class="btn btn-success btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">중간결재1</button>
-				<button type="button" class="btn btn-success btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">중간반려</button>
-				<%-- 중간결재자 버튼 종료 --%>
-				
-				<%-- 중간결재자 의견 시작 --%>
-				
-				<%-- 중간결재자 의견 종료 --%>
-			</c:if>
-			
-			
-			
-			<%-- 2.최종결재자가 로그인 한 경우 - 최종버튼만 보인다. --%>
-			<input type="text" class="form-control" value="1. sqlsession의 empno = 원글의 mid_emp_no인 경우 && mid_accept 0인 경우 && status = 1/ 2. sqlsession의 empno = 원글의 fin_emp_no인 경우 && mid_accept 1인 경우" readonly ><br/>
-			<c:if test="${ requestScope.apprvo.fk_fin_empno eq sessionScope.loginuser.pk_emp_no and requestScope.apprvo.mid_accept ne 0 and requestScope.apprvo.fin_accept eq 0 }">
-				<button type="button" class="btn btn-danger btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">최종결재</button>
-				<button type="button" class="btn btn-danger btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">최종반려</button>
-			</c:if>
-			
-			
-			<br/><hr>
+			<%-- 중간결재자 의견 종료 --%>
+		</c:if>
+		
+		<%-- 2.최종결재자가 로그인 한 경우 - 최종버튼만 보인다. --%>
+		<c:if test="${ requestScope.apprvo.fk_fin_empno eq sessionScope.loginuser.pk_emp_no and requestScope.apprvo.mid_accept ne 0 and requestScope.apprvo.fin_accept eq 0 }">
+			<button type="button" class="btn btn-danger btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">최종결재</button>
+			<button type="button" class="btn btn-danger btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">최종반려</button>
+		</c:if>
+		
+		<br/>
 	
 	<!-- 중간/최종 결재 승인을 텍스트보다는 색깔로 구분 -->
 	

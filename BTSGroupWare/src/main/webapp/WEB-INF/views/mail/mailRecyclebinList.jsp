@@ -50,7 +50,7 @@
 	// function declaration 
 	// 검색 버튼 클릭시 동작하는 함수
 	function gomailSearch() {
-		const frm = document.goReceiveListSelectFrm;
+		const frm = document.goRecyclebinListSelectFrm;
 		frm.method = "GET";
 		frm.action = "<%= ctxPath%>/mail/mailRecyclebinList.bts";
 		frm.submit();	
@@ -135,7 +135,7 @@
 		 	    url:"<%= ctxPath%>/mail/MailMoveToImportantList.bts", 
 				type:"GET",
 				data: {"pk_mail_num":pk_mail_num,
-					   "isRec":1},
+					   "isRec":0},
 				dataType:"JSON",
 				success:function(json){
 					
@@ -177,7 +177,7 @@
 		
 		<form name="goRecyclebinListSelectFrm" style="display: inline-block; padding-left: 470px;">		
 			<div id="mail_searchType">
-				<select class="form-control" id="searchType" name="searchType" style="">
+				<select class="form-control" id="searchType" name="searchType">
 					<option value="subject" selected="selected">제목</option>
 					<option value="sendempname">보낸이</option>
 				</select>
@@ -227,12 +227,18 @@
 									<span class="fa fa-paperclip"></span>
 								</th>
 								<th style="width: 10%;" class="text-center">보낸이</th>
-								<th style="width: 70%;">제목</th>
-								<th style="width: 20%;" class="text-left">날짜</th>
+								<th style="width: 68%;">제목</th>
+								<th style="width: 22%;" class="text-left">날짜</th>
 							</tr>
 						</thead>
 						
 						<tbody>
+						<c:if test="${empty requestScope.RecyclebinMailList}">
+							<tr>
+								<td colspan="10" style="text-align: center; width: 1000px;">메일이 존재하지 않습니다.</td>
+							</tr>							
+						</c:if>
+						<c:if test="${not empty requestScope.RecyclebinMailList}">	
 						<c:forEach items="${requestScope.RecyclebinMailList}" var="RecyclebinMailList">
 							<tr>
 								<td style="width: 40px;">
@@ -273,7 +279,8 @@
 									</c:if>									
 								</td>
 							</tr>	
-						</c:forEach>																				
+						</c:forEach>
+						</c:if>		
 						</tbody>
 					</table>
 				</div>	
