@@ -11,7 +11,7 @@
  
 #myheader a    {text-decoration:none;}
 
-body {font-family: 'Noto Sans KR', sans-serif; }
+body {font-family: 'Noto Sans KR', sans-serif; font-size: 18px;}
 
 
 /* mailReceiveList, mailSendList 서식 시작 */
@@ -48,11 +48,19 @@ ul#secondHeaderGroup, .secondHeaderList {
       display: inline-block;
 }
 
-/* 헤더 스타일  끝 */	
-	
   #mail_searchType, #searchWord, 
   #mail_serachWord, #mail_search,
   #btnSearch {
   	 display: inline-block;
   }	
 
+#navbarSupportedContent > ul > li {
+	margin-right: 20px;
+	font-size: 18px;
+}
+
+body {font-family: 'Noto Sans KR', sans-serif; }
+
+
+/* 헤더 스타일  끝 */
+	

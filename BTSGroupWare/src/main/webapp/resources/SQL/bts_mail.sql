@@ -534,13 +534,50 @@ where rno between #{startRno} and #{endRno}
 
 select *
 from tbl_mail
+where del_status = 1
+order by pk_mail_num desc;
+
+where importance_star_send = 1
+
+
 
 update tbl_mail set IMPORTANCE_STAR = 0
 
+
 commit;
 
+select *
+from tbl_employees;
+ 
+select fk_senduser_num, fk_receiveuser_num, recemail, sendemail
+     , recempname, sendempname, subject, content, filename, orgfilename
+from tbl_mail 
 
 
+select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date, importance, importance_star_send
+from 
+(
+select row_number() over(order by pk_mail_num desc) AS rno,
+       pk_mail_num, fk_senduser_num, sendempname, subject
+       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+       , filename , to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+       , importance, importance_star_send
+from tbl_mail
+where fk_senduser_num = '80000010' and importance_star_send = 1
+and lower('') like '%' || lower('') || '%'
+) V
 
+select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date, importance, importance_star_send
+from tbl_mail
+where importance_star_send = 1 and fk_senduser_num = '80000010'
 
+select *
+from tbl_mail
+where fk_senduser_num != '80000010'
+order by reg_date
 
+where fk_receiveuser_num = '80000010'
+
+select *
+from tbl_mail
+where  fk_senduser_num = '80000010' and fk_receiveuser_num = '80000010'

@@ -62,7 +62,7 @@
 			})// end of $("#reset").click(function(){})----------------------
 				
 			
-		 // 메일 쓰기	
+
 		  <%-- === 스마트 에디터 구현 시작 === --%>
 	       //전역변수
 	       var obj = [];
@@ -190,7 +190,7 @@
 			});// end of $("button#btnMailSend").click(function() {})-------------------------
 
 		
-			// ==== 메일쓰기가 아닌 ***임시저장*** 버튼 클릭 시 메일 테이블에서 TEMP_STATUS 을 0에서 1로 update 하기
+			// ==== 메일쓰기가 아닌 임시저장 버튼 클릭 시 메일 테이블에서 TEMP_STATUS 을 0에서 1로 update 하기
 			$("button#tempSave").click(function() {
 
 	  		 <%-- === 스마트 에디터 구현 시작 === --%>
@@ -254,11 +254,11 @@
 		      	if($("input[name=importance]").prop("checked")) {
 		      		// 중요 체크박스에 체크되어 있을 때 중요메일함에 들어가도록 하기 (importance = 1)
 		      		importanceVal = 1;			// 1
-		      	//	console.log(importanceVal);
+		      	//	console.log(importance);
 		      	}
 
 				const frm = document.mailWriteFrm;
-				frm.importanceVal.value = importanceVal;
+			//	frm.importanceVal.value = importanceVal;
 				frm.method = "POST";
 				frm.action = "<%= ctxPath%>/mail/mailTemporaryEnd.bts"
 				frm.submit();
@@ -381,7 +381,7 @@
 <div class="container" style="width: 100%; margin: 50px;">
 	<div class="row bg-title" style="border-bottom: solid 1.5px #e6e6e6;">	
 		<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-			<h4 class="page-title" style="color: black;">내게 쓰기</h4>
+			<h4 class="page-title" style="color: black;">메일 쓰기</h4>
 		</div>
 	</div>
 	
@@ -399,12 +399,6 @@
 			</button>
 		</li>	
 		<li class="buttonList">
-			<button type="button" id="writeMail" class="btn btn-secondary btn-sm" onclick="location.href='/bts/mail/mailWrite.bts'">
-			<i class="fa fa-pencil-square-o fa-fw" aria-hidden="true"></i>
-			메일쓰기
-			</button>
-		</li>	
-		<li class="buttonList">
 			<button type="button" id="reset" class="btn btn-secondary btn-sm">
 			<i class="fa fa-refresh fa-fw" aria-hidden="true"></i>
 			새로고침
@@ -416,34 +410,42 @@
 	<form name="mailWriteFrm" enctype="multipart/form-data" class="form-horizontal" style="margin-top: 20px;">
 		<table id="mailWriteTable">
 			<tr>
-			<%-- 받는 사람을 hidden으로 하되, value 를 로그인한 사람으로 설정해두기. --%>
-			<%--<th width="14%">받는 사람</th> --%>	
-				<td width="10%" data-toggle="tooltip" data-placement="top" title="">
-					<input type="hidden" id="recemail" name="recemail" value="${sessionScope.loginuser.uq_email}" style="width: 800px; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
-										
+				<th width="14%">받는 사람</th>
+				<td width="86%" data-toggle="tooltip" data-placement="top" title="">
+					<input type="text" id="recemail" name="recemail" value="${requestScope.mailvo.sendemail}" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
+					
 					<%-- hidden 타입으로 데이터값 보내기 --%>
 			     	<input type="hidden" id="sendemail" name="sendemail" value="${sessionScope.loginuser.uq_email}" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " /> 
 					<input type="hidden" id="fk_senduser_num" name="fk_senduser_num" value="${sessionScope.loginuser.pk_emp_no}"  style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
 					<input type="hidden" id="sendempname" name="sendempname" value="${sessionScope.loginuser.emp_name}" />
-               		<%-- 임시저장의 경우 --%>
+					<%-- temp_status 및 글번호 보내기 --%>
                		<input type="hidden" name="temp_status" id="temp_status" value="${temp_status}"/> 
                		<input type="hidden" name="pk_mail_num" id="pk_mail_num" value="${requestScope.mailvo.pk_mail_num}"/> 
+					<button type="button" class="btn btn-secondary btn-sm">주소록</button>
 				</td>
 			</tr>
 			<tr>
 				<th width="14%">
 					<span style="margin-right: 40px;">제목</span>
-						<input type="checkbox" id="importance" name="importance" />&nbsp;중요&nbsp;<span class="fa fa-exclamation" style="color: red;" class="text-center"></span>
+						<input type="checkbox" id="importance" name="importance" />&nbsp;&nbsp;중요!
 						<input type="hidden" id="importanceVal" name="importanceVal" />
 				</th>
 				<td width="110%" >
-					<input type="text" id="subject" name="subject" value="${requestScope.mailvo.subject}" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; display: inline-block;" />
+				<%-- RE --%>
+					<input type="text" id="subject" name="subject" value="RE: ${requestScope.mailvo.subject}" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; display: inline-block;" />
 				</td>
 			</tr>		
 			<tr>
 				<th width="14%">파일첨부</th>
 				<td width="86%" style="padding-top: 9px">
+					<%-- (filename이 존재한다면) 임시보관함에서 상세내용 클릭 시 기존에 첨부했던 파일 유지 --%>
+					<c:if test="${not empty requestScope.mailvo.orgfilename}">
+						<input type="file" name="attach" id="attach" style="display:none; width: 30%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 0px solid gray;" />
+						<label for="attach">&nbsp;&nbsp;${requestScope.mailvo.orgfilename}</label>
+					</c:if>
+					<c:if test="${empty requestScope.mailvo.orgfilename}">
 					<input type="file" name="attach" id="attach" style="width: 30%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 0px solid gray;" />
+					</c:if>					
 				</td>
 			</tr>			
 		</table>	
@@ -455,6 +457,15 @@
 			<tr style="border: 0px;">
 				<td width="1200px;" style="border: 0px">
 					<textarea rows="20" cols="100" style="width: 1090px; border: solid 1px gray; height: 400px;" name="content" id="content" >					
+					<br><br><br>
+					-----Original Message----- <br>
+					From: ${requestScope.mailvo.sendempname} (${requestScope.mailvo.sendemail}) <br>
+					To: ${requestScope.mailvo.recempname} (${requestScope.mailvo.recemail}) <br>
+					Sent: <c:if test="${not empty requestScope.mailvo.reservation_date}">${requestScope.mailvo.reservation_date}</c:if>
+						  <c:if test="${empty requestScope.mailvo.reservation_date}">${requestScope.mailvo.reg_date}</c:if>	
+						  <br>
+					Subject: ${requestScope.mailvo.subject} <br>
+					${requestScope.mailvo.content} <br>
 					</textarea>						
 				</td>
 			</tr>
@@ -476,4 +487,73 @@
 			<span id="reservationTime" style="margin-left: 20px;"></span>
 		</li>	
 	</ul>	
+</div>
+
+<%-- 발송예약 모달 --%>
+<div id="sendReservation_Modal" class="modal fade" role="dialog" data-keyword="false" data-backdrop="static">
+  <div class="modal-dialog" style="width: 400px;">
+  
+    <div class="modal-content">   
+      <div class="modal-header" style="height: 60px;">
+        <h5 class="modal-title" id="staticBackdropLabel">발송예약</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+      	<div id="sendReservation">
+      		<%-- 발송예약 모달 내용 시작 --%>
+	      		
+	      		<div id="sendReservation_content">
+		      		<%-- 모달 form 태그 시작 --%>
+					<form>
+						<div class="form-group form-wrap form-sendDate">
+							<label for="resSendDate" class="sendLabel">발송날짜 :</label>
+							<input type="date" id="resSendDate" />
+						</div>
+						
+						<div class="form-group form-wrap">
+							<label for="selectSendTime" class="sendLabel">발송시간 : </label>
+							<select class="form-control" id="resSendTimeHour" style="display:inline-block; height: 35px; width: 70px;">
+							  	<c:forEach begin="0" end="9" varStatus="loop">
+							  		 <option>0${loop.index}</option>
+							  	</c:forEach>
+							  	<c:forEach begin="0" end="9" varStatus="loop">
+							  		 <option>1${loop.index}</option>
+							  	</c:forEach>	
+							  	<c:forEach begin="0" end="3" varStatus="loop">
+							  		 <option>2${loop.index}</option>
+							  	</c:forEach>
+							</select>
+						  	<span>시</span>		
+							<select class="form-control" id="resSendTimeMinute" style="display:inline-block; height: 35px; width: 70px;">
+							  	<option>00</option>
+							  	<option>05</option>
+						  		<option>10</option>
+						  		<option>15</option>
+						  		<option>20</option>
+						  		<option>25</option>
+						  		<option>30</option>
+						  		<option>35</option>
+						  		<option>40</option>
+						  		<option>45</option>
+						  		<option>50</option>
+						  		<option>55</option>
+							</select>	
+							<span>분</span>					  								
+						</div>
+					</form> 	
+		      		<%-- 모달 form 태그 끝 --%>
+	      		</div>	      		
+      		<%-- 발송예약 모달 내용 끝 --%>
+      	</div>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn" style="border: solid 1px gray; background-color: #e6e6e6;" onclick="sendReservationOk()">확인</button>
+        <button type="button" class="btn btn-light" data-dismiss="modal" style="border: solid 1px gray">취소</button>
+      </div>
+    </div>    
+  </div>
 </div>

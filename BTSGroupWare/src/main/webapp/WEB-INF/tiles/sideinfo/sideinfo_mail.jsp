@@ -32,6 +32,9 @@
 					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailWrite.bts"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;&nbsp;메일쓰기</a></div>
 				</li>
 				<li style="margin-bottom: 15px;">
+					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailSendToMeWrite.bts"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;&nbsp;내게쓰기</a></div>
+				</li>
+				<li style="margin-bottom: 15px;">
 					<div id="mailBtn1" class="mailBtn"><a href="<%= ctxPath%>/mail/mailReceiveList.bts"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;&nbsp;받은메일함</a></div>
 				</li>
 				<li style="margin-bottom: 15px;">
