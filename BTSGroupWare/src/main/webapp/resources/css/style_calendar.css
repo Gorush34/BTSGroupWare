@@ -32,13 +32,14 @@ body {font-family: font-family: 'Noto Sans KR', sans-serif; }
 
 #mycontainer   { padding:20px; }
 #myheader      { display: flex; min-height:100px; position: relative; top: 60px; }
-#mycontent      { min-height:1200px; top:60px; padding-top: 40px; padding-left:250px; background-color:#FFF;
-                  float:left; width:1400px;}
+#mycontent      { min-height:1200px; top:60px; padding-top: 40px; margin-right:25px;  background-color:#FFF;
+                  float:right; width:80%;}
 #mysideinfo {
 		min-height: 1200px;
 		position: fixed;
 		top: 60px;
 		padding-top: 40px;
+		padding-left:30px; 
 		background-color: #FFF;
 		float: left;
 		width: 250px;
@@ -108,7 +109,8 @@ div#calendarSearch{
   position: relative;
   width: 320px;
   height: 32px;
-  margin-left: 800px;
+  float:right;
+  margin-right: 25px;
 }
 
 select#searchType {
@@ -278,7 +280,7 @@ table#scheduleRegisterContent > tbody  table#reservationTable{
 [data-tooltip]:not([data-tooltip=""]):hover:before{visibility:visible;opacity:1;top:-30px}
 [data-tooltip]:not([data-tooltip=""]):hover:after{visibility:visible;opacity:1;top:-8px}
 
-/
+
 
 /* 캘린더 상세(일정 상세) 파트 */
 table#detailScheduleContent > tbody > tr > th  {
@@ -298,24 +300,32 @@ table#detailScheduleContent > tbody  table#reservationTable{
 
 /* 일정 검색 결과 페이지 */
 table#searchListContentTable th, td{
-	 	
-	 	vertical-align: middle;
-	}
+ 	
+ 	vertical-align: middle;
+}
+
+tr.scheduleSearchResult{
+	background-color: white;
+	cursor: pointer;
+}
+
+a{
+    color: #395673;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a:hover {
+    color: #395673;
+    cursor: pointer;
+    text-decoration: none;
+	font-weight: bold;
+}
+
 	
-	tr.scheduleSearchResult{
-		background-color: white;
-		cursor: pointer;
-	}
-	
-	a{
-	    color: #395673;
-	    text-decoration: none;
-	    cursor: pointer;
-	}
-	
-	a:hover {
-	    color: #395673;
-	    cursor: pointer;
-	    text-decoration: none;
-		font-weight: bold;
-	}
+/* 일정 상세 파트 */
+table#detailScheduleContent > tbody > tr > th{
+	color: #007399;
+	text-align: center;
+	vertical-align: middle;
+}

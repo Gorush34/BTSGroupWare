@@ -70,6 +70,12 @@ public interface InterEdmsService {
 
 	// 상태가 반려됨인 리스트 불러오기
 	List<Map<String, Object>> getRejectList();
+
+	// 로그인유저의 결재대기문서 가져오기
+	int getTotalCountWaitingSign(Map<String, String> paraMap);
+
+	// 페이징 처리한 로그인유저의 결재대기목록 가져오기
+	List<Map<String, Object>> waitingSignListWithPaging(Map<String, String> paraMap);
 	
 	
 }

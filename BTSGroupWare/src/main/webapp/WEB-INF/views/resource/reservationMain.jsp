@@ -470,8 +470,8 @@
 	
 </script>
 
-<div id="resourceSide" style=" min-height:1200px; position: fixed; top:60px; padding-top: 40px; float:left; width:250px;">
-	<h4 style="margin-top: 50px;">자원관리</h4>
+<div id="resourceSide" style=" min-height:1200px; position: fixed; top:60px; padding-top: 40px; padding-left:30px; float:left; width:250px;">
+	<h4 style="margin-top: 30px; ">자원관리</h4>
 	<button type="button" class="btn btn-outline-primary btn-lg"  id="resRegisterbtn" style="margin: 15px auto; width:200px; display:block;" onclick="javascript:location.href='<%= ctxPath%>/reservation/reservationAdmin.bts'">자원등록</button>
 	<ul style="list-style-type: none; padding: 10px;">
 	 <c:if test="${not empty requestScope.classList}">
@@ -501,13 +501,17 @@
 </div>
 
 <div id="reservateMain" style="margin-left:250px;">
-	<h4 style="margin: 0 80px">예약하기</h4>
+	<div class="d-flex align-items-center p-3 my-3 text-white bg-purple shadow-sm" style="background-color: #6F42C1;">
+    <div class="lh-1" style="text-align: center; width: 100%;">
+      <h1 class="h6 mb-0 text-white lh-1" style="font-size:22px; font-weight: bold; ">예약하기</h1>
+    </div>
+  </div>
 	
 	<%-- 캘린더를 보여주는 곳 --%>
 	<input type="hidden" value="${sessionScope.loginuser.pk_emp_no}" id="fk_emp_no"/>
 	
 	<input type="hidden" value="${sessionScope.loginuser.emp_name}" id="emp_name"/>
-	<div id="calendar" style="margin: 60px 30px 50px 60px;"></div>
+	<div id="calendar" style="margin: 60px 30px 50px 30px;"></div>
 
 </div>
 
