@@ -27,6 +27,7 @@ $( document ).ready( function() {
 	  
 }); // end of $( document ).ready( function()
 
+		
 	
 	function telUpdate(i)	{
 		$.ajax({
@@ -35,14 +36,48 @@ $( document ).ready( function() {
 			type: "post",
 			dataType: 'json',
 			success : function(json) {
+				
+				var a; // 부서 select
+				var b; // 직급 select
+				
+				switch (json.department) {
+					case "영업": a=100; break;
+					case "마케팅": a=200; break;
+					case "기획": a=300; break;
+					case "총무": a=400; break;
+					case "인사": a=500; break;
+					case "회계": a=600; break;
+					case "--": a=700; break;
+				}
+				
+				switch (json.rank) {
+					case "사원": b=10; break;
+					case "주임": b=20; break;
+					case "대리": b=30; break;
+					case "과장": b=40; break;
+					case "차장": b=50; break;
+					case "부장": b=60; break;
+					case "전무": b=70; break;
+					case "사장": b=80; break;
+					case "--": b=70; break;
+				}
+				
+				
 				$("input#pk_addbook_no").val(json.pk_addbook_no)
 				$("input#name").val(json.name)
-				$("select#department").selected(json.department)
-				$("select#rank").selected(json.rank)
+				$("select#department").val(a).prop("selected",true);
+				$("select#rank").val(b).prop("selected",true);
 				$("input#email").val(json.email)
+				$("input#email1").val(json.email1)
+				$("input#email2").val(json.email2)
 				$("input#phone").val(json.phone)
+				$("input#hp2").val(json.hp2)
+				$("input#hp3").val(json.hp3)
 				$("input#company_name").val(json.company_name)
 				$("input#company_tel").val(json.company_tel)
+				$("select#num1").val(json.num1).prop("selected",true);
+				$("input#num2").val(json.num2)
+				$("input#num3").val(json.num3)
 				$("input#company_address").val(json.company_address)
 				$("input#memo").val(json.memo)
 			},
@@ -82,7 +117,6 @@ $( document ).ready( function() {
 			$email2.val($ele.val()); 
 		} 
 	}
-
 	/* 이메일 선택or직접입력 */
 	
 	function goSearch()	{
@@ -151,7 +185,7 @@ $( document ).ready( function() {
 		</tr>
 		-->
 		<tr style="border: solid darkgray 2px; margin-left:2%">
-			<td style="width:5%;"><input type="hidden" id="pk_addbook_no_${i.count}" name="pk_addbook_no${i.count}" value="${adb.pk_addbook_no}" readonly /></td>
+			<td style="width:5%;"><input type="hidden" id="pk_addbook_no_${i.count}" name="pk_addbook_no_${i.count}" value="${adb.pk_addbook_no}" readonly /></td>
 			<td style="width:13%;"><strong>이름</strong></td>
 			<td style="width:13%;"><strong>직급</strong></td>
 			<td style="width:22%;"><strong>휴대폰</strong></td>
@@ -281,7 +315,6 @@ $( document ).ready( function() {
 		<div style="display:inline;">
 		<p>
 		<select class="form-control" id="num1" name="num1" style="width:135px; display:inline; ">
-					<option value="">선택</option>
 					<option value="02">02</option>
 					<option value="031">031</option>
 					<option value="032">032</option>

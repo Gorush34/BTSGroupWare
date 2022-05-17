@@ -218,55 +218,122 @@
 			
   	</table>
   	
-  
+  	
 	 <div id="telAdd_main_tbl" style="text-align:center;">
 		<table>
+		<form name="updateFrm" action="<%=ctxPath%>/addBook/addBook_depInfo_update.bts" method="POST" >
 			<tr>
-				<td><h2>개인정보</h2><input type="hidden" id="haha" value="${sessionScope.loginuser.pk_emp_no}"></td>
+				<td><h2>개인정보</h2>
+					<input type="hidden" id="user" name="user" value="${sessionScope.loginuser.pk_emp_no}">
+					<input type="hidden" id="select_user_no" name="select_user_no" value="" readonly />
+				</td>
 			</tr>
 			<tr>
 				<td><strong>사진</strong></td>
-				<td><img src="<%=ctxPath %>/resources/images/addBook_perInfo_sample.jpg" class="img-rounded"><button class="btn btn-default" id="telAdd_mini_btn">삭제</button></td>
+				<td><img src="<%=ctxPath %>/resources/images/addBook_perInfo_sample.jpg" class="img-rounded"><!-- <button class="btn btn-default" id="telAdd_mini_btn">삭제</button> --></td>
 			</tr>
 			<tr>
 				<td><strong>이름</strong></td>
-				<td style="padding-top:25px;"><input type="text" class="form-control" id="name" name="name" placeholder="이름" readonly><br></td>
+				<td style="padding-top:25px;"><input type="text" class="form-control" id="name" name="name" placeholder="이름" ><br></td>
 			</tr>
+			<c:choose>
+		 	<c:when test="${sessionScope.loginuser.pk_emp_no eq 80000001}">
 			<tr>
 				<td style="padding-bottom:25px;"><strong>부서</strong></td>
-				<td><input type="text" class="form-control" id="department" name="department" placeholder="부서"  readonly><br></td>
+				<td>
+					<select id="department" name="department" class="form-control">
+					  <option value="100">영업</option>
+					  <option value="200">마케팅</option>
+					  <option value="300">기획</option>
+					  <option value="400">총무</option>
+					  <option value="500">인사</option>
+					  <option value="600">회계</option>
+					</select>
+				<br>
+				</td>
 			</tr>
 			<tr>
 				<td style="padding-bottom:25px;"><strong>직급</strong></td>
-				<td><input type="text" class="form-control" id="rank" name="rank" placeholder="직급" readonly><br></td>
+				<td>
+					<select id="rank" name="rank" class="form-control">
+					  <option value="10">사원</option>
+					  <option value="20">주임</option>
+					  <option value="30">대리</option>
+					  <option value="40">과장</option>
+					  <option value="50">차장</option>
+					  <option value="60">부장</option>
+					  <option value="70">전무</option>
+					  <option value="80">사장</option>
+					</select>
+				</td>
 			</tr>
 			<tr>
 				<td style="padding-bottom:25px;"><strong>이메일</strong></td>
-				<td><input type="text" class="form-control" id="email" name="email" placeholder="이메일" readonly><br></td>
+				<td>
+					<input class="form-control" id="email1" name="email1" style="width:135px; display:inline;" type="text" maxlength="12">&nbsp;@
+					<input class="form-control" id="email2" name="email2" style="width:135px; display:inline;" type="text" maxlength="12" placeholder="직접입력">&nbsp;
+					<select class="form-control" name="select_email" style="width:137px; display:inline;" onChange="selectEmail(this)">
+						<option value="gmail.com">gmail.com</option>
+						<option value="naver.com">naver.com</option>
+						<option value="nate.com">nate.com</option>
+						<option value="hanmail.net">hanmail.net</option>
+						<option value="1" selected>직접입력</option>
+					</select>
+				<br>
+				</td>
 			</tr>
 			<tr>
 				<td style="padding-bottom:25px;"><strong>휴대폰</strong></td>
-				<td><input type="text" class="form-control" id="phone" name="phone" placeholder="휴대폰" readonly><br></td>
+				<td>
+					<select class="form-control" id="hp1" name="hp1" style="width:135px; display:inline;" >
+						<option value="010">010</option>
+					</select>&nbsp;-&nbsp;
+					<input class="form-control" id="hp2" name="hp2" style="width:135px; display:inline;" type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">&nbsp;-&nbsp; 
+					<input class="form-control" id="hp3" name="hp3" style="width:135px; display:inline;" type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+				<br>
+				</td>
+			</tr>
+			</c:when>
+			<c:otherwise>
+			<tr>
+				<td style="padding-bottom:25px;"><strong>부서</strong></td>
+				<td><input type="text" class="form-control" id="department" name="department" placeholder="부서"  ><br></td>
 			</tr>
 			<tr>
-				
+				<td style="padding-bottom:25px;"><strong>직급</strong></td>
+				<td><input type="text" class="form-control" id="rank" name="rank" placeholder="직급" ><br></td>
+			</tr>
+			<tr>
+				<td style="padding-bottom:25px;"><strong>이메일</strong></td>
+				<td><input type="text" class="form-control" id="email" name="email" placeholder="이메일" ><br></td>
+			</tr>
+			<tr>
+				<td style="padding-bottom:25px;"><strong>휴대폰</strong></td>
+				<td><input type="text" class="form-control" id="phone" name="phone" placeholder="휴대폰" ><br></td>
+			</tr>
+		 	</c:otherwise>
+		 	</c:choose>
+			<tr>
 				<td style="padding-bottom:25px;"><strong>주소</strong></td>
-				<td><input type="text" class="form-control" id="address" name="address" placeholder="주소" style="width: 140%;" readonly><br></td>
-				
+				<td><input type="text" class="form-control" id="address" name="address" placeholder="주소" style="" ><br></td>
 			</tr>
 			<tr>
 				<td><strong>상세주소</strong></td>
-				<td><input type="text" class="form-control" id="detailaddress" name="detailaddress" placeholder="상세주소" style="width:150%; height: 50px;" readonly></td>
+				<td><input type="text" class="form-control" id="detailaddress" name="detailaddress" placeholder="상세주소" style="" ></td>
 			</tr>
-		<!-- 	
+			<c:choose>
+		 	<c:when test="${sessionScope.loginuser.pk_emp_no eq 80000001}">
 			<tr>
 				<td></td>
 				<td colspan="10" style="text-align:center; padding-top: 18%; ">
-					<button class="btn btn-info" id="" style="border: solid lightgray 2px;" >저장</button>
-					<button class="btn btn-default" id="" style="border: solid lightgray 2px;">취소</button>
+					<button class="btn btn-info" id="" style="border: solid lightgray 2px;" onclick="updateFrm(${i.count})" >저장</button>
 				</td>
 			</tr>
-		 -->	
+		 	</c:when>
+		 	<c:otherwise>
+		 	</c:otherwise>
+		 	</c:choose>
+		 	</form>
 		</table>
 	</div>
 	</div>
@@ -308,8 +375,18 @@
 	  $( "button#h_team" ).click( function() {
 	    $( "div#h_teamwon" ).slideToggle();
 	  });
+/////////////////////////////////////////////////////	  
 	  
-	  sessionScope
+	  if ( $("input#user").val() != 80000001 ) {
+		  $('#name').attr("disabled", "disabled");
+		  $('#department').attr("disabled", "disabled");
+		  $('#rank').attr("disabled", "disabled");
+		  $('#email').attr("disabled", "disabled");
+		  $('#phone').attr("disabled", "disabled");
+		  $('#address').attr("disabled", "disabled");
+		  $('#detailaddress').attr("disabled", "disabled");
+	  }
+	  
 	  
 	}); // end of $( document ).ready( function()
 
@@ -321,11 +398,42 @@
 			type: "post",
 			dataType: 'json',
 			success : function(json) {
+				
+				var a; // 부서 select
+				var b; // 직급 select
+				
+				switch (json.department) {
+					case "영업": a=100; break;
+					case "마케팅": a=200; break;
+					case "기획": a=300; break;
+					case "총무": a=400; break;
+					case "인사": a=500; break;
+					case "회계": a=600; break;
+					case "--": a=700; break;
+				}
+				
+				switch (json.rank) {
+					case "사원": b=10; break;
+					case "주임": b=20; break;
+					case "대리": b=30; break;
+					case "과장": b=40; break;
+					case "차장": b=50; break;
+					case "부장": b=60; break;
+					case "전무": b=70; break;
+					case "사장": b=80; break;
+					case "--": b=90; break;
+				}
+				
+				$("input#select_user_no").val(json.pk_emp_no)
 				$("input#name").val(json.name)
-				$("input#department").val(json.department)
-				$("input#rank").val(json.rank)
+				$("select#department").val(a).prop("selected",true);
+				$("select#rank").val(b).prop("selected",true);
 				$("input#email").val(json.email)
 				$("input#phone").val(json.phone)
+				$("input#hp2").val(json.hp2)
+				$("input#email1").val(json.email1)
+				$("input#email2").val(json.email2)
+				$("input#hp3").val(json.hp3)
 				$("input#address").val(json.address)
 				$("input#detailaddress").val(json.detailaddress)
 			},
@@ -334,7 +442,55 @@
 			}
 		});
 	}	
-			
+	
+	<%-- 
+	function updateFrm(i)	{
+		$.ajax({
+			url:"<%= ctxPath%>/addBook/addBook_depInfo_update.bts",
+			data:{"pk_emp_no" : $("input#pk_emp_no_"+i).val() ,
+				  "name" : $("input#name").val() ,
+				  "department" : $("input#department").val() ,
+				  "rank" : $("input#rank").val() ,
+				  "email1" : $("input#email1").val() ,
+				  "email2" : $("input#email2").val() ,
+				  "hp1" : $("input#hp1").val() ,
+				  "hp2" : $("input#hp2").val() ,
+				  "hp3" : $("input#hp3").val() ,
+				  "address" : $("input#address").val() ,
+				  "detailaddress" : $("input#detailaddress").val()
+			},
+			type: "post",
+			dataType: 'json',
+			success : function(json) {
+				
+			},
+			error: function(request){
+				
+			}
+		});
+	}	
+	--%>		
+	
+	/* 이메일 선택or직접입력 */
+	function selectEmail(ele){ 
+		var $ele = $(ele); 
+		var $email2 = $('input[name=email2]');
+		
+		// '1'인 경우 직접입력 
+		if($ele.val() == "1"){ 
+			$email2.attr('readonly', false); 
+			$email2.val(''); 
+		} else { 
+			$email2.attr('readonly', true); 
+			$email2.val($ele.val()); 
+		} 
+	}
+	/* 이메일 선택or직접입력 */
+	
+	
+
+	
+	
 /* ---------------------------------------------------------------------- */			
 			
 /* 조직도  */

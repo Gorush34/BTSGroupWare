@@ -386,7 +386,7 @@
 			<td><strong>부서</strong></td>
 			<td>
 				<select id="department" name="department" class="form-control">
-				  <option value="700" placeholder="없음">&nbsp;</option>
+				  <option value="700" placeholder="없음">--</option>
 				  <option value="100">영업</option>
 				  <option value="200">마케팅</option>
 				  <option value="300">기획</option>
@@ -400,7 +400,7 @@
 			<td><strong>직위</strong></td>
 			<td>
 				<select id="rank" name="rank" class="form-control">
-				  <option value="90" placeholder="없음">&nbsp;</option>
+				  <option value="90" placeholder="없음">--</option>
 				  <option value="10">사원</option>
 				  <option value="20">주임</option>
 				  <option value="30">대리</option>

@@ -120,9 +120,9 @@
              
              var html = ""
              html += '<tr><td><input type="hidden" value = ' + empno[i] + '></td>'
-             html += '<td><input type="text" style="text-align:center; border:none;" id="mid_text_name" readonly value = ' + name[i] + '></td>'
-             html += '<td><input type="text" style="text-align:center; border:none;" id="mid_text_rank" readonly value = ' + rank[i] + '></td>'
-             html += '<td><input type="text" style="text-align:center; border:none;" id="mid_text_dept" readonly value = ' + dept[i] + '></td></tr>'
+             html += '<td><input type="text" style="text-align:center; border:none;" id="mid_text_name_' + i + '"  readonly value = ' + name[i] + '></td>'
+             html += '<td><input type="text" style="text-align:center; border:none;" id="mid_text_rank_' + i + '" readonly value = ' + rank[i] + '></td>'
+             html += '<td><input type="text" style="text-align:center; border:none;" id="mid_text_dept_' + i + '" readonly value = ' + dept[i] + '></td></tr>'
              
              $("#tbl_middle > tbody:last").append(html)
           }
