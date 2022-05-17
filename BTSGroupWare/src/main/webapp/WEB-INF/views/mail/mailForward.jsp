@@ -431,8 +431,8 @@
 						<input type="hidden" id="importanceVal" name="importanceVal" />
 				</th>
 				<td width="110%" >
-				<%-- 제목에 FW : 붙여주기 --%>
-					<input type="text" id="subject" name="subject" value="${requestScope.mailvo.subject}" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; display: inline-block;" />
+				<%--FW --%>
+					<input type="text" id="subject" name="subject" value="FW: ${requestScope.mailvo.subject}" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; display: inline-block;" />
 				</td>
 			</tr>		
 			<tr>
@@ -459,10 +459,12 @@
 					<textarea rows="20" cols="100" style="width: 1090px; border: solid 1px gray; height: 400px;" name="content" id="content" >					
 					<br><br><br>
 					-----Original Message----- <br>
-					From: <${requestScope.mailvo.sendemail}> <br>
-					To: <${requestScope.mailvo.recemail}> <br>
-					Sent:  <br>
-					Subject:  <br>
+					From: ${requestScope.mailvo.sendempname} (${requestScope.mailvo.sendemail}) <br>
+					To: ${requestScope.mailvo.recempname} (${requestScope.mailvo.recemail}) <br>
+					Sent: <c:if test="${not empty requestScope.mailvo.reservation_date}">${requestScope.mailvo.reservation_date}</c:if>
+						  <c:if test="${empty requestScope.mailvo.reservation_date}">${requestScope.mailvo.reg_date}</c:if>	
+						  <br>
+					Subject: ${requestScope.mailvo.subject} <br>
 					${requestScope.mailvo.content} <br>
 					</textarea>						
 				</td>

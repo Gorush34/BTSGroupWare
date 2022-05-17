@@ -183,8 +183,10 @@
 
 	<!-- 메일 1개 상세내용을 읽어오기 (메일 전달 및 답장을 위함 - 검색타입과 검색명 없음) -->
 	<select id="getRecMailView_noSearch" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
-		select fk_senduser_num, fk_receiveuser_num, recemail, sendemail
-     		 , recempname, sendempname, subject, content, filename, orgfilename
+		select fk_senduser_num, fk_receiveuser_num, recemail, sendemail , recempname, sendempname, subject, content
+     		 , to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+     		 , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+     		 , filename, orgfilename
 		from tbl_mail 
 		where pk_mail_num = to_number(#{pk_mail_num})
 	</select>
@@ -195,6 +197,12 @@
 
 	<!-- ===== 휴지통 시작 ===== -->
 
+	<!-- // 각 메일함 상세보기에서 삭제버튼 클릭 (글 1개)시 해당 글번호 글 휴지통으로 이동하기 (del_status = 1) -->
+	<update id="updateTblMailDelStatus_one" parameterType="HashMap">
+		update tbl_mail set del_status = 1
+		where pk_mail_num = to_number(#{pk_mail_num})
+	</update>
+	
 	<!-- 받은메일함 or 보낸메일함에서 선택한 글번호에 해당하는 메일을 삭제 시, 메일 테이블에서 해당 메일번호의 삭제 상태를 1로 변경해주기 --> 
 	<!-- 메일 테이블에서 해당 메일의 삭제 상태(del_status)를 1로 변경해주기 -->
 	<update id="updateFromTblMailDelStatus" parameterType="HashMap">
@@ -459,10 +467,5 @@
 	
 	<!-- ===== 중요메일함 끝 ===== -->
 
-	<!-- // 각 메일함 상세보기에서 삭제버튼 클릭 (글 1개)시 해당 글번호 글 휴지통으로 이동하기 (del_status = 1) -->
-	<update id="updateTblMailDelStatus_one" parameterType="HashMap">
-		update tbl_mail set del_status = 1
-		where pk_mail_num = to_number(#{pk_mail_num})
-	</update>
 	
 </mapper>

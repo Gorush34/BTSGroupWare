@@ -534,12 +534,15 @@ where rno between #{startRno} and #{endRno}
 
 select *
 from tbl_mail
+where del_status = 1
+order by pk_mail_num desc;
+
 where importance_star_send = 1
 
 
-order by pk_mail_num desc
 
 update tbl_mail set IMPORTANCE_STAR = 0
+
 
 commit;
 
@@ -549,3 +552,6 @@ from tbl_employees;
 select fk_senduser_num, fk_receiveuser_num, recemail, sendemail
      , recempname, sendempname, subject, content, filename, orgfilename
 from tbl_mail 
+
+
+select * from v$resource_limit where resource_name = 'processes';
