@@ -47,7 +47,7 @@
 	
 	<!-- 상세부서정보 페이지에서 사원상세정보 ajax로 select 해오기 -->
 	<select id="addBook_depInfo_select_ajax" parameterType="int" resultType="com.spring.bts.hwanmo.model.EmployeeVO">
-		select E.emp_name , (D.ko_depname) AS ko_depname , (R.ko_rankname) AS ko_rankname , E.uq_email , E.uq_phone , E.address , E.detailaddress , e.extraaddress
+		select E.pk_emp_no , E.emp_name , (D.ko_depname) AS ko_depname , (R.ko_rankname) AS ko_rankname , E.uq_email , E.uq_phone , E.address , E.detailaddress , e.extraaddress
 		from tbl_employees E
 		join tbl_rank_sort R
 		on E.fk_rank_id = r.pk_rank_no
@@ -89,6 +89,13 @@
 		delete from tbl_addBook
 		where PK_ADDBOOK_NO = #{pk_addBook_no} 
 	</delete>
+	
+	<!-- 상세부서정보 페이지에서 관리자로 로그인시 사원상세정보 update 하기 -->
+	<update id="addBook_depInfo_update" parameterType="com.spring.bts.hwanmo.model.EmployeeVO" >
+		UPDATE tbl_employees
+     	SET emp_name = #{emp_name} , fk_department_id = #{fk_department_id} , fk_rank_id = #{fk_rank_id} , uq_email = #{uq_email} , uq_phone = #{uq_phone} , address = #{address} , detailaddress = #{detailaddress} 
+  		WHERE pk_emp_no = #{pk_emp_no}
+	</update>
 	
 	
 
