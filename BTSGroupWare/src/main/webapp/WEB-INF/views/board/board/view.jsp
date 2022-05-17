@@ -202,6 +202,13 @@
  <script>
  $(document).ready(function(){
 		
+	 $("input#commentContent").keydown(function(event){
+			
+			if(event.keyCode == 13) { // 엔터를 했을 경우
+				goAddWrite();	
+			}
+		});
+	 
 	 /// 글삭제
 	 $("button#btnDelete").click(function(){
 		  
@@ -575,7 +582,7 @@
 				        <input type="hidden" name="fk_emp_no" id="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />  
 				         <input type="hidden" name="name" id="name" value="${sessionScope.loginuser.emp_name}" readonly />
 				         <input type="text" name="content" id="commentContent" size="100" />
-				         
+				         <input type="text" style="display: none;"/>
 				         <%-- 댓글에 달리는 원게시물 글번호(즉, 댓글의 부모글 글번호) --%>
 				         <input type="hidden" name="fk_seq" id="fk_seq" value="${requestScope.boardvo.pk_seq}" />
 				         <button type="button" class="btn btn-light" onclick="goAddWrite()">댓글쓰기</button>
@@ -664,6 +671,7 @@
 				<th style="width: 22%; background-color: #DDDDDD;">글암호</th>
 				<td>
 					<input style="width: 100%;" type="password" id="pw" />
+					<input type="text" style="display: none;"/>
 					<input type="hidden" name="pk_seq" value="${boardvo.pk_seq}" readonly />
 					<input type="hidden" name="filename" value="${boardvo.filename}" readonly />
 					<input type="hidden" name="fk_emp_no" value="${boardvo.fk_emp_no}" readonly />

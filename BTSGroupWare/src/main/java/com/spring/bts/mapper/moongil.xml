@@ -886,7 +886,7 @@
 	                  ) A        
 			        ) V
 		 where rno between 1 and 5
-		 order by write_day desc  
+		 order by rno asc
    </select> 
     
     
