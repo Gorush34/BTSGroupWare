@@ -662,4 +662,80 @@ public class CalendarController {
 		
 		return jsonObj.toString();
 	}
+	
+	// == 메인페이지 : 임직원 생일 가져오기 == //
+	@ResponseBody
+	@RequestMapping(value="/calendar/employeeBirthIndex.bts", produces="text/plain;charset=UTF-8")
+	public String employeeBirthIndex() {
+		
+		List<Map<String,String>> birthIndexList = service.employeeBirthIndex();
+	/*	
+		int totalCount=0;          // 총 생일 건수		
+		int currentShowPageNo=0;   // 현재 보여주는 페이지 번호로서, 초기치로는 1페이지로 설정함.
+		int totalPage=0;           // 총 페이지수(웹브라우저상에서 보여줄 총 페이지 개수, 페이지바)  
+		int sizePerPage = 4;  // 한 페이지당 보여줄 행의 개수
+		int startRno=0;            // 시작 행번호
+	    int endRno=0;              // 끝 행번호 
+	    
+	    // 총 생일 건수(totalCount)
+	    totalCount = service.getTotaBirthCount();
+	
+      
+	    totalPage = (int)Math.ceil((double)totalCount/sizePerPage); 
+	*/	
+		JSONArray jsonArr = new JSONArray();
+		
+		for(Map<String,String> map : birthIndexList) {
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("EMP_NAME", map.get("EMP_NAME"));
+			jsonObj.put("BIRTHDAY", map.get("BIRTHDAY"));
+			jsonObj.put("MONTH", map.get("MONTH"));
+			
+			jsonArr.put(jsonObj);
+		}
+		
+		return jsonArr.toString();
+	}
+	
+	// == 메인페이지 : 임직원 생일 가져오기 == //
+	@ResponseBody
+	@RequestMapping(value="/calendar/preMonthBirthIndex.bts", produces="text/plain;charset=UTF-8")
+	public String preMonthBirthIndex(HttpServletRequest request) {
+		
+		String month = request.getParameter("month");
+		
+		List<Map<String,String>> birthIndexList1 = service.preMonthBirthIndex(month);
+		JSONArray jsonArr = new JSONArray();
+		
+		for(Map<String,String> map : birthIndexList1) {
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("EMP_NAME", map.get("EMP_NAME"));
+			jsonObj.put("BIRTHDAY", map.get("BIRTHDAY"));
+			jsonObj.put("MONTH", map.get("MONTH"));
+			
+			jsonArr.put(jsonObj);
+		}	
+		return jsonArr.toString();
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/calendar/nextMonthBirthIndex.bts", produces="text/plain;charset=UTF-8")
+	public String nextMonthBirthIndex(HttpServletRequest request) {
+		
+		String month = request.getParameter("month");
+		
+		List<Map<String,String>> birthIndexList2 = service.nextMonthBirthIndex(month);
+		JSONArray jsonArr = new JSONArray();
+		
+		for(Map<String,String> map : birthIndexList2) {
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("EMP_NAME", map.get("EMP_NAME"));
+			jsonObj.put("BIRTHDAY", map.get("BIRTHDAY"));
+			jsonObj.put("MONTH", map.get("MONTH"));
+			
+			jsonArr.put(jsonObj);
+		}	
+		return jsonArr.toString();
+	}
+	
 }
