@@ -206,9 +206,9 @@ margin: 10px;
 					<td align="center" style="font-size: 9pt; color: gray; width: 60px; ">[${fileboardvo.ko_depname}]</td>
 		
 					<td style="text-align: left;">
-						
-					<span class="subject" onclick="goView('${fileboardvo.pk_seq}')">${fileboardvo.subject}</span>      	
-					  	 
+						<c:if test="${fileboardvo.depthno == 0}">	
+							<span class="subject" onclick="goView('${fileboardvo.pk_seq}')">${fileboardvo.subject}</span>      	
+						</c:if>  	 
 	
 				      	 <c:if test="${fileboardvo.depthno > 0}">
 					      	 	<span class="subject" onclick="goView('${fileboardvo.pk_seq}')"><span style="color: red; font-style: italic; padding-left: ${fileboardvo.depthno * 20}px;">┗Re&nbsp;</span>${fileboardvo.subject}</span>
@@ -236,8 +236,7 @@ margin: 10px;
     <%-- === #101. 글검색 폼 추가하기 : 글제목, 글쓴이로 검색을 하도록 한다. === --%>
     <form name="searchFrm" style="margin-top: 20px; text-align: center;">
 	    <select name="ko_depname" id="ko_depname" style="height: 26px;">
-					<option value="" selected disabled>부서</option>	
-					<option value="">전체</option>
+					<option value="">전체부서</option>
 					<option value="공통">공통</option>
 					<option value="영업">영업</option>				 								
 					<option value="마케팅">마케팅</option>				 								

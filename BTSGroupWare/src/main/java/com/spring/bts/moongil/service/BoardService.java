@@ -528,6 +528,12 @@ public class BoardService implements InterBoardService {
 		return boardMap;
 	}
 
+	@Override
+	public LikeVO getlikeuser(Map<String, String> paraMap) {
+		LikeVO likevo = dao.getlikeuser(paraMap); // 글1개 조회하기
+		return likevo;
+	}
+
 
 
 
