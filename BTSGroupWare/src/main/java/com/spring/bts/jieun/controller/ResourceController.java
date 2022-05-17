@@ -344,9 +344,9 @@ public class ResourceController {
 			
 			
 			int pk_emp_no = loginuser.getPk_emp_no();
-			System.out.println("pk_emp_no" +pk_emp_no);
+			// System.out.println("pk_emp_no" +pk_emp_no);
 			int n = service.reservationCount(pk_emp_no);
-			System.out.println(n);
+			// System.out.println(n);
 			
 			JSONObject jsonObj = new JSONObject();
 			jsonObj.put("n", n);
