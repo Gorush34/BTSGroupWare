@@ -119,6 +119,8 @@ public interface InterBoardDAO {
 
 	List<Map<String, String>> getAll();
 
+	LikeVO getlikeuser(Map<String, String> paraMap);
+
 
 
 

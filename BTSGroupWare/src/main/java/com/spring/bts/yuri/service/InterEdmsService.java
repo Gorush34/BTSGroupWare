@@ -61,6 +61,15 @@ public interface InterEdmsService {
 
 	// 반려 목록 보기
 	List<ApprVO> edmsListSearchWithPaging_reject(Map<String, String> paraMap);
+
+	// 상태 상관없이 전체 리스트 불러오기
+	List<Map<String, Object>> getAllList();
+
+	// 상태가 승인됨인 리스트 불러오기
+	List<Map<String, Object>> getAcceptList();
+
+	// 상태가 반려됨인 리스트 불러오기
+	List<Map<String, Object>> getRejectList();
 	
 	
 }

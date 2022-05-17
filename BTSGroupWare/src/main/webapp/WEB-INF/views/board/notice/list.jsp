@@ -221,6 +221,21 @@ margin: 10px;
 					     </c:if> 	 
 	
 				      	 <c:if test="${noticevo.depthno > 0}">
+				      	 <span style=" <c:set var="text" value="${noticevo.header}"/>
+
+													  <c:if test="${fn:contains(text, '인사')}">
+														color: red;
+													  </c:if>
+													  <c:if test="${fn:contains(text, '부고')}">
+														color: black;
+													  </c:if>
+													  <c:if test="${fn:contains(text, '알려')}">
+														color: blue;
+													  </c:if>
+					      	 	
+					      	 	font-weight: bold; font-size: 10pt;">[&nbsp;${noticevo.header}&nbsp;]&nbsp;</span>
+				      	 
+				      	 
 					      	 	<span class="subject" onclick="goView('${noticevo.pk_seq}')"><span style="color: red; font-style: italic; padding-left: ${noticevo.depthno * 20}px;">┗Re&nbsp;</span>${noticevo.subject}</span>
 					     </c:if> 	 
    	 
