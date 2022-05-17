@@ -118,7 +118,7 @@
 	<!-- 병윤 주소록 레이아웃 시작 -->
 	<definition name="layout_addBook"  template="/WEB-INF/tiles/layout/layout-tiles_addBook.jsp"> 
 		<put-attribute name="header"  value="/WEB-INF/tiles/common/header.jsp" />
-		<put-attribute name="sideinfo"  value="/WEB-INF/tiles/sideinfo/sideinfo_addBook.jsp" />
+<!--  	<put-attribute name="sideinfo"  value="/WEB-INF/tiles/sideinfo/sideinfo_addBook.jsp" /> -->
 		<put-attribute name="content" value="" />
 		<put-attribute name="footer"  value="/WEB-INF/tiles/common/footer.jsp" />
 	</definition>
