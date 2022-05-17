@@ -91,18 +91,18 @@
           		&nbsp; <%-- 큰구분선1 --%>
           	</td>
           	
-          	<td rowspan="4" style="valign: center;">승인</td>
-          	<td style="background-color: #F7F7F7;">이름1</td>
+          	<td rowspan="4" style="valign: center;">#</td>
+          	<td style="background-color: #F7F7F7;">중간결재자</td>
              
-			<td rowspan="4" style="valign: center;">승인</td>
-          	<td style="background-color: #F7F7F7;">이름2</td>
+			<td rowspan="4" style="valign: center;">#</td>
+          	<td style="background-color: #F7F7F7;">최종결재자</td>
 		</tr>
 		
 		<tr>
-			<th>작성자 <input type="text" value="${requestScope.apprvo.fk_emp_no}"></th> 
+			<th>작성자 <input type="text" value="${requestScope.apprvo.fk_emp_no}"></th>
           	<td style="background-color: #F7F7F7;">${requestScope.apprvo.emp_name}&nbsp;[${requestScope.apprvo.ko_rankname}]</td>
-          	<td rowspan="2" style="background-color: #F7F7F7;">중간결재자 사번<br/>&nbsp;[${requestScope.apprvo.fk_mid_empno}]</td>
-			<td rowspan="2" style="background-color: #F7F7F7;">최종결재자 사번<br/>&nbsp;[${requestScope.apprvo.fk_fin_empno}]</td>
+          	<td rowspan="2" style="background-color: #F7F7F7;">${requestScope.apprname.fk_mid_empname}<br/>&nbsp;[${requestScope.apprvo.fk_mid_empno}]</td>
+			<td rowspan="2" style="background-color: #F7F7F7;">${requestScope.apprname.fk_fin_empname}<br/>&nbsp;[${requestScope.apprvo.fk_fin_empno}]</td>
 		</tr>
 		
         <tr>
@@ -114,16 +114,14 @@
 			<th>작성일자</th>
           	<td style="background-color: #F7F7F7;">${requestScope.apprvo.writeday}</td>
           	<td style="background-color: #F7F7F7;">
-          		<c:if test="${requestScope.apprvo.status == 0}">대기중</c:if>
-          		<c:if test="${requestScope.apprvo.status == 1}">중간승인됨</c:if>
-          		<c:if test="${requestScope.apprvo.status == 2}">최종승인됨</c:if>
-          		<c:if test="${requestScope.apprvo.status == 3}">반려됨</c:if>
+          		<c:if test="${requestScope.apprvo.mid_accept eq 0}">대기중</c:if>
+          		<c:if test="${requestScope.apprvo.mid_accept eq 1}"><span style="color:blue;">결재완료</span></c:if>
+          		<c:if test="${requestScope.apprvo.mid_accept eq 2}"><span style="color:red;">반려</span><</c:if>
           	</td>
 			<td style="background-color: #F7F7F7;">
-          		<c:if test="${requestScope.apprvo.status == 0}">대기중</c:if>
-          		<c:if test="${requestScope.apprvo.status == 1}">중간승인됨</c:if>
-          		<c:if test="${requestScope.apprvo.status == 2}">최종승인됨</c:if>
-          		<c:if test="${requestScope.apprvo.status == 3}">반려됨</c:if>
+          		<c:if test="${requestScope.apprvo.mid_accept ne 2 and requestScope.apprvo.fin_accept eq 0}">대기중</c:if>
+          		<c:if test="${requestScope.apprvo.fin_accept eq 1}"><span style="color:blue;">결재완료</span></c:if>
+          		<c:if test="${requestScope.apprvo.mid_accept eq 2 or requestScope.apprvo.fin_accept eq 2}"><span style="color:red;">반려</span></c:if>
           	</td>
 		</tr>
 	</table>
@@ -186,6 +184,18 @@
 						<fmt:formatNumber value="${requestScope.apprvo.fileSize}" pattern="#,###" />
 					</td>
 			</tr>
+			<tr>
+					<th>중간결재자 의견</th>
+					<td>
+						<input type="text" id="mid_opinion" name="mid_opinion" value="${requestScope.apprvo.mid_opinion}" readonly/>
+					</td>
+			</tr>
+			<tr>
+					<th>최종결재자 의견</th>
+					<td>
+						<input type="text" id="fin_opinion" name="fin_opinion" value="${requestScope.apprvo.fin_opinion}" readonly/>
+					</td>
+			</tr>
 			</c:if>
 			
 			
@@ -232,7 +242,7 @@
 			<input type="hidden" value="${requestScope.apprvo.fin_accept }">
 			
 			<%-- 1. 중간결재자가 로그인 한 경우 - 중간버튼만 보인다. --%>
-			<c:if test="${ requestScope.apprvo.fk_mid_empno eq sessionScope.loginuser.pk_emp_no and requestScope.apprvo.mid_accept eq 0 }">
+			<c:if test="${ requestScope.apprvo.fk_mid_empno eq sessionScope.loginuser.pk_emp_no and requestScope.apprvo.mid_accept eq 0 and requestScope.apprvo.fin_accept eq 0 }">
 				<%-- 중간결재자 버튼 시작 --%>
 				<button type="button" class="btn btn-success btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">중간결재1</button>
 				<button type="button" class="btn btn-success btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">중간반려</button>
@@ -247,10 +257,9 @@
 			
 			<%-- 2.최종결재자가 로그인 한 경우 - 최종버튼만 보인다. --%>
 			<input type="text" class="form-control" value="1. sqlsession의 empno = 원글의 mid_emp_no인 경우 && mid_accept 0인 경우 && status = 1/ 2. sqlsession의 empno = 원글의 fin_emp_no인 경우 && mid_accept 1인 경우" readonly ><br/>
-			<c:if test="${ requestScope.apprvo.fk_mid_empno eq sessionScope.loginuser.pk_emp_no and requestScope.apprvo.mid_accept == 0
-					   and requestScope.apprvo.status == 1 || requestScope.apprvo.fk_fin_empno eq sessionScope.loginuser.pk_emp_no and requestScope.apprvo.mid_accept eq 0 }">
-				<button type="button" class="btn btn-danger btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">중간결재3</button>
-				<button type="button" class="btn btn-danger btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">중간반려</button>
+			<c:if test="${ requestScope.apprvo.fk_fin_empno eq sessionScope.loginuser.pk_emp_no and requestScope.apprvo.mid_accept ne 0 and requestScope.apprvo.fin_accept eq 0 }">
+				<button type="button" class="btn btn-danger btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">최종결재</button>
+				<button type="button" class="btn btn-danger btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">최종반려</button>
 			</c:if>
 			
 			

@@ -880,6 +880,12 @@ public class EdmsController {
 	 	String pk_appr_no = request.getParameter("pk_appr_no");
 	 	// 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다. 
 
+	 	// 문서번호로 결재자 이름 알아오기
+	 	Map<String, String> signMap = new HashMap<>();
+	 	signMap = service.getApprSignInfo(pk_appr_no);
+	 	
+	 	mav.addObject("apprname", signMap); // 이름 넣어줌
+	 	
 	 	String fk_emp_no = request.getParameter("fk_emp_no");
 	 	System.out.println("~~~~~ view.bts에서 확인용 fk_emp_no " + fk_emp_no);
 //	 	System.out.println("~~~~~ view.bts에서 확인용 apprvo.getFk_emp_no => " + apprvo.getFk_emp_no());
@@ -1200,11 +1206,18 @@ public class EdmsController {
 	
 	// === 승인하기 페이지 요청하기 === //
 	@RequestMapping(value="/edms/appr/accept.bts")
-	public ModelAndView requiredLogin_accept(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
+	public ModelAndView requiredLogin_accept(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, ApprVO apprvo) { 
 		
 		// 승인할 문서번호 가져오기
 		String pk_appr_no = request.getParameter("pk_appr_no");
 		
+		// 문서번호 통해 문서정보 가져오기
+		apprvo = service.getApprInfo(pk_appr_no);
+		
+		// System.out.println("왜안받아와? : " + apprvo.getMid_accept());
+		// System.out.println("왜안받아와? : " + apprvo.getFin_accept());
+		/*
+		 
 		// 중간/최종결재자 사번 가져오기
 		String fk_mid_empno = request.getParameter("fk_mid_empno");
 		String fk_fin_empno = request.getParameter("fk_fin_empno");
@@ -1222,7 +1235,9 @@ public class EdmsController {
 		
 		HttpSession session = request.getSession();
 		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
-
+		
+		*/
+		
 /*	
 		System.out.println("승인 확인용 문서번호 pk_appr_no " + pk_appr_no);
 		System.out.println("승인 확인용 apprvo.getTitle() " + apprvo.getTitle());
@@ -1241,6 +1256,7 @@ public class EdmsController {
 		or연산자: 둘 중 하나라도 true이면 true.
 		( | 는 전체검사, ||는 앞쪽 조건만 true면 우항을 검사하지 않아서 속도 빠름 )
 */		
+		/*
 		// 1. 로그인한 사용자가 결재자가 아닌 경우 
 		if( loginuser.getPk_emp_no() != apprvo.getFk_mid_empno() 
 				&& loginuser.getPk_emp_no() != apprvo.getFk_fin_empno() ) { 
@@ -1272,16 +1288,19 @@ public class EdmsController {
 			
 		//	System.out.println("최종결재 mav 확인용 empno " + apprvo.getFk_fin_empno());	
 		}
+		*/
+		
 		
 		mav.addObject("apprvo", apprvo);
-		
+		mav.setViewName("appr/accept.edms");
 		return mav;
 	}
 
 	// === 승인하기 페이지 완료하기 === //
 	@RequestMapping(value="/edms/appr/acceptEnd.bts", method= {RequestMethod.POST})
-	public ModelAndView acceptEnd(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView acceptEnd(ModelAndView mav, HttpServletRequest request, ApprVO apprvo) {
 		
+		/*
 		String pk_appr_no = request.getParameter("pk_appr_no");
 		
 		Map<String, String> paraMap = new HashMap<>();
@@ -1296,7 +1315,31 @@ public class EdmsController {
 		// 그런데 apprvo에는 pk_emp_no 같은 게 없으므로 fk_emp_no에 임시로 로그인한 사용자 값을 넣어준다.
 		
 		int n = service.accept(apprvo);
-
+		*/
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+		int pk_emp_no = loginuser.getPk_emp_no();
+		
+		if(apprvo.getMid_opinion() == null) {
+			apprvo.setMid_opinion("");
+		}
+		
+		if(apprvo.getFin_opinion() == null) {
+			apprvo.setFin_opinion("");
+		}
+		
+		if(pk_emp_no == apprvo.getFk_mid_empno()) {
+			// 중간관리자라면
+			apprvo.setMid_accept("1"); // 승인 값 넣어줌
+		}
+		else if(pk_emp_no == apprvo.getFk_fin_empno()) {
+			// 최종관리자라면
+			apprvo.setFin_accept("1"); // 승인 값 넣어줌
+		}
+		
+		// 승인 처리하기
+		int n = service.updateAppr(apprvo);
+		
 		if(n==1) {
 			mav.addObject("message", "승인 성공!!");
 			mav.addObject("loc", request.getContextPath()+"/edms/list.bts");
@@ -1314,11 +1357,15 @@ public class EdmsController {
 	
 	// === 반려하기 페이지 요청하기 === //
 	@RequestMapping(value="/edms/appr/reject.bts")
-	public ModelAndView requiredLogin_reject(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
+	public ModelAndView requiredLogin_reject(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, ApprVO apprvo) { 
 		
 		// 반려할 문서번호 가져오기
 		String pk_appr_no = request.getParameter("pk_appr_no");
 		
+		// 문서번호 통해 문서정보 가져오기
+		apprvo = service.getApprInfo(pk_appr_no);
+		
+		/*
 		// 중간/최종결재자 사번 가져오기
 		String fk_mid_empno = request.getParameter("fk_mid_empno");
 		String fk_fin_empno = request.getParameter("fk_fin_empno");
@@ -1370,18 +1417,22 @@ public class EdmsController {
 		else if( loginuser.getPk_emp_no() == apprvo.getFk_fin_empno() ) {
 			mav.addObject("pk_appr_no", pk_appr_no);
 			mav.addObject("fk_mid_empno", apprvo.getFk_fin_empno());
-			mav.setViewName("appr/reject.edms");
+			
 		}
+		*/
 		
 		mav.addObject("apprvo", apprvo);
+		mav.setViewName("appr/reject.edms");
 		
 		return mav;
-	}
+	} // end of public ModelAndView requiredLogin_reject(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
 
+	
 	// === 반려하기 페이지 완료하기 === //
 	@RequestMapping(value="/edms/appr/rejectEnd.bts", method= {RequestMethod.POST})
-	public ModelAndView rejectEnd(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView rejectEnd(ModelAndView mav, HttpServletRequest request, ApprVO apprvo) {
 		
+		/*
 		String pk_appr_no = request.getParameter("pk_appr_no");
 		
 		Map<String, String> paraMap = new HashMap<>();
@@ -1396,6 +1447,26 @@ public class EdmsController {
 		apprvo.setFk_emp_no(loginuser.getPk_emp_no());
 		
 		int n = service.reject(apprvo);
+		*/
+		
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+		int pk_emp_no = loginuser.getPk_emp_no();
+		
+		if(apprvo.getMid_opinion() == null) {
+			apprvo.setMid_opinion("의견없음");
+		}
+		
+		if(apprvo.getFin_opinion() == null) {
+			apprvo.setFin_opinion("의견없음");
+		}
+		
+		apprvo.setFin_accept("2"); // 반려 값 넣어줌
+		
+		System.out.println("최종반려 : " + apprvo.getFin_accept());
+		
+		// 반려 처리하기
+		int n = service.updateAppr(apprvo);
 		
 		if(n==1) {
 			mav.addObject("message", "반려 성공!!");

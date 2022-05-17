@@ -233,6 +233,27 @@ public class EdmsService implements InterEdmsService {
 		List<Map<String, Object>> waitingList = dao.waitingSignListWithPaging(paraMap);
 		return waitingList;
 	}
+
+	// 문서번호 통해 문서정보 가져오기
+	@Override
+	public ApprVO getApprInfo(String pk_appr_no) {
+		ApprVO apprvo = dao.getApprInfo(pk_appr_no);
+		return apprvo;
+	}
+
+	// 승인 처리하기
+	@Override
+	public int updateAppr(ApprVO apprvo) {
+		int n = dao.updateAppr(apprvo);
+		return n;
+	}
+
+	// 문서번호로 결재자 이름 알아오기
+	@Override
+	public Map<String, String> getApprSignInfo(String pk_appr_no) {
+		Map<String, String> signMap = dao.getApprSignInfo(pk_appr_no);
+		return signMap;
+	}
 	
 	
 	
