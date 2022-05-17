@@ -381,7 +381,7 @@
 <div class="container" style="width: 100%; margin: 50px;">
 	<div class="row bg-title" style="border-bottom: solid 1.5px #e6e6e6;">	
 		<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-			<h4 class="page-title" style="color: black;">메일 쓰기</h4>
+			<h4 class="page-title" style="color: black;">내게 쓰기</h4>
 		</div>
 	</div>
 	
@@ -391,7 +391,7 @@
 			<i class="fa fa-send-o fa-fw" aria-hidden="true"></i>
 			보내기
 			</button>
-		</li>		
+		</li>	
 		<li class="buttonList">
 			<button type="button" id="tempSave" class="btn btn-secondary btn-sm">
 			<i class="fa fa-pencil-square-o fa-fw" aria-hidden="true"></i>
@@ -399,11 +399,11 @@
 			</button>
 		</li>	
 		<li class="buttonList">
-			<button type="button" id="writeToMe" class="btn btn-secondary btn-sm" onclick="location.href='/bts/mail/mailSendToMeWrite.bts'">
+			<button type="button" id="writeMail" class="btn btn-secondary btn-sm" onclick="location.href='/bts/mail/mailWrite.bts'">
 			<i class="fa fa-pencil-square-o fa-fw" aria-hidden="true"></i>
-			내게쓰기
+			메일쓰기
 			</button>
-		</li>			
+		</li>	
 		<li class="buttonList">
 			<button type="button" id="reset" class="btn btn-secondary btn-sm">
 			<i class="fa fa-refresh fa-fw" aria-hidden="true"></i>
@@ -416,10 +416,11 @@
 	<form name="mailWriteFrm" enctype="multipart/form-data" class="form-horizontal" style="margin-top: 20px;">
 		<table id="mailWriteTable">
 			<tr>
-				<th width="14%">받는 사람</th>
-				<td width="86%" data-toggle="tooltip" data-placement="top" title="">
-					<input type="text" id="recemail" name="recemail" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
-					
+			<%-- 받는 사람을 hidden으로 하되, value 를 로그인한 사람으로 설정해두기. --%>
+			<%--<th width="14%">받는 사람</th> --%>	
+				<td width="10%" data-toggle="tooltip" data-placement="top" title="">
+					<input type="hidden" id="recemail" name="recemail" value="${sessionScope.loginuser.uq_email}" style="width: 800px; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
+										
 					<%-- hidden 타입으로 데이터값 보내기 --%>
 			     	<input type="hidden" id="sendemail" name="sendemail" value="${sessionScope.loginuser.uq_email}" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " /> 
 					<input type="hidden" id="fk_senduser_num" name="fk_senduser_num" value="${sessionScope.loginuser.pk_emp_no}"  style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
@@ -427,7 +428,6 @@
                		<%-- 임시저장의 경우 --%>
                		<input type="hidden" name="temp_status" id="temp_status" value="${temp_status}"/> 
                		<input type="hidden" name="pk_mail_num" id="pk_mail_num" value="${requestScope.mailvo.pk_mail_num}"/> 
-					<button type="button" class="btn btn-secondary btn-sm">주소록</button>
 				</td>
 			</tr>
 			<tr>
@@ -476,73 +476,4 @@
 			<span id="reservationTime" style="margin-left: 20px;"></span>
 		</li>	
 	</ul>	
-</div>
-
-<%-- 발송예약 모달 --%>
-<div id="sendReservation_Modal" class="modal fade" role="dialog" data-keyword="false" data-backdrop="static">
-  <div class="modal-dialog" style="width: 400px;">
-  
-    <div class="modal-content">   
-      <div class="modal-header" style="height: 60px;">
-        <h5 class="modal-title" id="staticBackdropLabel">발송예약</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      
-      <div class="modal-body">
-      	<div id="sendReservation">
-      		<%-- 발송예약 모달 내용 시작 --%>
-	      		
-	      		<div id="sendReservation_content">
-		      		<%-- 모달 form 태그 시작 --%>
-					<form>
-						<div class="form-group form-wrap form-sendDate">
-							<label for="resSendDate" class="sendLabel">발송날짜 :</label>
-							<input type="date" id="resSendDate" />
-						</div>
-						
-						<div class="form-group form-wrap">
-							<label for="selectSendTime" class="sendLabel">발송시간 : </label>
-							<select class="form-control" id="resSendTimeHour" style="display:inline-block; height: 35px; width: 70px;">
-							  	<c:forEach begin="0" end="9" varStatus="loop">
-							  		 <option>0${loop.index}</option>
-							  	</c:forEach>
-							  	<c:forEach begin="0" end="9" varStatus="loop">
-							  		 <option>1${loop.index}</option>
-							  	</c:forEach>	
-							  	<c:forEach begin="0" end="3" varStatus="loop">
-							  		 <option>2${loop.index}</option>
-							  	</c:forEach>
-							</select>
-						  	<span>시</span>		
-							<select class="form-control" id="resSendTimeMinute" style="display:inline-block; height: 35px; width: 70px;">
-							  	<option>00</option>
-							  	<option>05</option>
-						  		<option>10</option>
-						  		<option>15</option>
-						  		<option>20</option>
-						  		<option>25</option>
-						  		<option>30</option>
-						  		<option>35</option>
-						  		<option>40</option>
-						  		<option>45</option>
-						  		<option>50</option>
-						  		<option>55</option>
-							</select>	
-							<span>분</span>					  								
-						</div>
-					</form> 	
-		      		<%-- 모달 form 태그 끝 --%>
-	      		</div>	      		
-      		<%-- 발송예약 모달 내용 끝 --%>
-      	</div>
-      </div>
-      
-      <div class="modal-footer">
-        <button type="button" class="btn" style="border: solid 1px gray; background-color: #e6e6e6;" onclick="sendReservationOk()">확인</button>
-        <button type="button" class="btn btn-light" data-dismiss="modal" style="border: solid 1px gray">취소</button>
-      </div>
-    </div>    
-  </div>
 </div>

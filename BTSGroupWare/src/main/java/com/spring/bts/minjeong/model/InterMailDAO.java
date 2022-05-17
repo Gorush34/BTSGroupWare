@@ -114,6 +114,15 @@ public interface InterMailDAO {
 
 	// 각 메일함 상세보기에서 삭제버튼 클릭 (글 1개)시 해당 글번호 글 휴지통으로 이동하기 (del_status = 1)
 	int updateTblMailDelStatus_one(Map<String, String> paraMap);
+
+	// 총 내게 쓴 메일 건수 구해오기
+	int getTotalCount_sendToMe(Map<String, String> paraMap);
+
+	// 페이징처리 한 내게쓴 메일목록 (검색 있든, 없든 모두 다 포함) 
+	List<MailVO> sendToMeListSearchWithPaging(Map<String, String> paraMap);
+
+	// 내게쓴 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
+	MailVO getSendToMeMailView(Map<String, String> paraMap);
 	
 
 }

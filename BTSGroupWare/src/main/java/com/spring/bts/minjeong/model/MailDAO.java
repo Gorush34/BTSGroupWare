@@ -284,6 +284,27 @@ public class MailDAO implements InterMailDAO {
 		return n;
 	}
 
+	// 총 내게 쓴 메일 건수 구해오기
+	@Override
+	public int getTotalCount_sendToMe(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("minjeong.getTotalCount_sendToMe", paraMap);
+		return n;
+	}
+
+	// 페이징처리 한 내게쓴 메일목록 (검색 있든, 없든 모두 다 포함) 
+	@Override
+	public List<MailVO> sendToMeListSearchWithPaging(Map<String, String> paraMap) {
+		List<MailVO> sendToMeList = sqlsession.selectList("minjeong.sendToMeListSearchWithPaging", paraMap);
+		return sendToMeList;
+	}
+
+	// 내게쓴 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
+	@Override
+	public MailVO getSendToMeMailView(Map<String, String> paraMap) {
+		MailVO getSendToMeMailView = sqlsession.selectOne("minjeong.getSendToMeMailView", paraMap);
+		return getSendToMeMailView;
+	}
+
 
 
 }
