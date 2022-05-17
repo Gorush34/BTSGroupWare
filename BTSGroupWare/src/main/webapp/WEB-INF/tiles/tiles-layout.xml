@@ -211,7 +211,7 @@
 	</definition>
 	<!-- 환모 근태 레이아웃 끝 -->
 	
-	<!-- 지은 일정 레이아웃 시작 -->
+	<!-- 지은 자원 레이아웃 시작 -->
 	<definition name="layout_resource"  template="/WEB-INF/tiles/layout/layout-tiles_resource.jsp"> 
 		<put-attribute name="header"  value="/WEB-INF/tiles/common/header.jsp" />
 		<put-attribute name="content" value="" />
@@ -227,7 +227,25 @@
 	<definition name="*/*/*.resource" extends="layout_resource">
 		<put-attribute name="content" value="/WEB-INF/views/resource/{1}/{2}/{3}.jsp"/>
 	</definition>
-	<!-- 지은 일정 레이아웃 끝 -->
+	<!-- 지은 자원 레이아웃 끝 -->
+	
+	<!-- 지은 투두 레이아웃 시작 -->
+	<definition name="layout_todolist"  template="/WEB-INF/tiles/layout/layout-tiles_todolist.jsp"> 
+		<put-attribute name="header"  value="/WEB-INF/tiles/common/header.jsp" />
+		<put-attribute name="content" value="" />
+		<put-attribute name="footer"  value="/WEB-INF/tiles/common/footer.jsp" />
+	</definition>
+	
+	<definition name="*.todo" extends="layout_todolist">
+		<put-attribute name="content" value="/WEB-INF/views/todolist/{1}.jsp"/>
+	</definition>
+	<definition name="*/*.todo" extends="layout_todolist">
+		<put-attribute name="content" value="/WEB-INF/views/todolist/{1}/{2}.jsp"/>
+	</definition>
+	<definition name="*/*/*.todo" extends="layout_todolist">
+		<put-attribute name="content" value="/WEB-INF/views/todolist/{1}/{2}/{3}.jsp"/>
+	</definition>
+	<!-- 지은 투두 레이아웃 끝 -->
 	
 </tiles-definitions> 
 
