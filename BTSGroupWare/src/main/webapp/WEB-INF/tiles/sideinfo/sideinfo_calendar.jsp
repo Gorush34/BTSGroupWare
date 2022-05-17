@@ -176,6 +176,28 @@
 		});
 		//////////////////////////////////////////////////
 		
+		// 추가창에서 엔터를 친 경우
+		  $("input.addCom_calname").keyup(function(event){
+			 if(event.keyCode == 13){ 
+				 goAddComCal();
+			 }
+		  });
+		  $("input.addMy_calname").keyup(function(event){
+			 if(event.keyCode == 13){ 
+				 goAddMyCal();
+			 }
+		  });
+		  $("input.editCom_calname").keyup(function(event){
+			 if(event.keyCode == 13){ 
+				 goEditComCal();
+			 }
+		  });
+		  $("input.editMy_calname").keyup(function(event){
+			 if(event.keyCode == 13){ 
+				 goEditMyCal();
+			 }
+		  });
+		
 	});// end of $(document).ready(function(){}-------------------
 
 			
@@ -197,6 +219,10 @@
 	 		  alert("추가할 사내캘린더 소분류명을 입력하세요!!");
 	 		  return;
 	 	}
+		if($("input.addCom_calname").val().length > 50){
+			  alert("50자 이내로 입력하세요!!");
+	 		  return;
+		}
 		
 	 	else {
 	 		 $.ajax({
@@ -334,6 +360,10 @@
 	 		  alert("추가할 사내캘린더 소분류명을 입력하세요!!");
 	 		  return;
 	 	}
+		if($("input.addMy_calname").val().length > 50){
+			  alert("50자 이내로 입력하세요!!");
+	 		  return;
+		}
 		
 	 	else {
 	 		 $.ajax({
