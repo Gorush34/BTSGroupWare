@@ -69,7 +69,7 @@
 
 	<div>
 	   <div id="sidebar" style="font-size: 11pt;">
-		 <h4>캘린더</h4>
+		 <h4>주소록</h4>
 		 
 	<%--	   <input type="hidden" value="${sessionScope }" id="fk_emp_no"> --%>
 		 
