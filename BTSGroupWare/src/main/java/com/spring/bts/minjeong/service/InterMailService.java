@@ -107,5 +107,8 @@ public interface InterMailService {
 	// 메일 1개 상세내용을 읽어오기 (메일 전달 및 답장을 위함 - 검색타입과 검색명 없음)
 	MailVO getRecMailView_noSearch(Map<String, String> paraMap);
 
+	// 각 메일함 상세보기에서 삭제버튼 클릭 (글 1개)시 해당 글번호 글 휴지통으로 이동하기 (del_status = 1)
+	int updateTblMailDelStatus_one(Map<String, String> paraMap);
+
 	
 }

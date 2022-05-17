@@ -392,14 +392,12 @@
 			보내기
 			</button>
 		</li>	
-		<%--
 		<li class="buttonList">
 			<button type="button" id="tempSave" class="btn btn-secondary btn-sm">
 			<i class="fa fa-pencil-square-o fa-fw" aria-hidden="true"></i>
 			임시저장
 			</button>
 		</li>	
-		 --%>
 		<li class="buttonList">
 			<button type="button" id="reset" class="btn btn-secondary btn-sm">
 			<i class="fa fa-refresh fa-fw" aria-hidden="true"></i>

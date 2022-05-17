@@ -277,6 +277,13 @@ public class MailDAO implements InterMailDAO {
 		return recMailView_noSearch;
 	}
 
+	// 각 메일함 상세보기에서 삭제버튼 클릭 (글 1개)시 해당 글번호 글 휴지통으로 이동하기 (del_status = 1)
+	@Override
+	public int updateTblMailDelStatus_one(Map<String, String> paraMap) {
+		int n = sqlsession.update("minjeong.updateTblMailDelStatus_one", paraMap);
+		return n;
+	}
+
 
 
 }

@@ -459,5 +459,10 @@
 	
 	<!-- ===== 중요메일함 끝 ===== -->
 
+	<!-- // 각 메일함 상세보기에서 삭제버튼 클릭 (글 1개)시 해당 글번호 글 휴지통으로 이동하기 (del_status = 1) -->
+	<update id="updateTblMailDelStatus_one" parameterType="HashMap">
+		update tbl_mail set del_status = 1
+		where pk_mail_num = to_number(#{pk_mail_num})
+	</update>
 	
 </mapper>

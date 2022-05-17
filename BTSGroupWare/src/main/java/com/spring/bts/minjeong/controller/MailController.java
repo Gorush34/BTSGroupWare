@@ -59,12 +59,13 @@ public class MailController {
 	// 메일 쓰기 폼페이지 요청 (추후 로그인 AOP 추가 requiredLogin_) 
 	@RequestMapping(value = "/mail/mailWrite.bts", produces = "text/plain; charset=UTF-8")	
 	public ModelAndView requiredLogin_mailWrite(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
-		/*
-		 * // 로그인 세션 요청하기 HttpSession session = request.getSession(); 
-		 * EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
-		 * 
-		 * mav.addObject("loginuser", loginuser);
-		 */
+		
+		 // 로그인 세션 요청하기 
+		 HttpSession session = request.getSession(); 
+		 EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
+		 
+		 mav.addObject("loginuser", loginuser);
+		 
 		// 메일 쓰기 폼 띄우기		
 		mav.setViewName("mailWrite.mail");	// view 단
 		
@@ -417,7 +418,8 @@ public class MailController {
 	// URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
 	// http://localhost:9090/bts/tiles1/mailList.bts
 	public ModelAndView requiredLogin_mailList(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
-	
+
+		
 		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
 		HttpSession session = request.getSession();
 		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
@@ -1279,10 +1281,20 @@ public class MailController {
 		// 성공 시 임시보관함 목록으로 이동
 		// DB 에 insert 가 성공적으로 됐을 때 / 실패했을 때
 		if(n==1) {
-			mav.setViewName("mailTemporarySuccess.mail");
+			String message = "메일을 임시보관함으로 이동했습니다.";
+			String loc = "javascript:history.go(-2)";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+			mav.setViewName("msg");				
 		}
 		else {// 실패 시 메일쓰기로 이동 (back)		
-	//		mav.setViewName("redirect:/mailWrite.bts");
+			String message = "메일을 임시보관함으로 이동하는데 실패했습니다.";
+			String loc = "javascript:history.go(0)";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+			mav.setViewName("msg");	
 		}
 		
 		return mav;
@@ -1960,6 +1972,55 @@ public class MailController {
 	
 	// =========================== 휴지통  =========================== //
 	// 휴지통에서 삭제 클릭시 아예 메일 테이블에서 해당 글 삭제하기
+	
+	// 각 메일함 상세보기에서 삭제버튼 클릭 (글 1개)시 해당 글번호 글 휴지통으로 이동하기 (del_status 를 1 로)
+	//  메일 전달쓰기 시 폼 페이지 요청 (이전에 썼던 내용들을 갖고온다. --> 메일쓰기로 보내서 insert 함.)
+	@RequestMapping(value = "/mail/mailMoveToRecyclebin_one.bts")	
+	public ModelAndView mailMoveToRecyclebin_one(HttpServletRequest request, ModelAndView mav) {
+		// 임시보관함 같은 경우에는 내용읽기를 요청 했을 때, 
+		// 1. 메일쓰기 form 이 떠야하고 & 이전에 입력했던 내용들이 모두 들어와 있어야 한다. (select 해오기)
+		// 2. 이전에 입력했던 내용들에서 다시 임시저장 클릭했을 때 임시보관함으로 이동할 수 있다.
+		
+		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+		
+		// view 단에서 요청한 검색타입 및 검색어, 글번호 받아오기
+		String pk_mail_num = request.getParameter("pk_mail_num");	// 글번호
+	//	System.out.println("확인용 pk_mail_num : " + pk_mail_num);
+		
+			// 글 내용 한개 뿐만 아니라 검색도 해야하므로 Map 에 담는다.
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("pk_mail_num", pk_mail_num);
+			
+			// map 에 담은 pk_mail_num 을 view 단으로 보낸다.
+		//	mav.addObject("paraMap", paraMap);
+
+			int n = 0;
+			n = service.updateTblMailDelStatus_one(paraMap);
+			if(n==1) {
+				// 상세내용보기에서 삭제버튼 클릭 시 휴지통으로 이동 성공 (del_status = 1)
+				// 각 페이지의 목록함으로 보내준다.			
+			//	System.out.println("임시보관함에서 "+pk_mail_num+"번 글이 휴지통으로 이동에 성공했습니다. ");
+				String message = "메일을 휴지통으로 이동했습니다.";
+				String loc = "javascript:history.go(-2)";
+				
+				mav.addObject("message", message);
+				mav.addObject("loc", loc);
+				mav.setViewName("msg");	
+			}
+			else {
+				// 상세내용보기에서 삭제버튼 클릭 시 휴지통으로 이동 실패 
+			//	System.out.println("임시보관함에서 "+pk_mail_num+"번 글이 휴지통으로 이동에 실패했습니다. ");
+				String message = "메일을 휴지통으로 이동하는데 실패했습니다.";
+				String loc = "javascript:history.back()";
+				
+				mav.addObject("message", message);
+				mav.addObject("loc", loc);
+				mav.setViewName("msg");
+			}
+			// 이전글 및 다음글 보여주기
+			return mav;
+	}	
+		
 	
 	// 받은메일함 및 보낸메일함 목록에서 메일 선택 시 휴지통으로 이동하기 (aJax, @ResponseBody)
 	// 받은메일함에서 삭제할 메일 선택 후 삭제버튼 클릭 시 휴지통목록으로 해당 메일 이동
