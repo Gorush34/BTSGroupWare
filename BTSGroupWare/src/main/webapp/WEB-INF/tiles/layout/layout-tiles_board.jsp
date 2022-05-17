@@ -38,23 +38,29 @@
   <script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery.form.min.js"></script>
 
 <style>
-	/* 헤더 스타일  시작 */
+/* 헤더 스타일  시작 */
 
 li.login_dropdown  { 
-   list-style: none;
-   display: inline-block;
+	list-style: none !important;
+	display: inline-block !important;
 }
 
 img#memberProfile {
-   max-width: 40px;
-   max-height: 40px;
-   border-radius: 100%;
+	max-width: 40px !important;
+	max-height: 40px !important;
+	border-radius: 100% !important;
 }
 
 ul#secondHeaderGroup, .secondHeaderList {
-      list-style-type: none;
-      display: inline-block;
+		list-style-type: none !important;
+		display: inline-block !important;
 }
+#navbarSupportedContent > ul > li {
+	margin-right: 20px !important;
+	font-size: 18px !important;
+}
+
+body {font-family: 'Noto Sans KR', sans-serif !important; }
 
 /* 헤더 스타일  끝 */
 

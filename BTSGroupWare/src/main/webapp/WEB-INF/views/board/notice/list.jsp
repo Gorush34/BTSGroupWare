@@ -187,7 +187,7 @@ margin: 10px;
 		
 				  <td align="center" style="width: 25px;">
 			         <c:if test="${not empty noticevo.filename}">
-			         <img style="width=12px;" src="<%= ctxPath%>/resources/images/disk.gif" />	
+			         <img style="width:12px;" src="<%= ctxPath%>/resources/images/disk.gif" />	
 			         </c:if>          
 			      </td>
 		
