@@ -48,7 +48,8 @@
 		<p style="margin-bottom: 10px;"></p>
 	</div>
 
- 
+ 	<span class="edms_title">기본정보</span>
+	
 	<c:if test="${empty requestScope.apprvo}">
 		<table class="table table-sm table-light">
 			<tr>
@@ -63,13 +64,12 @@
 		</table>
 	</c:if>
 	
-	
 	<c:if test="${not empty requestScope.apprvo}">
 
 	<div id="edms_view">
 	
 	<!-- ------------------------------------------------------------------------ -->
-<!-- <form name="viewfrm"> -->
+
 	<table style="width: 100%" class="table table-bordered">
 		<colgroup>
 		<col style="width: 16%; background-color: #e8e8e8;" />
@@ -80,6 +80,7 @@
 		<col style="width: 4%; background-color: #e8e8e8;" />
 		<col style="width: 8%;" />
 		</colgroup>
+		
 		
 		<tr>
 			<th>문서양식</th>
@@ -99,9 +100,9 @@
 		</tr>
 		
 		<tr>
-			<th>작성자 <input type="text" value="${requestScope.apprvo.fk_emp_no}"></th>
+			<th>작성자 <input type="hidden" value="${requestScope.apprvo.fk_emp_no}"></th>
           	<td style="background-color: #F7F7F7;">${requestScope.apprvo.emp_name}&nbsp;[${requestScope.apprvo.ko_rankname}]</td>
-          	<td rowspan="2" style="background-color: #F7F7F7;">${requestScope.apprname.fk_mid_empname}<br/>&nbsp;[${requestScope.apprvo.fk_mid_empno}]</td>
+          	<td rowspan="2" style="background-color: #F7F7F7; valign: middle;">${requestScope.apprname.fk_mid_empname}<br/>&nbsp;[${requestScope.apprvo.fk_mid_empno}]</td>
 			<td rowspan="2" style="background-color: #F7F7F7;">${requestScope.apprname.fk_fin_empname}<br/>&nbsp;[${requestScope.apprvo.fk_fin_empno}]</td>
 		</tr>
 		
@@ -161,28 +162,31 @@
 				</td>
 			</tr>
 			
-			<c:if test="${requestScope.filename ne '' || requestScope.filename ne null }"> 
 			<tr>
 				<th class="edmsView_th">첨부파일</th>
-				<td>
-					<%-- 로그인을 한 경우 --%>
-					<c:if test="${sessionScope.loginuser != null}">
-						<a href="<%= request.getContextPath()%>/edms/download.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}">${requestScope.apprvo.orgfilename}</a>
-					</c:if>
-					<%-- 로그인을 한 경우 --%>
-					
-					<%-- 로그인을 안 한 경우 --%>
-					<c:if test="${sessionScope.loginuser == null}">
-						${requestScope.apprvo.orgfilename}		<%-- 로그인을 안 했을 때는 진짜 파일명만 보여준다. --%>
-					</c:if>
-					<%-- 로그인을 안 한 경우 --%>
-				</td>
-			</tr>
-			<tr>
-					<th>파일크기(bytes)</th>
+				<!-- 첨부파일이 있는 경우 시작 -->
+				<c:if test="${requestScope.filename ne '' || requestScope.filename ne null }"> 
 					<td>
-						<fmt:formatNumber value="${requestScope.apprvo.fileSize}" pattern="#,###" />
+						<%-- 로그인을 한 경우 --%>
+						<c:if test="${sessionScope.loginuser != null}">
+							<a href="<%= request.getContextPath()%>/edms/download.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}">${requestScope.apprvo.orgfilename}</a>
+						</c:if>
+						<%-- 로그인을 한 경우 --%>
+						
+						<%-- 로그인을 안 한 경우 --%>
+						<c:if test="${sessionScope.loginuser == null}">
+							${requestScope.apprvo.orgfilename}		<%-- 로그인을 안 했을 때는 진짜 파일명만 보여준다. --%>
+						</c:if>
+						<%-- 로그인을 안 한 경우 --%>
 					</td>
+				</c:if>				
+			</tr>
+			
+			<tr>
+				<th>파일크기(bytes)</th>
+				<td>
+					<fmt:formatNumber value="${requestScope.apprvo.fileSize}" pattern="#,###" />
+				</td>
 			</tr>
 			<tr>
 					<th>중간결재자 의견</th>
@@ -196,7 +200,6 @@
 						<input type="text" id="fin_opinion" name="fin_opinion" value="${requestScope.apprvo.fin_opinion}" readonly/>
 					</td>
 			</tr>
-			</c:if>
 			
 			
 		</table>
@@ -219,6 +222,7 @@
 			
 			<input type="hidden" class="form-control" value="1. loginuser != null && 글쓴 사람이 아니고 승인자도 아닌 경우" readonly ><br/>
 			<%-- 페이징 처리되어진 후 특정 글제목을 클릭하여 상세내용을 본 이후 사용자가 목록보기 버튼을 클릭했을 때 돌아갈 페이지를 알려주기 위해 현재 페이지 주소를 뷰단으로 넘겨준다. --%>
+			
 			<button type="button" class="btn btn-dark btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/list.bts'">목록으로 돌아가기</button>
 			<button type="button" class="btn btn-dark btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>${requestScope.gobackURL}'">검색결과 목록으로</button>
 			<br/><hr>

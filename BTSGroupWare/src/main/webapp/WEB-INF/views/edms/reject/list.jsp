@@ -57,29 +57,9 @@
 								// 검색어(JaVa)가 나오는  idx는  6이 된다(0부터 세고 공백도 세니까)
 								
 								const len = $("input#searchWord").val().length;
-								// 검색어(JaVa)의 길이 len 은 4가 된다.
-								
+																
 								// substr은 오라클과 같고, substring은 java와 같다!
 							
-								// JAVA 방식	
-								/*
-								console.log("~~~~~~~~~~~ 시작 ~~~~~~~~~~~");
-								console.log(word.substring(0, idx));		// 검색어(JaVa) 앞까지의 글자 => "프로그램은"
-								console.log(word.substring(idx, idx+len));	// 검색어(JaVa) 글자 => "JAVA"
-								console.log(word.substring(idx+len));	// 검색어(JaVa) 뒤부터 끝까지 글자 => " 가 쉬운가요?"
-								console.log("~~~~~~~~~~~ 끝 ~~~~~~~~~~~");
-								*/
-								
-								// 오라클 방식
-								/*
-								console.log("~~~~~~~~~~~ 시작 ~~~~~~~~~~~");
-								console.log(word.substr(0, idx));		// 검색어(JaVa) 앞까지의 글자 => "프로그램은"
-								console.log(word.substr(idx, len));	// 검색어(JaVa) 글자 => "JAVA"
-								console.log(word.substring(len?);	// 검색어(JaVa) 뒤부터 끝까지 글자 => " 가 쉬운가요?"
-								console.log("~~~~~~~~~~~ 끝 ~~~~~~~~~~~");
-								*/
-								
-								// 하고자 하는 것 => JAVA만 css를 파란색으로 주고 다시 합치기
 								const result = word.substring(0, idx) + "<span style='color: blue;'>" + word.substring(idx, idx+len) + "</span>" + word.substring(idx+len);
 								
 								html += "<span style='cursor: pointer;' class='result'>" +result + "</span><br>";
@@ -101,17 +81,14 @@
 			}
 		}); // $("input#searchWord").keyup() --------------------
 		
-		
-		// [중요] on을 쓰면 id와 클래스가? 100% 잡힌다! (jQeury 참조!) 별 200개!!!
 		// on 을 사용하면 변경 이후의 이벤트가 변경된다.
 		$(document).on("click", "span.result", function() {
 			const word = $(this).text();
-			$("input#searchWord").val(word);	// 텍스트 박스에 검색된 결과의 문자열을 입력해준다.
+			$("input#searchWord").val(word);		// 텍스트 박스에 검색된 결과의 문자열을 입력해준다.
 			$("div#searchAutoComplete").hide();		// 선택한 것 외에는 숨기기
 			goSearch();
 		});
 		/* ********** 자동글 완성하기 종료 ********** */
-		
 		
 	});
 	
@@ -148,21 +125,20 @@
 
 <%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
 
-<div class="edmslist">
+
+
 	<div class="edmsHomeTitle">
-		<%-- <c:if test="${requestScope.apprvo.status eq 0}">
-			<span class="edms_maintitle">대기문서함</span>
-		</c:if>
-		<c:if test="${requestScope.apprvo.status eq 1}">
-			<span class="edms_maintitle">승인문서함</span>
-		</c:if>
-		<c:if test="${requestScope.apprvo.status eq 2}">
-			<span class="edms_maintitle">반려문서함</span>
-		</c:if> --%>
-		
+		<span class="edms_maintitle">${sessionScope.loginuser.emp_name}님의 반려문서함</span>
 		<p style="margin-bottom: 10px;"></p>
 	</div>
-
+	
+	<!-- 모든문서 시작 -->
+	<span class="edms_title"> 
+		<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
+		<input type="hidden" class="form-control-plaintext" type="text" name="name" value="${sessionScope.loginuser.emp_name}" readonly />
+	</span>
+		
+	<div class="divClear"></div>
 
 	<!-- 문서목록 시작 -->
 	<div id="edmsList">
@@ -181,49 +157,63 @@
 			
 		<div class="divClear"></div>
 
-		<%-- 결재대기 목록이 없을 때 시작 --%>
+		<%-- 결재반려 목록이 없을 때 시작 --%>
 		<c:if test="${empty requestScope.edmsList}">
 		<table class="table table-sm table-light">
 			<tr>
 				<td style="border-top: solid 1px #D3D3D3;">&nbsp;</td>
 			</tr>
 			<tr>
-				<td style="text-align: center; font-size: 12pt;">대기 중인 문서가 없습니다.</td>
+				<td style="text-align: center; font-size: 14pt;">문서가 없습니다.</td>
 			</tr>
 			<tr>
 				<td style="border-bottom: solid 1px #D3D3D3;">&nbsp;</td>
 			</tr>
 		</table>
 		</c:if>
-		<%-- 결재대기 목록이 없을 때 종료 --%>
+		<%-- 결재반려 목록이 없을 때 종료 --%>
 		
-		<%-- 결재대기 목록이 있을 때 종료 --%>
+		<%-- 결재반려 목록이 있을 때 종료 --%>
 		<c:if test="${not empty requestScope.edmsList}">
-		<table class="table table-sm table-hover table-light">
+		<table class="table table-sm table-hover table-light edmsTable">
 			<thead class="thead-light">
 				<tr>
-					<th scope="col" width="3%">#</th>
-					<th scope="col" width="13%">기안일</th>
-					<th scope="col" width="10%">결재양식</th>
-					<th scope="col" width="9%">긴급</th>
-					<th scope="col" width="31%">제목</th>
-					<th scope="col" width="6%">첨부</th>
-					<th scope="col" width="20%">문서번호</th>
-					<th scope="col" width="8%">상태</th>
+					<th scope="col" width="10%">문서번호</th>
+					<th scope="col" width="15%">기안일</th>
+					<th scope="col" width="15%">결재양식</th>
+					<th scope="col" width="10%">긴급</th>
+					<th scope="col" width="30%">제목</th>
+					<th scope="col" width="10%">첨부</th>
+					<th scope="col" width="10%">상태</th>
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="apprvo" items="${requestScope.edmsList}" varStatus="status">
-				<tr>
-					<th scope="row">${apprvo.pk_appr_no}</th>
+				<c:forEach var="apprvo" items="${requestScope.edmsList}">
+				<tr onclick="goView('${apprvo.pk_appr_no}')" style="cursor: pointer;">
+					
+					<td>${apprvo.pk_appr_no}</td>
 					
 					<td>${apprvo.writeday}</td>
 					
-					<td>${apprvo.fk_appr_sortno}</td> <%-- ${apprvo.fk_appr_sortno} --%>
+					<td>
+						${appr_name}
+						<%-- <c:if test="${apprvo.fk_appr_sortno eq 1}">
+							<span>업무기안서</span>
+						</c:if>
+						<c:if test="${apprvo.fk_appr_sortno eq 2}">
+							<span>증명서신청</span>
+						</c:if>
+						<c:if test="${apprvo.fk_appr_sortno eq 3}">
+							<span>사유서</span>
+						</c:if>
+						<c:if test="${apprvo.fk_appr_sortno eq 4}">
+							<span>-- 휴가 신청서 (팀장님 거니까 없애기) --</span>
+						</c:if> --%>
+					</td> <%-- ${apprvo.fk_appr_sortno} --%>
 					
 					<td>
 					<c:if test="${apprvo.emergency == 1}">
-						<button id="btn_emergency" class="btn btn-outline-danger disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">긴급</button>
+						<button id="btn_emergency" class="btn btn-danger edmsBtn">긴급</button>
 					</c:if>
 					<c:if test="${apprvo.emergency == 0}">
 						&nbsp;
@@ -244,22 +234,22 @@
 						<c:if test="${empty apprvo.filename}">&nbsp;</c:if>
 					</td>
 					
-					<td>${apprvo.pk_appr_no}</td>
 					<td>
-						<c:choose>
-							<c:when test="${apprvo.status == 0}">
-							<button class="btn btn-outline-secondary disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">대기중</button>
-							</c:when>
-							<c:when test="${apprvo.status == 1}">
-							<button class="btn btn-outline-info disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">진행중</button>
-							</c:when>
-							<c:when test="${apprvo.status == 2}">
-							<button class="btn btn-info disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">승인됨</button>
-							</c:when>
-							<c:when test="${apprvo.status == 3}">
-							<button class="btn btn-secondary disabled" style="height: 100%; line-height: 9pt; font-size: 9pt;">반려됨</button>
-							</c:when>
-						</c:choose>
+						<c:if test="${apprvo.mid_accept eq 0 and apprvo.fin_accept eq 0}">
+							<button class="btn btn-secondary edmsBtn">대기중</button>
+						</c:if>
+						<c:if test="${apprvo.mid_accept eq 1 and apprvo.fin_accept eq 0}">
+							<button class="btn btn-warning edmsBtn">진행중</button>
+						</c:if>
+						<c:if test="${apprvo.mid_accept eq 1 and apprvo.fin_accept eq 1}">
+							<button class="btn btn-info edmsBtn">승인됨</button>
+						</c:if>
+						<c:if test="${apprvo.mid_accept eq 2}">
+							<button class="btn btn-dark edmsBtn">반려됨</button>
+						</c:if>
+						<c:if test="${apprvo.mid_accept eq 1 and apprvo.fin_accept eq 2}">
+							<button class="btn btn-dark edmsBtn">반려됨</button>
+						</c:if>
 					</td>
 				</tr>
 				</c:forEach>
@@ -268,7 +258,7 @@
 		
 		<div class="divClear"></div>
 		</c:if>
-		<%-- 결재대기 목록이 있을 때 종료 --%>
+		<%-- 결재반려 목록이 있을 때 종료 --%>
 		
 		<div class="divClear"></div>
 		
@@ -295,7 +285,7 @@
 		</div>
 		
 	</div>
-	<!-- 결재대기 문서목록 종료 -->
+	<!-- 결재반려 문서목록 종료 -->
 	
 	
 	<div class="divClear"></div>

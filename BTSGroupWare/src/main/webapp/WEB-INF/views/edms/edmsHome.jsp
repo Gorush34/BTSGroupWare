@@ -21,9 +21,15 @@
 	// 페이징 처리되어진 후 특정 글제목을 클릭하여 상세내용을 본 이후 사용자가 목록보기 버튼을 클릭했을 때 돌아갈 페이지를 알려주기 위해 현재 페이지 주소를 뷰단으로 넘겨준다.
 		const gobackURL = "${requestScope.gobackURL}"; // 자꾸 빨간줄 뜸
 		
-	//	alert("list 단에서 확인용 gobackURL : " + gobackURL);
+		alert("list 단에서 확인용 gobackURL : " + gobackURL);
 		
-		location.href = "<%= ctxPath%>/edms/view.bts?pk_appr_no="+pk_appr_no+"&gobackURL="+gobackURL;
+		if(gobackURL == "") {
+			location.href = "<%= ctxPath%>/edms/view.bts?pk_appr_no="+pk_appr_no+"&gobackURL="+gobackURL;
+		}
+		else {
+			location.href = "<%= ctxPath%>/edms/view.bts?pk_appr_no="+pk_appr_no+"&gobackURL="+gobackURL;
+		}
+		
 				
 	} // end of function goView(pk_appr_no)
 
@@ -43,7 +49,7 @@
 		<p style="margin-bottom: 10px;"></p>
 	</div>
 	
-	<!-- 결재대기문서 시작 -->
+	<!-- 모든문서 시작 -->
 	<span class="edms_title"> 
 		<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
 		<input type="hidden" class="form-control-plaintext" type="text" name="name" value="${sessionScope.loginuser.emp_name}" readonly />
@@ -57,7 +63,7 @@
 		<%-- 모든문서 목록이 있을 때 시작 --%>
 		<div class="divClear"></div>
 		<c:if test="${not empty requestScope.all}">
-		<table class="table table-sm table-hover table-light edmsHomeTable">
+		<table class="table table-sm table-hover table-light edmsTable">
 			<thead class="thead-light">
 				<tr>
 					<th scope="col" width="4%">#</th>
@@ -74,7 +80,7 @@
 				<%-- forEach문 사용해서 뿌려주기 시작 --%>
  				<c:forEach var="all" items="${requestScope.all}" begin="0" end="4" step="1" varStatus="status">
 				<tr onclick="goView('${all.pk_appr_no}')" style="cursor: pointer;">
-					<th scope="row"><p><c:out value="${status.count}" /></p></th>
+					<th scope="row" style="valign:middle;"><p><c:out value="${status.count}" /></p></th>
 					
 					<td>${all.writeday}</td>
 					
@@ -82,7 +88,7 @@
 					
 					<td>
 						<c:if test="${all.emergency ne 0}">
-							<button id="btn_emergency" class="btn btn-danger edmsHomeBtn">긴급</button>
+							<button id="btn_emergency" class="btn btn-danger edmsBtn">긴급</button>
 						</c:if>
 					</td>
 					
@@ -100,19 +106,19 @@
 					
 					<td>
 						<c:if test="${all.mid_accept eq 0 and all.fin_accept eq 0}">
-							<button class="btn btn-secondary edmsHomeBtn disabled">대기중</button>
+							<button class="btn btn-secondary edmsBtn">대기중</button>
 						</c:if>
 						<c:if test="${all.mid_accept eq 1 and all.fin_accept eq 0}">
-							<button class="btn btn-info edmsHomeBtn  disabled">진행중</button>
+							<button class="btn btn-warning edmsBtn">진행중</button>
 						</c:if>
 						<c:if test="${all.mid_accept eq 1 and all.fin_accept eq 1}">
-							<button class="btn btn-success edmsHomeBtn  disabled">승인됨</button>
+							<button class="btn btn-info edmsBtn">승인됨</button>
 						</c:if>
 						<c:if test="${all.mid_accept eq 2}">
-							<button class="btn btn-dark edmsHomeBtn  disabled">반려됨</button>
+							<button class="btn btn-dark edmsBtn">반려됨</button>
 						</c:if>
 						<c:if test="${all.mid_accept eq 1 and all.fin_accept eq 2}">
-							<button class="btn btn-dark edmsHomeBtn  disabled">반려됨</button>
+							<button class="btn btn-dark edmsBtn">반려됨</button>
 						</c:if>
 					</td>
 				</tr>
@@ -144,12 +150,11 @@
 			</tr>
 		</table>
 		</c:if>
-		<%-- 결재대기 목록이 없을 때 종료 --%>
+		<%-- 모든문서 목록이 없을 때 종료 --%>
 		
 	</div>
-	<!-- 결재대기 문서목록 종료 -->
 	</div>
-	<!-- 나의 현황 종료 -->
+	<!-- 모든문서 종료 -->
 	
 	
 	
@@ -162,7 +167,7 @@
 		<%-- 결재승인 목록이 있을 때 시작 --%>
 		<div class="divClear"></div>
 		<c:if test="${not empty requestScope.accept}">
-		<table class="table table-sm table-hover table-light edmsHomeTable">
+		<table class="table table-sm table-hover table-light edmsTable">
 			<thead class="thead-light">
 				<tr>
 					<th scope="col" width="4%">#</th>
@@ -177,14 +182,14 @@
 			</thead>
 			<%-- forEach문 사용해서 뿌려주기 시작 --%>
 			<tbody>
- 				<c:forEach var="accept" items="${requestScope.accept}" begin="0" end="4" step="1"  varStatus="status">
+ 				<c:forEach var="accept" items="${requestScope.accept}" begin="0" end="4" step="1" varStatus="status">
 				<tr onclick="goView('${accept.pk_appr_no}')" style="cursor: pointer;">
 					<th scope="row"><p><c:out value="${status.count}" /></p></th>
 					<td>${accept.writeday}</td>
 					<td>${accept.appr_name}</td>
 					<td>
 						<c:if test="${accept.emergency ne 0}">
-						<button id="btn_emergency" class="btn btn-outline-danger edmsHomeBtn">긴급</button>
+						<button id="btn_emergency" class="btn btn-danger edmsBtn">긴급</button>
 						</c:if>
 					</td>
 					
@@ -202,10 +207,10 @@
 
 					<td>
 						<c:if test="${accept.mid_accept eq 1 and accept.fin_accept eq 0}">
-							<button class="btn btn-info edmsHomeBtn  disabled">승인중</button>
+							<button class="btn btn-warning edmsBtn">진행중</button>
 						</c:if>
 						<c:if test="${accept.fin_accept eq 1 and accept.fin_accept eq 1}">
-							<button class="btn btn-info edmsHomeBtn  disabled">승인됨</button>
+							<button class="btn btn-info edmsBtn">승인됨</button>
 						</c:if>
 					</td>
 				</tr>
@@ -253,7 +258,7 @@
 		<%-- 결재반려 목록이 있을 때 시작 --%>
 		<div class="divClear"></div>
 		<c:if test="${ not empty requestScope.reject}">
-		<table class="table table-sm table-hover table-light edmsHomeTable">
+		<table class="table table-sm table-hover table-light edmsTable">
 			<thead class="thead-light">
 				<tr>
 					<th scope="col" width="4%">#</th>
@@ -275,7 +280,7 @@
 					<td>${reject.appr_name}</td>
 					<td>
 						<c:if test="${reject.emergency ne 0}">
-						<button id="btn_emergency" class="btn btn-outline-danger edmsHomeBtn">긴급</button>
+						<button id="btn_emergency" class="btn btn-danger edmsBtn">긴급</button>
 						</c:if>
 					</td>
 					<td>
@@ -288,7 +293,7 @@
 					</td>
 					<td>${reject.pk_appr_no}</td>
 					<td>
-						<button class="btn btn-dark edmsHomeBtn">반려됨</button>
+						<button class="btn btn-dark edmsBtn">반려됨</button>
 					</td>
 				</tr>
 				</c:forEach>
