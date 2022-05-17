@@ -230,15 +230,20 @@ public class BtsController {
 		String message = "로그아웃 되었습니다.";
 		
 		String loc = "";
+		loc = request.getContextPath()+"/login.bts";
+		/*
 		if(goBackURL != null) {
-			loc = request.getContextPath()+goBackURL;
+			mav.setViewName("redirect:"+goBackURL);
+			session.removeAttribute("goBackURL"); // 세션에서 반드시 제거해주어야 한다.
 		}
 		else {
-			loc = request.getContextPath()+"/login.bts";
+			
 		}
+		*/
 		mav.addObject("message", message);
 		mav.addObject("loc", loc);
 		mav.setViewName("msg");
+		
 		// 
 		
 		return mav;
