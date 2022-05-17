@@ -91,10 +91,10 @@
           		&nbsp; <%-- 큰구분선1 --%>
           	</td>
           	
-          	<td rowspan="4" style="valign: center;">승인</td>
+          	<td rowspan="4" style="vertical-align: center;">승인</td>
           	<td style="background-color: #F7F7F7;">중간결재자 사번&nbsp;[${requestScope.apprvo.fk_mid_empno}]</td>
              
-			<td rowspan="4" style="valign: center;">승인</td>
+			<td rowspan="4" style="vertical-align: center;">승인</td>
           	<td style="background-color: #F7F7F7;">최종결재자 사번&nbsp;[${requestScope.apprvo.fk_fin_empno}]</td>
 		</tr>
 		

@@ -56,25 +56,21 @@
 		<ul style="list-style-type: none; padding: 10px;">
 			<li style="margin-bottom: 15px;">
 				
-				<!-- 문서작성 시작 -->
-				<div id="edmsSideBar1" class="edmsSideMenu">
-					문서작성
+				<div class="edmsSideMenu">
+					<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/edmsHome.bts'">전자결재 홈으로</span></label>
 				</div>
 				
-				<div id="slideTogglebox1" class="slideTogglebox">
-					<table style="margin: 0 20px;">
-						<tr>
-							<td><label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/edmsAdd.bts'">결재문서 작성하기</span></label></td>
-						</tr>
-					</table>
+				<!-- 문서작성 시작 -->
+				<div class="edmsSideMenu">
+					<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/edmsAdd.bts'">문서작성</span></label>
 				</div>
 				<!-- 문서작성 종료 -->
 				
 				
 				<!-- 내문서함 시작 -->
-				<div id="edmsSideBar2" class="edmsSideMenu">내문서함</div>
+				<div id="edmsSideBar1" class="edmsSideMenu">내문서함</div>
 				
-				<div id="slideTogglebox2" class="slideTogglebox2">
+				<div id="slideTogglebox1" class="slideTogglebox1">
 					<table style="margin: 0 20px;">
 						<tr>
 							<td>
@@ -100,27 +96,11 @@
 				</div>
 				<!-- 내문서함 종료 -->
 				
-				<!-- 부서 문서함 시작 -->
-				<div id="edmsSideBar3" class="edmsSideMenu">테스트용 링크</div>
 				
-				<div id="slideTogglebox3" class="slideTogglebox3">
+				<div id="edmsSideBar1" class="edmsSideMenu">결재하기</div>
+				
+				<div id="slideTogglebox1" class="slideTogglebox1">
 					<table style="margin: 0 20px;">
-						<tr>
-							<td><label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/edmsHome.bts'">home</span></label></td>
-						</tr>
-						<tr>
-							<td><label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/list.bts'">list</span></label></td>
-						</tr>
-						<tr>
-							<td>
-								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/view.bts'">view</span></label>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/edmsAdd.bts'">add</span></label>
-							</td>
-						</tr>
 						<tr>
 							<td>
 								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/waitingSignList.bts'">결재대기목록</span></label>
@@ -128,7 +108,6 @@
 						</tr>
 					</table>
 				</div>
-				<!-- 부서 문서함 종료 -->
 			</li>
 		</ul>
 	</div>

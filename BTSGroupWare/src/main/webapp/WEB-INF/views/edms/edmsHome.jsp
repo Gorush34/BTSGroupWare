@@ -80,7 +80,7 @@
 				<%-- forEach문 사용해서 뿌려주기 시작 --%>
  				<c:forEach var="all" items="${requestScope.all}" begin="0" end="4" step="1" varStatus="status">
 				<tr onclick="goView('${all.pk_appr_no}')" style="cursor: pointer;">
-					<th scope="row" style="valign:middle;"><p><c:out value="${status.count}" /></p></th>
+					<th scope="row" style="vertical-align: middle;"><p><c:out value="${status.count}" /></p></th>
 					
 					<td>${all.writeday}</td>
 					

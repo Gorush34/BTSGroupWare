@@ -197,38 +197,26 @@
 		<table class="table table-sm table-hover table-light edmsTable">
 			<thead class="thead-light">
 				<tr>
-					<th scope="col" width="10%">문서번호</th>
-					<th scope="col" width="15%">기안일</th>
-					<th scope="col" width="15%">결재양식</th>
-					<th scope="col" width="10%">긴급</th>
+					<th scope="col" width="4%">#</th>
+					<th scope="col" width="13%">기안일</th>
+					<th scope="col" width="10%">결재양식</th>
+					<th scope="col" width="9%">긴급</th>
 					<th scope="col" width="30%">제목</th>
-					<th scope="col" width="10%">첨부</th>
-					<th scope="col" width="10%">상태</th>
+					<th scope="col" width="6%">첨부</th>
+					<th scope="col" width="20%">문서번호</th>
+					<th scope="col" width="8%">상태</th>
 				</tr>
 			</thead>
 			<tbody>
 				<c:forEach var="apprvo" items="${requestScope.edmsList}" varStatus="status">
 				<tr onclick="goView('${apprvo.pk_appr_no}')" style="cursor: pointer;">
-					
-					<td>${apprvo.pk_appr_no}</td>
+					<th scope="row" style="vertical-align: middle;"><c:out value="${status.count}" /></th>
 					
 					<td>${apprvo.writeday}</td>
 					
 					<td>
-					<c:if test="${apprvo.fk_appr_sortno eq 1}">
-						업무기안서
-					</c:if>
-					<c:if test="${apprvo.fk_appr_sortno eq 2}">
-						증명서신청
-					</c:if>
-					<c:if test="${apprvo.fk_appr_sortno eq 3}">
-						사유서
-					</c:if>
-					<c:if test="${apprvo.fk_appr_sortno eq 4}">
-						휴가신청서(나중에 빼기)
-					</c:if>
+						${apprvo.writeday}
 					</td>
-					
 					
 					<td>
 					<c:if test="${apprvo.emergency == 1}">
@@ -239,7 +227,10 @@
 					</c:if>
 					</td>
 					
-					<td>${apprvo.title}</td>
+					<td>
+						<span class="title" onclick="goView('${apprvo.pk_appr_no}')" style="cursor: pointer;">${apprvo.title}</span>
+						
+					</td>
 					
 					<td>
 						<%-- 첨부파일이 있는 경우 --%>
@@ -249,6 +240,8 @@
 						<%-- 첨부파일이 없는 경우 --%>
 						<c:if test="${empty apprvo.filename}">&nbsp;</c:if>
 					</td>
+					
+					<td>${apprvo.pk_appr_no}</td>
 					
 					<td>
 						<c:if test="${apprvo.mid_accept eq 0 and apprvo.fin_accept eq 0}">

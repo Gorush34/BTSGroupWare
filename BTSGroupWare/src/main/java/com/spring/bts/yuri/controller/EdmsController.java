@@ -27,7 +27,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.bts.hwanmo.model.EmployeeVO;
-import com.spring.bts.moongil.model.BoardVO;
 import com.spring.bts.yuri.model.ApprVO;
 import com.spring.bts.common.FileManager;
 import com.spring.bts.common.MyUtil;
@@ -84,8 +83,7 @@ public class EdmsController {
 		return mav;		
 	}
 	
-	
-	
+			
 	// === 전자결재 문서작성 폼페이지 요청 === //
 	@RequestMapping(value="/edms/edmsAdd.bts", produces="text/plain;charset=UTF-8")
 	public ModelAndView requiredLogin_addEdms(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
@@ -99,7 +97,7 @@ public class EdmsController {
 		List<EmployeeVO> empList = service.addBook_depInfo_select();
 
 		mav.addObject("empList", empList);
-		
+	/*	
 		System.out.println("~~~ 조직도 시작 ~~~");
 		System.out.println("중간결재자 사번 => " + request.getParameter("middle_empno"));
 		System.out.println("중간결재자 이름 => " + request.getParameter("middle_name"));
@@ -110,12 +108,9 @@ public class EdmsController {
 		System.out.println("최종결재자 직급 => " + request.getParameter("last_rank"));
 		System.out.println("최종결재자 부서 => " + request.getParameter("last_dept"));
 		System.out.println("~~~ 조직도 끝 ~~~\n");
+	*/
 		/* 유리 줄 부분 끝 */
-	    
-		
-		System.out.println("사번? " + request.getParameter("name"));
-		
-		
+	    		
 		mav.setViewName("add.edms");
 		// /WEB-INF/views/edms/{1}.jsp
 		// /WEB-INF/views/edms/add.jsp 페이지를 만들어야 한다.
@@ -140,27 +135,12 @@ public class EdmsController {
 	//	String docform  = mrequest.getParameter("docform");
 	//	System.out.println("확인용 양식  => " + docform );
 		
-		
-		
 		// ===== 들어왔는지 찍어보는 곳 종료 ===== //
 		
-		// 파일첨부가 없는 전자결재 문서작성
-	
-		System.out.println("/edms/edmsAddEnd.bts 시작");
-		System.out.println("~~~~~ 결재번호 apprvo.getPk_appr_no() => " + apprvo.getPk_appr_no());
-		System.out.println("~~~~~ 결재구분번호 apprvo.getFk_appr_sortno() => " + apprvo.getFk_appr_sortno()); 
-		System.out.println("~~~~~ 사원번호 apprvo.getFk_emp_no() => " + apprvo.getFk_emp_no()); 
-		System.out.println("~~~~~ 최종승인자 apprvo.getFk_fin_empno() => " + apprvo.getFk_fin_empno());
-		System.out.println("~~~~~ 긴급여부 apprvo.getEmergency() => " + apprvo.getEmergency()); 
-		System.out.println("~~~~~ 제목 apprvo.getTitle() => " + apprvo.getTitle());
-		System.out.println("~~~~~ 내용 apprvo.getContents() => " + apprvo.getContents()); 
-		System.out.println("~~~~~ 결재진행상태 apprvo.getStatus() => " + apprvo.getStatus());
-		System.out.println("~~~~~ 최종승인여부 apprvo.getFin_accept() => " + apprvo.getFin_accept());
-		System.out.println("~~~~~ 결재작성일자 apprvo.getWriteday() => " + apprvo.getWriteday());
-		System.out.println("~~~~~ 파일읽음여부 apprvo.getViewcnt() => " + apprvo.getViewcnt());
-	
-		
-		
+		// 올바른 예시
+	//	System.out.println("~~~~~ 결재번호 apprvo.getPk_appr_no() => " + apprvo.getPk_appr_no());
+	//	System.out.println("~~~~~ 결재구분번호 apprvo.getFk_appr_sortno() => " + apprvo.getFk_appr_sortno()); 
+	//	System.out.println("~~~~~ 사원번호 apprvo.getFk_emp_no() => " + apprvo.getFk_emp_no());
 	/*
 		파일첨부가 된 글쓰기 이므로  MultipartHttpServletRequest mrequest 를 사용하기 위해서는 
 		먼저 /Board/src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml 에서     
@@ -171,11 +151,6 @@ public class EdmsController {
 		MultipartHttpServletRequest 인터페이스는 HttpServletRequest 인터페이스와  MultipartRequest 인터페이스를 상속받고있다.
 		즉, 웹 요청 정보를 얻기 위한 getParameter()와 같은 메소드와 Multipart(파일처리) 관련 메소드를 모두 사용가능하다.  	
 	*/	
-	
-		// 전자결재 양식선택(업무기안서 등..)을 위한 것 #yuly
-//		List<String> apprsortList = service.getApprsortList();
-		
-//		mav.addObject("apprsortList", apprsortList);
 		
 		// !!! === 첨부파일이 있는 경우 시작 !!! === // 
 		MultipartFile attach = apprvo.getAttach();
@@ -866,12 +841,12 @@ public class EdmsController {
 	 	mav.addObject("apprname", signMap); // 이름 넣어줌
 	 	
 	 	String fk_emp_no = request.getParameter("fk_emp_no");
-	 	System.out.println("~~~~~ view.bts에서 확인용 fk_emp_no " + fk_emp_no);
+//	 	System.out.println("~~~~~ view.bts에서 확인용 fk_emp_no " + fk_emp_no);
 //	 	System.out.println("~~~~~ view.bts에서 확인용 apprvo.getFk_emp_no => " + apprvo.getFk_emp_no());
 	 	
 
 	 	String fk_mid_empno = request.getParameter("fk_mid_empno");
-	 	System.out.println("~~~~~ view.bts에서 확인용 중간결재자 " + fk_mid_empno);
+//	 	System.out.println("~~~~~ view.bts에서 확인용 중간결재자 " + fk_mid_empno);
 	 	
 	 	
 	 	String searchType = request.getParameter("searchType");
@@ -1110,10 +1085,10 @@ public class EdmsController {
 		HttpSession session = request.getSession();
 		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
 
-		System.out.println("del에서 확인용 pk_appr_no " + pk_appr_no);
-		System.out.println("del에서  확인용 apprvo.getTitle() " + apprvo.getTitle());
+	//	System.out.println("del에서 확인용 pk_appr_no " + pk_appr_no);
+	//	System.out.println("del에서  확인용 apprvo.getTitle() " + apprvo.getTitle());
 		
-		System.out.println("del에서 확인용 apprvo.getFk_emp_no() " + apprvo.getFk_emp_no());
+	//	System.out.println("del에서 확인용 apprvo.getFk_emp_no() " + apprvo.getFk_emp_no());
 		
 		if( loginuser.getPk_emp_no() != apprvo.getFk_emp_no() ) {
 	//	if( !String.valueOf(loginuser.getPk_emp_no()).equals(apprvo.getFk_emp_no()) ) {
@@ -1452,7 +1427,7 @@ public class EdmsController {
 		}
 		
 		
-		System.out.println("최종반려 : " + apprvo.getFin_accept());
+	//	System.out.println("최종반려 : " + apprvo.getFin_accept());
 		
 		// 반려 처리하기
 		int n = service.updateAppr(apprvo);
