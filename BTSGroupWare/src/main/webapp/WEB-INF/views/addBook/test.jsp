@@ -14,55 +14,14 @@
       border-collapse: separate;
       border-spacing: 0 12px;
    }
-<%--    
-   .arrow-next_1 {
-    position: relative;
-    float:left;
-    width:90px;
-    height:90px;
-}
-
-.arrow-next_1::after {
-    position: absolute;
-    left: 10px; 
-    top: 20px; 
-    content: '';
-    width: 50px; /* 사이즈 */
-    height: 50px; /* 사이즈 */
-    border-top: 5px solid #000; /* 선 두께 */
-    border-right: 5px solid #000; /* 선 두께 */
-    transform: rotate(45deg); /* 각도 */
-}
-
-
-   .arrow-next_2 {
-    position: relative;
-    float:left;
-    width:90px;
-    height:90px;
-}
-
-.arrow-next_2::after {
-    position: absolute;
-    left: 10px; 
-    top: 20px; 
-    content: '';
-    width: 50px; /* 사이즈 */
-    height: 50px; /* 사이즈 */
-    border-top: 5px solid #000; /* 선 두께 */
-    border-right: 5px solid #000; /* 선 두께 */
-    transform: rotate(45deg); /* 각도 */
-}
---%>
-/* ----------------------------------------------------  */
 
 </style>
 
 
 <script type="text/javascript">
 
-	var mid_cnt = 0;
-	var fin_cnt = 0;
+	var cnt = 0;
+	var empMailStr;
    
    $( document ).ready( function() {
       
@@ -101,17 +60,17 @@
 			mid_cnt = $("input[name='uq_email']:checked").length;
 			console.log(mid_cnt);
 			
-	      	var empNoArr = new Array();
+	      	var empMailArr = new Array();
 	        $("input[name='uq_email']:checked").each(function() {
 	        	// console.log($(this).val());
-	        	empNoArr.push($(this).val());
+	        	empMailArr.push($(this).val());
 	        });
 	        if(mid_cnt == 0){
 	            alert("선택된 제품이 없습니다.");
 	            return;
 	        }
-	        const empNoStr = empNoArr.join();
-	        $("input#input_mid").val(empNoStr);
+	        empMailStr = empMailArr.join();
+	        $("input#input_mid").val(empMailStr);
 	        
 	        console.log( $("input#input_mid").val());
 	        
@@ -164,6 +123,37 @@
 
 //--------------------------- 등록 버튼 끝 ---------------------------//   
 
+	<%-- // 관심상품에서 선택한 제품을 장바구니로 넘기기
+	function  wishToCartSelect(cnt, wishNoStr) {
+		$.ajax({
+			url:"<%= ctxPath%>/product/wishToCartSelect.book",
+			type:"POST",
+			data:{"cnt":cnt,
+				  "wishNoStr":wishNoStr}, 
+			dataType:"JSON",
+			success:function(json) {
+				if(json.wishToCartSelect == 1) {
+					alert("선택한 제품이 장바구니에 담겼습니다.");
+					location.reload();
+				}else{
+					alert("오류발생"); 
+				}
+
+			},
+			error: function(request, status, error){
+				//alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			
+				if(request.responseText.match("로그인")){
+					if(!alert(request.responseText)) document.location = "<%= ctxPath%>/login/join.book";
+				}else{
+					alert(request.responseText);
+					location.reload();
+				}
+				
+			}
+		});//end of $.ajax
+	}//end of function  wishToCartSelect(cnt, wishNoStr)-------- --%>
+	
 
 </script>
 
