@@ -113,6 +113,12 @@ public interface InterBoardService {
 
 	LikeVO getlikeuser(Map<String, String> paraMap);
 
+	List<BoardVO> boardListSearchWithPaging_my(Map<String, String> paraMap);
+
+	int getTotalCount_my(Map<String, String> paraMap);
+
+	int my_cnt(int pk_emp_no);
+
 
 
 

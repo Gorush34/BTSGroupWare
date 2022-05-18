@@ -890,4 +890,84 @@
 		    from tbl_board_like
 			where FK_SEQ = #{pk_seq} and fk_emp_no = #{login_userid}
     </select>
+    
+    
+    <!-- 내가쓴글 -->
+    <!-- === 총 게시물 건수(totalCount) 구하기 - 검색이 있을때 와 검색이 없을때로 나뉜다. === -->
+    <select id="getTotalCount_my" parameterType="HashMap" resultType="int">
+	    select count(*)
+			from
+	         (
+	             select pk_seq, status, subject, user_name, fk_emp_no
+	             from tbl_board B
+	             UNION
+	             select pk_seq, status, subject, user_name, fk_emp_no
+	             from tbl_notice N
+	             UNION
+	             select pk_seq, status, subject, user_name, fk_emp_no
+	             from tbl_fileboard F
+	         )
+			where status = 1 and fk_emp_no = #{login_userid}
+			<if test='searchType != ""'>
+			and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+			</if>
+	</select>
+
+	<select id="boardListSearchWithPaging_my" parameterType="HashMap" resultType="com.spring.bts.moongil.model.BoardVO">
+		select rno,
+			            fk_emp_no, pk_seq, KO_RANKNAME ,subject, write_day, user_name, 
+	                    comment_count, filename, read_count, content, depthno, status, tblname
+			from
+			(
+			    select rownum AS rno,
+			            fk_emp_no, pk_seq, KO_RANKNAME ,subject, write_day, user_name, 
+	                    comment_count, filename, read_count, content, depthno, status, tblname
+			        from
+	                     (
+	                     select fk_emp_no, pk_seq, KO_RANKNAME , subject, to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') AS write_day, user_name , comment_count, filename, read_count, content, depthno, status, '자유게시판' AS tblname
+	                     from tbl_board B join tbl_employees E
+	                    ON fk_emp_no = E.pk_emp_no
+	                    join tbl_rank_sort S
+	                    ON E.FK_RANK_ID = S.PK_RANK_NO 
+	                     UNION   
+	                     select fk_emp_no, pk_seq, KO_RANKNAME, subject, to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') AS write_day, user_name , comment_count, filename, read_count, content, depthno, status, '공지사항' AS tblname
+	                     from tbl_notice N join tbl_employees E
+	                    ON fk_emp_no = E.pk_emp_no
+	                    join tbl_rank_sort S
+	                    ON E.FK_RANK_ID = S.PK_RANK_NO    
+	                     UNION
+	                     select fk_emp_no, pk_seq, KO_RANKNAME, subject, to_char(write_day, 'yyyy-mm-dd hh24:mi:ss') AS write_day, user_name , comment_count, filename, read_count, content, depthno, status, '자료실' AS tblname
+	                     from tbl_fileboard F join tbl_employees E
+	                    ON fk_emp_no = E.pk_emp_no
+	                    join tbl_rank_sort S
+	                    ON E.FK_RANK_ID = S.PK_RANK_NO
+	                     order by write_day desc 
+	                  ) A        
+			            where status = 1 and fk_emp_no = #{login_userid}
+			            <if test='searchType !="" and searchWord != "" '>
+					    and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+					    </if>
+
+			        ) V
+		 where rno between #{startRno} and #{endRno}
+         order by rno
+    </select>
+      
+    
+    <!-- 내가쓴글 수 -->
+    <select id="my_cnt" parameterType="HashMap" resultType="int">
+	    select count(*)
+			from
+	         (
+	             select pk_seq, status, subject, user_name, fk_emp_no
+	             from tbl_board B
+	             UNION
+	             select pk_seq, status, subject, user_name, fk_emp_no
+	             from tbl_notice N
+	             UNION
+	             select pk_seq, status, subject, user_name, fk_emp_no
+	             from tbl_fileboard F
+	         )
+			where status = 1 and fk_emp_no = #{pk_emp_no}
+	</select>
 </mapper>
