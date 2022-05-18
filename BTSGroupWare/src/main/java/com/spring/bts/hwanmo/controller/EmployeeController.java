@@ -713,9 +713,18 @@ public class EmployeeController {
 		 
 		   List<EmployeeVO> empList = service.addBook_depInfo_select();
 		   
-			
-			 String message = "";
-			 String loc = "";
+		   for(int i=0; i<empList.size(); i++) {
+			   
+			   // 이메일을 복호화한다.
+				try {
+				    String email = empList.get(i).getUq_email();
+				    
+				    empList.get(i).setUq_email( aes.decrypt(email) );
+				} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+					e.printStackTrace();
+				}
+			   
+		   } // end of for
 			   
 		   
 		   mav.addObject("loginuser", loginuser);

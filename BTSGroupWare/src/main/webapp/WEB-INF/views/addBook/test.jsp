@@ -205,7 +205,7 @@
             <td>
                <div id="y_teamwon">
                   <label>
-                     <input type="checkbox" id="uq_email" name="uq_email" value="${emp.emp_name}" />
+                     <input type="checkbox" id="uq_email" name="uq_email" value="${emp.uq_email}" />
                      <input type="hidden" id="employee_name" name="employee_name" value="${emp.emp_name}" />
                      <input type="hidden" id="employee_rank" name="employee_rank" value="${emp.ko_rankname}" />
                      <input type="hidden" id="employee_dept" name="employee_dept" value="${emp.ko_depname}" />
@@ -226,7 +226,7 @@
             <td>
                <div id="m_teamwon">
                   <label>
-                     <input type="checkbox" id="uq_email" name="uq_email" value="${emp.emp_name}" />
+                     <input type="checkbox" id="uq_email" name="uq_email" value="${emp.uq_email}" />
                      <input type="hidden" id="employee_name" name="employee_name" value="${emp.emp_name}" />
                      <input type="hidden" id="employee_rank" name="employee_rank" value="${emp.ko_rankname}" />
                      <input type="hidden" id="employee_dept" name="employee_dept" value="${emp.ko_depname}" />
@@ -246,7 +246,7 @@
             <td>
                <div id="g_teamwon">
                   <label>
-                     <input type="checkbox" id="uq_email" name="uq_email" value="${emp.emp_name}" />
+                     <input type="checkbox" id="uq_email" name="uq_email" value="${emp.uq_email}" />
                      <input type="hidden" id="employee_name" name="employee_name" value="${emp.emp_name}" />
                      <input type="hidden" id="employee_rank" name="employee_rank" value="${emp.ko_rankname}" />
                      <input type="hidden" id="employee_dept" name="employee_dept" value="${emp.ko_depname}" />
@@ -266,7 +266,7 @@
             <td>
                <div id="c_teamwon">
                   <label>
-                     <input type="checkbox" id="uq_email" name="uq_email" value="${emp.emp_name}" />
+                     <input type="checkbox" id="uq_email" name="uq_email" value="${emp.uq_email}" />
                      <input type="hidden" id="employee_name" name="employee_name" value="${emp.emp_name}" />
                      <input type="hidden" id="employee_rank" name="employee_rank" value="${emp.ko_rankname}" />
                      <input type="hidden" id="employee_dept" name="employee_dept" value="${emp.ko_depname}" />
@@ -286,7 +286,7 @@
             <td>
                <div id="i_teamwon">
                   <label>
-                     <input type="checkbox" id="uq_email" name="uq_email" value="${emp.emp_name}" />
+                     <input type="checkbox" id="uq_email" name="uq_email" value="${emp.uq_email}" />
                      <input type="hidden" id="employee_name" name="employee_name" value="${emp.emp_name}" />
                      <input type="hidden" id="employee_rank" name="employee_rank" value="${emp.ko_rankname}" />
                      <input type="hidden" id="employee_dept" name="employee_dept" value="${emp.ko_depname}" />
@@ -306,7 +306,7 @@
             <td>
                <div id="h_teamwon">
                   <label>
-                     <input type="checkbox" id="uq_email" name="uq_email" value="${emp.emp_name}" />
+                     <input type="checkbox" id="uq_email" name="uq_email" value="${emp.uq_email}" />
                      <input type="hidden" id="employee_name" name="employee_name" value="${emp.emp_name}" />
                      <input type="hidden" id="employee_rank" name="employee_rank" value="${emp.ko_rankname}" />
                      <input type="hidden" id="employee_dept" name="employee_dept" value="${emp.ko_depname}" />
