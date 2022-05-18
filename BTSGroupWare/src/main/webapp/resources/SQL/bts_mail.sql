@@ -581,3 +581,29 @@ where fk_receiveuser_num = '80000010'
 select *
 from tbl_mail
 where  fk_senduser_num = '80000010' and fk_receiveuser_num = '80000010'
+
+
+
+
+select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date, importance, importance_star_rec
+from 
+(
+select row_number() over(order by pk_mail_num desc) AS rno,
+       pk_mail_num, fk_senduser_num, sendempname, subject
+       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+       , importance, importance_star_rec
+from tbl_mail
+where fk_receiveuser_num = '80000010' and fk_senduser_num != '80000010' and
+del_status = 0 and reservation_status = 0 and temp_status = 0	
+order by pk_mail_num desc
+) V
+where rno between 1 and 5
+
+select * 
+from tbl_employees
+
+select pk_mail_num, fk_senduser_num, sendempname, subject, to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reservation_date, to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+from tbl_mail
+order by pk_mail_num desc
+

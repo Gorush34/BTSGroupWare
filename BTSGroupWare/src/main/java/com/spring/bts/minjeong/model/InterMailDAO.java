@@ -125,7 +125,7 @@ public interface InterMailDAO {
 	MailVO getSendToMeMailView(Map<String, String> paraMap);
 
 	// 메인페이지에서 로그인한 사용자의 받은메일함 목록 보여주기
-//	List<Map<String, String>> mailReceive_main();
+	List<Map<String, String>> mailReceive_main(String fk_receiveuser_num);
 	
 
 }

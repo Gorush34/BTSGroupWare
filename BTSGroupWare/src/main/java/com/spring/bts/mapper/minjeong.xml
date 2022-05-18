@@ -7,6 +7,36 @@
 <!-- ==== 대부분은 namespace에 파일이름 사용(유일하니까) ==== -->
 <mapper namespace="minjeong">
 
+
+	<!-- 메인페이지 받은메일함 시작 -->
+	<resultMap type="HashMap" id="mailReceive_main">
+      <result property="pk_mail_num" 		column="pk_mail_num" 		javaType="String" />
+      <result property="fk_senduser_num" 	column="fk_senduser_num" 	javaType="String" />
+      <result property="sendempname" 		column="sendempname" 		javaType="String" />
+      <result property="subject" 			column="subject" 			javaType="String" />
+      <result property="reg_date" 			column="reg_date" 			javaType="String" />
+      <result property="reservation_date" 	column="reservation_date" 	javaType="String" />	
+	</resultMap>
+	
+ 	<select id="mailReceive_main" resultMap="mailReceive_main" parameterType="String">
+		select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, reservation_date
+		from 
+		(
+		select row_number() over(order by pk_mail_num desc) AS rno,
+		       pk_mail_num, fk_senduser_num, sendempname, subject
+		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+		       , to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+		from tbl_mail
+		where fk_receiveuser_num = #{fk_receiveuser_num} and fk_senduser_num != #{fk_receiveuser_num} and
+		del_status = 0 and reservation_status = 0 and temp_status = 0	
+		) V
+		where rno between 1 and 5
+	</select>
+
+	<!-- 메인페이지 받은메일함 끝 -->
+
+
+
 	<!-- ===== 받은메일함 시작 ===== -->
 	
 	<!-- 받은메일함 목록 보여주기 (검색 X, 페이징 X) -->
@@ -522,7 +552,6 @@
 				) V
 		where V.pk_mail_num = #{pk_mail_num}
 	</select>
-	
 	
 	<!-- ===== 내게쓴메일함 끝 ===== -->
 	
