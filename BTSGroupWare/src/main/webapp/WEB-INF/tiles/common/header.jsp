@@ -127,7 +127,7 @@
                   <a class="dropdown-item" href="<%=ctxPath%>/emp/updateEmp.bts">나의정보</a>
              	  <!-- 사원등록 막아놓을 예정 -->
              	  <c:if test="${sessionScope.loginuser.pk_emp_no == 80000001 }">
-                  	<a class="dropdown-item" href="<%=ctxPath%>/emp/registerEmp.bts">사원등록</a>
+                  	<a class="dropdown-item" href="<%=ctxPath%>/emp/registerEmp.bts">관리자 페이지</a>
                   </c:if>
                   <a class="dropdown-item" href="<%=ctxPath%>/logout.bts">로그아웃</a>
               </div>
