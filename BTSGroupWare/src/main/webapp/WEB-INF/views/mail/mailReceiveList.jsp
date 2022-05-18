@@ -171,7 +171,7 @@
 </script>
 
 <%-- 받은 메일함 목록 보여주기 --%>	
-<div class="col-xs-10" style="width: 90%; margin: 10px; padding-top: 20px;">
+<div class="col-xs-10" id="mailListWriteCss" style="width: 90%; margin: 10px; padding-top: 20px;">
 	<div style="border-bottom: solid 1.5px #e6e6e6;" style="width: 90%;" >		
 		<div>
 			<h4 style="color: black;">받은 메일함</h4>
