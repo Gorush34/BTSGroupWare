@@ -326,7 +326,7 @@
 				     -->
 				    <tr style="text-align: center;">
 				      <th class="th_title" style="width:20%; text-align: center;">희망휴가일수</th>
-				      <td style="text-align: left;"><input type="text" id="vac_days" name="vac_days" style="width: 50px; text-align: center;" />&nbsp;일</td>
+				      <td style="text-align: left;"><input type="number" id="vac_days" name="vac_days" min="1" max="100" style="width: 50px; text-align: center;" />&nbsp;일</td>
 				      <th class="th_title" style="width:20%; text-align: center;">휴가시작일</th>
 				      <td style="text-align: left;">
 				      	<input class="requiredInfo" type="text" id="eDatepicker" name="start_vac">

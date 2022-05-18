@@ -582,7 +582,7 @@ public class EmployeeController {
 				// 파일을 받아와야만 service 에 보낼 수 있다. (DB 에 보내도록 한다.)
 				fileSize = attach.getSize();					// 첨부파일의 크기
 				empVO.setImg_name(newFileName);			// 톰캣(WAS)에 저장될 파일명
-				System.out.println(" 컨트롤러 updateImg.bts에서 받아진 이미지 이름 : " + newFileName);
+				// System.out.println(" 컨트롤러 updateImg.bts에서 받아진 이미지 이름 : " + newFileName);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
