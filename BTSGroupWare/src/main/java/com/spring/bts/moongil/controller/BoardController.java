@@ -893,9 +893,13 @@ public class BoardController {
 					jsonObj.put("pk_seq", cmtvo.getPk_seq());
 					jsonObj.put("fk_seq", cmtvo.getFk_seq());
 					jsonObj.put("fk_emp_no", cmtvo.getFk_emp_no());
+					jsonObj.put("ko_rankname", cmtvo.getKo_rankname());
 					if(loginuser != null) {
 						jsonObj.put("pk_emp_no", loginuser.getPk_emp_no());
 					}
+		//			System.out.println(cmtvo.getName());
+		//			System.out.println(cmtvo.getKo_rankname());
+					
 					jsonArr.put(jsonObj);
 				}// end of for------------------
 			}

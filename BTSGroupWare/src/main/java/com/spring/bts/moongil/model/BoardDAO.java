@@ -128,12 +128,6 @@ public class BoardDAO implements InterBoardDAO {
 	}
 
 	@Override
-	public List<CommentVO> getCommentList(String fk_seq) {
-		List<CommentVO> commentList = sqlsession.selectList("moongil.getCommentList", fk_seq);
-		return commentList;
-	}
-
-	@Override
 	public List<BoardVO> temp_list(Map<String, String> paraMap) {
 		List<BoardVO> temp_list = sqlsession.selectList("moongil.temp_list", paraMap);
 		return temp_list;

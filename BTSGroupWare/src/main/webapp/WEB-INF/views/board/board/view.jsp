@@ -111,8 +111,8 @@
 	}	 
 	
 	td.comment_content{
-	min-width:740px;
-	max-width:740px;
+	min-width:690px;
+	max-width:690px;
 	word-break:break-all;
 	padding-right: 25px;
 	}	 
@@ -202,6 +202,21 @@
  <script>
  $(document).ready(function(){
 		
+	 $("input#commentContent").keydown(function(event){
+			
+			if(event.keyCode == 13) { // 엔터를 했을 경우
+				goAddWrite();	
+			}
+		});
+	 
+	 $("input#pw").keydown(function(event){
+			
+			if(event.keyCode == 13) { // 엔터를 했을 경우
+				 $("button#btnDelete").click();
+			}
+		});
+	 
+	 
 	 /// 글삭제
 	 $("button#btnDelete").click(function(){
 		  
@@ -335,7 +350,7 @@
 						  html += "<tr>";
 						  html += "<td class='comment_index'>"+(index+1)+"</td>";
 						  html += "<td class='comment_content'>"+item.content+"</td>";
-						  html += "<td class='comment_name'>"+item.name+"</td>";
+						  html += "<td class='comment_name'>"+item.name+" "+item.ko_rankname+"</td>";
 						  html += "<td class='comment_regDate'>"+item.regDate+"</td>";
 						  if( writeuser == loginuser ) {
 							  html += "<td style='text-align: center;' onclick='goDelComment(\""+item.pk_seq+"\")'><span style='cursor: pointer; color: gray; margin-left: 10px;'>X</span></td>";
@@ -575,7 +590,7 @@
 				        <input type="hidden" name="fk_emp_no" id="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />  
 				         <input type="hidden" name="name" id="name" value="${sessionScope.loginuser.emp_name}" readonly />
 				         <input type="text" name="content" id="commentContent" size="100" />
-				         
+				         <input type="text" style="display: none;"/>
 				         <%-- 댓글에 달리는 원게시물 글번호(즉, 댓글의 부모글 글번호) --%>
 				         <input type="hidden" name="fk_seq" id="fk_seq" value="${requestScope.boardvo.pk_seq}" />
 				         <button type="button" class="btn btn-light" onclick="goAddWrite()">댓글쓰기</button>
@@ -664,6 +679,7 @@
 				<th style="width: 22%; background-color: #DDDDDD;">글암호</th>
 				<td>
 					<input style="width: 100%;" type="password" id="pw" />
+					<input type="text" style="display: none;"/>
 					<input type="hidden" name="pk_seq" value="${boardvo.pk_seq}" readonly />
 					<input type="hidden" name="filename" value="${boardvo.filename}" readonly />
 					<input type="hidden" name="fk_emp_no" value="${boardvo.fk_emp_no}" readonly />

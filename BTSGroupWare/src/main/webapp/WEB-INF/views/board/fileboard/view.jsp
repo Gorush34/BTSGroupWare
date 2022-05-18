@@ -128,6 +128,13 @@
  <script>
  $(document).ready(function(){
 
+	 $("input#pw").keydown(function(event){
+			
+			if(event.keyCode == 13) { // 엔터를 했을 경우
+				 $("button#btnDelete").click();
+			}
+		});
+	 
 	 /// 글삭제
 	 $("button#btnDelete").click(function(){
 		  

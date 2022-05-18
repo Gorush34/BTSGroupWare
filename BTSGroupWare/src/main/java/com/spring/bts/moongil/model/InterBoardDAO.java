@@ -43,8 +43,6 @@ public interface InterBoardDAO {
 
 	int updateCommentCount(String fk_seq);
 
-	List<CommentVO> getCommentList(String fk_seq);
-
 	int tmp_write(BoardVO boardvo);
 
 	BoardVO getView2(Map<String, String> paraMap);

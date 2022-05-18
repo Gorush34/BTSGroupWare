@@ -246,15 +246,6 @@
     	update tbl_board set comment_count = comment_count + 1 
     	where pk_seq = #{fk_seq}
     </update>
-    
-    <!-- === #93. 원게시물에 딸린 댓글들을 조회해오기 === -->  
-    <select id="getCommentList" parameterType="String" resultType="com.spring.bts.moongil.model.CommentVO"> 
-	    select name, content, to_char(regDate, 'yyyy-mm-dd hh24:mi') AS regDate 
-		from tbl_comment
-		where status = 1 and fk_seq = #{fk_seq}
-		order by pk_seq asc
-    </select>
-    
    
     
     <!-- === #135. 원글 글번호(parentSeq) 여기에 해당하는 댓글 totalPage 수 알아오기 === -->
@@ -267,11 +258,15 @@
     
     <select id="getCommentListPaging" parameterType="HashMap" resultType="com.spring.bts.moongil.model.CommentVO">
 
-		select name, content, regDate, fk_emp_no, pk_seq, fk_seq
+		select name, content, regDate, fk_emp_no, pk_seq, fk_seq, ko_rankname
 		from 
 		(
-		select row_number() over(order by pk_seq desc) AS rno, name, content, fk_emp_no, pk_seq, fk_seq, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate
-		from tbl_comment
+		select row_number() over(order by pk_seq desc) AS rno, name, content, fk_emp_no, pk_seq, fk_seq, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate, ko_rankname
+		from tbl_comment C 
+        JOIN tbl_employees E
+        ON C.fk_emp_no = E.pk_emp_no
+        join tbl_rank_sort S
+        ON E.fk_rank_id = S.pk_rank_no
 		where status = 1 and fk_seq = #{fk_seq}
 		) V
 		where rno between #{startRno} and #{endRno}
@@ -886,7 +881,7 @@
 	                  ) A        
 			        ) V
 		 where rno between 1 and 5
-		 order by write_day desc  
+		 order by rno asc
    </select> 
     
     
