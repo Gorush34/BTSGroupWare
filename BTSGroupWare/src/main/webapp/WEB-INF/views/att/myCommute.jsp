@@ -2,7 +2,8 @@
     pageEncoding="UTF-8"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %> 
 <%
  	String ctxPath = request.getContextPath();
 	//     /bts
@@ -79,7 +80,7 @@
 			     <table class="table" id="tbl_commute">
 					  <thead class="thead-light">
 					    <tr style="text-align: center;">
-					      <th style="width:20%; text-align: center;">연월일</th>
+					      <th style="width:20%; text-align: center;">근무일</th>
 					      <th style="width:20%; text-align: center;">출근시간</th>
 					      <th style="width:20%; text-align: center;">퇴근시간</th>
 					      <th style="width:20%; text-align: center;">근무시간</th>
@@ -90,9 +91,24 @@
 					  	<c:forEach var="cmt" items="${requestScope.cmtList}" varStatus="status">
 							<tr style="text-align: center;">
 						      <td style="width:20%; text-align: center;">${cmt.regdate }</td>
-						      <td style="width:20%; text-align: center;">${cmt.in_time }</td>
-						      <td style="width:20%; text-align: center;">${cmt.out_time }</td>
-						      <td style="width:20%; text-align: center;">${cmt.total_worktime } 시간</td>
+						      <c:if test="${cmt.in_time ne '-9999' }">
+						      	<td style="width:20%; text-align: center;">${cmt.in_time }</td>
+						      </c:if>
+						      <c:if test="${cmt.in_time eq '-9999' }">
+						      	<td style="width:20%; text-align: center;"><span style="color: red;">기록되지 않음</span></td>
+						      </c:if>
+						      <c:if test="${cmt.out_time ne '-9999' }">
+						      	<td style="width:20%; text-align: center;">${cmt.out_time }</td>
+						      </c:if>
+						      <c:if test="${cmt.out_time eq '-9999' }">
+						      	<td style="width:20%; text-align: center;"><span style="color: red;">기록되지 않음</span></td>
+						      </c:if>
+						      <c:if test="${cmt.total_worktime ne '-9999' }">
+						      	<td style="width:20%; text-align: center;">${cmt.total_worktime } 시간</td>
+						      </c:if>
+						      <c:if test="${cmt.total_worktime eq '-9999' }">
+						      	<td style="width:20%; text-align: center;"><span style="color: red; font-weight: bold;">측정 불가</span></td>
+						      </c:if>	
 						    </tr>
 					    </c:forEach>
 					    </c:if>
