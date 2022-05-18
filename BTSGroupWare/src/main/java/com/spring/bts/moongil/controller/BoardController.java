@@ -245,7 +245,7 @@ public class BoardController {
 		
 		@ResponseBody
 		@RequestMapping(value = "/board/main.bts", produces = "text/plain;charset=UTF-8")
-		public ModelAndView requiredLogin_Boardmain(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, BoardVO boardvo) {
+		public ModelAndView Boardmain(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, BoardVO boardvo) {
 			
 			HttpSession session = request.getSession();
 			
@@ -377,13 +377,13 @@ public class BoardController {
 			//  /WEB-INF/views/tiles1/board/list.jsp 파일을 생성한다.
 			
 			return mav;
-		}// end of public String requiredLogin_ajax_getIntegratedBoard(HttpServletRequest request, HttpServletResponse response) {}
+		}// end of public String ajax_getIntegratedBoard(HttpServletRequest request, HttpServletResponse response) {}
 		
 		
 	
 	// --- 게시판 시작 ---  -----------------
 	@RequestMapping(value = "/board/list.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
-	public ModelAndView requiredLogin_list_board(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView list_board(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		///////////////////////////////////
 		
@@ -583,7 +583,7 @@ public class BoardController {
 	// === 게시판 글쓰기 ====
 	// === #51. 게시판 글쓰기 폼페이지 요청 === //
 		@RequestMapping(value="/board/write.bts")
-		public ModelAndView requiredLogin_add(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		public ModelAndView add(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 			getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출 
 			
@@ -765,7 +765,7 @@ public class BoardController {
 	// == 게시판 글 보기 == //
 	// === #62. 글1개를 보여주는 페이지 요청 === //
 	@RequestMapping(value="/board/view.bts")
-	public ModelAndView requiredLogin_view(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView view(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출 
 		
@@ -1081,7 +1081,7 @@ public class BoardController {
 	
 	// === #71. 글 수정페이지 요청 === //
 	@RequestMapping(value="/board/edit.bts")
-	public ModelAndView requiredLogin_edit(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView edit(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		request.getSession();
 		
@@ -1130,7 +1130,7 @@ public class BoardController {
 	
 	// === 임시저장글 작성 === //
 		@RequestMapping(value="/board/tmp_write.bts")
-		public ModelAndView requiredLogin_edit2(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		public ModelAndView edit2(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 			String gobackURL = request.getParameter("gobackURL");  
 		 	
 			request.getSession();
@@ -1248,7 +1248,7 @@ public class BoardController {
 	
 	// ==== #163. 첨부파일 다운로드 받기 ==== //
 		@RequestMapping(value="/file/download_board.bts")
-		public void requiredLogin_download(HttpServletRequest request, HttpServletResponse response) {
+		public void download(HttpServletRequest request, HttpServletResponse response) {
 			
 			String pk_seq = request.getParameter("pk_seq");
 			// 첨부파일이 있는 글번호 
@@ -1309,7 +1309,7 @@ public class BoardController {
 	
 		
 		@RequestMapping(value="/file/download_fileboard.bts")
-		public void requiredLogin_download_fileboard(HttpServletRequest request, HttpServletResponse response) {
+		public void download_fileboard(HttpServletRequest request, HttpServletResponse response) {
 			
 			String pk_seq = request.getParameter("pk_seq");
 			// 첨부파일이 있는 글번호 
@@ -1369,7 +1369,7 @@ public class BoardController {
 		}
 		
 		@RequestMapping(value="/file/download_notice.bts")
-		public void requiredLogin_download_notice(HttpServletRequest request, HttpServletResponse response) {
+		public void download_notice(HttpServletRequest request, HttpServletResponse response) {
 			
 			String pk_seq = request.getParameter("pk_seq");
 			// 첨부파일이 있는 글번호 
@@ -1497,7 +1497,7 @@ public class BoardController {
 
 		// --- 공지 게시판 시작 ---  -----------------
 		@RequestMapping(value = "/notice/list.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
-		public ModelAndView requiredLogin_list_notice(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		public ModelAndView list_notice(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 			
 			///////////////////////////////////
 			
@@ -1646,7 +1646,7 @@ public class BoardController {
 		
 		// === 글쓰기 ====
 			@RequestMapping(value="/notice/write.bts")
-			public ModelAndView requiredLogin_add_notice(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+			public ModelAndView add_notice(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 			
 				getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출 
 				
@@ -1877,7 +1877,7 @@ public class BoardController {
 			
 			// === #71. 글 수정페이지 요청 === //
 			@RequestMapping(value="/notice/edit.bts")
-			public ModelAndView requiredLogin_edit_notice(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+			public ModelAndView edit_notice(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 				
 				request.getSession();
 				
@@ -2028,7 +2028,7 @@ public class BoardController {
 		
 	// --- 자료 게시판 시작 ---  -----------------
 	@RequestMapping(value = "/fileboard/list.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
-	public ModelAndView requiredLogin_list_fileboard(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView list_fileboard(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		///////////////////////////////////
 		
@@ -2179,7 +2179,7 @@ public class BoardController {
 	
 	// === 글쓰기 ====
 		@RequestMapping(value="/fileboard/write.bts")
-		public ModelAndView requiredLogin_add_fileboard(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		public ModelAndView add_fileboard(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 			getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출 
 			
@@ -2286,7 +2286,7 @@ public class BoardController {
 	
 		
 		@RequestMapping(value="/fileboard/view.bts")
-		public ModelAndView requiredLogin_view_fileboard(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		public ModelAndView view_fileboard(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 			
 			getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출 
 			
@@ -2409,7 +2409,7 @@ public class BoardController {
 		
 		// === #71. 글 수정페이지 요청 === //
 		@RequestMapping(value="/fileboard/edit.bts")
-		public ModelAndView requiredLogin_edit_fileboard(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		public ModelAndView edit_fileboard(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 			
 			request.getSession();
 			
@@ -2549,7 +2549,7 @@ public class BoardController {
 	// -- 내가 쓴 게시물 --- //
 			@ResponseBody
 			@RequestMapping(value = "/board/my.bts", produces = "text/plain;charset=UTF-8")
-			public ModelAndView requiredLogin_Board_my(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, BoardVO boardvo) {
+			public ModelAndView Board_my(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, BoardVO boardvo) {
 				
 				HttpSession session = request.getSession();
 				
@@ -2689,7 +2689,7 @@ public class BoardController {
 				//  /WEB-INF/views/tiles1/board/list.jsp 파일을 생성한다.
 				
 				return mav;
-			}// end of public String requiredLogin_ajax_getIntegratedBoard(HttpServletRequest request, HttpServletResponse response) {}		
+			}// end of public String ajax_getIntegratedBoard(HttpServletRequest request, HttpServletResponse response) {}		
 		
 	
 	
