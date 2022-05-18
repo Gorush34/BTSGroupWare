@@ -422,6 +422,8 @@
 				
 				$("input#select_user_no").val(json.pk_emp_no)
 				$("input#name").val(json.name)
+				$("input#rank").val(json.rank)
+				$("input#department").val(json.department)
 				$("select#department").val(a).prop("selected",true);
 				$("select#rank").val(b).prop("selected",true);
 				$("input#email").val(json.email)
@@ -439,33 +441,6 @@
 		});
 	}	
 	
-	<%-- 
-	function updateFrm(i)	{
-		$.ajax({
-			url:"<%= ctxPath%>/addBook/addBook_depInfo_update.bts",
-			data:{"pk_emp_no" : $("input#pk_emp_no_"+i).val() ,
-				  "name" : $("input#name").val() ,
-				  "department" : $("input#department").val() ,
-				  "rank" : $("input#rank").val() ,
-				  "email1" : $("input#email1").val() ,
-				  "email2" : $("input#email2").val() ,
-				  "hp1" : $("input#hp1").val() ,
-				  "hp2" : $("input#hp2").val() ,
-				  "hp3" : $("input#hp3").val() ,
-				  "address" : $("input#address").val() ,
-				  "detailaddress" : $("input#detailaddress").val()
-			},
-			type: "post",
-			dataType: 'json',
-			success : function(json) {
-				
-			},
-			error: function(request){
-				
-			}
-		});
-	}	
-	--%>		
 	
 	/* 이메일 선택or직접입력 */
 	function selectEmail(ele){ 
@@ -483,7 +458,34 @@
 	}
 	/* 이메일 선택or직접입력 */
 	
-	
+	/* 이름 유효성검사 */
+	$("span.error").hide();	
+		$("input#name").focus();
+		
+		// 아이디가 name 제약 조건 
+		$("input#name").blur(() => { 
+			const $target = $(event.target);
+			
+			const name = $target.val().trim();
+			if(name == ""){
+				// 입력하지 않거나 공백만 입력했을 경우
+				$("table#telAdd_main_tbl :input").prop("disabled", true);
+				$target.prop("disabled", false);
+			//	$target.next().show();
+			// 	또는
+				$target.parent().find(".error").show();
+			
+				$target.focus();
+				
+				
+			} else {
+				// 공백이 아닌 글자를 입력했을 경우
+				$("table#telAdd_main_tbl :input").prop("disabled", false);
+				//	$target.next().hide();
+				// 	또는
+				$target.parent().find(".error").hide();
+			}
+		}); // end of $("input#emp_name").blur(() => {})-------------------------------------------
 
 	
 	

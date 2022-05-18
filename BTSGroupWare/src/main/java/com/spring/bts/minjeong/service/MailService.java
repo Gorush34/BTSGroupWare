@@ -394,8 +394,14 @@ public class MailService implements InterMailService {
       MailVO mailvo = dao.getSendToMeMailView(paraMap);      
       return mailvo;
    }
-	
-	
+
+   
+	// 메인페이지에서 로그인한 사용자의 받은메일함 목록 보여주기
+	@Override
+	public List<Map<String, String>> mailReceive_main(String fk_receiveuser_num) {
+		List<Map<String, String>> mailReceive_main = dao.mailReceive_main(fk_receiveuser_num);
+		return mailReceive_main;
+	}
 
 	
 }

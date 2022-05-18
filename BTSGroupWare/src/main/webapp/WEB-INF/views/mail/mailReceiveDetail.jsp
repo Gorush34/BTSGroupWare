@@ -9,33 +9,6 @@
 %>
 
 <style type="text/css">
-
-/* 테이블 */
-  table, th, td, input, textarea {border: solid #a0a0a0 0px;}
-  
-  #table {border-collapse: collapse;
-          width: 1175px;         
-          }
-          
-  #table th, #table td{padding: 5px;}
-  #table th{ 
-  		color: ;
-  }
-
-/*버튼 */   
-  .buttonList {
-  		display: inline-block;
-  		list-style-type: none; 		
-  }
- 
-  #buttonGroup {
-  		padding: 0px;
-  		margin-top: 5px;
-  }
-  
-    button {
-  		border-radius: 3px !important;
-  } 
   
     ul#mailReceiveDetailGroup, .detailList {
   	 list-style-type: none;
@@ -71,10 +44,10 @@ $(document).ready(function (){
 		
 </script>
 
-<div class="container" style="width: 100%; margin: 50px;">
-		<div class="row bg-title" style="border-bottom: solid 1.5px #e6e6e6;">	
-			<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12" style="padding: 0px;">
-				<h4 class="page-title" style="color: black;">받은 메일함</h4>
+<div class="col-xs-10" id="mailListDetailCss">
+		<div style="border-bottom: solid 1.5px #e6e6e6;" style="width: 90%;">	
+			<div>
+				<h4 style="color: black;">받은 메일함</h4>
 			</div>	
 			<div id="goList">
 				<%-- 답장 클릭 시, 보낸 사람 및 내용에 이전에 썼던 내용을 유지해야 함. --%>
@@ -89,14 +62,14 @@ $(document).ready(function (){
 				<button type="button" id="btnGodeleteOne" class="btn btn-secondary btn-sm" style="margin-bottom: 5px;" onclick="btnGodeleteOne('${requestScope.mailvo.pk_mail_num}')">
 				삭제
 				</button>					
-				<button type="button" id="btnGoList" class="btn btn-secondary btn-sm" onclick="location.href='<%= ctxPath%>/mail/mailReceiveList.bts'" style="margin-left: 950px; margin-bottom: 5px; ">
+				<button type="button" id="btnGoList" class="btn btn-secondary btn-sm" onclick="location.href='<%= ctxPath%>/mail/mailReceiveList.bts'" style="margin-left: 1260px; margin-bottom: 5px; ">
 				목록
 				</button>
 			</div>	
 		</div>	
 	
 	<div class="mailDetailWrap" style="width: 100%;">
-		<div class="" style="margin-left: -50px">
+		<div class="col-sm-12" style="margin-left: -60px">
 			<ul class="mailReceiveDetailGroup">
 				<li id="title" class="detailList">
 					<h5 style="font-weight: bold; padding:10px 0 20px 0">${requestScope.mailvo.subject}</h5>

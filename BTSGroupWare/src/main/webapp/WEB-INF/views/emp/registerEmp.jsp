@@ -8,6 +8,13 @@
 
 %>
 
+<style type="text/css">
+
+	table#tblEmpRegister > tbody > tr > td {
+		margin-top: 15px !important;
+	}
+
+</style>
 
 <script type="text/javascript">
 
@@ -453,12 +460,12 @@
 		<tr>
 			<td><h2>사원 등록<br><br></h2></td>
 		</tr>
-		
+		<%-- 
 		<tr>
 			<td><strong>사진</strong></td>
 			<td style="align:center;"><img id="empProfile" src="<%=ctxPath %>/resources/images/ques.png" alt="..." ><button class="btn btn-default" id="telAdd_mini_btn">삭제</button></td>
 		</tr>
-		
+		 --%>
 		<tr>
 			<td><strong>이름&nbsp;</strong><span id="star">*</span></td>
 			<td><input required type="text" class="requiredInfo" id="emp_name" name="emp_name" size="5" placeholder="이름" style="width: 100px;" /></td>
@@ -594,7 +601,7 @@
 	</table>
 	</form>
 	<div style="padding-left: 200px;">
-		<button class="btn btn-info" id="btn_register" style="border: solid lightgray 2px;" onclick="goRegister();">저장</button>
+		<button class="btn btn-info" id="btn_register" style="border: solid lightgray 2px;" onclick="goRegister();">등록</button>
 		<!-- 
 		<button class="btn btn-default" id="btn_list" style="border: solid lightgray 2px;">목록으로 이동</button>
 		<button class="btn btn-default" id="btn_cancel" style="border: solid lightgray 2px;">취소</button>
