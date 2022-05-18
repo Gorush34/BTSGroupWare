@@ -305,6 +305,14 @@ public class MailDAO implements InterMailDAO {
 		return getSendToMeMailView;
 	}
 
+	
+	// 메인페이지에서 로그인한 사용자의 받은메일함 목록 보여주기
+	@Override
+	public List<Map<String, String>> mailReceive_main(String fk_receiveuser_num) {
+		List<Map<String, String>> mailReceive_main = sqlsession.selectList("minjeong.mailReceive_main", fk_receiveuser_num);
+		return mailReceive_main;
+	}
+	 
 
 
 }

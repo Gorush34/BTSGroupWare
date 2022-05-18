@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -54,6 +55,50 @@ public class MailController {
 	@Autowired
     private AES256 aes;
 
+	
+	// =========================== 메인페이지 받은메일함   =========================== //
+	// 메인페이지에서 로그인한 사용자의 받은메일함 목록 보여주기
+	@ResponseBody
+	@RequestMapping(value = "/mail/mailReceive_main.bts", produces = "text/plain; charset=UTF-8")	
+	public String mailReceive_main(HttpServletRequest request, HttpServletResponse response) {
+
+		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
+		
+	//	System.out.println("메인에서 받은메일함 페이지에서 로그인한 사용자 id (사원번호) 받아오기 " + loginuser.getPk_emp_no());
+	//  메인에서 받은메일함 페이지에서 로그인한 사용자 id (사원번호) 받아오기 : 80000010
+		String fk_receiveuser_num = String.valueOf(loginuser.getPk_emp_no());	// loginuser.getPk_emp_no() 로그인한 사용자의 사원번호 받아오기
+						
+		List<Map<String, String>> mailRecList_main = service.mailReceive_main(fk_receiveuser_num);
+	//	System.out.println("확인용 mailRecList_main" + mailRecList_main);
+	// 확인용 mailRecList_main[{reg_date=2022-05-17 23:28:46, reservation_date=2022-05-17 23:30:00, subject=파일 복구 후 발송예약 테스트 합니다..., fk_senduser_num=80000010, sendempname=김민정, pk_mail_num=218}, 
+	// {reg_date=2022-05-17 16:28:44, subject=RE: 임시저장만 들어가라 - 보낸메일함으로 가세요 - 답장 날짜 확인하기!!, fk_senduser_num=80000010, sendempname=김민정, pk_mail_num=210}, {reg_date=2022-05-17 02:36:25, subject=RE : 김사장이 중요 표시에 체크하고 메일 보냅니다~~~ --> 김사장이 받는 사람으로 답장보내기, fk_senduser_num=80000010, sendempname=김민정, pk_mail_num=198}, 
+	// {reg_date=2022-05-16 16:27:41, reservation_date=2022-05-16 16:30:00, subject=예약발송 날짜 형태 수정 후 다시 보냄 테스트, fk_senduser_num=80000010, sendempname=김민정, pk_mail_num=192},
+	// {reg_date=2022-05-16 16:16:14, subject=임시보관함으로 이동 잘되니? 테스트 에서 보낸메일함으로 보내기~~~, fk_senduser_num=80000010, sendempname=김민정, pk_mail_num=189}]
+
+		JSONArray jsonArr = new JSONArray();
+		
+		if(mailRecList_main != null && mailRecList_main.size() > 0) {
+			
+			for(Map<String, String> mailMap : mailRecList_main) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("pk_mail_num", mailMap.get("pk_mail_num"));
+				jsonObj.put("fk_senduser_num", mailMap.get("fk_senduser_num"));
+				jsonObj.put("sendempname", mailMap.get("sendempname"));
+				jsonObj.put("subject", mailMap.get("subject"));
+				jsonObj.put("reg_date", mailMap.get("reg_date"));
+				jsonObj.put("reservation_date", mailMap.get("reservation_date"));
+				jsonArr.put(jsonObj);
+			}
+			
+		}
+		
+		return jsonArr.toString();
+	}
+	
+	
+	
 	// =========================== 메일쓰기  =========================== //
 	
 	// 메일 쓰기 폼페이지 요청 (추후 로그인 AOP 추가 requiredLogin_) 

@@ -13,22 +13,6 @@
 
 body {font-family: 'Noto Sans KR', sans-serif; font-size: 18px;}
 
-
-/* mailReceiveList, mailSendList 서식 시작 */
-
-	#secondHeader {
-		display: inline-block;
-	}
-	
-	#delTrash, #readReceive, #readSend {
-		border: 0;
-		background-color: white;
-	}
-	
-	ul#secondHeaderGroup, .secondHeaderList {
-		list-style-type: none;
-		display: inline-block;
-	}
 	
 /* 헤더 스타일  시작 */
 
@@ -63,4 +47,75 @@ body {font-family: 'Noto Sans KR', sans-serif; }
 
 
 /* 헤더 스타일  끝 */
+
+
+
+
+/* =================== mail 전체 공통 서식 시작 =================== */
+
+#secondHeader {
+	display: inline-block;
+}
+
+#delTrash, #readReceive, #readSend {
+	border: 0;
+	background-color: white;
+}
+
+ul#secondHeaderGroup, .secondHeaderList {
+	list-style-type: none;
+	display: inline-block;
+}
 	
+
+/* === mail 쓰기 부분 서식 (메일쓰기, 내게쓰기, 임시보관함 상세) === */	
+/* 테이블 */
+  table, th, td, input, textarea {border: solid #a0a0a0 0px;}
+  
+  #table {border-collapse: collapse;
+          width: 1175px;
+          }
+         
+  #table th, #table td{padding: 5px;}
+  #table th{ 
+  		background-color: #6F808A; 
+  		color: white;
+  }
+
+#writeTableCss {
+	border: 0px; width: 1500px;
+}
+
+#content {
+	width: 1450px; border: solid 1px gray; height: 400px
+}
+
+/*버튼 */   
+.buttonList {
+		display: inline-block;
+		list-style-type: none; 	
+		size: 10px;	
+}
+
+#buttonGroup {
+		padding: 0px;
+		margin-top: 5px;
+}
+
+  button {
+		border-radius: 3px !important;
+} 
+
+#mailListWriteCss {	
+	width: 90%; margin: 10px; padding-top: 20px;	
+}
+
+/* === mail 상세내용 서식 (메일쓰기, 내게쓰기, 임시보관함 상세) === */	
+
+#mailListDetailCss{	
+	width: 90%; margin: 10px; padding-top: 20px;	
+}
+
+/* =================== mail 전체 공통 서식 끝 =================== */
+
+ 	

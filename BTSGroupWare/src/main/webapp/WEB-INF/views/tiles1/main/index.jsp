@@ -19,6 +19,11 @@ td#no{
     font-weight: bold;
     font-size: 15pt;
 }
+
+td.mail_subject:hover {
+	font-weight: bold;
+}
+
 </style>
 
 <script type="text/javascript">
@@ -63,6 +68,7 @@ td#no{
 		scheduleCount();
 		reservationCount();
 		employeeBirth();
+		readRecMail();
 		
 	});// end of $(document).ready(function(){})----------------------
 
@@ -652,7 +658,54 @@ td#no{
          	}
 		});
 	}// end of function preMonth(){}---------------------------------
+
+	// 로그인한 사용자의 받은메일함 보여주기
+	function readRecMail() {
 		
+		$.ajax({
+			url:"<%= request.getContextPath()%>/mail/mailReceive_main.bts",
+			dataType:"JSON",
+			success:function(json) {
+				
+				let html = "";
+				if(json.length > 0) {
+					$.each(json, function(index, item) {
+						  html += "<tr style='text-align: center;'>";  
+						  html += "<td class='mail' style='width:20%; style='text-align: center;'>"+item.sendempname+"</td>";
+						  html += "<td class='mail_subject' style='width:60%; text-align: left; padding-left: 30px;'><span onclick='goView_recMail("+item.pk_mail_num+")'style='color: black; cursor: pointer; '>"+item.subject+"</span></td>";
+						  if(item.reservation_date != null) {
+						  	html += "<td class='mail' style='width:20%; text-align: center;'>"+item.reservation_date+"</td>";	
+						  }
+						  else {
+							  	html += "<td class='mail' style='width:20%; text-align: center;'>"+item.reg_date+"</td>";							  
+						  }
+						  html += "</tr>";
+					});
+
+				}
+				else {
+					  html += "<tr>";
+					  html += "<td colspan='4' id='no' class='mail'>받은 메일이 없습니다.</td>";
+					  html += "</tr>";					
+				}
+				
+				  $("tbody#mailRecDisplay").html(html);				
+			},
+			  error: function(request, status, error){
+					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			  }
+		});
+		
+	}// end of function recMailList()-----------------------
+	  
+  // 로그인한 사용자의 메일 상세내용 보여주기		
+  function goView_recMail(pk_mail_num) {
+				  	
+	  location.href="<%= ctxPath%>/mail/mailReceiveDetail.bts?pk_mail_num="+pk_mail_num;
+	}// end of function goView(seq){}----------------------------------------------
+	
+	
+	
 </script>
 
 
@@ -952,21 +1005,10 @@ td#no{
 							    <tr style="text-align: center;">
 							      <th style="width:20%; text-align: center;">보낸이</th>
 							      <th style="width:60%; text-align: center;">제목</th>
-							      <th style="width:20%; text-align: center;">작성일자</th>
+							      <th style="width:20%; text-align: center;">보낸날짜</th>
 							    </tr>
 							  </thead>
-							  <tbody id="all_body">
-								<tr style="text-align: center;">
-							      <td style="width:20%; text-align: center;">정환모</td>
-							      <td style="width:60%; text-align: left; padding-left: 30px;">여기는 메일함이에요!</td>
-							      <td style="width:20%; text-align: center;">2022/4/30</td>
-							    </tr>
-							    <tr style="text-align: center;">
-							      <td style="width:20%; text-align: center;">정환모</td>
-							      <td style="width:60%; text-align: left; padding-left: 30px;">메인화면 채워야되니까 보존해주세요..</td>
-							      <td style="width:20%; text-align: center;">2022/4/30</td>
-							    </tr>
-							  </tbody>
+					  		<tbody id="mailRecDisplay"></tbody>
 							</table>
 	                    	</div>
 						</div>
