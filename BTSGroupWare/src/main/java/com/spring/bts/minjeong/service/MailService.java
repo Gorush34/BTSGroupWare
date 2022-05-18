@@ -403,5 +403,41 @@ public class MailService implements InterMailService {
 		return mailReceive_main;
 	}
 
+	// 받은 메일 1개 클릭 시 rec_status 업데이트 (받은메일함에서 읽음 표시하기 위함)
+	@Override
+	public int updateRec_status(Map<String, String> paraMap) {
+		int updateRec_status = dao.updateRec_status(paraMap);
+		return updateRec_status;
+	}
+
+	// 보낸 메일 1개 클릭 시 send_status 업데이트 (보낸메일함에서 읽음 표시하기 위함)
+	@Override
+	public int updateSend_status(Map<String, String> paraMap) {
+		int updateSend_status = dao.updateSend_status(paraMap);
+		return updateSend_status;
+	}
+
+	// 받은 메일 1개 클릭 시 imp_status 업데이트 (중요메일함에서 읽음 표시하기 위함)
+	@Override
+	public int updateImp_status(Map<String, String> paraMap) {
+		int updateImp_status = dao.updateImp_status(paraMap);
+		return updateImp_status;
+	}
+
+	// 글씀과 동시에 tbl_mailRead 테이블에 해당 글번호의 값을 insert 시켜준다.
+	@Override
+	public int addToMailRead(String fk_mail_num) {
+		int n = dao.addToMailRead(fk_mail_num);
+		return n;
+	}
+
+	@Override
+	public String getPkMailNum(MailVO mailvo) {
+		String getPkMailNum = dao.getPkMailNum(mailvo);
+		return getPkMailNum;
+	}
+
+
+
 	
 }

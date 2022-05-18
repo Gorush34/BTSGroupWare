@@ -235,7 +235,7 @@
 						<tbody>
 						<c:if test="${empty requestScope.receiveMailList}">
 							<tr>
-								<td colspan="10" style="text-align: center; width: 1000px;">메일이 존재하지 않습니다.</td>
+								<td colspan="12" style="text-align: center; width: 1278px;">메일이 존재하지 않습니다.</td>
 							</tr>							
 						</c:if>
 						<c:if test="${not empty requestScope.receiveMailList}">
@@ -267,7 +267,12 @@
 												<c:if test="${receiveMailList.importance == '1'}">
 													<span class="fa fa-exclamation" style="color: red;" class="text-center"></span>
 												</c:if>	
-												${receiveMailList.subject}
+												<c:if test="${receiveMailList.rec_status == '1'}">
+													<span>${receiveMailList.subject}</span>
+												</c:if>
+												<c:if test="${receiveMailList.rec_status == '0'}">
+													<span style="font-weight: bold;">${receiveMailList.subject}</span>												
+												</c:if>
 										</span>
 									</td>
 									<td class="text-left">									
