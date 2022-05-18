@@ -114,7 +114,7 @@ function mybd_cnt(){
 				}
 			});
 			
-		}// end of function scheduleCount(){}-------------------------------------------------
+		}// end of function mybd_cnt(){}-------------------------------------------------
 
 	
 function goReadBest() {
@@ -266,9 +266,6 @@ function goReadBest() {
 			<ul style="list-style-type: none; padding: 10px; text-align: center;">
 				<li id="side" class="hover " style="padding: 10px 0; margin-top: 50px; font-size: 14pt;" onclick="javascript:location.href='<%= request.getContextPath()%>/board/my.bts'" >
 					나의 작성글
-				</li>
-				<li id="side" class="hover " style="padding: 10px 0; margin-top: 50px; font-size: 14pt;" onclick="javascript:location.href='<%= request.getContextPath()%>/board/my.bts'" >
-					<span class="badge" id="mybd_cnt"></span>
 				</li>
 			</ul>
 			

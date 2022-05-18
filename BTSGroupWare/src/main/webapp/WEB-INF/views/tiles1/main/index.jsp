@@ -131,7 +131,7 @@ td.mail_subject:hover {
 	      
 		  // 기상 가져오기 끝
 		
-		
+		mybd_cnt();
 		goReadAll();	
 		goReadNotice();	
 		goReadBoard();	
@@ -345,7 +345,32 @@ td.mail_subject:hover {
 		
 		  location.href="<%= ctxPath%>/fileboard/view.bts?pk_seq="+pk_seq+"&gobackURL="+gobackURL; 
 		}// end of function goView(seq){}----------------------------------------------
-	  
+	
+	
+	// 내가쓴글 
+	function mybd_cnt(){
+			
+			$.ajax({
+				url:"<%= ctxPath%>/board/my_cnt.bts",
+				dataType:"JSON",
+				success:function(json){
+					//console.log("json.n"+json.n);
+					let html = "";
+					if(json.n == 0){
+						html += 0;
+					}
+					else if(json.n > 0){
+						html += json.n;
+					}
+					
+					$("span#mybd_cnt").html(html);
+				},
+				error: function(request, status, error){
+						alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+				}
+			});
+			
+		}// end of function mybd_cnt(){}-------------------------------------------------
 		
 	// ==== 일정 및 자원 예약 관련 함수 ==== //	
 	// 오늘의 일정 수 
@@ -982,12 +1007,12 @@ td.mail_subject:hover {
 		        		</a>
 		        	</li>
 		        	<li class="summary-community">
-		        		<a href="">
+		        		<a href="javascript:location.href='<%= request.getContextPath()%>/board/my.bts'">
 		        			<span class="type">
 		        				<span class="ic_dashboard2 ic_type_community" title="community"></span>
 		        			</span>
-		        			<span class="text">내 커뮤니티 새글</span>
-		        			<span class="badge">0</span>
+		        			<span class="text">작성한 글</span>
+		        			<span class="badge" id="mybd_cnt"></span>
 		        		</a>
 		        	</li>
 		        	<li class="summary-asset">
