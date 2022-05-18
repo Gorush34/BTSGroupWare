@@ -35,7 +35,7 @@
 	
 	<!-- 상세부서정보 페이지 사원목록 불러오기 -->
 	<select id="addBook_depInfo_select" resultType="com.spring.bts.hwanmo.model.EmployeeVO">
-		select E.pk_emp_no, E.emp_name , R.ko_rankname , D.ko_depname , R.pk_rank_no
+		select E.pk_emp_no, E.emp_name , R.ko_rankname , D.ko_depname , R.pk_rank_no, E.uq_email
 		from tbl_EMPLOYEES E
 		join tbl_rank_sort R
 		on E.fk_rank_id = R.pk_rank_no

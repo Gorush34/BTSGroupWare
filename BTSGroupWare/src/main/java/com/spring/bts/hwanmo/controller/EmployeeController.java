@@ -13,6 +13,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -35,6 +36,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.bts.byungyoon.service.InterAddBookService;
 import com.spring.bts.common.AES256;
 import com.spring.bts.common.FileManager;
 import com.spring.bts.common.MyUtil;
@@ -61,6 +63,9 @@ public class EmployeeController {
 	
 	@Autowired
 	private InterAttendanceService attService;
+	
+	@Autowired
+	private InterAddBookService service;
 	
 	// === #155. 파일업로드 및 다운로드를 해주는 FileManager 클래스 의존객체 주입하기(DI : DependencyInjection) ===	  
 	@Autowired // Type에 따라 알아서 Bean 을 주입해준다. 
@@ -698,7 +703,28 @@ public class EmployeeController {
 	} // end of public ModelAndView updateEmpEnd(ModelAndView mav, HttpServletRequest request) {})----------------
 	
 	
-	
+	 // 실험용 페이지
+     @RequestMapping(value="/addBook/test.bts")
+     public ModelAndView orgChart_sample(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	   
+	   
+		   HttpSession session = request.getSession();
+		   EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+		 
+		   List<EmployeeVO> empList = service.addBook_depInfo_select();
+		   
+			
+			 String message = "";
+			 String loc = "";
+			   
+		   
+		   mav.addObject("loginuser", loginuser);
+		   mav.addObject("empList", empList);
+		   
+		   mav.setViewName("test.addBook");
+		   
+	      return mav;
+   }
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	
