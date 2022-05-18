@@ -57,6 +57,7 @@
 			
 		}); // end of $("button#in_time").click(function(){})---------------
 		
+		// 퇴근시간 클릭시
 		$("button#out_time").click(function(){
 			
 			if($("span#workin").text() == "미등록") {
@@ -313,9 +314,9 @@
 								<tr id="">
 				   					<td><span id="link" style="margin-left: 5px;"><a href="<%= ctxPath %>/emp/registerEmp.bts">사원등록</a></span></td>
 				   				</tr>
-				   				<tr>
+				   				<%-- <tr>
 				   					<td><span id="link" style="margin-left: 5px;"><a href="<%= ctxPath %>/emp/viewAll.bts">모든 사원목록</a></span></td>
-				   				</tr>	
+				   				</tr> --%>	
 		   				</tbody>	
 	   				</table>	
 				</div>
