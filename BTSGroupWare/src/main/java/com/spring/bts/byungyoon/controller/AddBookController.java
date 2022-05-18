@@ -518,7 +518,6 @@ public class AddBookController {
 		int pk_addbook_no = Integer.parseInt(request.getParameter("pk_addbook_no"));
 		
 		
-		
 		int n = service.addBook_delete(pk_addbook_no);
 	        
 		if(n == 0) {
@@ -547,7 +546,23 @@ public class AddBookController {
 			
 			 String message = "";
 			 String loc = "";
-			   
+			
+			 
+			 String mid_test_1 = request.getParameter("mid_test_1");
+			  String mid_test_2 = request.getParameter("mid_test_2");
+			  String mid_test_3 = request.getParameter("mid_test_3");
+			  String last_test_1 = request.getParameter("last_test_1");
+			  String last_test_2 = request.getParameter("last_test_2");
+			  String last_test_3 = request.getParameter("last_test_3");
+			  
+			  System.out.println(mid_test_1);
+			  System.out.println(mid_test_2);
+			  System.out.println(mid_test_3);
+			  System.out.println(last_test_1);
+			  System.out.println(last_test_2);
+			  System.out.println(last_test_3);
+			 
+			 
 		   
 		   mav.addObject("loginuser", loginuser);
 		   mav.addObject("message", message);
@@ -567,6 +582,7 @@ public class AddBookController {
 			   @RequestParam(value="name[]") List<String> name,
 			   @RequestParam(value="rank[]") List<String> rank,   
 			   @RequestParam(value="dept[]") List<String> dept) {
+		 
 		   
 		   
 		   HttpSession session = request.getSession();
