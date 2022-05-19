@@ -21,7 +21,7 @@
 	// 페이징 처리되어진 후 특정 글제목을 클릭하여 상세내용을 본 이후 사용자가 목록보기 버튼을 클릭했을 때 돌아갈 페이지를 알려주기 위해 현재 페이지 주소를 뷰단으로 넘겨준다.
 		const gobackURL = "${requestScope.gobackURL}"; // 자꾸 빨간줄 뜸
 		
-		alert("list 단에서 확인용 gobackURL : " + gobackURL);
+	//	alert("list 단에서 확인용 gobackURL : " + gobackURL);
 		
 		if(gobackURL == "") {
 			location.href = "<%= ctxPath%>/edms/view.bts?pk_appr_no="+pk_appr_no+"&gobackURL="+gobackURL;
@@ -45,7 +45,7 @@
 	<div class="edmsHome">
 	
 	<div class="edmsHomeTitle">
-		<span class="edms_maintitle">${sessionScope.loginuser.emp_name}님의 현황</span>
+		<span class="edms_maintitle">전자결재 현황</span>
 		<p style="margin-bottom: 10px;"></p>
 	</div>
 	
@@ -63,7 +63,7 @@
 		<%-- 모든문서 목록이 있을 때 시작 --%>
 		<div class="divClear"></div>
 		<c:if test="${not empty requestScope.all}">
-		<table class="table table-sm table-hover table-light edmsTable">
+		<table class="table table-sm table-hover table-light edmsTable ellipsisTable">
 			<thead class="thead-light">
 				<tr>
 					<th scope="col" width="4%">#</th>
@@ -92,7 +92,7 @@
 						</c:if>
 					</td>
 					
-					<td>
+					<td class="elltitle">
 						<span class="title">${all.title}</span>
 					</td>
 					
@@ -167,7 +167,7 @@
 		<%-- 결재승인 목록이 있을 때 시작 --%>
 		<div class="divClear"></div>
 		<c:if test="${not empty requestScope.accept}">
-		<table class="table table-sm table-hover table-light edmsTable">
+		<table class="table table-sm table-hover table-light edmsTable ellipsisTable">
 			<thead class="thead-light">
 				<tr>
 					<th scope="col" width="4%">#</th>
@@ -193,7 +193,7 @@
 						</c:if>
 					</td>
 					
-					<td>
+					<td class="elltitle">
 						<span class="title" onclick="goView('${accept.pk_appr_no}')" style="cursor: pointer;">${accept.title}</span>
 					</td>
 					
@@ -258,7 +258,7 @@
 		<%-- 결재반려 목록이 있을 때 시작 --%>
 		<div class="divClear"></div>
 		<c:if test="${ not empty requestScope.reject}">
-		<table class="table table-sm table-hover table-light edmsTable">
+		<table class="table table-sm table-hover table-light edmsTable ellipsisTable">
 			<thead class="thead-light">
 				<tr>
 					<th scope="col" width="4%">#</th>
@@ -283,7 +283,7 @@
 						<button id="btn_emergency" class="btn btn-danger edmsBtn">긴급</button>
 						</c:if>
 					</td>
-					<td>
+					<td class="elltitle">
 						<span class="title" onclick="goView('${reject.pk_appr_no}')" style="cursor: pointer;">${reject.title}</span>
 					</td>
 					<td>

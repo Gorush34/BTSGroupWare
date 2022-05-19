@@ -148,37 +148,17 @@
 
 <%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
 
-<div class="edmslist">
+	<div class="edmslist">
 	<div class="edmsHomeTitle">
-		<%-- <c:if test="${requestScope.apprvo.status eq 0}">
-			<span class="edms_maintitle">대기문서함</span>
-		</c:if>
-		<c:if test="${requestScope.apprvo.status eq 1}">
-			<span class="edms_maintitle">승인문서함</span>
-		</c:if>
-		<c:if test="${requestScope.apprvo.status eq 2}">
-			<span class="edms_maintitle">반려문서함</span>
-		</c:if> --%>
-		
+		<span class="edms_maintitle">${sessionScope.loginuser.emp_name}님의 결재대기함</span>
 		<p style="margin-bottom: 10px;"></p>
 	</div>
-
+	
 
 	<!-- 문서목록 시작 -->
 	<div id="edmsList">
-		<span class="edms_title">결재대기문서 목록보기</span>
-		<!--
-		<div class="dropdown">
-			<button class="btn btn-primart-outline dropdown-toggle" type="button" data-toggle="dropdown"
-					aria-haspopup="true" aria-expanded="false">10개 보기</button>
-			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-				<a class="dropdown-item" href="#">10개 보기</a>
-				<a class="dropdown-item" href="#">30개 보기</a>
-				<a class="dropdown-item" href="#">50개 보기</a>
-			</div>
-		</div>
-		-->
-			
+		<span class="edms_title">결재대기 문서 목록보기</span>
+		
 		<div class="divClear"></div>
 
 		<%-- 결재대기 목록이 없을 때 시작 --%>
@@ -199,7 +179,7 @@
 		
 		<%-- 결재대기 목록이 있을 때 종료 --%>
 		<c:if test="${not empty requestScope.waitingList}">
-		<table class="table table-sm table-hover table-light edmsTable">
+		<table class="table table-sm table-hover table-light edmsTable ellipsisTable">
 			<thead class="thead-light">
 				<tr>
 					<th scope="col" width="4%">#</th>
@@ -230,7 +210,7 @@
 					</c:if>
 					</td>
 					
-					<td>
+					<td class="elltitle">
 						<span class="title" onclick="goView('${waiting.pk_appr_no}')" style="cursor: pointer;">${waiting.title}</span>
 					</td>
 					
