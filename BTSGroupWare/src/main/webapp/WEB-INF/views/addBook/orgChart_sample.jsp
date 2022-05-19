@@ -151,9 +151,9 @@
              
              var html = ""
              html += '<tr><td><input type="hidden" value = ' + empno[i] + '></td>'
-             html += '<td><input type="text" style="text-align:center; border:none;" id="last_text_name" readonly value = ' + name[i] + '></td>'
-             html += '<td><input type="text" style="text-align:center; border:none;" id="last_text_rank" readonly value = ' + rank[i] + '></td>'
-             html += '<td><input type="text" style="text-align:center; border:none;" id="last_text_dept" readonly value = ' + dept[i] + '></td></tr>'
+             html += '<td><input type="text" style="text-align:center; border:none;" id="last_text_name_' + i + '" readonly value = ' + name[i] + '></td>'
+             html += '<td><input type="text" style="text-align:center; border:none;" id="last_text_rank_' + i + '" readonly value = ' + rank[i] + '></td>'
+             html += '<td><input type="text" style="text-align:center; border:none;" id="last_text_dept_' + i + '" readonly value = ' + dept[i] + '></td></tr>'
              
              $("#tbl_last > tbody:last").append(html)
           }
@@ -161,15 +161,79 @@
       }
 //--------------------------- 최종결재자 버튼 끝 ---------------------------//      
    
-//--------------------------- 등록 버튼 시작 ---------------------------//
+//--------------------------- 모달 등록 버튼 시작(여길 누르면 input에 값이 담김) ---------------------------//
 
    function goApprove() {
    
-      
+	   var empno = [];
+       var name = [];
+       var rank = [];
+       var dept = [];
+        $("input[name='empno']:checked").each(function(){
+            id = $(this).attr('id')
+            empno.push($(this).val());
+            name.push($("#employee_name_" + id.split('_')[3]).val())
+            rank.push($("#employee_rank_" + id.split('_')[3]).val())
+            dept.push($("#employee_dept_" + id.split('_')[3]).val())
+            
+        });
+	
+        
+	   for(var i=0; i<empno.length; i++){
+		   
+		   var mid_html = ""
+	             mid_html += '<tr><td><input type="hidden" value = ' + empno[i] + '></td>'
+	             mid_html += '<td><input type="text" style="text-align:center; border:none;" id="mid_text_name_' + i + '" name="last_text_name_' + i + '" readonly value = ' + name[i] + '></td>'
+	             mid_html += '<td><input type="text" style="text-align:center; border:none;" id="mid_text_rank_' + i + '" name="last_text_rank_' + i + '" readonly value = ' + rank[i] + '></td>'
+	             mid_html += '<td><input type="text" style="text-align:center; border:none;" id="mid_text_dept_' + i + '" name="last_text_dept_' + i + '" readonly value = ' + dept[i] + '></td></tr>'
+		   
+		   var last_html = ""
+			   last_html += '<tr><td><input type="hidden" value = ' + empno[i] + '></td>'
+			   last_html += '<td><input type="text" style="text-align:center; border:none;" id="last_text_name_' + i + '" name="last_text_name_' + i + '" readonly value = ' + name[i] + '></td>'
+			   last_html += '<td><input type="text" style="text-align:center; border:none;" id="last_text_rank_' + i + '" name="last_text_rank_' + i + '" readonly value = ' + rank[i] + '></td>'
+			   last_html += '<td><input type="text" style="text-align:center; border:none;" id="last_text_dept_' + i + '" name="last_text_dept_' + i + '" readonly value = ' + dept[i] + '></td></tr>'
+             
+             $("#test_tbl > #tbody1").append(mid_html)
+             $("#test_tbl > #tbody2").append(last_html)
+		  /* 
+		   	$("#mid_test_"+(i+1)).val($("#mid_text_name_"+i).val());
+			$("#last_test_"+(i+1)).val($("#last_text_name_"+i).val());
+		  */ 
+		}
+	   
    }
 
-//--------------------------- 등록 버튼 끝 ---------------------------//   
+//--------------------------- 모달 등록 버튼 끝(여길 누르면 input에 값이 담김) ---------------------------//   
 
+/* ------ 여길 누르면 값이 컨트롤러 단으로 넘어감 ------ */
+<%--
+function test() {
+	const frm = document.testFrm;
+    frm.action = "<%=ctxPath%>/addBook/orgChart_sample.bts"
+    frm.method = "post"
+	frm.submit();
+}
+--%>
+function test(i)	{
+	$.ajax({
+		url:"<%= ctxPath%>/addBook/orgChart_sample.bts",
+		data:{"test_1" : $("#last_text_name_0").val() ,
+			  "test_2" : $("#last_text_name_1").val() ,
+			  "test_3" : $("#last_text_name_2").val() ,
+			},
+		type: "post",
+		dataType: 'json',
+		success : function(json) {
+			
+		},
+		error: function(request){
+			
+		}
+	});
+}
+
+
+/* ------ 여길 누르면 값이 컨트롤러 단으로 넘어감 ------ */
 
 </script>
 
@@ -185,9 +249,33 @@
 
 
    
-   <!-- 모달 -->
+   
+  <form name="testFrm">
+ <table id="test_tbl">
+ <!--  
+ <input type="text" id="mid_test_1" name="mid_test_1" > 
+ <input type="text" id="mid_test_2" name="mid_test_2" > 
+ <input type="text" id="mid_test_3" name="mid_test_3" > 
+ 
+ <input type="text" id="last_test_1" name="last_test_1" > 
+ <input type="text" id="last_test_2" name="last_test_2" > 
+ <input type="text" id="last_test_3" name="last_test_3" > 
+ -->
+ <tbody id="tbody1">
+ 	<tr>
+ </tbody>
+ <tbody>
+ 	<tr>
+ </tbody>
+ 
+ </table>
+ </form>
+ <button type="submit" onclick="test()">넘어가라</button>
+ 
 <button class="btn btn-default" data-toggle="modal" data-target="#viewModal">유리한테 줄 조직도 틀</button>
 
+
+<!-- 모달 -->
 <div class="modal fade" data-backdrop="static" id="viewModal">
    <div class="modal-dialog">
    <div class="modal-content" style= "height:90%; width:200%;">

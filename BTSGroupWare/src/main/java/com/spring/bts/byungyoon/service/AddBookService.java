@@ -1,5 +1,7 @@
 package com.spring.bts.byungyoon.service;
 
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.Map;
 
@@ -112,6 +114,20 @@ public class AddBookService implements InterAddBookService  {
 				
 		return n;
 	}
+
+	// 이메일 중복체크
+	@Override
+	public boolean emailDuplicateCheck(String email) {
+		try {
+			email = aes.encrypt(email); // 이메일을 암호화
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		
+		boolean isExist = dao.emailDuplicateCheck(email);
+		return isExist;
+	}
+	
 
 
 }

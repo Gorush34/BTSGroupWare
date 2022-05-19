@@ -491,9 +491,15 @@ public class EdmsController {
 		int sizePerPage = 10;		// 한 페이지당 보여줄 게시물 건수 
 		int currentShowPageNo = 0;	// 현재 보여주는 페이지번호로서, 초기치로는 1페이지로 설정함.
 		int totalPage = 0;			// 총 페이지수(웹브라우저상에서 보여줄 총 페이지 개수, 페이지바)
-		
 		int startRno = 0;			// 시작 행번호
 		int endRno = 0;				// 끝 행번호
+		int fk_emp_no = 0;
+		
+		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
+		
+		fk_emp_no = loginuser.getPk_emp_no();
+		
+		paraMap.put("fk_emp_no", String.valueOf(fk_emp_no));
 		
 		// 내문서함 - 대기문서함 총 게시물 건수(totalCount)
 		totalCount = service.getTotalCount_wait(paraMap);
@@ -518,7 +524,8 @@ public class EdmsController {
 		endRno = startRno + sizePerPage - 1;
 		
 		paraMap.put("startRno", String.valueOf(startRno));
-		paraMap.put("endRno", String.valueOf(endRno));		
+		paraMap.put("endRno", String.valueOf(endRno));	
+		paraMap.put("fk_emp_no", String.valueOf(fk_emp_no));
 		
 		// 상태가 대기중인 모든 결재문서 불러오기
 		edmsList = service.getEdmsListWithPaging_wait(paraMap);

@@ -37,6 +37,9 @@ public interface InterAddBookService {
 
 	// 상세부서정보 페이지에서 관리자로 로그인시 사원상세정보 update 하기
 	int addBook_depInfo_update(EmployeeVO evo);
+
+	// 이메일 중복체크
+	boolean emailDuplicateCheck(String email);
 	
 	
 }

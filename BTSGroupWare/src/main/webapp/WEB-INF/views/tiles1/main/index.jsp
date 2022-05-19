@@ -972,9 +972,11 @@ td.mail_subject:hover {
 	        		</span>
 	        		<span class="info">
 	        			<span class="name" title="">${emp.emp_name}</span>
+	        			<c:if test="${sessionScope.loginuser.pk_emp_no != 80000001 }">
 	        			<span class="position">${emp.ko_rankname}</span>
 	        			<br>
 	        			<span class="part">${emp.ko_depname}</span>
+	        			</c:if>
 	        		</span>
 	        	</div>
 	        

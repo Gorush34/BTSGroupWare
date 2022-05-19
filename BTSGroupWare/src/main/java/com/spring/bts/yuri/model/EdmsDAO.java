@@ -144,6 +144,7 @@ public class EdmsDAO implements InterEdmsDAO {
 	// 대기문서 목록 페이징 처리
 	@Override
 	public List<ApprVO> edmsListSearchWithPaging_wait(Map<String, String> paraMap) {
+		
 		List<ApprVO> edmsList = sqlsession.selectList("yuri.edmsListSearchWithPaging_wait", paraMap);
 		return edmsList;
 	}
@@ -228,6 +229,9 @@ public class EdmsDAO implements InterEdmsDAO {
 	// 상태가 대기중인 모든 결재문서 불러오기
 	@Override
 	public List<ApprVO> getEdmsListWithPaging_wait(Map<String, String> paraMap) {
+
+		System.out.println(paraMap.get("fk_emp_no"));
+		
 		List<ApprVO> edmsList = sqlsession.selectList("yuri.getEdmsListWithPaging_wait", paraMap);
 		return edmsList;
 	}

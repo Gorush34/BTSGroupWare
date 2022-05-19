@@ -400,7 +400,7 @@ public class MailController {
 	*/	
 		// 메일 data 를 DB 로 보낸다. (첨부파일 있을 때 / 첨부파일 없을 때)
 		int n = 0;
-		
+
 		if(attach.isEmpty()) {
 			// 첨부파일이 없을 때
 //			mailvo.setTemp_status("0");			// 임시보관함 - 상세내용 보기 - 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
@@ -413,6 +413,9 @@ public class MailController {
 				mailvo.setReservation_status("0");
 				mailvo.setTemp_status("0");			// 임시보관함 - 상세내용 보기 - 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
 				n = service.add(mailvo);
+				String fk_mail_num = service.getPkMailNum(mailvo);
+			//	System.out.println("확인용 fk_mail_num : " + fk_mail_num);
+				n = service.addToMailRead(fk_mail_num);	// 글씀과 동시에 tbl_mailRead 테이블에 해당 글번호의 값을 insert 시켜준다.
 			}	
 		}
 		else {
@@ -420,6 +423,9 @@ public class MailController {
 			mailvo.setReservation_status("0");
 			mailvo.setTemp_status("0");			// 임시보관함 - 상세내용 보기 - 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
 			n = service.add_withFile(mailvo);
+			String fk_mail_num = service.getPkMailNum(mailvo);
+		//	System.out.println("확인용 fk_mail_num : " + fk_mail_num);
+			n = service.addToMailRead(fk_mail_num);
 		}
 		
 		// 성공 시 보낸 메일함으로 이동 or 메일 발송 성공 페이지로 이동
@@ -650,7 +656,6 @@ public class MailController {
 		// 사용자가 메일번호(pk_mail_num=?) 뒤에 정수외의 것을 입력하지 않도록 exception 처리를 한다.
 		try {
 			Integer.parseInt(pk_mail_num);			
-
 		
 			// 글 내용 한개 뿐만 아니라 검색도 해야하므로 Map 에 담는다.
 			Map<String, String> paraMap = new HashMap<>();
@@ -663,10 +668,21 @@ public class MailController {
 			// map 에 담은 검색타입과 검색어를 view 단으로 보낸다.
 			mav.addObject("paraMap", paraMap);
 			
-			// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
 			MailVO mailvo = null;
-			mailvo = service.getRecMailView(paraMap);
-			mav.addObject("mailvo", mailvo);
+			
+			// 받은 메일 1개 클릭 시 rec_status 업데이트 (rec_status = 1로 변경한다. (받은메일함에서 읽음 표시하기 위함)
+			int n = 0;
+			n = service.updateRec_status(paraMap);
+			if(n==1) {
+				// 받은메일 목록에서 상세내용 클릭 시 rec_stauts 를 update 한 후,
+				// 각 페이지의 상세내용을 읽어온다.		
+
+				// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
+				mailvo = service.getRecMailView(paraMap);
+				mav.addObject("mailvo", mailvo);
+			}
+
+
 			
 			// 이전글 및 다음글 보여주기
 			
@@ -866,8 +882,7 @@ public class MailController {
 		// 사용자가 메일번호(pk_mail_num=?) 뒤에 정수외의 것을 입력하지 않도록 exception 처리를 한다.
 		try {
 			Integer.parseInt(pk_mail_num);			
-
-		
+			
 			// 글 내용 한개 뿐만 아니라 검색도 해야하므로 Map 에 담는다.
 			Map<String, String> paraMap = new HashMap<>();
 			paraMap.put("pk_mail_num", pk_mail_num);
@@ -879,11 +894,21 @@ public class MailController {
 			// map 에 담은 검색타입과 검색어를 view 단으로 보낸다.
 			mav.addObject("paraMap", paraMap);
 			
-			// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
 			MailVO mailvo = null;
-			mailvo = service.getSendMailView(paraMap);
-			mav.addObject("mailvo", mailvo);
 			
+			// 보낸 메일 1개 클릭 시 send_status 업데이트 (send_status = 1로 변경한다. (보낸메일함에서 읽음 표시하기 위함)
+			int n = 0;
+			n = service.updateSend_status(paraMap);
+			if(n==1) {
+				// 보낸메일 목록에서 상세내용 클릭 시 send_status 를 update 한 후,
+				// 각 페이지의 상세내용을 읽어온다.		
+
+				// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
+				mailvo = service.getSendMailView(paraMap);
+				mav.addObject("mailvo", mailvo);
+			}
+
+
 			// 이전글 및 다음글 보여주기
 			
 			
@@ -1098,9 +1123,19 @@ public class MailController {
 			mav.addObject("paraMap", paraMap);
 			
 			// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
-			MailVO mailvo = null;
-			mailvo = service.getImportantMailView(paraMap);
-			mav.addObject("mailvo", mailvo);
+			MailVO mailvo = null;			
+			// 중요 메일 1개 클릭 시 imp_status 업데이트 (imp_status = 1로 변경한다.중요메일함에서 읽음 표시하기 위함)
+			int n = 0;
+			n = service.updateImp_status(paraMap);
+			if(n==1) {
+				// 받은메일 목록에서 상세내용 클릭 시 rec_stauts 를 update 한 후,
+				// 각 페이지의 상세내용을 읽어온다.		
+
+				// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
+				mailvo = service.getImportantMailView(paraMap);
+				mav.addObject("mailvo", mailvo);
+			}
+
 			
 			// 이전글 및 다음글 보여주기
 			

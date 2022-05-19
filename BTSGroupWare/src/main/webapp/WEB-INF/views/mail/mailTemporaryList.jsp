@@ -217,7 +217,7 @@
 					<table>
 						<thead>
 							<tr>
-								<th style="width: 2%;">
+								<th style="width: 3%;">
 									<input type="checkbox" id="checkAll" />
 								</th>
 								<%--
@@ -225,7 +225,7 @@
 									<span class="fa fa-star-o"></span>
 								</th>
 								 --%>
-									<th style="width: 2%;">
+									<th style="width: 3%;">
 										<span class="fa fa-paperclip"></span>
 									</th>
 								<th style="width: 10%;" class="text-center">받는이</th>
@@ -237,7 +237,7 @@
 						<tbody>
 						<c:if test="${empty requestScope.TemporaryMailList}">
 							<tr>
-								<td colspan="10" style="text-align: center; width: 1000px;">메일이 존재하지 않습니다.</td>
+								<td colspan="10" style="text-align: center; width: 1278px;">메일이 존재하지 않습니다.</td>
 							</tr>							
 						</c:if>
 						<c:if test="${not empty requestScope.TemporaryMailList}">
