@@ -28,15 +28,23 @@
 <title>연락처추가페이지</title>
 
 	<div id="telAdd_main_tbl" style="text-align:center;">
-	<form name="telAddFrm"> 
-	<table id="tbl_telAdd">
-		<tr>
-			<td><h2>연락처 추가<br><br></h2><input type="hidden" id="registeruser" value="${sessionScope.loginuser.pk_emp_no}"></td>
-		</tr>
-		<tr>
-			<td><strong>사진</strong></td>
-			<td><img src="<%=ctxPath %>/resources/images/addBook_telAdd_sample.jpg" alt="..." class="img-rounded"><button class="btn btn-default" id="telAdd_mini_btn">삭제</button></td>
-		</tr>
+		<form name="updateImgFrm" id="updateImgFrm" action="<%= ctxPath%>/emp/updateImg.bts" method="post" enctype="multipart/form-data" role="form">
+		<table id="tblEmpUpdate" style="">	
+			<tr>
+				<td><h2>주소록 추가<br><br></h2><input type="hidden" id="registeruser" value="${sessionScope.loginuser.pk_emp_no}"></td>
+			</tr>
+			<tr>
+				<td><strong>사진</strong></td>
+				<td style="text-align:left;"><img id="empProfile" src="<%= ctxPath%>/resources/images/nol.png" style="width:60%;"><br></td>
+				<td>	
+					<input type="file" name="attach" id="attach" style="display:inline;"/><br><br>
+					<button type="button" style=" display:inline;" id="updateImage" class="btn btn-primary">사진변경</button> 
+				</td>
+			</tr>
+		</table>
+		</form>
+		<form name="telAddFrm"> 
+		<table id="tbl_telAdd">
 		<tr>
 			<td><strong>이름*</strong></td>
 			<td>
@@ -154,7 +162,32 @@
 	
 	$( document ).ready( function() {
 		
-
+		// 사진변경버튼 클릭시
+	 	$("button#updateImage").on("click", function (event) {
+	 		/// event.preventDefault(); 
+	 		var url = $("#updateImgFrm").attr("action"); 
+	 		var form = $('#updateImgFrm')[0]; 
+	 		var formData = new FormData(form); 
+	 		$.ajax({ 
+	 			url: url
+	 		  , type: 'POST'
+	 		  , data: formData
+	 		  , dataType: "json"
+	 		  , async: false
+	 		  , success: function (json) { 
+	 			 alert("사진이 변경되었습니다. 변경된 사진은 재접속시 적용됩니다.");
+	 			 <%-- $("#empProfile").attr("src", "<%= ctxPath%>/resources/files/${json.img_name}"); --%>
+	 			 /* $("#empProfile").attr("src", json.path +"/"+json.img_name);  */
+	 			 // history.go(0);
+	 		  }, error: function (json) { 
+	 			  alert("실패!");
+	 		  }, 
+	 		    cache: false
+	 		  , contentType: false
+	 		  , processData: false 
+	 		  });
+	 	
+	 	}); // end of $("button#updateImage").on("click", function (event) {}---------------------------
 	
 	}); // end of $( document ).ready( function()------------------------------------------
 	
