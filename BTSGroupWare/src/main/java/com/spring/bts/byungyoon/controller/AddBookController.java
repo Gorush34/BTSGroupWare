@@ -500,28 +500,82 @@ public class AddBookController {
 		}
 	
 	
-	// 주소록 삭제하기
-	@RequestMapping(value = "/addBook/addBook_delete.bts", method = {RequestMethod.POST})
-	public ModelAndView addBook_delete(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
-		
-		int pk_addbook_no = Integer.parseInt(request.getParameter("pk_addbook_no"));
-		
-		
-		int n = service.addBook_delete(pk_addbook_no);
-	        
-		if(n == 0) {
-			mav.addObject("message", "삭제할 수 없습니다.");
-		} else {
-			mav.addObject("message", "삭제되었습니다.");
+		// 주소록 삭제하기
+		@RequestMapping(value = "/addBook/addBook_delete.bts", method = {RequestMethod.POST})
+		public ModelAndView addBook_delete(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+			
+			int pk_addbook_no = Integer.parseInt(request.getParameter("pk_addbook_no"));
+			
+			
+			int n = service.addBook_delete(pk_addbook_no);
+		        
+			if(n == 0) {
+				mav.addObject("message", "삭제할 수 없습니다.");
+			} else {
+				mav.addObject("message", "삭제되었습니다.");
+			}
+		  
+			mav.addObject("loc", request.getContextPath()+"/addBook/addBook_main.bts");
+			mav.setViewName("msg");
+		      
+			return mav;
 		}
-	  
-		mav.addObject("loc", request.getContextPath()+"/addBook/addBook_main.bts");
-		mav.setViewName("msg");
-	      
-		return mav;
-	}
 	
 	
+		// 사원목록에서 사원 삭제하기
+		@RequestMapping(value = "/addBook/addBook_depInfo_delete.bts", method = {RequestMethod.POST})
+		public ModelAndView addBook_depInfo_delete(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+			
+			int pk_emp_no = Integer.parseInt(request.getParameter("user"));
+			
+			System.out.println("pk_emp_no :" + pk_emp_no);
+			
+			int n = service.addBook_depInfo_delete(pk_emp_no);
+		        
+			if(n == 0) {
+				mav.addObject("message", "삭제할 수 없습니다.");
+			} else {
+				mav.addObject("message", "삭제되었습니다.");
+			}
+	 	  
+			mav.addObject("loc", request.getContextPath()+"/addBook/addBook_depInfo.bts");
+			mav.setViewName("msg");
+		     
+			return mav;
+		}
+	
+	
+	// 이메일 중복체크
+			@ResponseBody
+			@RequestMapping(value="/addBook/emailDuplicateCheck.bts", method = {RequestMethod.POST}, produces="text/plain;charset=UTF-8")
+			public String emailDuplicateCheck(HttpServletRequest request) { 
+			
+				String email = request.getParameter("email");
+				
+				
+				// System.out.println(">>> 확인용 uq_email =>"+ uq_email );	// 내가 입력한 아이디 값
+				
+				boolean isExist = service.emailDuplicateCheck(email);
+				
+				JSONObject jsonObj = new JSONObject(); 	// {}
+				jsonObj.put("isExist", isExist);			// {"isExist":true} 또는 {"isExist":false} 으로 만들어준다. 
+					
+					String json = jsonObj.toString();	// 문자열 형태인 "{"isExist":true}" 또는 "{"isExist":false}" 으로 만들어준다.
+					// System.out.println(">>> 확인용 json =>"+ json );	
+				//	>>> 확인용 json =>{"isExist":false}
+				//	또는	
+				//	>>> 확인용 json =>{"isExist":true}
+					
+				request.setAttribute("json",json);
+					
+				return json;
+				
+			} // public String emailDuplicateCheck(HttpServletRequest request) 
+	
+	
+	
+	
+/*	
 	 // 실험용 페이지
 	   @RequestMapping(value="/addBook/orgChart_sample.bts")
 	   public ModelAndView orgChart_sample(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
@@ -546,39 +600,9 @@ public class AddBookController {
 		   
 	      return mav;
 	   }
+*/	   
 	   
-	   
-	   // 이메일 중복체크
-		@ResponseBody
-		@RequestMapping(value="/addBook/emailDuplicateCheck.bts", method = {RequestMethod.POST}, produces="text/plain;charset=UTF-8")
-		public String emailDuplicateCheck(HttpServletRequest request) { 
-		
-			String email = request.getParameter("email");
-			
-			
-			// System.out.println(">>> 확인용 uq_email =>"+ uq_email );	// 내가 입력한 아이디 값
-			
-			boolean isExist = service.emailDuplicateCheck(email);
-			
-			JSONObject jsonObj = new JSONObject(); 	// {}
-			jsonObj.put("isExist", isExist);			// {"isExist":true} 또는 {"isExist":false} 으로 만들어준다. 
-				
-				String json = jsonObj.toString();	// 문자열 형태인 "{"isExist":true}" 또는 "{"isExist":false}" 으로 만들어준다.
-				// System.out.println(">>> 확인용 json =>"+ json );	
-			//	>>> 확인용 json =>{"isExist":false}
-			//	또는	
-			//	>>> 확인용 json =>{"isExist":true}
-				
-			request.setAttribute("json",json);
-				
-			return json;
-			
-		} // public String emailDuplicateCheck(HttpServletRequest request) { }----------------------
-
-   
-
-   
-   
+	  
 
 	
 	
