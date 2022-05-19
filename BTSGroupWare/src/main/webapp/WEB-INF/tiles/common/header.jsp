@@ -126,12 +126,14 @@
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item" href="<%=ctxPath%>/emp/updateEmp.bts">나의정보</a>
              	  <!-- 사원등록 막아놓을 예정 -->
-                  <a class="dropdown-item" href="<%=ctxPath%>/emp/registerEmp.bts">사원등록</a>
+             	  <c:if test="${sessionScope.loginuser.pk_emp_no == 80000001 }">
+                  	<a class="dropdown-item" href="<%=ctxPath%>/emp/registerEmp.bts">관리자 페이지</a>
+                  </c:if>
                   <a class="dropdown-item" href="<%=ctxPath%>/logout.bts">로그아웃</a>
               </div>
             </li>
            
-           <span style="color: navy; font-weight: bold;">${sessionScope.loginuser.emp_name}</span> 님 로그인중.. 
+           <span style="color: navy; font-weight: bold;">${sessionScope.loginuser.emp_name}</span> 님 환영합니다!
          </div>
       </c:if>
    </nav>

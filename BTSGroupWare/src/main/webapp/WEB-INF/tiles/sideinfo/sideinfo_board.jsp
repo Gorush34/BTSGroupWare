@@ -37,16 +37,16 @@ td#no{
 color:black !important;
 }
 
+
 a.nav-link{
-margin-right: 20px;
-font-size: 15px;
-    padding-right: 0.5rem;
-    padding-left: 0.5rem;
-        display: block;
-    padding: 0.5rem 1rem;
+
 
 }
 
+a.nav-link{
+	display: block;
+    padding: 0.5rem 1rem;
+}
 #side{
     color: black;
     font-size: 15pt;
@@ -85,14 +85,36 @@ color: red;
 	$(document).ready(function(){
 		
 		goReadBest();
-
+		mybd_cnt();
 		
 	});// end of $(document).ready(function(){}-------------------
 
 			
 	//Function Declaration
 
-
+function mybd_cnt(){
+			
+			$.ajax({
+				url:"<%= ctxPath%>/board/my_cnt.bts",
+				dataType:"JSON",
+				success:function(json){
+					//console.log("json.n"+json.n);
+					let html = "";
+					if(json.n == 0){
+						html += 0;
+					}
+					else if(json.n > 0){
+						html += json.n;
+					}
+					
+					$("span#mybd_cnt").html(html);
+				},
+				error: function(request, status, error){
+						alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+				}
+			});
+			
+		}// end of function mybd_cnt(){}-------------------------------------------------
 
 	
 function goReadBest() {
@@ -240,6 +262,12 @@ function goReadBest() {
 				<tbody id="bestDisplay"></tbody>
 				
 			</table>		
+			
+			<ul style="list-style-type: none; padding: 10px; text-align: center;">
+				<li id="side" class="hover " style="padding: 10px 0; margin-top: 50px; font-size: 14pt;" onclick="javascript:location.href='<%= request.getContextPath()%>/board/my.bts'" >
+					나의 작성글
+				</li>
+			</ul>
 			
 		</div>
 		

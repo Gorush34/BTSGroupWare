@@ -170,13 +170,12 @@
 </script>
 
 <%-- 보낸 메일함 목록 보여주기 --%>	
-<div class="container" style="width: 100%; margin: 50px;">
-	<div class="row bg-title" style="border-bottom: solid 1.5px #e6e6e6;">	
-		<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-			<h4 class="page-title" style="color: black;">보낸 메일함</h4>
+<div class="col-xs-10" style="width: 90%; margin: 10px; padding-top: 20px;">
+	<div style="border-bottom: solid 1.5px #e6e6e6;" style="width: 90%;" >		
+		<div>
+			<h4 style="color: black;">보낸 메일함</h4>
 		</div>
-		
-		<form name="goSendListSelectFrm" style="display: inline-block; padding-left: 470px;">		
+		<form name="goSendListSelectFrm" style="display: inline-block; padding-left: 1070px;">		
 			<div id="mail_searchType">
 				<select class="form-control" id="searchType" name="searchType" style="">
 					<option value="subject" selected="selected">제목</option>
@@ -228,15 +227,16 @@
 									<span class="fa fa-paperclip"></span>
 								</th>
 								<th style="width: 10%;" class="text-center">받는이</th>
-								<th style="width: 68%;">제목</th>
-								<th style="width: 22%;" class="text-left">날짜</th>
+								<th style="width: 60%;">제목</th>
+								<th style="width: 10%;">읽음여부</th>								
+								<th style="width: 20%;" class="text-left">날짜</th>
 							</tr>
 						</thead>
 						
 						<tbody>
 						<c:if test="${empty requestScope.SendMailList}">
 							<tr>
-								<td colspan="10" style="text-align: center; width: 1000px;">메일이 존재하지 않습니다.</td>
+								<td colspan="10" style="text-align: center; width: 1278px;">메일이 존재하지 않습니다.</td>
 							</tr>							
 						</c:if>
 						<c:if test="${not empty requestScope.SendMailList}">		
@@ -267,10 +267,16 @@
 									<span class="subject" onclick="goSendMailView('${SendMailList.pk_mail_num}')">
 										<c:if test="${SendMailList.importance == '1'}">
 											<span class="fa fa-exclamation" style="color: red;" class="text-center"></span>
-										</c:if>	
-										${SendMailList.subject}
+										</c:if>
+										<c:if test="${SendMailList.send_status == '1'}">
+											<span>${SendMailList.subject}</span>
+										</c:if>
+										<c:if test="${SendMailList.send_status == '0'}">
+											<span style="font-weight: bold;">${SendMailList.subject}</span>												
+										</c:if>											
 									</span>
 								</td>
+								<td>읽지않음</td>																
 								<td class="text-left">									
 									<c:if test="${not empty SendMailList.reservation_date}">
 											${SendMailList.reservation_date}

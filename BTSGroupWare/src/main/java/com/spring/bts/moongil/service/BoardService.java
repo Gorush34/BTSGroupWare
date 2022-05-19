@@ -529,6 +529,24 @@ public class BoardService implements InterBoardService {
 		return likevo;
 	}
 
+	@Override
+	public List<BoardVO> boardListSearchWithPaging_my(Map<String, String> paraMap) {
+		List<BoardVO> boardList = dao.boardListSearchWithPaging_my(paraMap);
+		return boardList;
+	}
+
+	@Override
+	public int getTotalCount_my(Map<String, String> paraMap) {
+		int n = dao.getTotalCount_my(paraMap);
+		return n;
+	}
+
+	@Override
+	public int my_cnt(int pk_emp_no) {
+		int n = dao.my_cnt(pk_emp_no);
+		return n;
+	}
+
 
 
 

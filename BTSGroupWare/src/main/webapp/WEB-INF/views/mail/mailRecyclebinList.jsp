@@ -169,13 +169,12 @@
 </script>
 
 <%-- 받은 메일함 목록 보여주기 --%>	
-<div class="container" style="width: 100%; margin: 50px;">
-	<div class="row bg-title" style="border-bottom: solid 1.5px #e6e6e6;">	
-		<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-			<h4 class="page-title" style="color: black;">휴지통</h4>
+<div class="col-xs-10" style="width: 90%; margin: 10px; padding-top: 20px;">
+	<div style="border-bottom: solid 1.5px #e6e6e6;" style="width: 90%;" >		
+		<div>
+			<h4 style="color: black;">휴지통</h4>
 		</div>
-		
-		<form name="goRecyclebinListSelectFrm" style="display: inline-block; padding-left: 470px;">		
+		<form name="goRecyclebinListSelectFrm" style="display: inline-block; padding-left: 1070px;">		
 			<div id="mail_searchType">
 				<select class="form-control" id="searchType" name="searchType">
 					<option value="subject" selected="selected">제목</option>
@@ -235,7 +234,7 @@
 						<tbody>
 						<c:if test="${empty requestScope.RecyclebinMailList}">
 							<tr>
-								<td colspan="10" style="text-align: center; width: 1000px;">메일이 존재하지 않습니다.</td>
+								<td colspan="10" style="text-align: center; width: 1278px;">메일이 존재하지 않습니다.</td>
 							</tr>							
 						</c:if>
 						<c:if test="${not empty requestScope.RecyclebinMailList}">	

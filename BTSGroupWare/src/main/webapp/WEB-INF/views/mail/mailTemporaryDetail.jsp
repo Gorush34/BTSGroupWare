@@ -10,38 +10,6 @@
 
 <style type="text/css">
 
-/* 테이블 */
-  table, th, td, input, textarea {border: solid #a0a0a0 0px;}
-  
-  #table {border-collapse: collapse;
-          width: 1175px;
-          }
-         
-  #table th, #table td{padding: 5px;}
-  #table th{ 
-  		background-color: #6F808A; 
-  		color: white;
-  }
-
-/*버튼 */   
-  .buttonList {
-  		display: inline-block;
-  		list-style-type: none; 	
-  		size: 10px;	
-  }
- 
-  #buttonGroup {
-  		padding: 0px;
-  		margin-top: 5px;
-  }
-  
-    button {
-  		border-radius: 3px !important;
-  } 
-  
-  /* 파일첨부 */
-  /*input="file" 태그 원래 형태 지우기*/
-
    
 </style>
 
@@ -378,9 +346,9 @@
 	
 </script>
 
-<div class="container" style="width: 100%; margin: 50px;">
-	<div class="row bg-title" style="border-bottom: solid 1.5px #e6e6e6;">	
-		<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+<div class="col-xs-10" id="mailListWriteCss">
+	<div style="border-bottom: solid 1.5px #e6e6e6;" style="width: 90%;">	
+		<div>
 			<h4 class="page-title" style="color: black;">메일 쓰기</h4>
 		</div>
 	</div>
@@ -454,10 +422,10 @@
 		<br>
 		
 		<%-- 메일 내용 시작 (스마트 에디터 사용) --%>
-		<table style="border: 0px; width: 1110px;">
+		<table id="writeTableCss">
 			<tr style="border: 0px;">
 				<td width="1200px;" style="border: 0px">
-					<textarea rows="20" cols="100" style="width: 1090px; border: solid 1px gray; height: 400px;" name="content" id="content" >					
+					<textarea rows="20" cols="100" style="width: 1450px; border: solid 1px gray; height: 400px;" name="content" id="content" >					
 					${requestScope.mailvo.content}
 					</textarea>						
 				</td>

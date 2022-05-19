@@ -336,9 +336,9 @@
 	 		  , dataType: "json"
 	 		  , async: false
 	 		  , success: function (json) { 
-	 			 alert(json.img_name);
+	 			 alert("사진이 변경되었습니다. 변경된 사진은 재접속시 적용됩니다.");
 	 			 <%-- $("#empProfile").attr("src", "<%= ctxPath%>/resources/files/${json.img_name}"); --%>
-	 			 $("#empProfile").attr("src", json.path +"/"+json.img_name); 
+	 			 /* $("#empProfile").attr("src", json.path +"/"+json.img_name);  */
 	 			 // history.go(0);
 	 		  }, error: function (json) { 
 	 			  alert("실패!");

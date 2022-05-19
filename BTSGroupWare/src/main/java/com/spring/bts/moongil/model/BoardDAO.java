@@ -366,6 +366,24 @@ public class BoardDAO implements InterBoardDAO {
 		return likevo;
 	}
 
+	@Override
+	public List<BoardVO> boardListSearchWithPaging_my(Map<String, String> paraMap) {
+		List<BoardVO> boardList = sqlsession.selectList("moongil.boardListSearchWithPaging_my", paraMap);
+		return boardList;
+	}
+
+	@Override
+	public int getTotalCount_my(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("moongil.getTotalCount_my", paraMap);
+		return n;
+	}
+
+	@Override
+	public int my_cnt(int pk_emp_no) {
+		int n = sqlsession.selectOne("moongil.my_cnt", pk_emp_no);
+		return n;
+	}
+
 
 
 	

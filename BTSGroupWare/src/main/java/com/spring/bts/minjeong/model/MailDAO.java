@@ -305,6 +305,49 @@ public class MailDAO implements InterMailDAO {
 		return getSendToMeMailView;
 	}
 
+	
+	// 메인페이지에서 로그인한 사용자의 받은메일함 목록 보여주기
+	@Override
+	public List<Map<String, String>> mailReceive_main(String fk_receiveuser_num) {
+		List<Map<String, String>> mailReceive_main = sqlsession.selectList("minjeong.mailReceive_main", fk_receiveuser_num);
+		return mailReceive_main;
+	}
+
+	// 받은 메일 1개 클릭 시 read_status 업데이트 (받은메일함에서 읽음 표시하기 위함)
+	@Override
+	public int updateRec_status(Map<String, String> paraMap) {
+		int updateRec_status = sqlsession.update("minjeong.updateRec_status", paraMap);
+		return updateRec_status;
+	}
+
+	// 보낸 메일 1개 클릭 시 send_status 업데이트 (보낸메일함에서 읽음 표시하기 위함)
+	@Override
+	public int updateSend_status(Map<String, String> paraMap) {
+		int updateSend_status = sqlsession.update("minjeong.updateSend_status", paraMap);
+		return updateSend_status;
+	}
+
+	// 받은 메일 1개 클릭 시 imp_status 업데이트 (중요메일함에서 읽음 표시하기 위함)
+	@Override
+	public int updateImp_status(Map<String, String> paraMap) {
+		int updateImp_status = sqlsession.update("minjeong.updateImp_status", paraMap);
+		return updateImp_status;
+	}
+
+	// 글씀과 동시에 tbl_mailRead 테이블에 해당 글번호의 값을 insert 시켜준다.
+
+	@Override
+	public int addToMailRead(String fk_mail_num) {
+		int n = sqlsession.insert("minjeong.addToMailRead", fk_mail_num);
+		return n;
+	}
+
+	@Override
+	public String getPkMailNum(MailVO mailvo) {
+		String getPkMailNum = sqlsession.selectOne("minjeong.getPkMailNum", mailvo);
+		return getPkMailNum;
+	}
+
 
 
 }

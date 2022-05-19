@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -54,6 +55,50 @@ public class MailController {
 	@Autowired
     private AES256 aes;
 
+	
+	// =========================== 메인페이지 받은메일함   =========================== //
+	// 메인페이지에서 로그인한 사용자의 받은메일함 목록 보여주기
+	@ResponseBody
+	@RequestMapping(value = "/mail/mailReceive_main.bts", produces = "text/plain; charset=UTF-8")	
+	public String mailReceive_main(HttpServletRequest request, HttpServletResponse response) {
+
+		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
+		
+	//	System.out.println("메인에서 받은메일함 페이지에서 로그인한 사용자 id (사원번호) 받아오기 " + loginuser.getPk_emp_no());
+	//  메인에서 받은메일함 페이지에서 로그인한 사용자 id (사원번호) 받아오기 : 80000010
+		String fk_receiveuser_num = String.valueOf(loginuser.getPk_emp_no());	// loginuser.getPk_emp_no() 로그인한 사용자의 사원번호 받아오기
+						
+		List<Map<String, String>> mailRecList_main = service.mailReceive_main(fk_receiveuser_num);
+	//	System.out.println("확인용 mailRecList_main" + mailRecList_main);
+	// 확인용 mailRecList_main[{reg_date=2022-05-17 23:28:46, reservation_date=2022-05-17 23:30:00, subject=파일 복구 후 발송예약 테스트 합니다..., fk_senduser_num=80000010, sendempname=김민정, pk_mail_num=218}, 
+	// {reg_date=2022-05-17 16:28:44, subject=RE: 임시저장만 들어가라 - 보낸메일함으로 가세요 - 답장 날짜 확인하기!!, fk_senduser_num=80000010, sendempname=김민정, pk_mail_num=210}, {reg_date=2022-05-17 02:36:25, subject=RE : 김사장이 중요 표시에 체크하고 메일 보냅니다~~~ --> 김사장이 받는 사람으로 답장보내기, fk_senduser_num=80000010, sendempname=김민정, pk_mail_num=198}, 
+	// {reg_date=2022-05-16 16:27:41, reservation_date=2022-05-16 16:30:00, subject=예약발송 날짜 형태 수정 후 다시 보냄 테스트, fk_senduser_num=80000010, sendempname=김민정, pk_mail_num=192},
+	// {reg_date=2022-05-16 16:16:14, subject=임시보관함으로 이동 잘되니? 테스트 에서 보낸메일함으로 보내기~~~, fk_senduser_num=80000010, sendempname=김민정, pk_mail_num=189}]
+
+		JSONArray jsonArr = new JSONArray();
+		
+		if(mailRecList_main != null && mailRecList_main.size() > 0) {
+			
+			for(Map<String, String> mailMap : mailRecList_main) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("pk_mail_num", mailMap.get("pk_mail_num"));
+				jsonObj.put("fk_senduser_num", mailMap.get("fk_senduser_num"));
+				jsonObj.put("sendempname", mailMap.get("sendempname"));
+				jsonObj.put("subject", mailMap.get("subject"));
+				jsonObj.put("reg_date", mailMap.get("reg_date"));
+				jsonObj.put("reservation_date", mailMap.get("reservation_date"));
+				jsonArr.put(jsonObj);
+			}
+			
+		}
+		
+		return jsonArr.toString();
+	}
+	
+	
+	
 	// =========================== 메일쓰기  =========================== //
 	
 	// 메일 쓰기 폼페이지 요청 (추후 로그인 AOP 추가 requiredLogin_) 
@@ -355,7 +400,7 @@ public class MailController {
 	*/	
 		// 메일 data 를 DB 로 보낸다. (첨부파일 있을 때 / 첨부파일 없을 때)
 		int n = 0;
-		
+
 		if(attach.isEmpty()) {
 			// 첨부파일이 없을 때
 //			mailvo.setTemp_status("0");			// 임시보관함 - 상세내용 보기 - 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
@@ -368,6 +413,9 @@ public class MailController {
 				mailvo.setReservation_status("0");
 				mailvo.setTemp_status("0");			// 임시보관함 - 상세내용 보기 - 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
 				n = service.add(mailvo);
+				String fk_mail_num = service.getPkMailNum(mailvo);
+			//	System.out.println("확인용 fk_mail_num : " + fk_mail_num);
+				n = service.addToMailRead(fk_mail_num);	// 글씀과 동시에 tbl_mailRead 테이블에 해당 글번호의 값을 insert 시켜준다.
 			}	
 		}
 		else {
@@ -375,6 +423,9 @@ public class MailController {
 			mailvo.setReservation_status("0");
 			mailvo.setTemp_status("0");			// 임시보관함 - 상세내용 보기 - 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
 			n = service.add_withFile(mailvo);
+			String fk_mail_num = service.getPkMailNum(mailvo);
+		//	System.out.println("확인용 fk_mail_num : " + fk_mail_num);
+			n = service.addToMailRead(fk_mail_num);
 		}
 		
 		// 성공 시 보낸 메일함으로 이동 or 메일 발송 성공 페이지로 이동
@@ -605,7 +656,6 @@ public class MailController {
 		// 사용자가 메일번호(pk_mail_num=?) 뒤에 정수외의 것을 입력하지 않도록 exception 처리를 한다.
 		try {
 			Integer.parseInt(pk_mail_num);			
-
 		
 			// 글 내용 한개 뿐만 아니라 검색도 해야하므로 Map 에 담는다.
 			Map<String, String> paraMap = new HashMap<>();
@@ -618,10 +668,21 @@ public class MailController {
 			// map 에 담은 검색타입과 검색어를 view 단으로 보낸다.
 			mav.addObject("paraMap", paraMap);
 			
-			// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
 			MailVO mailvo = null;
-			mailvo = service.getRecMailView(paraMap);
-			mav.addObject("mailvo", mailvo);
+			
+			// 받은 메일 1개 클릭 시 rec_status 업데이트 (rec_status = 1로 변경한다. (받은메일함에서 읽음 표시하기 위함)
+			int n = 0;
+			n = service.updateRec_status(paraMap);
+			if(n==1) {
+				// 받은메일 목록에서 상세내용 클릭 시 rec_stauts 를 update 한 후,
+				// 각 페이지의 상세내용을 읽어온다.		
+
+				// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
+				mailvo = service.getRecMailView(paraMap);
+				mav.addObject("mailvo", mailvo);
+			}
+
+
 			
 			// 이전글 및 다음글 보여주기
 			
@@ -821,8 +882,7 @@ public class MailController {
 		// 사용자가 메일번호(pk_mail_num=?) 뒤에 정수외의 것을 입력하지 않도록 exception 처리를 한다.
 		try {
 			Integer.parseInt(pk_mail_num);			
-
-		
+			
 			// 글 내용 한개 뿐만 아니라 검색도 해야하므로 Map 에 담는다.
 			Map<String, String> paraMap = new HashMap<>();
 			paraMap.put("pk_mail_num", pk_mail_num);
@@ -834,11 +894,21 @@ public class MailController {
 			// map 에 담은 검색타입과 검색어를 view 단으로 보낸다.
 			mav.addObject("paraMap", paraMap);
 			
-			// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
 			MailVO mailvo = null;
-			mailvo = service.getSendMailView(paraMap);
-			mav.addObject("mailvo", mailvo);
 			
+			// 보낸 메일 1개 클릭 시 send_status 업데이트 (send_status = 1로 변경한다. (보낸메일함에서 읽음 표시하기 위함)
+			int n = 0;
+			n = service.updateSend_status(paraMap);
+			if(n==1) {
+				// 보낸메일 목록에서 상세내용 클릭 시 send_status 를 update 한 후,
+				// 각 페이지의 상세내용을 읽어온다.		
+
+				// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
+				mailvo = service.getSendMailView(paraMap);
+				mav.addObject("mailvo", mailvo);
+			}
+
+
 			// 이전글 및 다음글 보여주기
 			
 			
@@ -1053,9 +1123,19 @@ public class MailController {
 			mav.addObject("paraMap", paraMap);
 			
 			// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
-			MailVO mailvo = null;
-			mailvo = service.getImportantMailView(paraMap);
-			mav.addObject("mailvo", mailvo);
+			MailVO mailvo = null;			
+			// 중요 메일 1개 클릭 시 imp_status 업데이트 (imp_status = 1로 변경한다.중요메일함에서 읽음 표시하기 위함)
+			int n = 0;
+			n = service.updateImp_status(paraMap);
+			if(n==1) {
+				// 받은메일 목록에서 상세내용 클릭 시 rec_stauts 를 update 한 후,
+				// 각 페이지의 상세내용을 읽어온다.		
+
+				// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
+				mailvo = service.getImportantMailView(paraMap);
+				mav.addObject("mailvo", mailvo);
+			}
+
 			
 			// 이전글 및 다음글 보여주기
 			
