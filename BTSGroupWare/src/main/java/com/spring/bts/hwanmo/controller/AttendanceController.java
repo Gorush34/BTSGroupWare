@@ -1006,6 +1006,28 @@ public class AttendanceController {
 		return mav;
 	} // end of public ModelAndView waitingSign(HttpServletRequest request, HttpServletResponse response, ModelAndView mav)------
 		
+	
+	// == 메인 페이지 오늘의 일정 수 불러오기 == //
+	@ResponseBody
+	@RequestMapping(value="/att/vacCount.bts")
+	public String vacCount(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+		
+		
+		int pk_emp_no = loginuser.getPk_emp_no();
+		// System.out.println("pk_emp_no" +pk_emp_no);
+		int n = attService.vacCount(pk_emp_no);
+		// System.out.println(n);
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n);
+		
+		
+		return jsonObj.toString();
+	}
+	
 	/////////////////////////////////////////////////////////////////////////////////////////////
 		
 	// === 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 생성 === //

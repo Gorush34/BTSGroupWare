@@ -449,4 +449,12 @@
       where ishired = 1 and pk_emp_no = #{pk_emp_no} and emp_pwd = #{emp_pwd}
    </select>
 	
+	<!-- // 총 올린  결재대기중인 연차신청 수 가져오기 -->
+	<select id="vacCount" parameterType="int" resultType="int">
+		select count(*)
+		from tbl_attendance
+		where fk_fin_app_no = #{fk_emp_no} and approval_status = 0
+	</select>
+	
+	
 </mapper>

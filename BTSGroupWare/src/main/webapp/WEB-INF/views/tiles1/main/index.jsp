@@ -146,6 +146,7 @@ td.mail_subject:hover {
 		reservationCount();
 		employeeBirth();
 		readRecMail();
+		vacCount();
 		
 	});// end of $(document).ready(function(){})----------------------
 
@@ -430,6 +431,31 @@ td.mail_subject:hover {
 			});
 			
 		}// end of function reservationCount(){}-------------------------------------------------
+		
+	     function vacCount(){
+				
+				$.ajax({
+					url:"<%= ctxPath%>/att/vacCount.bts",
+					dataType:"JSON",
+					success:function(json){
+						//console.log("json.n"+json.n);
+						let html = "";
+						//vacCount
+						if(json.n == 0){
+							html += 0;
+						}
+						else if(json.n > 0){
+							html += json.n;
+						}
+						
+						$("span#vacCount").html(html);
+					},
+					error: function(request, status, error){
+							alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+					}
+				});
+				
+		}// end of function vacCount(){}-------------------------------------------------
 		
 		
 		// 기상 관련함수 시작
@@ -952,8 +978,9 @@ td.mail_subject:hover {
   		});
   	   
      } // end of function refreshInOutTime()--------------
+    
      
-	///////////////// 정환모 메인화면 작업 함수 시작 /////////////////////////
+	///////////////// 정환모 메인화면 작업 함수 끝 /////////////////////////
 	
 </script>
 
@@ -1002,8 +1029,8 @@ td.mail_subject:hover {
 		        			<span class="type">
 		        				<span class="ic_dashboard2 ic_type_approval" title="approval"></span>
 		        			</span>
-		        			<span class="text">결재할 문서</span>
-		        			<span class="badge">0</span>
+		        			<span class="text">공가 결재대기문서</span>
+		        			<span class="badge" id="vacCount"></span>
 		        		</a>
 		        	</li>
 		        	<li class="summary-calendar">
