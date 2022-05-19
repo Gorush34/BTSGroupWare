@@ -1358,6 +1358,9 @@ public class EdmsController {
 		// 문서번호 통해 문서정보 가져오기
 		apprvo = service.getApprInfo(pk_appr_no);
 		
+		System.out.println("왜안받아와? : " + apprvo.getMid_accept());
+		System.out.println("왜안받아와? : " + apprvo.getFin_accept());
+		
 		/*
 		// 중간/최종결재자 사번 가져오기
 		String fk_mid_empno = request.getParameter("fk_mid_empno");
@@ -1465,8 +1468,7 @@ public class EdmsController {
 			apprvo.setFin_accept("2"); // 반려 값 넣어줌
 		}
 		
-		
-	//	System.out.println("최종반려 : " + apprvo.getFin_accept());
+		System.out.println("최종반려 : " + apprvo.getFin_accept()); // 0이 나온다. 대체 왜?????
 		
 		// 반려 처리하기
 		int n = service.updateAppr(apprvo);
@@ -1832,6 +1834,451 @@ public class EdmsController {
 	
 	// 정환모 작업공간 끝
 	////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	
+	
+	
+	// 나의 문서함
+	// === 진행중인 나의 문서함 요청 === //
+	   @RequestMapping(value="/edms/mydoc/waitlist.bts")
+	   public ModelAndView mywaitlist(ModelAndView mav, HttpServletRequest request) {
+	      
+	      getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출
+	      
+	      List<ApprVO> mywaitlist = null;
+	      
+	      HttpSession session = request.getSession();
+	      session.setAttribute("readCountPermission", "yes");
+	      
+	      // 본인글만 보기 위해 paraMap에 로그인한 사원의 사번 추가함
+	      EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+	       
+	      int loginuser_empno = 0;
+	       if(loginuser != null) {
+	          loginuser_empno = loginuser.getPk_emp_no();
+	          // loginuser_empno 는 로그인 되어진 사용자의 사원번호 이다.
+	       }
+	      
+	    //   System.out.println("loginuser_empno" + loginuser_empno);
+	       
+	      String searchType = request.getParameter("searchType");
+	      String searchWord = request.getParameter("searchWord");
+	      String str_currentShowPageNo = request.getParameter("currentShowPageNo");
+	      
+	      if(searchType == null || (!"title".equals(searchType) && !"emp_name".equals(searchType)) ) {
+	         searchType = "";
+	      }
+	      
+	      if(searchWord == null || "".equals(searchWord) || searchWord.trim().isEmpty() ) {
+	         searchWord = "";
+	      }
+	      
+	      Map<String, String> paraMap = new HashMap<>();
+	      paraMap.put("searchType", searchType);
+	      paraMap.put("searchWord", searchWord);
+	      paraMap.put("loginuser_empno", String.valueOf(loginuser_empno));
+	      
+	      // 먼저 총 게시물 건수(totalCount)를 구해와야 한다.
+	      // 총 게시물 건수(totalCount)는 검색조건이 있을 때와 없을때로 나뉘어진다. 
+	      int totalCount = 0;         // 총 게시물 건수
+	      int sizePerPage = 10;      // 한 페이지당 보여줄 게시물 건수 
+	      int currentShowPageNo = 0;   // 현재 보여주는 페이지번호로서, 초기치로는 1페이지로 설정함.
+	      int totalPage = 0;         // 총 페이지수(웹브라우저상에서 보여줄 총 페이지 개수, 페이지바)
+	      
+	      int startRno = 0;         // 시작 행번호
+	      int endRno = 0;            // 끝 행번호
+	      
+	      // 내문서함 - 대기/진행중인문서함 총 게시물 건수(totalCount)
+	      totalCount = service.mywaitlist_cnt(paraMap);
+	      totalPage = (int) Math.ceil((double)totalCount/sizePerPage);
+	      
+	      if(str_currentShowPageNo == null) { // 게시판에 보여지는 초기화면
+	         currentShowPageNo = 1;
+	      }
+	      else {
+	         try {
+	            currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+	            if( currentShowPageNo < 1 || currentShowPageNo > totalPage) { currentShowPageNo = 1; }
+	         } catch(NumberFormatException e) {
+	            currentShowPageNo = 1;
+	         }
+	      }
+	      
+	      // *** 가져올 게시글의 범위 구하기 시작 *** //      
+	      startRno = ((currentShowPageNo - 1) * sizePerPage) + 1;
+	      endRno = startRno + sizePerPage - 1;
+	      
+	      paraMap.put("startRno", String.valueOf(startRno));
+	      paraMap.put("endRno", String.valueOf(endRno));      
+	      
+	      // 상태가 대기/진행중인 나의 문서 불러오기
+	      mywaitlist = service.mywaitlist_paging(paraMap);
+	      
+	      // 검색대상 컬럼과 검색어 유지
+	      if( !"".equals(searchType) && !"".equals(searchWord) ) {
+	         mav.addObject("paraMap", paraMap);
+	      }
+	      
+	      // 페이지바 만들기
+	      int blockSize = 10; // 1개의 블록마다 보여질 페이지번호의 개수 1 2 3 ... 10 [다음] 이런 식!
+	      int loop = 1;
+	      
+	      int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+	      
+	      String pageBar = "<ul style='list-style: none;'>";
+	      String url = "waitlist.bts";
+	      
+	      // === [맨처음][이전] 만들기 === //
+	      if(pageNo != 1) {
+	         pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1'>[맨처음]</a></li>";
+	         pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+	      }
+	      while( !(loop > blockSize || pageNo > totalPage) ) {
+	         if(pageNo == currentShowPageNo) {
+	            pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";  
+	         }
+	         else {
+	            pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>"; 
+	         }
+	         
+	         loop++;
+	         pageNo++;
+	         
+	      }// end of while-----------------------
+	      
+	      // === [다음][마지막] 만들기 === //
+	      if( pageNo <= totalPage ) {
+	         pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+	         pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>"; 
+	      }
+	      
+	      pageBar += "</ul>";
+	      mav.addObject("pageBar", pageBar);
+	      
+	      String gobackURL = MyUtil.getCurrentURL(request);
+	      
+	      mav.addObject("gobackURL", gobackURL.replaceAll("&", " "));
+	      // ==== 페이징 처리를 한 검색어가 있는 전체 글목록 보여주기 끝 ====
+	      
+	      mav.addObject("mywaitlist", mywaitlist);
+	      mav.setViewName("mydoc/waitlist.edms");
+	      
+	      return mav;      
+	   }
+	   
+	   @RequestMapping(value="/edms/mydoc/acceptlist.bts")
+	   public ModelAndView myacceptlist(ModelAndView mav, HttpServletRequest request) {
+	      
+	      getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출
+	      
+	      List<ApprVO> myacceptlist = null;
+	      
+	      HttpSession session = request.getSession();
+	      session.setAttribute("readCountPermission", "yes");
+	      
+	      // 본인글만 보기 위해 paraMap에 로그인한 사원의 사번 추가함
+	      EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+	       
+	      int loginuser_empno = 0;
+	       if(loginuser != null) {
+	          loginuser_empno = loginuser.getPk_emp_no();
+	          // loginuser_empno 는 로그인 되어진 사용자의 사원번호 이다.
+	       }
+	      
+	       System.out.println("accept의 loginuser_empno =>" + loginuser_empno );
+	       
+	      String searchType = request.getParameter("searchType");
+	      String searchWord = request.getParameter("searchWord");
+	      String str_currentShowPageNo = request.getParameter("currentShowPageNo");
+	      
+	      if(searchType == null || (!"title".equals(searchType) && !"emp_name".equals(searchType)) ) {
+	         searchType = "";
+	      }
+	      
+	      if(searchWord == null || "".equals(searchWord) || searchWord.trim().isEmpty() ) {
+	         searchWord = "";
+	      }
+	      
+	      Map<String, String> paraMap = new HashMap<>();
+	      paraMap.put("searchType", searchType);
+	      paraMap.put("searchWord", searchWord);
+	      paraMap.put("loginuser_empno", String.valueOf(loginuser_empno));
+	      
+	      // 먼저 총 게시물 건수(totalCount)를 구해와야 한다.
+	      // 총 게시물 건수(totalCount)는 검색조건이 있을 때와 없을때로 나뉘어진다. 
+	      int totalCount = 0;         // 총 게시물 건수
+	      int sizePerPage = 10;      // 한 페이지당 보여줄 게시물 건수 
+	      int currentShowPageNo = 0;   // 현재 보여주는 페이지번호로서, 초기치로는 1페이지로 설정함.
+	      int totalPage = 0;         // 총 페이지수(웹브라우저상에서 보여줄 총 페이지 개수, 페이지바)
+	      
+	      int startRno = 0;         // 시작 행번호
+	      int endRno = 0;            // 끝 행번호
+	      
+	      // 내문서함 - 대기/진행중인문서함 총 게시물 건수(totalCount)
+	      totalCount = service.myacceptlist_cnt(paraMap);
+	      totalPage = (int) Math.ceil((double)totalCount/sizePerPage);
+	      
+	      if(str_currentShowPageNo == null) { // 게시판에 보여지는 초기화면
+	         currentShowPageNo = 1;
+	      }
+	      else {
+	         try {
+	            currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+	            if( currentShowPageNo < 1 || currentShowPageNo > totalPage) { currentShowPageNo = 1; }
+	         } catch(NumberFormatException e) {
+	            currentShowPageNo = 1;
+	         }
+	      }
+	      
+	      // *** 가져올 게시글의 범위 구하기 시작 *** //      
+	      startRno = ((currentShowPageNo - 1) * sizePerPage) + 1;
+	      endRno = startRno + sizePerPage - 1;
+	      
+	      paraMap.put("startRno", String.valueOf(startRno));
+	      paraMap.put("endRno", String.valueOf(endRno));      
+	      
+	      // 상태가 대기/진행중인 나의 문서 불러오기
+	      myacceptlist = service.myacceptlist_paging(paraMap);
+	      
+	      // 검색대상 컬럼과 검색어 유지
+	      if( !"".equals(searchType) && !"".equals(searchWord) ) {
+	         mav.addObject("paraMap", paraMap);
+	      }
+	      
+	      // 페이지바 만들기
+	      int blockSize = 10; // 1개의 블록마다 보여질 페이지번호의 개수 1 2 3 ... 10 [다음] 이런 식!
+	      int loop = 1;
+	      
+	      int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+	      
+	      String pageBar = "<ul style='list-style: none;'>";
+	      String url = "acceptlist.bts";
+	      
+	      // === [맨처음][이전] 만들기 === //
+	      if(pageNo != 1) {
+	         pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1'>[맨처음]</a></li>";
+	         pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+	      }
+	      while( !(loop > blockSize || pageNo > totalPage) ) {
+	         if(pageNo == currentShowPageNo) {
+	            pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";  
+	         }
+	         else {
+	            pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>"; 
+	         }
+	         
+	         loop++;
+	         pageNo++;
+	         
+	      }// end of while-----------------------
+	      
+	      // === [다음][마지막] 만들기 === //
+	      if( pageNo <= totalPage ) {
+	         pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+	         pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>"; 
+	      }
+	      
+	      pageBar += "</ul>";
+	      mav.addObject("pageBar", pageBar);
+	      
+	      String gobackURL = MyUtil.getCurrentURL(request);
+	      
+	      mav.addObject("gobackURL", gobackURL.replaceAll("&", " "));
+	      // ==== 페이징 처리를 한 검색어가 있는 전체 글목록 보여주기 끝 ====
+	      
+	      mav.addObject("myacceptlist", myacceptlist);
+	      mav.setViewName("mydoc/acceptlist.edms");
+	      
+	      return mav;      
+	   }
+	   
+	   
+	   @RequestMapping(value="/edms/mydoc/rejectlist.bts")
+	   public ModelAndView myrejectlist(ModelAndView mav, HttpServletRequest request) {
+	      
+	      getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출
+	      
+	      List<ApprVO> myrejectlist = null;
+	      
+	      HttpSession session = request.getSession();
+	      session.setAttribute("readCountPermission", "yes");
+	      
+	      // 본인글만 보기 위해 paraMap에 로그인한 사원의 사번 추가함
+	      EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+	       
+	      int loginuser_empno = 0;
+	       if(loginuser != null) {
+	          loginuser_empno = loginuser.getPk_emp_no();
+	          // loginuser_empno 는 로그인 되어진 사용자의 사원번호 이다.
+	       }
+	      
+	    //   System.out.println("loginuser_empno" + loginuser_empno);
+	       
+	      String searchType = request.getParameter("searchType");
+	      String searchWord = request.getParameter("searchWord");
+	      String str_currentShowPageNo = request.getParameter("currentShowPageNo");
+	      
+	      if(searchType == null || (!"title".equals(searchType) && !"emp_name".equals(searchType)) ) {
+	         searchType = "";
+	      }
+	      
+	      if(searchWord == null || "".equals(searchWord) || searchWord.trim().isEmpty() ) {
+	         searchWord = "";
+	      }
+	      
+	      Map<String, String> paraMap = new HashMap<>();
+	      paraMap.put("searchType", searchType);
+	      paraMap.put("searchWord", searchWord);
+	      paraMap.put("loginuser_empno", String.valueOf(loginuser_empno));
+	      
+	      // 먼저 총 게시물 건수(totalCount)를 구해와야 한다.
+	      // 총 게시물 건수(totalCount)는 검색조건이 있을 때와 없을때로 나뉘어진다. 
+	      int totalCount = 0;         // 총 게시물 건수
+	      int sizePerPage = 10;      // 한 페이지당 보여줄 게시물 건수 
+	      int currentShowPageNo = 0;   // 현재 보여주는 페이지번호로서, 초기치로는 1페이지로 설정함.
+	      int totalPage = 0;         // 총 페이지수(웹브라우저상에서 보여줄 총 페이지 개수, 페이지바)
+	      
+	      int startRno = 0;         // 시작 행번호
+	      int endRno = 0;            // 끝 행번호
+	      
+	      // 내문서함 - 대기/진행중인문서함 총 게시물 건수(totalCount)
+	      totalCount = service.myrejectlist_cnt(paraMap);
+	      totalPage = (int) Math.ceil((double)totalCount/sizePerPage);
+	      
+	      if(str_currentShowPageNo == null) { // 게시판에 보여지는 초기화면
+	         currentShowPageNo = 1;
+	      }
+	      else {
+	         try {
+	            currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+	            if( currentShowPageNo < 1 || currentShowPageNo > totalPage) { currentShowPageNo = 1; }
+	         } catch(NumberFormatException e) {
+	            currentShowPageNo = 1;
+	         }
+	      }
+	      
+	      // *** 가져올 게시글의 범위 구하기 시작 *** //      
+	      startRno = ((currentShowPageNo - 1) * sizePerPage) + 1;
+	      endRno = startRno + sizePerPage - 1;
+	      
+	      paraMap.put("startRno", String.valueOf(startRno));
+	      paraMap.put("endRno", String.valueOf(endRno));      
+	      
+	      // 상태가 대기/진행중인 나의 문서 불러오기
+	      myrejectlist = service.myrejectlist_paging(paraMap);
+	      
+	      // 검색대상 컬럼과 검색어 유지
+	      if( !"".equals(searchType) && !"".equals(searchWord) ) {
+	         mav.addObject("paraMap", paraMap);
+	      }
+	      
+	      // 페이지바 만들기
+	      int blockSize = 10; // 1개의 블록마다 보여질 페이지번호의 개수 1 2 3 ... 10 [다음] 이런 식!
+	      int loop = 1;
+	      
+	      int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+	      
+	      String pageBar = "<ul style='list-style: none;'>";
+	      String url = "rejectlist.bts";
+	      
+	      // === [맨처음][이전] 만들기 === //
+	      if(pageNo != 1) {
+	         pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1'>[맨처음]</a></li>";
+	         pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+	      }
+	      while( !(loop > blockSize || pageNo > totalPage) ) {
+	         if(pageNo == currentShowPageNo) {
+	            pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";  
+	         }
+	         else {
+	            pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>"; 
+	         }
+	         
+	         loop++;
+	         pageNo++;
+	         
+	      }// end of while-----------------------
+	      
+	      // === [다음][마지막] 만들기 === //
+	      if( pageNo <= totalPage ) {
+	         pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+	         pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>"; 
+	      }
+	      
+	      pageBar += "</ul>";
+	      mav.addObject("pageBar", pageBar);
+	      
+	      String gobackURL = MyUtil.getCurrentURL(request);
+	      
+	      mav.addObject("gobackURL", gobackURL.replaceAll("&", " "));
+	      // ==== 페이징 처리를 한 검색어가 있는 전체 글목록 보여주기 끝 ====
+	      
+	      mav.addObject("myrejectlist", myrejectlist);
+	      mav.setViewName("mydoc/rejectlist.edms");
+	      
+	      return mav;      
+	   }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

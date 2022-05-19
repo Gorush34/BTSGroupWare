@@ -17,10 +17,6 @@
 	
 	$(document).ready(function(){
 		
-		
-		var abc = $("input#emp_no").val();
-		
-		
 		$("button#btnReject").click(function() {
 			// 폼(form)을 전송(submit)
 			const frm = document.rejectFrm;
