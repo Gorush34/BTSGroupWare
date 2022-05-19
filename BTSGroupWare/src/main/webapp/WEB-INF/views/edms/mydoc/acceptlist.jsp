@@ -6,8 +6,6 @@
 	String ctxPath = request.getContextPath();
 %>
 
-<!-- style_edms.css 는 이미 layout-tiles_edms.jsp 에 선언되어 있으므로 쓸 필요 X! -->
-
 <script type="text/javascript">
 	$(document).ready(function() {
 
@@ -19,7 +17,7 @@
 		});
 		
 		// 검색시 검색조건 및 검색어 값 유지시키기
-		if( "${not empty requestScope.paraMap}" ) {
+		if( ${not empty requestScope.paraMap} ) {
 			$("select#searchType").val("${requestScope.paraMap.searchType}");
 			$("input#searchWord").val("${requestScope.paraMap.searchWord}");
 		}
@@ -124,8 +122,6 @@
 	
 </script>
 
-<%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
-
 
 
 	<div class="edmsHomeTitle">
@@ -147,10 +143,8 @@
 		
 		<div class="divClear"></div>
 
-		<input type="text" value="${requestScope.myAcceptList.get(9).pk_appr_no}">
-		
 		<%-- 결재승인 목록이 있을 때 종료 --%>
-		<c:if test=" ${not empty requestScope.myAcceptList}">
+		<c:if test="${not empty requestScope.myAcc}">
 		<table class="table table-sm table-hover table-light edmsTable ellipsisTable">
 			<thead class="thead-light">
 				<tr>
@@ -165,7 +159,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="accept" items="${requestScope.myAcceptList}">
+				<c:forEach var="accept" items="${requestScope.myAcc}">
 				<tr onclick="goView('${accept.pk_appr_no}')" style="cursor: pointer;">
 					<%-- <th scope="row" style="vertical-align: middle;"><c:out value="${status.count}" /></th> --%>
 					<th>아아아이</th>
@@ -228,7 +222,7 @@
 		
 		
 		<%-- 결재승인 목록이 없을 때 시작 --%>
-		<c:if test="${empty requestScope.myAcceptList}">
+		<c:if test= "${empty requestScope.myAcc}" >
 		<table class="table table-sm table-light">
 			<tr>
 				<td style="border-top: solid 1px #D3D3D3;">&nbsp;</td>
