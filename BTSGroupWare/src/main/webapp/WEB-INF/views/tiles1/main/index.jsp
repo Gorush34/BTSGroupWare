@@ -1025,7 +1025,7 @@ td.mail_subject:hover {
 		        		</a>
 		        	</li>
 		        	<li class="summary-approval">
-	 		        	<a href="">
+	 		        	<a href="javascript:location.href='<%= request.getContextPath()%>/att/waitingSign.bts'">
 		        			<span class="type">
 		        				<span class="ic_dashboard2 ic_type_approval" title="approval"></span>
 		        			</span>
