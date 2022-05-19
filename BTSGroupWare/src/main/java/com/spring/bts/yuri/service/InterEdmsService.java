@@ -8,10 +8,10 @@ import com.spring.bts.yuri.model.ApprVO;
 
 public interface InterEdmsService {
 
-	// 로그인된 사원 정보 가져오기 #yuly
+	// 로그인된 사원 정보 가져오기
 	EmployeeVO getLoginMember(Map<String, String> paraMap);
 	
-	// 전자결재 양식선택(업무기안서, 휴가신청서 등..)을 위한 것 #yuly
+	// 전자결재 양식선택(업무기안서, 휴가신청서 등..)을 위한 것
 //	List<String> getApprsortList();
 	
 	// 글쓰기(파일 첨부가 없는 글쓰기)
@@ -99,6 +99,21 @@ public interface InterEdmsService {
 	int getTotalCount_reject(Map<String, String> paraMap);
 
 
+	
+	///////////////////////////////////////
+	
+	
+	// 내문서함
+	int mywaitlist_cnt(Map<String, String> paraMap);
+	List<ApprVO> mywaitlist_paging(Map<String, String> paraMap);
+
+	int myacceptlist_cnt(Map<String, String> paraMap);
+	List<ApprVO> myacceptlist_paging(Map<String, String> paraMap);
+
+	int myrejectlist_cnt(Map<String, String> paraMap);
+	List<ApprVO> myrejectlist_paging(Map<String, String> paraMap);
+
+	
 	
 	
 }

@@ -67,8 +67,8 @@
 				<!-- 문서작성 종료 -->
 				
 				
-				<!-- 내문서함 시작 -->
-				<div id="edmsSideBar1" class="edmsSideMenu">내문서함</div>
+				<!-- 전체문서함 시작 -->
+				<div id="edmsSideBar1" class="edmsSideMenu">전체문서함</div>
 				
 				<div id="slideTogglebox1" class="slideTogglebox1">
 					<table style="margin: 0 20px;">
@@ -94,16 +94,44 @@
 						</tr>
 					</table>
 				</div>
-				<!-- 내문서함 종료 -->
+				<!-- 전체문서함 종료 -->
 				
+				<!-- 내문서함 시작 -->
+				<div id="edmsSideBar2" class="edmsSideMenu">내문서함</div>
 				
-				<div id="edmsSideBar1" class="edmsSideMenu">결재하기</div>
-				
-				<div id="slideTogglebox1" class="slideTogglebox1">
+				<div id="slideTogglebox2" class="slideTogglebox2">
 					<table style="margin: 0 20px;">
 						<tr>
 							<td>
-								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/waitingSignList.bts'">결재대기목록</span></label>
+								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/mydoc/waitlist.bts'">대기문서함</span></label>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/mydoc/acceptlist.bts'">승인문서함</span></label>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/mydoc/rejectlist.bts'">반려문서함</span></label>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<!-- 내문서함 종료 -->
+				
+				<div id="edmsSideBar3" class="edmsSideMenu">결재하기</div>
+				
+				<div id="slideTogglebox3" class="slideTogglebox3">
+					<table style="margin: 0 20px;">
+						<tr>
+							<td>
+								<label for="mySche">
+								 <span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/waitingSignList.bts'">
+								 	결재대기목록
+								 </span>&nbsp;
+								 <a href="#" class="badge badge-pill badge-info">대기개수</a>
+								</label>
 							</td>
 						</tr>
 					</table>

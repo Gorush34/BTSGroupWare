@@ -128,7 +128,7 @@
 
 
 	<div class="edmsHomeTitle">
-		<span class="edms_maintitle">${sessionScope.loginuser.emp_name}님의 반려문서함</span>
+		<span class="edms_maintitle">BTSGroupware 반려문서함</span>
 		<p style="margin-bottom: 10px;"></p>
 	</div>
 	
@@ -175,41 +175,27 @@
 		
 		<%-- 결재반려 목록이 있을 때 종료 --%>
 		<c:if test="${not empty requestScope.rejectList}">
-		<table class="table table-sm table-hover table-light edmsTable">
+		<table class="table table-sm table-hover table-light edmsTable ellipsisTable">
 			<thead class="thead-light">
 				<tr>
-					<th scope="col" width="10%">문서번호</th>
-					<th scope="col" width="15%">기안일</th>
-					<th scope="col" width="15%">결재양식</th>
-					<th scope="col" width="10%">긴급</th>
+					<th scope="col" width="4%">#</th>
+					<th scope="col" width="13%">기안일</th>
+					<th scope="col" width="10%">결재양식</th>
+					<th scope="col" width="9%">긴급</th>
 					<th scope="col" width="30%">제목</th>
-					<th scope="col" width="10%">첨부</th>
-					<th scope="col" width="10%">상태</th>
+					<th scope="col" width="6%">첨부</th>
+					<th scope="col" width="20%">문서번호</th>
+					<th scope="col" width="8%">상태</th>
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="reject" items="${requestScope.rejectList}">
+				<c:forEach var="reject" items="${requestScope.rejectList}" varStatus="status">
 				<tr onclick="goView('${reject.pk_appr_no}')" style="cursor: pointer;">
-					
-					<td>${reject.pk_appr_no}</td>
+					<th scope="row" style="vertical-align: middle;"><c:out value="${status.count}" /></th>
 					
 					<td>${reject.writeday}</td>
 					
-					<td>
-						${reject.pk_appr_no}
-						<%-- <c:if test="${apprvo.fk_appr_sortno eq 1}">
-							<span>업무기안서</span>
-						</c:if>
-						<c:if test="${apprvo.fk_appr_sortno eq 2}">
-							<span>증명서신청</span>
-						</c:if>
-						<c:if test="${apprvo.fk_appr_sortno eq 3}">
-							<span>사유서</span>
-						</c:if>
-						<c:if test="${apprvo.fk_appr_sortno eq 4}">
-							<span>-- 휴가 신청서 (팀장님 거니까 없애기) --</span>
-						</c:if> --%>
-					</td> <%-- ${apprvo.fk_appr_sortno} --%>
+					<td>${reject.appr_name}</td>
 					
 					<td>
 					<c:if test="${reject.emergency == 1}">
@@ -220,9 +206,8 @@
 					</c:if>
 					</td>
 					
-					<td>
+					<td class="elltitle">
 						<span class="title" onclick="goView('${reject.pk_appr_no}')" style="cursor: pointer;">${reject.title}</span>
-						
 					</td>
 					
 					<td>
@@ -233,6 +218,8 @@
 						<%-- 첨부파일이 없는 경우 --%>
 						<c:if test="${empty reject.filename}">&nbsp;</c:if>
 					</td>
+					
+					<td>${reject.pk_appr_no}</td>
 					
 					<td>
 						<c:if test="${reject.mid_accept eq 0 and reject.fin_accept eq 0}">
