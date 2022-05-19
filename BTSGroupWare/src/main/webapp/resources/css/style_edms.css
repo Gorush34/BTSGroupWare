@@ -1,7 +1,19 @@
 @charset "UTF-8";
 
-body {font-family: 'Noto Sans KR', sans-serif; }
+#mycontent     { min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:white;
+                 float:right; width:90%; padding-left: 5%}
+                  
+#mysideinfo      { min-height:1200px; position: fixed; top:60px; padding-top: 40px; background-color:#FFF;
+                  float:left; width:250px; margin-left: 5px; }
 
+#myfooter      { display: flex; min-height:120px; position: relative; top:60px; background-color:#555555; margin-bottom: 70px; 
+                 clear:both; }
+ 
+#myheader a    {text-decoration:none;}
+
+body {font-family: 'Noto Sans KR', sans-serif; font-size: 18px;}
+
+	
 /* 헤더 스타일  시작 */
 
 li.login_dropdown  { 
@@ -20,22 +32,19 @@ ul#secondHeaderGroup, .secondHeaderList {
       display: inline-block;
 }
 
+#navbarSupportedContent > ul > li {
+	margin-right: 20px;
+	font-size: 18px;
+}
+
+body {font-family: 'Noto Sans KR', sans-serif; }
+
+
 /* 헤더 스타일  끝 */
 
 
 
-#mycontainer	{ padding:20px; }
-#myheader		{ display: flex; min-height:100px; position: relative; top: 60px; }
-#mycontent		{ min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:#F2F2F2;
-				  float:right; width:80%; padding: 20px; }
 
-#mysideinfo      { min-height:1200px; position: fixed; top:60px; padding-top: 40px; background-color:#FFF;
-                  float:left; width:250px; }
-                  
-#myfooter		{ display: flex; min-height:120px; position: relative; top:60px; background-color:#555555; margin-bottom: 70px; 
-				  clear:both; }
-
-#myheader a		{ text-decoration:none; }
 
 
 
@@ -106,21 +115,36 @@ div.edmsSideMenu{cursor: pointer;}
 	}
 	*/
 	
-	
-	/* 카드 */
-	div.card {
-		min-width: 120px;
-		max-width: 240px;
+	/* 테이블 제목 빠져나옴 방지 */
+	.ellipsisTable {
+		width: 100%;
+		table-layout: fixed;
 	}
 	
+	/* 테이블 제목 빠져나옴 방지 */
+	.ellipsisTable > tbody > tr > td.elltitle {
+		white-space: nowrap;		/* 공백 문자가 있는 경우 자동 줄바꿈을 하지 않고 한 줄로 처리한다. */
+	    overflow: hidden;			/* 글자가 넘어가는 것은 숨김 처리 */
+	    text-overflow: ellipsis;	/* 글자가 넘어가면 생략부호 표시 */
+	    max-width: 20;
+	}
+	
+	
+	
+	/* 카드 */
+	/* div.card {
+		min-width: 120px;
+		max-width: 240px;
+	} */
+	
 	/* 카드 제목 */
-	div.card-title {
+	/* div.card-title {
 		font-size: 12pt;
 		line-height: 12pt;
 		text-align: left;
 		padding-left: 12px;
 		margin-top: 12px;
-	}	
+	} */	
 	
 	/* 전체보기 div(왼쪽 오른쪽 하려고) */
 	div.more {

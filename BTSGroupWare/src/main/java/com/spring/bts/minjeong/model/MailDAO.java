@@ -8,6 +8,8 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.fasterxml.jackson.databind.deser.impl.CreatorCandidate.Param;
+
 @Repository	// @component 가 포함되어 있는 것이다. 자동적으로 bean 으로 올라간다.
 public class MailDAO implements InterMailDAO {
 
@@ -312,7 +314,65 @@ public class MailDAO implements InterMailDAO {
 		List<Map<String, String>> mailReceive_main = sqlsession.selectList("minjeong.mailReceive_main", fk_receiveuser_num);
 		return mailReceive_main;
 	}
-	 
+
+	// 받은 메일 1개 클릭 시 read_status 업데이트 (받은메일함에서 읽음 표시하기 위함)
+	@Override
+	public int updateRec_status(Map<String, String> paraMap) {
+		int updateRec_status = sqlsession.update("minjeong.updateRec_status", paraMap);
+		return updateRec_status;
+	}
+
+	// 보낸 메일 1개 클릭 시 send_status 업데이트 (보낸메일함에서 읽음 표시하기 위함)
+	@Override
+	public int updateSend_status(Map<String, String> paraMap) {
+		int updateSend_status = sqlsession.update("minjeong.updateSend_status", paraMap);
+		return updateSend_status;
+	}
+
+	// 받은 메일 1개 클릭 시 imp_status 업데이트 (중요메일함에서 읽음 표시하기 위함)
+	@Override
+	public int updateImp_status(Map<String, String> paraMap) {
+		int updateImp_status = sqlsession.update("minjeong.updateImp_status", paraMap);
+		return updateImp_status;
+	}
+
+	// 글씀과 동시에 tbl_mailRead 테이블에 해당 글번호의 값을 insert 시켜준다.
+
+	@Override
+	public int addToMailRead(String fk_mail_num) {
+		int n = sqlsession.insert("minjeong.addToMailRead", fk_mail_num);
+		return n;
+	}
+
+	@Override
+	public String getPkMailNum(MailVO mailvo) {
+		String getPkMailNum = sqlsession.selectOne("minjeong.getPkMailNum", mailvo);
+		return getPkMailNum;
+	}
+
+	// pk_mail_num 을 통해 구해온 fk_mail_num 으로 rec_status 가 0인지 1인지(1이라면 rec_date도 가져오기) 알아온다.
+	@Override
+	public List<MailVO> getRecCheck(String fk_mail_num) {
+		List<MailVO> getRecCheck = sqlsession.selectList("minjeong.getRecCheck", fk_mail_num);
+		return getRecCheck;		
+	}
+
+	// 페이징처리 한 보낸메일 수신확인 메일목록 (검색 있든, 없든 모두 다 포함) 
+	@Override
+	public List<MailVO> sendMailList_recCheck(Map<String, String> paraMap) {
+		List<MailVO> sendMailList_recCheck = sqlsession.selectList("minjeong.sendMailList_recCheck", paraMap);
+		return sendMailList_recCheck;
+	}
+
+	// 총 보낸 메일 수신확인 건수 구해오기 (service 단으로 보내기) 
+	@Override
+	public int getTotalCount_recCheck(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("minjeong.getTotalCount_recCheck", paraMap);
+		return n;
+	}
+
+
+
 
 
 }

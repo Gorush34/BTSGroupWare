@@ -516,16 +516,16 @@
 
 	<div>
 	   <div id="sidebar" style="font-size: 11pt;">
-		 <h4 style="margin-top: 30px; ">캘린더</h4>
+		 <h4 >캘린더</h4>
 		 
 			<input type="hidden" value="${sessionScope.loginuser.pk_emp_no}" id="fk_emp_no"/>
 		
 			<ul style="list-style-type: none; padding: 10px;">
 				<li style="margin-bottom: 15px;">
-					<div id="calenderbtn1" class="calenderbtn">사내 캘린더</div>
-						<div id="slideTogglebox1"  class="slideTogglebox">
+					<div id="calenderbtn1" class="calenderbtn" style="font-size: 18px; font-weight: bold; color:#00ace6;">사내 캘린더</div>
+						<div id="slideTogglebox1"  class="slideTogglebox" style="margin: 5px 0 5px 10px;">
 							<%-- 사내 캘린더를 보여주는 곳 --%>
-							<div id="companyCal" style="margin-bottom: 10px;"></div>			
+							<div id="companyCal" style="margin-bottom: 10px; margin-top: 5px;"></div>			
 						</div>
 						<%-- 사내 캘린더 추가를 할 수 있는 직원은 직위코드가 3 이면서 부서코드가 4 에 근무하는 사원이 로그인 한 경우에만 가능하도록 조건을 걸어둔다.  	
 	     				<c:if test="${sessionScope.loginuser.fk_pcode =='3' && sessionScope.loginuser.fk_dcode == '4' }"> --%>
@@ -535,11 +535,11 @@
 						<%-- </c:if>	--%>
 				</li>
 				<li style="margin-bottom: 15px;">
-					<div id="calenderbtn2" class="calenderbtn">관심 캘린더</div>
-						<div id="slideTogglebox2"  class="slideTogglebox">
+					<div id="calenderbtn2" class="calenderbtn" style="font-size: 18px; font-weight: bold; color:#00ace6;">관심 캘린더</div>
+						<div id="slideTogglebox2"  class="slideTogglebox" style="margin: 5px 0 5px 10px;">
 						<div>
  							<%-- 내 캘린더를 보여주는 곳 --%>
-							<div id="myCal" style="margin-bottom: 10px;"></div>					
+							<div id="myCal" style="margin-bottom: 10px;  margin-top: 5px;"></div>					
 						</div>
 						</div>
 						<span id="addMyCalendar" onclick="addMyCalendar()">&nbsp;&nbsp;+ 내 캘린더 추가</span>		

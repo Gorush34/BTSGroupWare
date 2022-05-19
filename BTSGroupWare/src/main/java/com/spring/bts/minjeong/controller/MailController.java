@@ -400,7 +400,7 @@ public class MailController {
 	*/	
 		// 메일 data 를 DB 로 보낸다. (첨부파일 있을 때 / 첨부파일 없을 때)
 		int n = 0;
-		
+
 		if(attach.isEmpty()) {
 			// 첨부파일이 없을 때
 //			mailvo.setTemp_status("0");			// 임시보관함 - 상세내용 보기 - 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
@@ -413,6 +413,9 @@ public class MailController {
 				mailvo.setReservation_status("0");
 				mailvo.setTemp_status("0");			// 임시보관함 - 상세내용 보기 - 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
 				n = service.add(mailvo);
+				String fk_mail_num = service.getPkMailNum(mailvo);
+			//	System.out.println("확인용 fk_mail_num : " + fk_mail_num);
+				n = service.addToMailRead(fk_mail_num);	// 글씀과 동시에 tbl_mailRead 테이블에 해당 글번호의 값을 insert 시켜준다.
 			}	
 		}
 		else {
@@ -420,6 +423,9 @@ public class MailController {
 			mailvo.setReservation_status("0");
 			mailvo.setTemp_status("0");			// 임시보관함 - 상세내용 보기 - 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
 			n = service.add_withFile(mailvo);
+			String fk_mail_num = service.getPkMailNum(mailvo);
+		//	System.out.println("확인용 fk_mail_num : " + fk_mail_num);
+			n = service.addToMailRead(fk_mail_num);
 		}
 		
 		// 성공 시 보낸 메일함으로 이동 or 메일 발송 성공 페이지로 이동
@@ -650,7 +656,6 @@ public class MailController {
 		// 사용자가 메일번호(pk_mail_num=?) 뒤에 정수외의 것을 입력하지 않도록 exception 처리를 한다.
 		try {
 			Integer.parseInt(pk_mail_num);			
-
 		
 			// 글 내용 한개 뿐만 아니라 검색도 해야하므로 Map 에 담는다.
 			Map<String, String> paraMap = new HashMap<>();
@@ -663,10 +668,21 @@ public class MailController {
 			// map 에 담은 검색타입과 검색어를 view 단으로 보낸다.
 			mav.addObject("paraMap", paraMap);
 			
-			// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
 			MailVO mailvo = null;
-			mailvo = service.getRecMailView(paraMap);
-			mav.addObject("mailvo", mailvo);
+			
+			// 받은 메일 1개 클릭 시 rec_status 업데이트 (rec_status = 1로 변경한다. (받은메일함에서 읽음 표시하기 위함)
+			int n = 0;
+			n = service.updateRec_status(paraMap);
+			if(n==1) {
+				// 받은메일 목록에서 상세내용 클릭 시 rec_stauts 를 update 한 후,
+				// 각 페이지의 상세내용을 읽어온다.		
+
+				// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
+				mailvo = service.getRecMailView(paraMap);
+				mav.addObject("mailvo", mailvo);
+			}
+
+
 			
 			// 이전글 및 다음글 보여주기
 			
@@ -842,6 +858,172 @@ public class MailController {
 		return mav;
 	}	
 
+	// 보낸메일함 수신확인 목록 보기 페이지 요청 (페이징 처리 및 검색기능 포함)
+	@RequestMapping(value = "/mail/mailSendCheckList.bts")	
+	public ModelAndView mailSendCheckList(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, MailVO mailvo) {
+
+		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
+
+		
+	//	System.out.println("보낸메일함 수신확인 목록 페이지에서 로그인한 사용자 id (사원번호) 받아오기 " + loginuser.getPk_emp_no());
+		
+		String fk_senduser_num = String.valueOf(loginuser.getPk_emp_no());
+		String empname = String.valueOf(loginuser.getEmp_name());
+				
+		
+		List<MailVO> sendMailList_recCheck = null;
+	
+		// 검색 목록
+		String searchType = request.getParameter("searchType");		// 사용자가 선택한 검색 타입
+		String searchWord = request.getParameter("searchWord");		// 사용자가 입력한 검색어
+		String str_currentShowPageNo = request.getParameter("currentShowPageNo");	// 현재 페이지 번호
+		
+		// searchType 에는 제목 및 사원명이 있는데, 이 외의 것들이 들어오게 되면 기본값으로 보여준다
+		if(searchType == null || (!"subject".equals(searchType)) && (!"recempname".equals(searchType)) ) {
+			searchType = "";
+		}
+		
+		// 검색 입력창에 아무것도 입력하지 않았을 때 or 공백일 때 기본값을 보여주도록 한다.
+		if(searchWord == null || "".equals(searchWord) && searchWord.trim().isEmpty()) {
+			searchWord = "";
+		}
+		
+		// DB 로 보내기 위해 요청된 정보를 Map에 담는다.
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("searchType", searchType);
+		paraMap.put("searchWord", searchWord);
+
+		paraMap.put("fk_senduser_num",fk_senduser_num);	// 로그인한 사용자의 사원번호 map 에 담아서 보내주기
+		
+		// 먼저 총 받은 메일 수(totalCount)를 구해와야 한다.
+		// 총 게시물 건수는 검색조건이 있을 때와 없을 때로 나뉜다.
+		int totalCount = 0;
+		int sizePerPage = 10;
+		int currentShowPageNo = 0;
+		int totalPage = 0;
+		
+		int startRno = 0;
+		int endRno = 0;
+		
+		// 총 보낸 메일 수신확인 건수 구해오기 (service 단으로 보내기) 
+		totalCount =service.getTotalCount_recCheck(paraMap); // 검색기능 포함시 paraMap 에 담아서 파라미터에 넣을 것
+		 		
+		totalPage = (int) Math.ceil((double)totalCount/sizePerPage);	// 총 페이지 수 (전체게시물 / 페이지당 보여줄 갯수)
+
+		if(str_currentShowPageNo == null) {
+			// 페이지바를 거치지 않은 맨 처음 화면
+			currentShowPageNo = 1;
+		}
+		else {	
+			try {	// 사용자가 페이지 넘버에 정수만 입력할 수 있도록 설정		
+				currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+				if(currentShowPageNo < 1 || currentShowPageNo > totalPage) {
+					// 1 미만의 페이지 또는 총 페이지 수를 넘어서는 페이지수 입력 시 기본페이지로
+					currentShowPageNo = 1;
+				}				
+			} catch (NumberFormatException e) {
+				currentShowPageNo = 1;
+			}
+		}
+		
+		startRno = ( (currentShowPageNo - 1) * sizePerPage ) + 1;
+		endRno = startRno + sizePerPage - 1;
+		
+		paraMap.put("startRno", String.valueOf(startRno));
+		paraMap.put("endRno", String.valueOf(endRno));
+	//	String fk_mail_num = service.getPkMailNum(mailvo);	// vo를 통해 구한 읽음처리 테이블의 fk_mail_num
+	//	paraMap.put("fk_mail_num",fk_mail_num);
+		
+		 // 페이징처리 한 보낸메일 수신확인 메일목록 (검색 있든, 없든 모두 다 포함) 
+		sendMailList_recCheck = service.sendMailListSearchWithPaging_recCheck(paraMap);
+		
+		// 검색대상 컬럼(searchType) 및 검색어(searchWord) 유지시키기 위함
+		if(!"".equals(searchType) && !"".equals(searchWord)) {
+			mav.addObject("paraMap", paraMap);
+		}
+		
+		
+		// === 페이지바 만들기 시작
+		int blockSize = 5;
+		// blockSize 는 1개 블럭(토막) 당 보여지는 페이지번호의 개수이다.
+		/*
+	        		1  2  3  4  5  6  7  8  9 10 [다음][마지막]  -- 1개블럭
+			[맨처음][이전]  11 12 13 14 15 16 17 18 19 20 [다음][마지막]  -- 1개블럭
+			[맨처음][이전]  21 22 23
+		*/		
+		
+		int loop = 1;
+		/*
+    		loop는 1부터 증가하여 1개 블럭을 이루는 페이지번호의 개수[ 지금은 10개(== blockSize) ] 까지만 증가하는 용도이다.
+		*/		
+		
+		int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+		
+		String pageBar = "<ul style='list-style:none;'>";
+		String url = "mailSendCheckList.bts";	// 상대경로 mailReceiveList.bts	(앞에 /mail 붙이지 말고 맨 끝에 부분만 붙이도록 한다.)
+		
+		
+		// [맨처음][이전] 만들기
+		if(pageNo != 1) {
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1'>[맨처음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+		}
+		
+		while ( !(loop > blockSize || pageNo > totalPage) ) {
+			
+			if(pageNo == currentShowPageNo) {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; color:black; padding: 2px 4px;'>"+pageNo+"</li>";				
+			}
+			else {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";				
+			}
+			
+			loop++;
+			pageNo++;
+			
+		}// end of while------------------------------------------
+		
+		
+		// [다음][마지막] 만들기
+		if(pageNo <= totalPage) {
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>";	
+		}
+		
+		pageBar += "</ul>";
+		
+		mav.addObject("pageBar", pageBar);
+
+
+		// === 페이징 처리되어진 후 특정 글제목을 클릭하여 상세내용을 본 이후
+		//     사용자가 목록보기 버튼을 클릭했을때 돌아갈 페이지를 알려주기 위해
+		//     현재 페이지 주소를 뷰단으로 넘겨준다.
+	//	String goBackURL = MyUtil.getCurrnetURL(request);
+	//	System.out.println("*** 확인용 goBackURL : "+goBackURL);
+		/*
+			*** 확인용 goBackURL : /list.action
+			*** 확인용 goBackURL : /list.action?searchType= searchWord=%20 currentShowPageNo=2
+			*** 확인용 goBackURL : /list.action?searchType=subject searchWord=j
+			*** 확인용 goBackURL : /list.action?searchType=subject searchWord=j%20 currentShowPageNo=2
+		*/
+	//	mav.addObject("goBackURL", goBackURL.replaceAll("&", " "));		// view 단에 넘겨주자. & 을 " " 로 바꿔준 결과값들.
+		// === 페이징 처리를 한 검색어가 있는 전체 글목록 보여주기 끝 === //	
+		///////////////////////////////////////////////////////////////////////////////////////////
+	//	String fk_mail_num = service.getPkMailNum(mailvo);
+	//	System.out.println("확인용 fk_mail_num : " + fk_mail_num);
+	//	List<MailVO> rec_statusDate = service.getRecCheck(fk_mail_num);	// mailvo 로 부터 구해온 pk_mail_num 으로 rec_status 가 0인지 1인지(1이라면 rec_date도 가져오기) 알아온다.
+	//	System.out.println("확인용 rec_statusDate : " + rec_statusDate);
+	//	System.out.println("확인용 fk_mail_num : " + fk_mail_num); 
+		
+	//	mav.addObject("rec_statusDate", rec_statusDate);		
+		mav.addObject("fk_senduser_num", fk_senduser_num);
+		mav.addObject("sendMailList_recCheck", sendMailList_recCheck);				
+		mav.setViewName("mailSendCheckList.mail");
+		return mav;
+	}		
+	
 	
 	// 보낸메일함 내용 읽기 (1개 메일함 상세내용 보여주는 페이지 요청)
 	@RequestMapping(value = "/mail/mailSendDetail.bts")	
@@ -866,8 +1048,7 @@ public class MailController {
 		// 사용자가 메일번호(pk_mail_num=?) 뒤에 정수외의 것을 입력하지 않도록 exception 처리를 한다.
 		try {
 			Integer.parseInt(pk_mail_num);			
-
-		
+			
 			// 글 내용 한개 뿐만 아니라 검색도 해야하므로 Map 에 담는다.
 			Map<String, String> paraMap = new HashMap<>();
 			paraMap.put("pk_mail_num", pk_mail_num);
@@ -879,11 +1060,21 @@ public class MailController {
 			// map 에 담은 검색타입과 검색어를 view 단으로 보낸다.
 			mav.addObject("paraMap", paraMap);
 			
-			// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
 			MailVO mailvo = null;
-			mailvo = service.getSendMailView(paraMap);
-			mav.addObject("mailvo", mailvo);
 			
+			// 보낸 메일 1개 클릭 시 send_status 업데이트 (send_status = 1로 변경한다. (보낸메일함에서 읽음 표시하기 위함)
+			int n = 0;
+			n = service.updateSend_status(paraMap);
+			if(n==1) {
+				// 보낸메일 목록에서 상세내용 클릭 시 send_status 를 update 한 후,
+				// 각 페이지의 상세내용을 읽어온다.		
+
+				// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
+				mailvo = service.getSendMailView(paraMap);
+				mav.addObject("mailvo", mailvo);
+			}
+
+
 			// 이전글 및 다음글 보여주기
 			
 			
@@ -1098,9 +1289,19 @@ public class MailController {
 			mav.addObject("paraMap", paraMap);
 			
 			// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
-			MailVO mailvo = null;
-			mailvo = service.getImportantMailView(paraMap);
-			mav.addObject("mailvo", mailvo);
+			MailVO mailvo = null;			
+			// 중요 메일 1개 클릭 시 imp_status 업데이트 (imp_status = 1로 변경한다.중요메일함에서 읽음 표시하기 위함)
+			int n = 0;
+			n = service.updateImp_status(paraMap);
+			if(n==1) {
+				// 받은메일 목록에서 상세내용 클릭 시 rec_stauts 를 update 한 후,
+				// 각 페이지의 상세내용을 읽어온다.		
+
+				// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
+				mailvo = service.getImportantMailView(paraMap);
+				mav.addObject("mailvo", mailvo);
+			}
+
 			
 			// 이전글 및 다음글 보여주기
 			

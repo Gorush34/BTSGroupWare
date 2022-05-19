@@ -46,17 +46,6 @@ public class EdmsService implements InterEdmsService {
 		EmployeeVO loginuser = dao.getLoginMember(paraMap);
 		return loginuser;
 	}	
-
-	
-	// === 전자결재 양식선택(업무기안서, 휴가신청서 등..)을 위한 것 === // #yuly
-/*
-	@Override
-	public List<String> getApprsortList() {
-		List<String> apprsortList = dao.getApprsortList();
-		return apprsortList;
-	}
-*/
-	
 	
 	// === 글쓰기(파일 첨부가 없는 글쓰기) === //
 	@Override
@@ -281,6 +270,54 @@ public class EdmsService implements InterEdmsService {
 	public int getTotalCount_reject(Map<String, String> paraMap) {
 		int totalCount = dao.getTotalCount_reject(paraMap);
 		return totalCount;
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//////////////////////////////
+	
+	
+	@Override
+	public int mywaitlist_cnt(Map<String, String> paraMap) {
+		int totalCount = dao.mywaitlist_cnt(paraMap);
+		return totalCount;
+	}
+
+	@Override
+	public List<ApprVO> mywaitlist_paging(Map<String, String> paraMap) {
+		List<ApprVO> mywaitlist = dao.mywaitlist_paging(paraMap);
+		return mywaitlist;
+	}
+
+	@Override
+	public int myacceptlist_cnt(Map<String, String> paraMap) {
+		int totalCount = dao.myacceptlist_cnt(paraMap);
+		return totalCount;
+	}
+
+	@Override
+	public List<Map<String, Object>> myacceptlist_paging(Map<String, String> paraMap) {
+		List<Map<String, Object>> myacceptlist = dao.myacceptlist_paging(paraMap);
+		return myacceptlist;
+	}
+
+	@Override
+	public int myrejectlist_cnt(Map<String, String> paraMap) {
+		int totalCount = dao.myrejectlist_cnt(paraMap);
+		return totalCount;
+	}
+
+	@Override
+	public List<ApprVO> myrejectlist_paging(Map<String, String> paraMap) {
+		List<ApprVO> myrejectlist = dao.myrejectlist_paging(paraMap);
+		return myrejectlist;
 	}
 
 

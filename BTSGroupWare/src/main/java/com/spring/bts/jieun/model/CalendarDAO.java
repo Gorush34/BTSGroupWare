@@ -131,6 +131,28 @@ public class CalendarDAO implements InterCalendarDAO {
 		return map;
 	}
 	
+	// == 상세페이지에서 댓글 적기 == //
+	@Override
+	public int commentInput(Map<String, String> paraMap) {
+		int n = sqlsession.insert("jieun.commentInput", paraMap);
+		return n;
+	}
+	
+	// == 상세페이지에서 댓글 보여주기 == //
+	@Override
+	public List<Map<String, String>> getScheduleComment(String pk_schno) {
+		List<Map<String, String>> commentList = sqlsession.selectList("jieun.getScheduleComment", pk_schno);
+		return commentList;
+	}
+	
+	// == 상세페이지에서 댓글 삭제 == //
+	@Override
+	public int delComment(String pk_schecono) {
+		int n = sqlsession.delete("jieun.delComment", pk_schecono);
+		return n;
+	}
+
+
 	// === 일정 삭제 하기 === //
 	@Override
 	public int deleteSchedule(String pk_schno) {
@@ -196,7 +218,6 @@ public class CalendarDAO implements InterCalendarDAO {
 	}
 	
 	
-
 	
 	
 	

@@ -1,79 +1,51 @@
 @charset "UTF-8";
+                  
+#mycontent     { min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:white;
+                 float:right; width:90%; padding-left: 6%}
+                  
+#mysideinfo      { min-height:1200px; position: fixed; top:60px; padding-top: 60px; background-color:#FFF;
+                  float:left; width:250px; margin-left: 50px; }
 
-body {
-	font-family: 'Noto Sans KR', sans-serif;
-}
-/* 헤더 스타일  시작 */  
+#myfooter      { display: flex; min-height:120px; position: relative; top:60px; background-color:#555555; margin-bottom: 70px; 
+                 clear:both; }
+ 
+#myheader a    {text-decoration:none;}
+
+body {font-family: 'Noto Sans KR', sans-serif; font-size: 18px;}
+
+   
+/* 헤더 스타일  시작 */
+
 li.login_dropdown  { 
-	list-style: none;
-	display: inline-block;
+   list-style: none;
+   display: inline-block;
 }
 
 img#memberProfile {
-	max-width: 40px;
-	max-height: 40px;
-	border-radius: 100%;
+   max-width: 40px;
+   max-height: 40px;
+   border-radius: 100%;
 }
 
 ul#secondHeaderGroup, .secondHeaderList {
-		list-style-type: none;
-		display: inline-block;
-}
-#navbarSupportedContent > ul > li {
-	margin-right: 20px;
-	font-size: 18px;
+      list-style-type: none;
+      display: inline-block;
 }
 
-body {font-family: 'Noto Sans KR', sans-serif; 
-	   font-size: 18px;}
+  #mail_searchType, #searchWord, 
+  #mail_serachWord, #mail_search,
+  #btnSearch {
+      display: inline-block;
+  }   
+
+#navbarSupportedContent > ul > li {
+   margin-right: 20px;
+   font-size: 18px;
+}
+
 
 /* 헤더 스타일  끝 */
 
-#mycontainer {
-		padding: 20px;
-	}
-	
-	#myheader {
-		display: flex;
-		min-height: 100px;
-		position: relative;
-		top: 60px;
-	}
-	
-	#mycontent {
-		min-height: 1200px;
-		position: relative;
-		top: 60px;
-		padding-top: 40px;
-		background-color: white;
-		float: right;
-		width: 80%;
-		padding: 20px;
-	}
-	
-	#mysideinfo {
-		min-height: 1200px;
-		position: fixed;
-		top: 60px;
-		padding-top: 40px;
-		background-color: #FFF;
-		float: left;
-		width: 250px;
-	}
-	
-	#myfooter {
-		display: flex;
-		min-height: 120px;
-		position: relative;
-		top: 60px;
-		background-color: #555555;
-		margin-bottom: 70px;
-		clear: both;
-	}
-	
-	#myheader a {
-		text-decoration: none;
-	}
 
 
 	
@@ -108,7 +80,7 @@ body {font-family: 'Noto Sans KR', sans-serif;
 	font-family: 'Noto Sans KR',맑은 고딕,돋움, malgun gothic, dotum,AppleGothic,Helvetica,sans-serif;
 	text-align:center;
 	padding-top: 3%;
-    padding-left: 31%;
+    padding-left: 27%;
 	}
 	
 	button#telAdd_mini_btn {
@@ -123,8 +95,8 @@ body {font-family: 'Noto Sans KR', sans-serif;
 	}
 	
 	div#buttonmenu {
-		padding-top: 5%;
-		padding-right: 28%;
+		padding-top: 3%;
+		padding-right: 52%;
 	}
 	
 
@@ -137,11 +109,9 @@ body {font-family: 'Noto Sans KR', sans-serif;
 /* ///////////////////////////////////////////////////////////////////////////////////////// */
 /* ///////////////////////////////////////////////////////////////////////////////////////// */
 
-body { 
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-}
 
+
+/*
 .header {
   overflow: hidden;
   background-color: #f1f1f1;
@@ -194,7 +164,7 @@ body {
   margin: 0;
   font-family: "Lato", sans-serif;
 }
-
+*/
 .sidebar {
   margin: 0;
   padding: 0;

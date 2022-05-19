@@ -19,6 +19,10 @@ body {font-family: 'Noto Sans KR', sans-serif; }
 
 /* 헤더 스타일  시작 */
 
+#myheader > nav > div:nth-child(4) {
+	font-size: 18px;
+}
+
 li.login_dropdown  { 
 	list-style: none;
 	display: inline-block;

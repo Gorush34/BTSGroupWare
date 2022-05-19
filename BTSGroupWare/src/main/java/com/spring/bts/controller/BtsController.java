@@ -145,7 +145,7 @@ public class BtsController {
 		paraMap.put("pk_emp_no", userid);
 		paraMap.put("emp_pwd", Sha256.encrypt(pwd));
 		
-		EmployeeVO loginuser = service.getLoginMember(paraMap);
+		EmployeeVO loginuser = empService.getLoginMember(paraMap);
 		
 		if(loginuser == null) { // 로그인 실패시
 			String message = "아이디 또는 암호가 틀립니다.";
@@ -274,17 +274,16 @@ public class BtsController {
 		str_jsonObjArr = str_jsonObjArr.substring(1, str_jsonObjArr.length()-1);
 		
 		String[] arr_str_jsonObjArr = str_jsonObjArr.split("\\},");
-		
+	
 		for(int i=0; i<arr_str_jsonObjArr.length; i++) {
-			arr_str_jsonObjArr[i] += "}";	//,"ta":"15.7"} 부분에서 '}' 부분 += 함.
+			arr_str_jsonObjArr[i] += "}";
 		}
-		
+	
 		/*  확인용
 		for(String jsonObj : arr_str_jsonObjArr) {
-			System.out.println(jsonObj);
+		System.out.println(jsonObj);
 		}
-		
-		*/ // jsonObj 객체 하나하나가 나온다.
+		*/
 		// {"locationName":"속초","ta":"15.7"}
 		// {"locationName":"북춘천","ta":"24.9"}
 		// {"locationName":"철원","ta":"23.8"}
@@ -297,31 +296,31 @@ public class BtsController {
 		// {"locationName":"밀양","ta":"24.7"}
 		// {"locationName":"산청","ta":"24.2"}
 		// {"locationName":"거제","ta":"21.0"}
-		// {"locationName":"남해","ta":"22.7"}
-		
-		
+		// {"locationName":"남해","ta":"22.7"}}
+	
+	
 		String[] locationArr = {"서울","인천","수원","춘천","강릉","청주","홍성","대전","안동","포항","대구","전주","울산","부산","창원","여수","광주","목포","제주","울릉도","백령도"};
 		String result = "[";
 		
 		for(String jsonObj : arr_str_jsonObjArr) {
 		
-		for(int i=0; i<locationArr.length; i++) {
-			//  if( jsonObj.indexOf(locationArr[i]) >= 0 ) { // 북춘천,춘천,북강릉,강릉,북창원,창원이 있으므로  if(jsonObj.indexOf(locationArr[i]) >= 0) { 을 사용하지 않음 
+			for(int i=0; i<locationArr.length; i++) {
+				//  if( jsonObj.indexOf(locationArr[i]) >= 0 ) { // 북춘천,춘천,북강릉,강릉,북창원,창원이 있으므로  if(jsonObj.indexOf(locationArr[i]) >= 0) { 을 사용하지 않음 
 				if( jsonObj.substring(jsonObj.indexOf(":")+2, jsonObj.indexOf(",")-1).equals(locationArr[i]) ) { 
-					result += jsonObj+",";  // [{"locationName":"춘천","ta":"26.7"},{"locationName":"백령도","ta":"13.8"}, ..... {"locationName":"제주","ta":"18.9"}, 
-					break;
-				}
+						result += jsonObj+",";  // [{"locationName":"춘천","ta":"26.7"},{"locationName":"백령도","ta":"13.8"}, ..... {"locationName":"제주","ta":"18.9"}, 
+						break;
+					}
 			}
 		}// end of for------------------------------
 		
-			result = result.substring(0, result.length()-1);  // [{"locationName":"춘천","ta":"26.7"},{"locationName":"백령도","ta":"13.8"}, ..... {"locationName":"제주","ta":"18.9"}
-			result = result + "]";                            // [{"locationName":"춘천","ta":"26.7"},{"locationName":"백령도","ta":"13.8"}, ..... {"locationName":"제주","ta":"18.9"}]
-			
-			/*  확인용
-			System.out.println(result);
-			// [{"locationName":"춘천","ta":"26.7"},{"locationName":"백령도","ta":"13.8"},{"locationName":"강릉","ta":"18.4"},{"locationName":"서울","ta":"27.7"},{"locationName":"인천","ta":"23.8"},{"locationName":"울릉도","ta":"19.2"},{"locationName":"수원","ta":"26.5"},{"locationName":"청주","ta":"26.8"},{"locationName":"대전","ta":"26.4"},{"locationName":"안동","ta":"24.3"},{"locationName":"포항","ta":"19.4"},{"locationName":"대구","ta":"22.7"},{"locationName":"전주","ta":"26.3"},{"locationName":"울산","ta":"20.7"},{"locationName":"창원","ta":"21.9"},{"locationName":"광주","ta":"25.6"},{"locationName":"부산","ta":"22.0"},{"locationName":"목포","ta":"23.2"},{"locationName":"여수","ta":"23.0"},{"locationName":"홍성","ta":"25.0"},{"locationName":"제주","ta":"18.9"}]
-			
-			*/
+		result = result.substring(0, result.length()-1);  // [{"locationName":"춘천","ta":"26.7"},{"locationName":"백령도","ta":"13.8"}, ..... {"locationName":"제주","ta":"18.9"}
+		result = result + "]";                            // [{"locationName":"춘천","ta":"26.7"},{"locationName":"백령도","ta":"13.8"}, ..... {"locationName":"제주","ta":"18.9"}]
+		
+		/*  확인용
+		System.out.println(result);
+		// [{"locationName":"춘천","ta":"26.7"},{"locationName":"백령도","ta":"13.8"},{"locationName":"강릉","ta":"18.4"},{"locationName":"서울","ta":"27.7"},{"locationName":"인천","ta":"23.8"},{"locationName":"울릉도","ta":"19.2"},{"locationName":"수원","ta":"26.5"},{"locationName":"청주","ta":"26.8"},{"locationName":"대전","ta":"26.4"},{"locationName":"안동","ta":"24.3"},{"locationName":"포항","ta":"19.4"},{"locationName":"대구","ta":"22.7"},{"locationName":"전주","ta":"26.3"},{"locationName":"울산","ta":"20.7"},{"locationName":"창원","ta":"21.9"},{"locationName":"광주","ta":"25.6"},{"locationName":"부산","ta":"22.0"},{"locationName":"목포","ta":"23.2"},{"locationName":"여수","ta":"23.0"},{"locationName":"홍성","ta":"25.0"},{"locationName":"제주","ta":"18.9"}]
+		
+		*/
 		return result;
 	}
 	

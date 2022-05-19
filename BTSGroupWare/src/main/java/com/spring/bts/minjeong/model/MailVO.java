@@ -27,7 +27,17 @@ public class MailVO {
 //	private String importance_star;			// NUMBER(2) 			중요보관함(★) 저장여부 	(0:저장 X , 1:저장O) 
 	private String importance_star_send;	// NUMBER(2) 			보낸사람 전용 중요보관함(★) 저장여부 	(0:저장 X , 1:저장O) 
 	private String importance_star_rec;		// NUMBER(2) 			받는사람 전용 중요보관함(★) 저장여부 	(0:저장 X , 1:저장O) 
+
+	// 메일 읽음상태 update 하기
+	private String fk_mail_num;
+	private String rec_status;		// NUMBER(2) 			받는사람 전용 중요보관함(★) 저장여부 	(0:저장 X , 1:저장O) 
+	private String rec_date;		// NUMBER(2) 			받는사람 전용 중요보관함(★) 저장여부 	(0:저장 X , 1:저장O) 
+	private String send_status;		// NUMBER(2) 			받는사람 전용 중요보관함(★) 저장여부 	(0:저장 X , 1:저장O) 
+	private String send_date;		// NUMBER(2) 			받는사람 전용 중요보관함(★) 저장여부 	(0:저장 X , 1:저장O) 
+	private String imp_status;		// NUMBER(2) 			받는사람 전용 중요보관함(★) 저장여부 	(0:저장 X , 1:저장O) 
+	private String imp_date;		// NUMBER(2) 			받는사람 전용 중요보관함(★) 저장여부 	(0:저장 X , 1:저장O) 
 	
+
 	// 메일 상세내용 보기
 	private String prev_seq;		// 이전글번호
 	private String prev_subject;	// 이전글제목
@@ -307,7 +317,67 @@ public class MailVO {
 		this.importance_star_rec = importance_star_rec;
 	}
 
-		
+
+	
+	// 읽음상태 update
+	
+	public String getRec_status() {
+		return rec_status;
+	}
+
+	public void setRec_status(String rec_status) {
+		this.rec_status = rec_status;
+	}
+
+	public String getRec_date() {
+		return rec_date;
+	}
+
+	public void setRec_date(String rec_date) {
+		this.rec_date = rec_date;
+	}
+
+	public String getSend_status() {
+		return send_status;
+	}
+
+	public void setSend_status(String send_status) {
+		this.send_status = send_status;
+	}
+
+	public String getSend_date() {
+		return send_date;
+	}
+
+	public void setSend_date(String send_date) {
+		this.send_date = send_date;
+	}
+
+	public String getImp_status() {
+		return imp_status;
+	}
+
+	public void setImp_status(String imp_status) {
+		this.imp_status = imp_status;
+	}
+
+	public String getImp_date() {
+		return imp_date;
+	}
+
+	public void setImp_date(String imp_date) {
+		this.imp_date = imp_date;
+	}
+
+	public String getFk_mail_num() {
+		return fk_mail_num;
+	}
+
+	public void setFk_mail_num(String fk_mail_num) {
+		this.fk_mail_num = fk_mail_num;
+	}
+
+
 	
 	
 }

@@ -403,5 +403,65 @@ public class MailService implements InterMailService {
 		return mailReceive_main;
 	}
 
+	// 받은 메일 1개 클릭 시 rec_status 업데이트 (받은메일함에서 읽음 표시하기 위함)
+	@Override
+	public int updateRec_status(Map<String, String> paraMap) {
+		int updateRec_status = dao.updateRec_status(paraMap);
+		return updateRec_status;
+	}
+
+	// 보낸 메일 1개 클릭 시 send_status 업데이트 (보낸메일함에서 읽음 표시하기 위함)
+	@Override
+	public int updateSend_status(Map<String, String> paraMap) {
+		int updateSend_status = dao.updateSend_status(paraMap);
+		return updateSend_status;
+	}
+
+	// 받은 메일 1개 클릭 시 imp_status 업데이트 (중요메일함에서 읽음 표시하기 위함)
+	@Override
+	public int updateImp_status(Map<String, String> paraMap) {
+		int updateImp_status = dao.updateImp_status(paraMap);
+		return updateImp_status;
+	}
+
+	// 글씀과 동시에 tbl_mailRead 테이블에 해당 글번호의 값을 insert 시켜준다.
+	@Override
+	public int addToMailRead(String fk_mail_num) {
+		int n = dao.addToMailRead(fk_mail_num);
+		return n;
+	}
+
+	// 메일 글쓰기 pk_mail_num 가져오기 (글쓰기 다음 번호, 읽음처리 테이블 fk_mail_num 에 넣기 위함) -->
+	@Override
+	public String getPkMailNum(MailVO mailvo) {
+		String getPkMailNum = dao.getPkMailNum(mailvo);
+		return getPkMailNum;
+	}
+
+
+	// pk_mail_num 을 통해 구해온 fk_mail_num 으로 rec_status 가 0인지 1인지(1이라면 rec_date도 가져오기) 알아온다.
+	@Override
+	public List<MailVO> getRecCheck(String fk_mail_num) {
+		List<MailVO> getRecCheck = dao.getRecCheck(fk_mail_num);
+		return getRecCheck;
+	}
+
+	 // 페이징처리 한 보낸메일 수신확인 메일목록 (검색 있든, 없든 모두 다 포함) 
+	@Override
+	public List<MailVO> sendMailListSearchWithPaging_recCheck(Map<String, String> paraMap) {
+		List<MailVO> sendMailList_recCheck = dao.sendMailList_recCheck(paraMap);
+		return sendMailList_recCheck;
+	}
+
+	// 총 보낸 메일 수신확인 건수 구해오기 (service 단으로 보내기) 
+	@Override
+	public int getTotalCount_recCheck(Map<String, String> paraMap) {
+		int n = dao.getTotalCount_recCheck(paraMap);
+		return n;
+	}
+
+
+
+
 	
 }

@@ -37,16 +37,16 @@ td#no{
 color:black !important;
 }
 
+
 a.nav-link{
-margin-right: 20px;
-font-size: 15px;
-    padding-right: 0.5rem;
-    padding-left: 0.5rem;
-        display: block;
-    padding: 0.5rem 1rem;
+
 
 }
 
+a.nav-link{
+	display: block;
+    padding: 0.5rem 1rem;
+}
 #side{
     color: black;
     font-size: 15pt;

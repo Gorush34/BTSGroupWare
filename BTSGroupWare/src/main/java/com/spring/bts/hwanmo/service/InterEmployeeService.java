@@ -38,4 +38,7 @@ public interface InterEmployeeService {
 	// 회원정보 가져오기
 	List<Map<String, Object>> getEmpInfo(int pk_emp_no);
 
+	// 로그인 처리하기
+	EmployeeVO getLoginMember(Map<String, String> paraMap);
+
 }

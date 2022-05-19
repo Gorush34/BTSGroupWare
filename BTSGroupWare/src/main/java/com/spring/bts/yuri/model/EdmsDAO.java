@@ -245,4 +245,50 @@ public class EdmsDAO implements InterEdmsDAO {
 		int totalCount = sqlsession.selectOne("yuri.getTotalCount_reject", paraMap);
 		return totalCount;
 	}
+
+	
+	
+	
+	
+	////////////////////////////////////////////////////
+	
+	// 내문서함(로그인유저)
+	
+	@Override
+	public int mywaitlist_cnt(Map<String, String> paraMap) {
+		int totalCount = sqlsession.selectOne("yuri.mywaitlist_cnt", paraMap);
+		return totalCount;
+	}
+	
+	@Override
+	public List<ApprVO> mywaitlist_paging(Map<String, String> paraMap) {
+		List<ApprVO> mywaitlist = sqlsession.selectList("yuri.mywaitlist_paging", paraMap);
+		return mywaitlist;
+	}
+
+	@Override
+	public int myacceptlist_cnt(Map<String, String> paraMap) {
+		int totalCount = sqlsession.selectOne("yuri.myacceptlist_cnt", paraMap);
+		return totalCount;
+	}
+
+	@Override
+	public List<Map<String, Object>> myacceptlist_paging(Map<String, String> paraMap) {
+		List<Map<String, Object>> myacceptlist = sqlsession.selectList("yuri.myacceptlist_paging", paraMap);
+		return myacceptlist;
+	}
+
+	@Override
+	public int myrejectlist_cnt(Map<String, String> paraMap) {
+		int totalCount = sqlsession.selectOne("yuri.myrejectlist_cnt", paraMap);
+		return totalCount;
+	}
+
+	@Override
+	public List<ApprVO> myrejectlist_paging(Map<String, String> paraMap) {
+		List<ApprVO> myrejectlist = sqlsession.selectList("yuri.myrejectlist_paging", paraMap);
+		return myrejectlist;
+	}
+
+
 }

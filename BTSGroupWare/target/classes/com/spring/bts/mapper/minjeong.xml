@@ -60,8 +60,8 @@
 		</if>		
 	</select>
 
-	
-	<!--  페이징처리 한 받은 메일목록 (검색 있든, 없든 모두 다 포함)  -->
+	<!--  페이징처리 한 받은 메일목록  1 (검색 있든, 없든 모두 다 포함)  -->
+<!-- 
  	<select id="recMailListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
 		select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date, importance, importance_star_rec
 		from 
@@ -79,8 +79,29 @@
 		</if>	
 		) V
 		where rno between #{startRno} and #{endRno}
-	</select> 
-	
+	</select> -->
+ 
+	<!--  페이징처리 한 받은 메일목록 2 (검색 있든, 없든 모두 다 포함 && 읽음상태 표시)  -->
+ 	<select id="recMailListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
+	select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date, importance, importance_star_rec, rec_status
+		from 
+		(
+		select row_number() over(order by pk_mail_num desc) AS rno,
+		       pk_mail_num, fk_senduser_num, sendempname, subject
+		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+		       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+		       , importance, importance_star_rec, rec_status
+		from tbl_mail M join tbl_mailread R
+		on M.pk_mail_num = R.fk_mail_num
+		where fk_receiveuser_num = #{fk_receiveuser_num} and fk_senduser_num != #{fk_receiveuser_num} and
+		del_status = 0 and reservation_status = 0 and temp_status = 0
+		<if test="searchType != ''">
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>	
+		) V
+		where rno between #{startRno} and #{endRno} 		
+	</select>
+
 
 	<!-- 페이징처리 / 검색기능 포함 된 받은메일함 목록에서 상세내용 조회하기 (이전글, 다음글 제외) -->
 	<select id="getRecMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">	
@@ -141,8 +162,8 @@
 		</if>		
 	</select>
 
-	
-	<!-- 페이징처리 한 보낸 메일목록 (검색 있든, 없든 모두 다 포함) -->
+	<!-- 페이징처리 한 보낸 메일목록 1(검색 있든, 없든 모두 다 포함) -->
+	<!-- 
  	<select id="sendMailListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
 		select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date, importance, importance_star_send
 		from
@@ -160,8 +181,28 @@
 		</if>	
 		) V
 		where rno between #{startRno} and #{endRno}
-	</select> 	
-
+	</select>  	-->		
+	
+	<!-- 페이징처리 한 보낸 메일목록 2 (검색 있든, 없든 모두 다 포함 && 읽음상태 표시) -->
+ 	<select id="sendMailListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
+		select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date, importance, importance_star_send, send_status
+		from
+		(
+		select row_number() over(order by pk_mail_num desc) AS rno,
+		       pk_mail_num, fk_receiveuser_num, recempname, subject
+		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+		       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+		       , importance, importance_star_send, send_status
+		from tbl_mail M join tbl_mailread R
+		on M.pk_mail_num = R.fk_mail_num
+		where fk_senduser_num = #{fk_senduser_num} and fk_receiveuser_num != #{fk_senduser_num} and
+		del_status = 0 and reservation_status = 0 and temp_status = 0
+		<if test="searchType != ''">
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>
+		) V
+		where rno between #{startRno} and #{endRno}
+	</select>
 
 
 	<!-- 페이징처리 / 검색기능 포함 된 보낸메일함 목록에서 상세내용 조회하기 (이전글, 다음글 제외) -->
@@ -447,8 +488,8 @@
 		</if>		
 	</select>
 	
-	<!-- 페이징처리 한 중요메일함 목록 (검색 있든, 없든 모두 다 포함) -->
-
+	<!-- 페이징처리 한 중요메일함 목록 1 (검색 있든, 없든 모두 다 포함) -->
+<!-- 
 	<select id="ImportantMailListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
 		select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date, importance, importance_star_send, importance_star_rec
 		from 
@@ -465,6 +506,27 @@
 		</if>	
 		) V
 		where rno between #{startRno} and #{endRno}	
+	</select>  -->
+
+	
+	<!-- 페이징처리 한 중요메일함 2 (검색 있든, 없든 모두 다 포함 && 읽음상태 표시) -->
+ 	<select id="ImportantMailListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
+		select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date, importance, importance_star_send, importance_star_rec, imp_status
+		from
+		(
+		select row_number() over(order by pk_mail_num desc) AS rno,
+		       pk_mail_num, fk_senduser_num, sendempname, subject
+		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+		       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+		       , importance, importance_star_send, importance_star_rec, imp_status
+		from tbl_mail M join tbl_mailread R
+		on M.pk_mail_num = R.fk_mail_num
+		where (fk_receiveuser_num = #{fk_receiveuser_num} or fk_senduser_num = #{fk_receiveuser_num} ) and importance_star_send = 1 or importance_star_rec = 1
+		<if test="searchType != ''">
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>
+		) V
+		where rno between #{startRno} and #{endRno}
 	</select>
 
 	<!-- 페이징처리 / 검색기능 포함 된 중요메일함 목록에서 상세내용 조회하기 (이전글, 다음글 제외) -->
@@ -554,5 +616,93 @@
 	</select>
 	
 	<!-- ===== 내게쓴메일함 끝 ===== -->
+
+
+	<!-- 메일 목록에서 읽음처리 시작 -->
+
+	<!-- 받은 메일 1개 클릭 시 rec_status 업데이트 (받은메일함에서 읽음 표시하기 위함) -->
+	<update id="updateRec_status" parameterType="HashMap">
+		update tbl_mailRead 
+		   set rec_status = 1
+		 	 , rec_date = sysdate
+		where fk_mail_num = #{pk_mail_num}
+	</update>
+
+	<!-- 보낸 메일 1개 클릭 시 send_status 업데이트 (보낸메일함에서 읽음 표시하기 위함)  -->
+	<update id="updateSend_status" parameterType="HashMap">
+		update tbl_mailRead 
+		   set send_status = 1
+		 	 , send_date = sysdate
+		where fk_mail_num = #{pk_mail_num}
+	</update>
 	
+	<!-- 받은 메일 1개 클릭 시 imp_status 업데이트 (imp_status = 1로 변경한다.중요메일함에서 읽음 표시하기 위함) -->
+	<update id="updateImp_status" parameterType="HashMap">
+		update tbl_mailRead 
+		   set imp_status = 1
+		 	 , imp_date = sysdate
+		where fk_mail_num = #{pk_mail_num}
+	</update>	
+	
+	<!-- 글씀과 동시에 tbl_mailRead 테이블에 해당 글번호의 값을 insert 시켜준다. -->
+	<insert id="addToMailRead" parameterType="String">
+		insert into tbl_mailRead(fk_mail_num, rec_status, send_status, imp_status)
+		values(#{fk_mail_num}, 0, 0, 0)
+	</insert>  
+ 
+ 	<!-- 메일 글쓰기 pk_mail_num 가져오기 (글쓰기 다음 번호, 읽음처리 테이블 fk_mail_num 에 넣기 위함) -->
+	<select id="getPkMailNum" parameterType="com.spring.bts.minjeong.model.MailVO" resultType="String">
+		select pk_mail_num
+		FROM
+		(
+		select pk_mail_num, rownum as rno
+		from tbl_mail
+		order by pk_mail_num desc
+		) V
+		where rno = 1
+    </select>
+
+	<!-- 메일 목록에서 사용자가 읽음처리 끝 -->
+	
+	<!-- 상대방이 메일을 읽었을 때 rec_status 가 1로 바뀌면서, rec_status 가 1인 목록들 조회해오기 -->
+	<select id="getRecCheck" parameterType="String" resultType="com.spring.bts.minjeong.model.MailVO">
+		select rec_status , rec_date
+		from tbl_mailRead
+		where fk_mail_num = #{fk_mail_num} and rec_status = 1
+	</select>
+
+	<!--  총 보낸메일 개수 구해오기 -->
+	<select id="getTotalCount_recCheck" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_mail
+		where fk_senduser_num = #{fk_senduser_num} and fk_receiveuser_num != #{fk_senduser_num} and
+		del_status = 0 and reservation_status = 0 and temp_status = 0
+		<if test="searchType != ''">
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>		
+	</select>
+	
+	<!-- 페이징처리 한 보낸 수신확인 메일목록 2 (검색 있든, 없든 모두 다 포함 && 읽음상태 표시) -->
+ 	<select id="sendMailList_recCheck" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
+		select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date, importance, importance_star_send, send_status
+			 , rec_status, rec_date 
+		from
+		(
+		select row_number() over(order by pk_mail_num desc) AS rno,
+		       pk_mail_num, fk_receiveuser_num, recempname, subject
+		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+		       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+		       , importance, importance_star_send, send_status, rec_status, to_char(rec_date, 'yyyy-mm-dd hh24:mi:ss') as rec_date
+		from tbl_mail M join tbl_mailread R
+		on M.pk_mail_num = R.fk_mail_num
+		where fk_senduser_num = #{fk_senduser_num} and fk_receiveuser_num != #{fk_senduser_num} and
+		del_status = 0 and reservation_status = 0 and temp_status = 0
+		<if test="searchType != ''">
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>
+		) V
+		where rno between #{startRno} and #{endRno}
+	</select>
+	
+
 </mapper>

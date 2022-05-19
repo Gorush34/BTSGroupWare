@@ -204,12 +204,6 @@
 								삭제
 							</button>
 						</li>
-						<li class="secondHeaderList">
-							<button type="button" id=readSend onclick="goReadSend()">
-							<i class="fa fa-envelope-o fa-fw"></i>
-								읽음
-							</button>
-						</li>
 					</ul>
 				</div>
 				
@@ -235,7 +229,7 @@
 						<tbody>
 						<c:if test="${empty requestScope.ReservationMailList}">
 							<tr>
-								<td colspan="10" style="text-align: center; width: 1000px;">메일이 존재하지 않습니다.</td>
+								<td colspan="10" style="text-align: center; width: 1278px;">메일이 존재하지 않습니다.</td>
 							</tr>							
 						</c:if>
 						<c:if test="${not empty requestScope.ReservationMailList}">

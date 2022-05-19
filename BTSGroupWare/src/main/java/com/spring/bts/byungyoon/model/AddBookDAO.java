@@ -102,6 +102,26 @@ public class AddBookDAO implements InterAddBookDAO {
 	}
 
 
+	// 이메일 중복체크
+	@Override
+	public boolean emailDuplicateCheck(String email) {
+		
+		boolean isExist = sqlsession.selectOne("byungyoon.emailDuplicateCheck", email);
+		
+		return isExist;
+	}
+
+
+	// 사원 목록에서 사원 삭제하기
+	@Override
+	public int addBook_depInfo_delete(int pk_emp_no) {
+		
+		int n = sqlsession.delete("byungyoon.addBook_depInfo_delete" , pk_emp_no);
+		
+		return n;
+	}
+
+
 
 	
 	

@@ -32,6 +32,10 @@ ul#secondHeaderGroup, .secondHeaderList {
 	font-size: 18px;
 }
 
+#myheader > nav > div:nth-child(4) {
+	font-size: 18px;
+}
+
 body {font-family: 'Noto Sans KR', sans-serif; }
 
 /* 헤더 스타일  끝 */
@@ -69,9 +73,9 @@ div.left_section {
 }
 
 span.photo img {
-    width: 82px;
-    height: 82px;
-    border-radius: 100px;
+    width: 82px !important;
+    height: 82px !important;
+    border-radius: 100px !important;
 }
 
 div.profile > span {

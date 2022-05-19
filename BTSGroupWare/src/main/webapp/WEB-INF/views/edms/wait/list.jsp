@@ -128,7 +128,7 @@
 
 
 	<div class="edmsHomeTitle">
-		<span class="edms_maintitle">${sessionScope.loginuser.emp_name}님의 대기문서함</span>
+		<span class="edms_maintitle">BTSGroupware 대기문서함</span>
 		<p style="margin-bottom: 10px;"></p>
 	</div>
 	
@@ -175,7 +175,7 @@
 		
 		<%-- 결재대기 목록이 있을 때 종료 --%>
 		<c:if test="${not empty requestScope.edmsList}">
-		<table class="table table-sm table-hover table-light edmsTable">
+		<table class="table table-sm table-hover table-light edmsTable ellipsisTable">
 			<thead class="thead-light">
 				<tr>
 					<th scope="col" width="4%">#</th>
@@ -208,9 +208,8 @@
 					</c:if>
 					</td>
 					
-					<td>
+					<td class="elltitle">
 						<span class="title" onclick="goView('${apprvo.pk_appr_no}')" style="cursor: pointer;">${apprvo.title}</span>
-						
 					</td>
 					
 					<td>

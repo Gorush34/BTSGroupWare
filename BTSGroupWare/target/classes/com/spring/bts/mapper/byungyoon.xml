@@ -35,7 +35,7 @@
 	
 	<!-- 상세부서정보 페이지 사원목록 불러오기 -->
 	<select id="addBook_depInfo_select" resultType="com.spring.bts.hwanmo.model.EmployeeVO">
-		select E.pk_emp_no, E.emp_name , R.ko_rankname , D.ko_depname , R.pk_rank_no
+		select E.pk_emp_no, E.emp_name , R.ko_rankname , D.ko_depname , R.pk_rank_no, E.uq_email
 		from tbl_EMPLOYEES E
 		join tbl_rank_sort R
 		on E.fk_rank_id = R.pk_rank_no
@@ -84,7 +84,7 @@
 		</if>
 	</select>
 	
-	<!-- // 주소록 삭제하기 -->
+	<!-- 주소록 삭제하기 -->
 	<delete id="addBook_delete" parameterType="int">
 		delete from tbl_addBook
 		where PK_ADDBOOK_NO = #{pk_addBook_no} 
@@ -97,6 +97,18 @@
   		WHERE pk_emp_no = #{pk_emp_no}
 	</update>
 	
+	<!-- 이메일 중복체크 -->
+	<select id="emailDuplicateCheck" parameterType="String" resultType="boolean">
+  		select count(*)
+		from tbl_employees
+		where uq_email = #{email}
+	</select>
+	
+	<!-- 사원목록에서 사원 삭제하기 -->
+	<delete id="addBook_depInfo_delete" parameterType="int">
+		delete from tbl_employees
+		where pk_emp_no = #{pk_emp_no} 
+	</delete>
 	
 	
 	

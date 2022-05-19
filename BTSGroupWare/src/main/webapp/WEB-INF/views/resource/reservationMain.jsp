@@ -137,6 +137,8 @@
 
 	    calendar = new FullCalendar.Calendar(calendarEl, {
 	      timeZone: 'local',
+	      locale: 'ko',
+	      themeSystem: 'bootstrap',
 	      initialView: 'timeGridWeek',
 	      headerToolbar: {
 	        left: 'prev,next today',
@@ -470,15 +472,15 @@
 	
 </script>
 
-<div id="resourceSide" style=" min-height:1200px; position: fixed; top:60px; padding-top: 40px; padding-left:30px; float:left; width:250px;">
-	<h4 style="margin-top: 30px; ">자원관리</h4>
+<div id="resourceSide" style=" min-height:1200px; position: fixed; top:60px; padding-top: 40px; float:left; width:250px;">
+	<h4>자원관리</h4>
 	<button type="button" class="btn btn-outline-primary btn-lg"  id="resRegisterbtn" style="margin: 15px auto; width:200px; display:block;" onclick="javascript:location.href='<%= ctxPath%>/reservation/reservationAdmin.bts'">자원등록</button>
 	<ul style="list-style-type: none; padding: 10px;">
 	 <c:if test="${not empty requestScope.classList}">
 	 <c:forEach var="map" items="${requestScope.classList}" varStatus="status">
 		<li style="margin-bottom: 15px;">
 			<div id="resourceClass" class="resourceClass" style="font-weight: bold; color:#00ace6;"><input type="hidden" value="${map.PK_CLASSNO}">${map.CLASSNAME}</div>
-				<div id="slideTogglebox1"  class="slideTogglebox" style="margin: 5px 0 5px 10px;">
+				<div id="slideTogglebox1"  class="slideTogglebox" style="margin: 5px 0 5px 10px; font-size: 11pt;">
 					<table>
 						<c:if test="${not empty requestScope.resourceList}">
 							<c:forEach var="map2" items="${requestScope.resourceList}">
