@@ -98,6 +98,12 @@
 	</update>
 	
 	
+	<select id="emailDuplicateCheck" parameterType="String" resultType="boolean">
+  		select count(*)
+		from tbl_employees
+		where uq_email = #{email}
+	</select>
+	
 	
 	
 

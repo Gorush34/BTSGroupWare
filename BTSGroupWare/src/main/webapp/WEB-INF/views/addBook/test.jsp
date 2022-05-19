@@ -61,6 +61,8 @@
 
 <script type="text/javascript">
 
+	var mid_cnt = 0;
+	var fin_cnt = 0;
    
    $( document ).ready( function() {
       
@@ -93,8 +95,54 @@
      $( "button#h_team" ).click( function() {
        $( "div#h_teamwon" ).slideToggle();
      });
-     
+	
+     	// 중간결재자		
+		$("button#set_mid").click(function () {
+			mid_cnt = $("input[name='uq_email']:checked").length;
+			console.log(mid_cnt);
+			
+	      	var empNoArr = new Array();
+	        $("input[name='uq_email']:checked").each(function() {
+	        	// console.log($(this).val());
+	        	empNoArr.push($(this).val());
+	        });
+	        if(mid_cnt == 0){
+	            alert("선택된 제품이 없습니다.");
+	            return;
+	        }
+	        const empNoStr = empNoArr.join();
+	        $("input#input_mid").val(empNoStr);
+	        
+	        console.log( $("input#input_mid").val());
+	        
+	        middle_approve();
+	        // wishToCartSelect(cnt, wishNoStr);
+		});//end of $("li#btn_delete").click(function ()
+
    
+		// 최종결재자		
+		$("button#set_fin").click(function () {
+			fin_cnt = $("input[name='uq_email']:checked").length;
+			console.log(fin_cnt);
+			
+	      	var empNoArr = new Array();
+	        $("input[name='uq_email']:checked").each(function() {
+	        	// console.log($(this).val());
+	        	empNoArr.push($(this).val());
+	        });
+	        if(fin_cnt == 0){
+	            alert("선택된 제품이 없습니다.");
+	            return;
+	        }
+	        const empNoStr = empNoArr.join();
+	        $("input#input_fin").val(empNoStr);
+	        
+	        console.log( $("input#input_fin").val());
+	        
+	        last_approve();
+	        // wishToCartSelect(cnt, wishNoStr);
+		});//end of $("li#btn_delete").click(function ()
+				
    }); // end of $( document ).ready( function()------------------------------------------
     
 
@@ -106,12 +154,12 @@
          var name = [];
          var rank = [];
          var dept = [];
-          $("input[name='empno']:checked").each(function() {
+          $("input[name='uq_email']:checked").each(function() {
               id = $(this).attr('id')
               empno.push($(this).val());
-              name.push($("#employee_name_" + id.split('_')[3]).val())
-              rank.push($("#employee_rank_" + id.split('_')[3]).val())
-              dept.push($("#employee_dept_" + id.split('_')[3]).val())
+              name.push($(this).next().val());
+              rank.push($(this).next().next().val());
+              dept.push($(this).next().next().next().val());
           });
           
           $("#mid_emp").empty()
@@ -124,7 +172,10 @@
              html += '<td><input type="text" style="text-align:center; border:none;" id="mid_text_rank_' + i + '" readonly value = ' + rank[i] + '></td>'
              html += '<td><input type="text" style="text-align:center; border:none;" id="mid_text_dept_' + i + '" readonly value = ' + dept[i] + '></td></tr>'
              
-             $("#tbl_middle > tbody:last").append(html)
+             $("#tbl_middle > tbody:last").append(html);
+             
+             
+             
           }
       }   
 //--------------------------- 중간결재자 버튼 끝 ---------------------------//   
@@ -136,12 +187,12 @@
          var name = [];
          var rank = [];
          var dept = [];
-          $("input[name='empno']:checked").each(function(){
-              id = $(this).attr('id')
+          $("input[name='uq_email']:checked").each(function(){
+        	  id = $(this).attr('id')
               empno.push($(this).val());
-              name.push($("#employee_name_" + id.split('_')[3]).val())
-              rank.push($("#employee_rank_" + id.split('_')[3]).val())
-              dept.push($("#employee_dept_" + id.split('_')[3]).val())
+              name.push($(this).next().val());
+              rank.push($(this).next().next().val());
+              dept.push($(this).next().next().next().val());
               
           });
           
@@ -151,94 +202,41 @@
              
              var html = ""
              html += '<tr><td><input type="hidden" value = ' + empno[i] + '></td>'
-             html += '<td><input type="text" style="text-align:center; border:none;" id="last_text_name_' + i + '" readonly value = ' + name[i] + '></td>'
-             html += '<td><input type="text" style="text-align:center; border:none;" id="last_text_rank_' + i + '" readonly value = ' + rank[i] + '></td>'
-             html += '<td><input type="text" style="text-align:center; border:none;" id="last_text_dept_' + i + '" readonly value = ' + dept[i] + '></td></tr>'
+             html += '<td><input type="text" style="text-align:center; border:none;" id="last_text_name" readonly value = ' + name[i] + '></td>'
+             html += '<td><input type="text" style="text-align:center; border:none;" id="last_text_rank" readonly value = ' + rank[i] + '></td>'
+             html += '<td><input type="text" style="text-align:center; border:none;" id="last_text_dept" readonly value = ' + dept[i] + '></td></tr>'
              
-             $("#tbl_last > tbody:last").append(html)
+             $("#tbl_last > tbody:last").append(html);
+             
+             
           }
           
       }
 //--------------------------- 최종결재자 버튼 끝 ---------------------------//      
    
-//--------------------------- 모달 등록 버튼 시작(여길 누르면 input에 값이 담김) ---------------------------//
+//--------------------------- 등록 버튼 시작 ---------------------------//
 
    function goApprove() {
-   
-	   var empno = [];
-       var name = [];
-       var rank = [];
-       var dept = [];
-        $("input[name='empno']:checked").each(function(){
-            id = $(this).attr('id')
-            empno.push($(this).val());
-            name.push($("#employee_name_" + id.split('_')[3]).val())
-            rank.push($("#employee_rank_" + id.split('_')[3]).val())
-            dept.push($("#employee_dept_" + id.split('_')[3]).val())
-            
-        });
-	
-        
-	   for(var i=0; i<empno.length; i++){
-		   
-		   var mid_html = ""
-	             mid_html += '<tr><td><input type="hidden" value = ' + empno[i] + '></td>'
-	             mid_html += '<td><input type="text" style="text-align:center; border:none;" id="mid_text_name_' + i + '" name="last_text_name_' + i + '" readonly value = ' + name[i] + '></td>'
-	             mid_html += '<td><input type="text" style="text-align:center; border:none;" id="mid_text_rank_' + i + '" name="last_text_rank_' + i + '" readonly value = ' + rank[i] + '></td>'
-	             mid_html += '<td><input type="text" style="text-align:center; border:none;" id="mid_text_dept_' + i + '" name="last_text_dept_' + i + '" readonly value = ' + dept[i] + '></td></tr>'
-		   
-		   var last_html = ""
-			   last_html += '<tr><td><input type="hidden" value = ' + empno[i] + '></td>'
-			   last_html += '<td><input type="text" style="text-align:center; border:none;" id="last_text_name_' + i + '" name="last_text_name_' + i + '" readonly value = ' + name[i] + '></td>'
-			   last_html += '<td><input type="text" style="text-align:center; border:none;" id="last_text_rank_' + i + '" name="last_text_rank_' + i + '" readonly value = ' + rank[i] + '></td>'
-			   last_html += '<td><input type="text" style="text-align:center; border:none;" id="last_text_dept_' + i + '" name="last_text_dept_' + i + '" readonly value = ' + dept[i] + '></td></tr>'
-             
-             $("#test_tbl > #tbody1").append(mid_html)
-             $("#test_tbl > #tbody2").append(last_html)
-		  /* 
-		   	$("#mid_test_"+(i+1)).val($("#mid_text_name_"+i).val());
-			$("#last_test_"+(i+1)).val($("#last_text_name_"+i).val());
-		  */ 
-		}
+	   var mid_list = $("input#input_mid").val();
+	   $("input#save_mid").val(mid_list);
 	   
+	   var fin_list = $("input#input_fin").val();
+	   $("input#save_fin").val(fin_list);
+	   $('.modal').modal('hide');
    }
 
-//--------------------------- 모달 등록 버튼 끝(여길 누르면 input에 값이 담김) ---------------------------//   
+//--------------------------- 등록 버튼 끝 ---------------------------//   
 
-/* ------ 여길 누르면 값이 컨트롤러 단으로 넘어감 ------ */
-<%--
-function test() {
-	const frm = document.testFrm;
-    frm.action = "<%=ctxPath%>/addBook/orgChart_sample.bts"
-    frm.method = "post"
-	frm.submit();
-}
---%>
-function test(i)	{
-	$.ajax({
-		url:"<%= ctxPath%>/addBook/orgChart_sample.bts",
-		data:{"test_1" : $("#last_text_name_0").val() ,
-			  "test_2" : $("#last_text_name_1").val() ,
-			  "test_3" : $("#last_text_name_2").val() ,
-			},
-		type: "post",
-		dataType: 'json',
-		success : function(json) {
-			
-		},
-		error: function(request){
-			
-		}
-	});
-}
-
-
-/* ------ 여길 누르면 값이 컨트롤러 단으로 넘어감 ------ */
 
 </script>
 
 <title>조직도 틀 샘플</title>
 
+<div>
+<input type="text" id="save_mid"  name="save_mid" />
+<input type="text" id="save_fin"  name="save_fin" />
+</div>
+
 
 
 
@@ -249,33 +247,9 @@ function test(i)	{
 
 
    
-   
-  <form name="testFrm">
- <table id="test_tbl">
- <!--  
- <input type="text" id="mid_test_1" name="mid_test_1" > 
- <input type="text" id="mid_test_2" name="mid_test_2" > 
- <input type="text" id="mid_test_3" name="mid_test_3" > 
- 
- <input type="text" id="last_test_1" name="last_test_1" > 
- <input type="text" id="last_test_2" name="last_test_2" > 
- <input type="text" id="last_test_3" name="last_test_3" > 
- -->
- <tbody id="tbody1">
- 	<tr>
- </tbody>
- <tbody>
- 	<tr>
- </tbody>
- 
- </table>
- </form>
- <button type="submit" onclick="test()">넘어가라</button>
- 
+   <!-- 모달 -->
 <button class="btn btn-default" data-toggle="modal" data-target="#viewModal">유리한테 줄 조직도 틀</button>
 
-
-<!-- 모달 -->
 <div class="modal fade" data-backdrop="static" id="viewModal">
    <div class="modal-dialog">
    <div class="modal-content" style= "height:90%; width:200%;">
@@ -295,10 +269,10 @@ function test(i)	{
             <td>
                <div id="y_teamwon">
                   <label>
-                     <input type="checkbox" id="pk_emp_no_${i.count}" name="empno" value="${emp.pk_emp_no}" />
-                     <input type="hidden" id="employee_name_${i.count}" name="employee_name" value="${emp.emp_name}" />
-                     <input type="hidden" id="employee_rank_${i.count}" name="employee_rank" value="${emp.ko_rankname}" />
-                     <input type="hidden" id="employee_dept_${i.count}" name="employee_dept" value="${emp.ko_depname}" />
+                     <input type="checkbox" id="uq_email" name="uq_email" value="${emp.emp_name}" />
+                     <input type="hidden" id="employee_name" name="employee_name" value="${emp.emp_name}" />
+                     <input type="hidden" id="employee_rank" name="employee_rank" value="${emp.ko_rankname}" />
+                     <input type="hidden" id="employee_dept" name="employee_dept" value="${emp.ko_depname}" />
                      &nbsp;${emp.emp_name}&nbsp;[${emp.ko_rankname}]
                   </label>
                </div>
@@ -316,10 +290,10 @@ function test(i)	{
             <td>
                <div id="m_teamwon">
                   <label>
-                     <input type="checkbox" id="pk_emp_no_${i.count}" name="empno" value="${emp.pk_emp_no}" />
-                     <input type="hidden" id="employee_name_${i.count}" name="employee_name" value="${emp.emp_name}" />
-                     <input type="hidden" id="employee_rank_${i.count}" name="employee_rank" value="${emp.ko_rankname}" />
-                     <input type="hidden" id="employee_dept_${i.count}" name="employee_dept" value="${emp.ko_depname}" />
+                     <input type="checkbox" id="uq_email" name="uq_email" value="${emp.emp_name}" />
+                     <input type="hidden" id="employee_name" name="employee_name" value="${emp.emp_name}" />
+                     <input type="hidden" id="employee_rank" name="employee_rank" value="${emp.ko_rankname}" />
+                     <input type="hidden" id="employee_dept" name="employee_dept" value="${emp.ko_depname}" />
                      &nbsp;${emp.emp_name}&nbsp;[${emp.ko_rankname}]
                   </label>
                </div>
@@ -336,10 +310,10 @@ function test(i)	{
             <td>
                <div id="g_teamwon">
                   <label>
-                     <input type="checkbox" id="pk_emp_no_${i.count}" name="empno" value="${emp.pk_emp_no}" />
-                     <input type="hidden" id="employee_name_${i.count}" name="employee_name" value="${emp.emp_name}" />
-                     <input type="hidden" id="employee_rank_${i.count}" name="employee_rank" value="${emp.ko_rankname}" />
-                     <input type="hidden" id="employee_dept_${i.count}" name="employee_dept" value="${emp.ko_depname}" />
+                     <input type="checkbox" id="uq_email" name="uq_email" value="${emp.emp_name}" />
+                     <input type="hidden" id="employee_name" name="employee_name" value="${emp.emp_name}" />
+                     <input type="hidden" id="employee_rank" name="employee_rank" value="${emp.ko_rankname}" />
+                     <input type="hidden" id="employee_dept" name="employee_dept" value="${emp.ko_depname}" />
                      &nbsp;${emp.emp_name}&nbsp;[${emp.ko_rankname}]
                   </label>
                </div>
@@ -356,10 +330,10 @@ function test(i)	{
             <td>
                <div id="c_teamwon">
                   <label>
-                     <input type="checkbox" id="pk_emp_no_${i.count}" name="empno" value="${emp.pk_emp_no}" />
-                     <input type="hidden" id="employee_name_${i.count}" name="employee_name" value="${emp.emp_name}" />
-                     <input type="hidden" id="employee_rank_${i.count}" name="employee_rank" value="${emp.ko_rankname}" />
-                     <input type="hidden" id="employee_dept_${i.count}" name="employee_dept" value="${emp.ko_depname}" />
+                     <input type="checkbox" id="uq_email" name="uq_email" value="${emp.emp_name}" />
+                     <input type="hidden" id="employee_name" name="employee_name" value="${emp.emp_name}" />
+                     <input type="hidden" id="employee_rank" name="employee_rank" value="${emp.ko_rankname}" />
+                     <input type="hidden" id="employee_dept" name="employee_dept" value="${emp.ko_depname}" />
                      &nbsp;${emp.emp_name}&nbsp;[${emp.ko_rankname}]
                   </label>
                </div>
@@ -376,10 +350,10 @@ function test(i)	{
             <td>
                <div id="i_teamwon">
                   <label>
-                     <input type="checkbox" id="pk_emp_no_${i.count}" name="empno" value="${emp.pk_emp_no}" />
-                     <input type="hidden" id="employee_name_${i.count}" name="employee_name" value="${emp.emp_name}" />
-                     <input type="hidden" id="employee_rank_${i.count}" name="employee_rank" value="${emp.ko_rankname}" />
-                     <input type="hidden" id="employee_dept_${i.count}" name="employee_dept" value="${emp.ko_depname}" />
+                     <input type="checkbox" id="uq_email" name="uq_email" value="${emp.emp_name}" />
+                     <input type="hidden" id="employee_name" name="employee_name" value="${emp.emp_name}" />
+                     <input type="hidden" id="employee_rank" name="employee_rank" value="${emp.ko_rankname}" />
+                     <input type="hidden" id="employee_dept" name="employee_dept" value="${emp.ko_depname}" />
                      &nbsp;${emp.emp_name}&nbsp;[${emp.ko_rankname}]
                   </label>
                </div>
@@ -396,10 +370,10 @@ function test(i)	{
             <td>
                <div id="h_teamwon">
                   <label>
-                     <input type="checkbox" id="pk_emp_no_${i.count}" name="empno" value="${emp.pk_emp_no}" />
-                     <input type="hidden" id="employee_name_${i.count}" name="employee_name" value="${emp.emp_name}" />
-                     <input type="hidden" id="employee_rank_${i.count}" name="employee_rank" value="${emp.ko_rankname}" />
-                     <input type="hidden" id="employee_dept_${i.count}" name="employee_dept" value="${emp.ko_depname}" />
+                     <input type="checkbox" id="uq_email" name="uq_email" value="${emp.emp_name}" />
+                     <input type="hidden" id="employee_name" name="employee_name" value="${emp.emp_name}" />
+                     <input type="hidden" id="employee_rank" name="employee_rank" value="${emp.ko_rankname}" />
+                     <input type="hidden" id="employee_dept" name="employee_dept" value="${emp.ko_depname}" />
                      &nbsp;${emp.emp_name}&nbsp;[${emp.ko_rankname}]
                   </label>
                </div>
@@ -412,8 +386,8 @@ function test(i)	{
         
         <div id="tbl_two" style="float:left; width:20%; margin-top:7%;">
            <table>
-              <tr><td><button class="form-control" style="height:70px;" onclick="middle_approve();" >중간결재<br>추가  / 삭제</button></td></tr>
-              <tr><td><button class="form-control" style="height:70px; margin-top:170%;" onclick="last_approve();">최종결재<br>추가  / 삭제</button></td></tr>
+              <tr><td><button class="form-control" style="height:70px;" id="set_mid">중간결재<br>추가  / 삭제</button></td></tr>
+              <tr><td><button class="form-control" style="height:70px; margin-top:170%;" id="set_fin"  onclick="last_approve();">최종결재<br>추가  / 삭제</button></td></tr>
            </table>
         </div>
         
@@ -426,6 +400,8 @@ function test(i)	{
                <td style="width:13%;"><strong>이름</strong></td>
                <td style="width:13%;"><strong>직급</strong></td>
                <td style="width:13%;"><strong>부서</strong></td>
+               <td><input type="text" id="input_mid"  name="input_mid" /></td>
+               <td><input type="hidden" id="input_fin"  name="input_fin" /></td>
             </tr>
             <tbody id = "mid_emp">
                <tr style="border-bottom: solid darkgray 2px;">
@@ -434,6 +410,9 @@ function test(i)	{
                   <td><input type="text" id="middle_name" name="middle_name"  style="border:none; text-align:center; " ><br></td>
                   <td><input type="text" id="middle_rank" name="middle_rank"  style="border:none; text-align:center;" ><br></td>
                   <td><input type="text" id="middle_dept" name="middle_dept"  style="border:none; text-align:center;"  ><br></td>
+                  
+
+               	  
                </tr>
             </tbody>
          </table>
@@ -452,6 +431,7 @@ function test(i)	{
                   <td><input type="text" id="last_name" name="last_name"  style="border:none; text-align:center; " ><br></td>
                   <td><input type="text" id="last_rank" name="last_rank"  style="border:none; text-align:center;" ><br></td>
                   <td><input type="text" id="last_dept" name="last_dept"  style="border:none; text-align:center;"  ><br></td>
+                  
                </tr>
             </tbody>   
          </table>
@@ -460,7 +440,7 @@ function test(i)	{
    </div><!-- modal-body -->
    
    <div class="modal-footer">
-   <input type="button" class="btn btn-primary" id="insert_customer_btn" onclick="goApprove()" value="등록">
+   <input type="button" class="btn btn-primary" id="insert_customer_btn" data-dismiss="modal" onclick="goApprove()" value="등록">
    <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
    </div>
    </div>

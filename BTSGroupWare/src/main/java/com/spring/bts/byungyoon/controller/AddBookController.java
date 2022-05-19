@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -83,7 +84,6 @@ public class AddBookController {
 			}
 	   }
 	   
-	   
 	   //DB에서 얼마나 가져올지 정하는거
 	   
 	   startRno = ((currentShowPageNo - 1) * sizePerPage) + 1;
@@ -138,7 +138,6 @@ public class AddBookController {
 		}
 		
 		pageBar += "</ul>";
-	
 		
 	   mav.addObject("message", message);
 	   mav.addObject("loc", loc);
@@ -160,11 +159,9 @@ public class AddBookController {
 	   EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
 	 
 	   List<EmployeeVO> empList = service.addBook_depInfo_select();
-	   
 		
 		 String message = "";
 		 String loc = "";
-		   
 	   
 	   mav.addObject("loginuser", loginuser);
 	   mav.addObject("message", message);
@@ -255,7 +252,6 @@ public class AddBookController {
 	   
 	   int pk_addbook_no = Integer.parseInt(request.getParameter("pk_addbook_no"));
 	   
-	   
 	   AddBookVO avo = service.addBook_main_telUpdate_select(pk_addbook_no);
 	   updateMap.put("pk_addbook_no", avo.getPk_addbook_no());
 	   updateMap.put("name", avo.getAddb_name());
@@ -264,11 +260,11 @@ public class AddBookController {
 	   updateMap.put("email", avo.getEmail());
 	   updateMap.put("phone", avo.getPhone());
 	   
-	   int i= avo.getEmail().indexOf("@");
-		
+//	   int i= avo.getEmail().indexOf("@");
+	/*	
 	   String email1 = avo.getEmail().substring(0, i);
 	   String email2 = avo.getEmail().substring(i+1);
-		
+	*/	
        String hp2 = avo.getPhone().substring(4, 8);
        String hp3 = avo.getPhone().substring(9, 13);
        
@@ -281,9 +277,8 @@ public class AddBookController {
        
        updateMap.put("hp2" , hp2);
        updateMap.put("hp3" , hp3);
-       updateMap.put("email1" , email1);
-       updateMap.put("email2" , email2);
-       updateMap.put("email2" , email2);
+ //    updateMap.put("email1" , email1);
+ //    updateMap.put("email2" , email2);
        updateMap.put("num1" , num1);
        updateMap.put("num2" , num2);
        updateMap.put("num3" , num3);
@@ -306,8 +301,9 @@ public class AddBookController {
 	   String addb_name = request.getParameter("name");
 	   int fk_dept_no = Integer.parseInt(request.getParameter("department"));
 	   int fk_rank_no = Integer.parseInt(request.getParameter("rank"));
-	   String email1 = request.getParameter("email1");
-	   String email2 = request.getParameter("email2");
+//	   String email1 = request.getParameter("email1");
+//	   String email2 = request.getParameter("email2");
+	   String email = request.getParameter("email");
 	   String hp1 = request.getParameter("hp1");												
 	   String hp2 = request.getParameter("hp2");												
 	   String hp3 = request.getParameter("hp3");
@@ -318,7 +314,7 @@ public class AddBookController {
 	   String company_address  = request.getParameter("company_address");
 	   String memo = request.getParameter("memo");
 	   
-	   String email = email1+"@"+email2;
+//	   String email = email1+"@"+email2;
 	   String phone = hp1+"-"+hp2+"-"+hp3;
 	   String com_tel = "";
 		if( num2 == "" && num3 == "") {
@@ -326,10 +322,6 @@ public class AddBookController {
 		}else {
 			com_tel = num1+"-"+num2+"-"+num3;
 		}
-	   
-		
-		
-		
 	   
 	   AddBookVO avo = new AddBookVO(); 
 	   
@@ -422,18 +414,18 @@ public class AddBookController {
 	       // 아이디: test 도메인: test.com
 	       System.out.println("id: "+id+"domain: "+domain);
 		*/
-		int i= evo.getUq_email().indexOf("@");
+//		int i= evo.getUq_email().indexOf("@");
 		
-		String email1 = evo.getUq_email().substring(0, i);
-		String email2 = evo.getUq_email().substring(i+1);
+//		String email1 = evo.getUq_email().substring(0, i);
+//		String email2 = evo.getUq_email().substring(i+1);
 		
         String hp2 = evo.getUq_phone().substring(4, 8);
         String hp3 = evo.getUq_phone().substring(9, 13);
         
         depInfoMap.put("hp2" , hp2);
         depInfoMap.put("hp3" , hp3);
-        depInfoMap.put("email1" , email1);
-        depInfoMap.put("email2" , email2);
+//      depInfoMap.put("email1" , email1);
+//      depInfoMap.put("email2" , email2);
 		
 		depInfoMap.put("address", evo.getAddress());
 		depInfoMap.put("detailaddress", evo.getDetailaddress());
@@ -454,15 +446,16 @@ public class AddBookController {
 			String emp_name = request.getParameter("name");
 			int fk_department_id = Integer.parseInt(request.getParameter("department"));
 			int fk_rank_id = Integer.parseInt(request.getParameter("rank"));
-			String email1 = request.getParameter("email1");
-			String email2 = request.getParameter("email2");
+//			String email1 = request.getParameter("email1");
+//			String email2 = request.getParameter("email2");
+			String uq_email = request.getParameter("email");
 			String hp1 = request.getParameter("hp1");
 			String hp2 = request.getParameter("hp2");
 			String hp3 = request.getParameter("hp3");
 			String address = request.getParameter("address");
 			String detailaddress = request.getParameter("detailaddress");
 			
-			String uq_email = email1+"@"+email2;
+//			String uq_email = email1+"@"+email2;
 		    String uq_phone = hp1+"-"+hp2+"-"+hp3;
 			
 		    try {
@@ -512,8 +505,6 @@ public class AddBookController {
 	// 주소록 삭제하기
 	@RequestMapping(value = "/addBook/addBook_delete.bts", method = {RequestMethod.POST})
 	public ModelAndView addBook_delete(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
-	      
-		System.out.println(request.getParameter("pk_addbook_no"));
 		
 		int pk_addbook_no = Integer.parseInt(request.getParameter("pk_addbook_no"));
 		
@@ -537,36 +528,20 @@ public class AddBookController {
 	   @RequestMapping(value="/addBook/orgChart_sample.bts")
 	   public ModelAndView orgChart_sample(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		   
-		   
 		   HttpSession session = request.getSession();
 		   EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
 		 
 		   List<EmployeeVO> empList = service.addBook_depInfo_select();
-		   
-			
-			 String message = "";
-			 String loc = "";
-			
 			 
-			 String mid_test_1 = request.getParameter("mid_test_1");
-			  String mid_test_2 = request.getParameter("mid_test_2");
-			  String mid_test_3 = request.getParameter("mid_test_3");
-			  String last_test_1 = request.getParameter("last_test_1");
-			  String last_test_2 = request.getParameter("last_test_2");
-			  String last_test_3 = request.getParameter("last_test_3");
+			  String test_1 = request.getParameter("test_1");
+			  String test_2 = request.getParameter("test_2");
+			  String test_3 = request.getParameter("test_3");
 			  
-			  System.out.println(mid_test_1);
-			  System.out.println(mid_test_2);
-			  System.out.println(mid_test_3);
-			  System.out.println(last_test_1);
-			  System.out.println(last_test_2);
-			  System.out.println(last_test_3);
-			 
-			 
+			  System.out.println(test_1);
+			  System.out.println(test_2);
+			  System.out.println(test_3);
 		   
 		   mav.addObject("loginuser", loginuser);
-		   mav.addObject("message", message);
-		   mav.addObject("loc", loc);
 		   mav.addObject("empList", empList);
 		   
 		   mav.setViewName("orgChart_sample.addBook");
@@ -575,30 +550,32 @@ public class AddBookController {
 	   }
 	   
 	   
-	// 실험용 ajax 페이지
-	   @RequestMapping(value="/addBook/orgChart_sample_ajax.bts")
-	   public ModelAndView orgChart_sample_ajax(HttpServletRequest request, HttpServletResponse response, 
-			   @RequestParam(value="empno[]") List<String> empno,
-			   @RequestParam(value="name[]") List<String> name,
-			   @RequestParam(value="rank[]") List<String> rank,   
-			   @RequestParam(value="dept[]") List<String> dept) {
-		 
-		   
-		   
-		   HttpSession session = request.getSession();
-		   EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
-		 
-		   List<EmployeeVO> empList = service.addBook_depInfo_select();
-		   
+	   // 이메일 중복체크
+		@ResponseBody
+		@RequestMapping(value="/addBook/emailDuplicateCheck.bts", method = {RequestMethod.POST}, produces="text/plain;charset=UTF-8")
+		public String emailDuplicateCheck(HttpServletRequest request) { 
+		
+			String email = request.getParameter("email");
 			
-			 String message = "";
-			 String loc = "";
-			   
-		   
-		   
-	      return null;
-	   }
-	
+			
+			// System.out.println(">>> 확인용 uq_email =>"+ uq_email );	// 내가 입력한 아이디 값
+			
+			boolean isExist = service.emailDuplicateCheck(email);
+			
+			JSONObject jsonObj = new JSONObject(); 	// {}
+			jsonObj.put("isExist", isExist);			// {"isExist":true} 또는 {"isExist":false} 으로 만들어준다. 
+				
+				String json = jsonObj.toString();	// 문자열 형태인 "{"isExist":true}" 또는 "{"isExist":false}" 으로 만들어준다.
+				// System.out.println(">>> 확인용 json =>"+ json );	
+			//	>>> 확인용 json =>{"isExist":false}
+			//	또는	
+			//	>>> 확인용 json =>{"isExist":true}
+				
+			request.setAttribute("json",json);
+				
+			return json;
+			
+		} // public String emailDuplicateCheck(HttpServletRequest request) { }----------------------
 
    
 

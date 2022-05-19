@@ -68,8 +68,8 @@ $( document ).ready( function() {
 				$("select#department").val(a).prop("selected",true);
 				$("select#rank").val(b).prop("selected",true);
 				$("input#email").val(json.email)
-				$("input#email1").val(json.email1)
-				$("input#email2").val(json.email2)
+			//	$("input#email1").val(json.email1)
+			//	$("input#email2").val(json.email2)
 				$("input#phone").val(json.phone)
 				$("input#hp2").val(json.hp2)
 				$("input#hp3").val(json.hp3)
@@ -103,21 +103,6 @@ $( document ).ready( function() {
 		
 	}
 	
-	/* 이메일 선택or직접입력 */
-	function selectEmail(ele){ 
-		var $ele = $(ele); 
-		var $email2 = $('input[name=email2]');
-		
-		// '1'인 경우 직접입력 
-		if($ele.val() == "1"){ 
-			$email2.attr('readonly', false); 
-			$email2.val(''); 
-		} else { 
-			$email2.attr('readonly', true); 
-			$email2.val($ele.val()); 
-		} 
-	}
-	/* 이메일 선택or직접입력 */
 	
 	function goSearch()	{
 		const frm = document.searchFrm;
@@ -282,15 +267,7 @@ $( document ).ready( function() {
 		<div class="form-group">
 		<label for="recipient-name" class="control-label"><strong>이메일</strong></label>
 		<p>
-			<input class="form-control" id="email1" name="email1" style="width:135px; display:inline;" type="text" maxlength="12">&nbsp;@
-			<input class="form-control" id="email2" name="email2" style="width:135px; display:inline;" type="text" maxlength="12" placeholder="직접입력">&nbsp;
-			<select class="form-control" name="select_email" style="width:145px; display:inline;" onChange="selectEmail(this)">
-				<option value="gmail.com">gmail.com</option>
-				<option value="naver.com">naver.com</option>
-				<option value="nate.com">nate.com</option>
-				<option value="hanmail.net">hanmail.net</option>
-				<option value="1" selected>직접입력</option>
-			</select>
+			<input class="form-control" id="email" name="email" style="width:300px; display:inline;" type="text" maxlength="12">
 		</p>
 		</div>
 		

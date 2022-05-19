@@ -603,6 +603,7 @@
 		select count(*)
 		from tbl_appr
 		where ( mid_accept = 0 or ( mid_accept = 1 and fin_accept = 0 ) )
+		and fk_emp_no = #{fk_emp_no}
 		<if test='searchType != ""'>
 		and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
 		</if>
@@ -634,6 +635,7 @@
 				from tbl_appr A JOIN tbl_appr_sort S
 				ON A.fk_appr_sortno = S.pk_appr_sortno
 				where ( mid_accept = 0 or ( mid_accept = 1 and fin_accept = 0 ) )
+				and fk_emp_no = #{fk_emp_no}
 				<if test='searchType !="" and searchWord != "" '>
 		        and lower(${searchType}) like '%'||lower(#{searchWord}) ||'%'
 		        </if>
