@@ -1,10 +1,10 @@
 @charset "UTF-8";
                   
 #mycontent     { min-height:1200px; position: relative; top:60px; padding-top: 40px; background-color:white;
-                 float:right; width:90%; padding-left: 5%}
+                 float:right; width:90%; padding-left: 6%}
                   
-#mysideinfo      { min-height:1200px; position: fixed; top:60px; padding-top: 40px; background-color:#FFF;
-                  float:left; width:250px; margin-left: 5px; }
+#mysideinfo      { min-height:1200px; position: fixed; top:60px; padding-top: 60px; background-color:#FFF;
+                  float:left; width:250px; margin-left: 50px; }
 
 #myfooter      { display: flex; min-height:120px; position: relative; top:60px; background-color:#555555; margin-bottom: 70px; 
                  clear:both; }
@@ -95,8 +95,8 @@ ul#secondHeaderGroup, .secondHeaderList {
 	}
 	
 	div#buttonmenu {
-		padding-top: 5%;
-		padding-right: 38%;
+		padding-top: 3%;
+		padding-right: 52%;
 	}
 	
 
@@ -164,7 +164,7 @@ body {
   margin: 0;
   font-family: "Lato", sans-serif;
 }
-
+*/
 .sidebar {
   margin: 0;
   padding: 0;
@@ -214,4 +214,3 @@ div.content {
     float: none;
   }
 }
-*/
