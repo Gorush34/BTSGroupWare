@@ -78,6 +78,7 @@ public class AddBookDAO implements InterAddBookDAO {
 	// 주소록 메인에서 총 연락처 개수 가져오기
 	@Override
 	public int addBook_main_totalPage(Map<String, String> paraMap) {
+		
 		int n = sqlsession.selectOne("byungyoon.addBook_main_totalPage" , paraMap);
 		return n;
 	}
@@ -88,6 +89,26 @@ public class AddBookDAO implements InterAddBookDAO {
 	public int addBook_delete(int pk_addbook_no) {
 		int n = sqlsession.delete("byungyoon.addBook_delete" , pk_addbook_no);
 		return n;
+	}
+
+
+	// 상세부서정보 페이지에서 관리자로 로그인시 사원상세정보 update 하기
+	@Override
+	public int addBook_depInfo_update(EmployeeVO evo) {
+
+		int n = sqlsession.update("byungyoon.addBook_depInfo_update" , evo);
+		
+		return n;
+	}
+
+
+	// 이메일 중복체크
+	@Override
+	public boolean emailDuplicateCheck(String email) {
+		
+		boolean isExist = sqlsession.selectOne("byungyoon.emailDuplicateCheck", email);
+		
+		return isExist;
 	}
 
 

@@ -79,6 +79,29 @@ public class BoardController {
 		
 		// === 메인페이지 === //
 		@ResponseBody
+		@RequestMapping(value="/board/my_cnt.bts")
+		public String my_cnt(HttpServletRequest request) {
+			
+			HttpSession session = request.getSession();
+			EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+			
+			
+			int pk_emp_no = loginuser.getPk_emp_no();
+			// System.out.println("pk_emp_no" +pk_emp_no);
+			int n = service.my_cnt(pk_emp_no);
+			// System.out.println(n);
+			
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("n", n);
+			
+			
+			return jsonObj.toString();
+		}
+
+		
+		
+		
+		@ResponseBody
 		@RequestMapping(value = "/board/readAll.bts", produces = "text/plain;charset=UTF-8")
 		public String ajax_getAll(HttpServletRequest request, HttpServletResponse response) {
 			
@@ -222,7 +245,7 @@ public class BoardController {
 		
 		@ResponseBody
 		@RequestMapping(value = "/board/main.bts", produces = "text/plain;charset=UTF-8")
-		public ModelAndView requiredLogin_Boardmain(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, BoardVO boardvo) {
+		public ModelAndView Boardmain(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, BoardVO boardvo) {
 			
 			HttpSession session = request.getSession();
 			
@@ -354,13 +377,13 @@ public class BoardController {
 			//  /WEB-INF/views/tiles1/board/list.jsp 파일을 생성한다.
 			
 			return mav;
-		}// end of public String requiredLogin_ajax_getIntegratedBoard(HttpServletRequest request, HttpServletResponse response) {}
+		}// end of public String ajax_getIntegratedBoard(HttpServletRequest request, HttpServletResponse response) {}
 		
 		
 	
 	// --- 게시판 시작 ---  -----------------
 	@RequestMapping(value = "/board/list.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
-	public ModelAndView requiredLogin_list_board(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView list_board(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		///////////////////////////////////
 		
@@ -560,7 +583,7 @@ public class BoardController {
 	// === 게시판 글쓰기 ====
 	// === #51. 게시판 글쓰기 폼페이지 요청 === //
 		@RequestMapping(value="/board/write.bts")
-		public ModelAndView requiredLogin_add(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		public ModelAndView add(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 			getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출 
 			
@@ -742,7 +765,7 @@ public class BoardController {
 	// == 게시판 글 보기 == //
 	// === #62. 글1개를 보여주는 페이지 요청 === //
 	@RequestMapping(value="/board/view.bts")
-	public ModelAndView requiredLogin_view(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView view(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출 
 		
@@ -893,9 +916,13 @@ public class BoardController {
 					jsonObj.put("pk_seq", cmtvo.getPk_seq());
 					jsonObj.put("fk_seq", cmtvo.getFk_seq());
 					jsonObj.put("fk_emp_no", cmtvo.getFk_emp_no());
+					jsonObj.put("ko_rankname", cmtvo.getKo_rankname());
 					if(loginuser != null) {
 						jsonObj.put("pk_emp_no", loginuser.getPk_emp_no());
 					}
+		//			System.out.println(cmtvo.getName());
+		//			System.out.println(cmtvo.getKo_rankname());
+					
 					jsonArr.put(jsonObj);
 				}// end of for------------------
 			}
@@ -1054,7 +1081,7 @@ public class BoardController {
 	
 	// === #71. 글 수정페이지 요청 === //
 	@RequestMapping(value="/board/edit.bts")
-	public ModelAndView requiredLogin_edit(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView edit(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		request.getSession();
 		
@@ -1103,7 +1130,7 @@ public class BoardController {
 	
 	// === 임시저장글 작성 === //
 		@RequestMapping(value="/board/tmp_write.bts")
-		public ModelAndView requiredLogin_edit2(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		public ModelAndView edit2(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 			String gobackURL = request.getParameter("gobackURL");  
 		 	
 			request.getSession();
@@ -1221,7 +1248,7 @@ public class BoardController {
 	
 	// ==== #163. 첨부파일 다운로드 받기 ==== //
 		@RequestMapping(value="/file/download_board.bts")
-		public void requiredLogin_download(HttpServletRequest request, HttpServletResponse response) {
+		public void download(HttpServletRequest request, HttpServletResponse response) {
 			
 			String pk_seq = request.getParameter("pk_seq");
 			// 첨부파일이 있는 글번호 
@@ -1282,7 +1309,7 @@ public class BoardController {
 	
 		
 		@RequestMapping(value="/file/download_fileboard.bts")
-		public void requiredLogin_download_fileboard(HttpServletRequest request, HttpServletResponse response) {
+		public void download_fileboard(HttpServletRequest request, HttpServletResponse response) {
 			
 			String pk_seq = request.getParameter("pk_seq");
 			// 첨부파일이 있는 글번호 
@@ -1342,7 +1369,7 @@ public class BoardController {
 		}
 		
 		@RequestMapping(value="/file/download_notice.bts")
-		public void requiredLogin_download_notice(HttpServletRequest request, HttpServletResponse response) {
+		public void download_notice(HttpServletRequest request, HttpServletResponse response) {
 			
 			String pk_seq = request.getParameter("pk_seq");
 			// 첨부파일이 있는 글번호 
@@ -1470,7 +1497,7 @@ public class BoardController {
 
 		// --- 공지 게시판 시작 ---  -----------------
 		@RequestMapping(value = "/notice/list.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
-		public ModelAndView requiredLogin_list_notice(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		public ModelAndView list_notice(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 			
 			///////////////////////////////////
 			
@@ -1619,7 +1646,7 @@ public class BoardController {
 		
 		// === 글쓰기 ====
 			@RequestMapping(value="/notice/write.bts")
-			public ModelAndView requiredLogin_add_notice(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+			public ModelAndView add_notice(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 			
 				getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출 
 				
@@ -1850,7 +1877,7 @@ public class BoardController {
 			
 			// === #71. 글 수정페이지 요청 === //
 			@RequestMapping(value="/notice/edit.bts")
-			public ModelAndView requiredLogin_edit_notice(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+			public ModelAndView edit_notice(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 				
 				request.getSession();
 				
@@ -2001,7 +2028,7 @@ public class BoardController {
 		
 	// --- 자료 게시판 시작 ---  -----------------
 	@RequestMapping(value = "/fileboard/list.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
-	public ModelAndView requiredLogin_list_fileboard(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView list_fileboard(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		///////////////////////////////////
 		
@@ -2152,7 +2179,7 @@ public class BoardController {
 	
 	// === 글쓰기 ====
 		@RequestMapping(value="/fileboard/write.bts")
-		public ModelAndView requiredLogin_add_fileboard(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		public ModelAndView add_fileboard(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 			getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출 
 			
@@ -2259,7 +2286,7 @@ public class BoardController {
 	
 		
 		@RequestMapping(value="/fileboard/view.bts")
-		public ModelAndView requiredLogin_view_fileboard(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		public ModelAndView view_fileboard(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 			
 			getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출 
 			
@@ -2382,7 +2409,7 @@ public class BoardController {
 		
 		// === #71. 글 수정페이지 요청 === //
 		@RequestMapping(value="/fileboard/edit.bts")
-		public ModelAndView requiredLogin_edit_fileboard(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		public ModelAndView edit_fileboard(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 			
 			request.getSession();
 			
@@ -2518,6 +2545,153 @@ public class BoardController {
 		
 	// --- 자료 게시판 끝 --- -------------------
 	
+			
+	// -- 내가 쓴 게시물 --- //
+			@ResponseBody
+			@RequestMapping(value = "/board/my.bts", produces = "text/plain;charset=UTF-8")
+			public ModelAndView Board_my(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, BoardVO boardvo) {
+				
+				HttpSession session = request.getSession();
+				
+				getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출 
+				
+				List<BoardVO> boardList = null;
+			
+				EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+
+			 	int login_userid1 = 0;
+			 	if(loginuser != null) {
+			 	   login_userid1 = loginuser.getPk_emp_no();
+		 	  
+			 	}
+
+			 	String login_userid = Integer.toString(login_userid1);
+				 
+				session.setAttribute("readCountPermission", "yes");
+
+				String searchType = request.getParameter("searchType");
+				String searchWord = request.getParameter("searchWord");
+					
+				String str_currentShowPageNo = request.getParameter("currentShowPageNo");
+				
+				if(searchType == null || (!"subject".equals(searchType) && !"user_name".equals(searchType)) ) {
+					searchType = "";
+				}
+				
+				if(searchWord == null || "".equals(searchWord) || searchWord.trim().isEmpty() ) {
+					searchWord = "";
+				}
+				
+				Map<String, String> paraMap = new HashMap<>();
+				paraMap.put("searchType", searchType);
+				paraMap.put("searchWord", searchWord);
+				paraMap.put("login_userid", login_userid);
+				
+				int totalCount = 0;        // 총 게시물 건수
+				int sizePerPage = 10;       // 한 페이지당 보여줄 게시물 건수 
+				int currentShowPageNo = 0; // 현재 보여주는 페이지번호로서, 초기치로는 1페이지로 설정함.
+				int totalPage = 0;         // 총 페이지수(웹브라우저상에서 보여줄 총 페이지 개수, 페이지바)
+				
+				int startRno = 0; // 시작 행번호
+				int endRno = 0;   // 끝 행번호
+				 
+				// 총 게시물 건수(totalCount)
+				totalCount = service.getTotalCount_my(paraMap);
+			
+				totalPage = (int) Math.ceil((double)totalCount/sizePerPage);
+		//		System.out.println("totalCount =>" +totalCount);
+		//		System.out.println("totalPage =>" +totalPage);
+				
+				if(str_currentShowPageNo == null) {
+					currentShowPageNo = 1;
+				}
+				else {
+					try {
+						currentShowPageNo = Integer.parseInt(str_currentShowPageNo); 
+						if( currentShowPageNo < 1 || currentShowPageNo > totalPage) {
+							currentShowPageNo = 1;
+						}
+					} catch(NumberFormatException e) {
+						currentShowPageNo = 1;
+					}
+				}
+				
+				
+				startRno = ((currentShowPageNo - 1) * sizePerPage) + 1;
+				endRno = startRno + sizePerPage - 1;
+
+				
+				paraMap.put("startRno", String.valueOf(startRno));
+				paraMap.put("endRno", String.valueOf(endRno));
+				
+				boardList = service.boardListSearchWithPaging_my(paraMap);
+				// 페이징 처리한 글목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함 한 것)
+				
+				// 아래는 검색대상 컬럼과 검색어를 유지시키기 위한 것임.
+				if( !"".equals(searchType) && !"".equals(searchWord) ) {
+					mav.addObject("paraMap", paraMap);
+				}
+				
+				
+				// === 페이지바 만들기 === //
+				int blockSize = 10;
+				
+				int loop = 1;
+				
+				int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+				
+				String pageBar = "<ul style='list-style: none;'>";
+				String url = "main.bts";
+				
+				// === [맨처음][이전] 만들기 === //
+				if(pageNo != 1) {
+					pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1'>[맨처음]</a></li>";
+					pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+				}
+				
+				while( !(loop > blockSize || pageNo > totalPage) ) {
+					
+					if(pageNo == currentShowPageNo) {
+						pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";  
+					}
+					else {
+						pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a style='color: black;' href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>"; 
+					}
+					
+					loop++;
+					pageNo++;
+					
+				}// end of while-----------------------
+				
+				
+				// === [다음][마지막] 만들기 === //
+				if( pageNo <= totalPage ) {
+					pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+					pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>"; 
+				}
+				
+				pageBar += "</ul>";
+				
+				mav.addObject("pageBar", pageBar);
+				
+				String gobackURL = MyUtil.getCurrentURL(request);
+
+				mav.addObject("gobackURL", gobackURL.replaceAll("&", " "));
+				
+
+				
+				mav.addObject("boardList", boardList);
+				
+				/////////////////////////////////////
+				
+				
+				mav.setViewName("board_my.board");
+				//  /WEB-INF/views/tiles1/board/list.jsp 파일을 생성한다.
+				
+				return mav;
+			}// end of public String ajax_getIntegratedBoard(HttpServletRequest request, HttpServletResponse response) {}		
+		
+	
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -2545,8 +2719,7 @@ public class BoardController {
 	   String ctxPath = request.getContextPath();
 	   
 	   out.println("<div><img src='"+ctxPath+"/resources/images/board/error.gif'/></div>");
-	   out.printf("<div style='margin: 20px; color: blue; font-weight: bold; font-size: 26pt;'>%s</div>", "장난금지");
-	   out.println("<a href='"+ctxPath+"/index.action'>홈페이지로 가기</a>");
+	   out.println("<a href='"+ctxPath+"/index.bts'>홈페이지로 가기</a>");
 	   out.println("</body>");
 	   out.println("</html>");
 	   

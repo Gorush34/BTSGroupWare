@@ -74,10 +74,10 @@
           		&nbsp; <%-- 큰구분선1 --%>
           	</td>
           	
-          	<td rowspan="4" style="valign: center;">승인</td>
+          	<td rowspan="4" style="vertical-align: center;">승인</td>
           	<td style="background-color: #F7F7F7;">부장</td>
              
-			<td rowspan="4" style="valign: center;">승인</td>
+			<td rowspan="4" style="vertical-align: center;">승인</td>
           	<td style="background-color: #F7F7F7;">사장</td>
 		</tr>
 		<tr>

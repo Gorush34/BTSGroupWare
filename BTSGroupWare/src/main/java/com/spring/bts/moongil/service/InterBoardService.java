@@ -35,8 +35,6 @@ public interface InterBoardService {
 
 	int addComment(CommentVO commentvo) throws Throwable;
 
-	List<CommentVO> getCommentList(String fk_seq);
-
 	List<BoardVO> temp_list(Map<String, String> paraMap);
 
 	int tmp_write(BoardVO boardvo);
@@ -114,6 +112,12 @@ public interface InterBoardService {
 	List<Map<String, String>> getAll();
 
 	LikeVO getlikeuser(Map<String, String> paraMap);
+
+	List<BoardVO> boardListSearchWithPaging_my(Map<String, String> paraMap);
+
+	int getTotalCount_my(Map<String, String> paraMap);
+
+	int my_cnt(int pk_emp_no);
 
 
 

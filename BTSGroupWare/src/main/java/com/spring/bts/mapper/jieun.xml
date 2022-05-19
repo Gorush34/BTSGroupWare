@@ -297,9 +297,6 @@
 		order by pk_classno asc
 	</select>
 	
-	
-	
-
 	<!-- 해당 자원 예약내용 가져오기 -->
 	<resultMap type="HashMap" id="resourceSpecialReservation_Map">
 		<result property="PK_RSERNO"       column="pk_rserno"        javaType="String"/>
@@ -372,8 +369,6 @@
 		where pk_rserno = #{pk_rserno}
 	</delete>
 	
-	
-	
 	<!-- 자원 등록하기 : 관리자 -->
 	<insert id="resourceRegister_end" parameterType="HashMap">
 		insert into tbl_resource(PK_RNO, fk_classno, rname, rinfo)
@@ -401,6 +396,14 @@
 		delete from tbl_resource
 		where pk_rno = #{pk_rno}
 	</delete>
+	
+	<!-- ======================================================================== -->
+	
+	<!-- 투두 소분류 추가 -->
+	<insert id="todoPlus" parameterType="String">
+		insert into tbl_todosub(pk_todosubno, todosubject)
+		values(seq_todosubno.nextval, #{todoSubject})
+	</insert>
 	
 	
 	<!-- ============================================================================================== -->

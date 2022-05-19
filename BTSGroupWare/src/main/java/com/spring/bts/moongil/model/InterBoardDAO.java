@@ -43,8 +43,6 @@ public interface InterBoardDAO {
 
 	int updateCommentCount(String fk_seq);
 
-	List<CommentVO> getCommentList(String fk_seq);
-
 	int tmp_write(BoardVO boardvo);
 
 	BoardVO getView2(Map<String, String> paraMap);
@@ -120,6 +118,12 @@ public interface InterBoardDAO {
 	List<Map<String, String>> getAll();
 
 	LikeVO getlikeuser(Map<String, String> paraMap);
+
+	List<BoardVO> boardListSearchWithPaging_my(Map<String, String> paraMap);
+
+	int getTotalCount_my(Map<String, String> paraMap);
+
+	int my_cnt(int pk_emp_no);
 
 
 

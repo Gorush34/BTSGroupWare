@@ -42,6 +42,13 @@ public interface InterAddBookDAO {
 	public int addBook_delete(int pk_addbook_no);
 
 
+	// 상세부서정보 페이지에서 관리자로 로그인시 사원상세정보 update 하기
+	public int addBook_depInfo_update(EmployeeVO evo);
+
+	// 이메일 중복체크
+	public boolean emailDuplicateCheck(String email);
+
+
 
 	
 }

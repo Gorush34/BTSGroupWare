@@ -14,7 +14,7 @@ public class CommentVO {
 	private String regDate;      // 작성일자
 	private String fk_seq;    // 원게시물 글번호
 	private String status;       // 글삭제여부
-	
+	private String ko_rankname;
 	private MultipartFile attach;
 
 	private String filename;    // WAS(톰캣)에 저장될 파일명(2022042911123035243254235235234.png) 
@@ -26,7 +26,7 @@ public class CommentVO {
 	public CommentVO() {}
 
 	public CommentVO(String pk_seq, String fk_emp_no, String name, String content, String regDate, String fk_seq,
-			String status, MultipartFile attach, String filename, String orgfilename, String filesize) {
+			String status, MultipartFile attach, String filename, String orgfilename, String filesize, String ko_rankname) {
 		this.pk_seq = pk_seq;
 		this.fk_emp_no = fk_emp_no;
 		this.name = name;
@@ -38,6 +38,7 @@ public class CommentVO {
 		this.filename = filename;
 		this.orgfilename = orgfilename;
 		this.filesize = filesize;
+		this.ko_rankname = ko_rankname;
 	}
 
 
@@ -128,6 +129,14 @@ public class CommentVO {
 
 	public void setFilesize(String filesize) {
 		this.filesize = filesize;
+	}
+
+	public String getKo_rankname() {
+		return ko_rankname;
+	}
+
+	public void setKo_rankname(String ko_rankname) {
+		this.ko_rankname = ko_rankname;
 	}
 	
 	

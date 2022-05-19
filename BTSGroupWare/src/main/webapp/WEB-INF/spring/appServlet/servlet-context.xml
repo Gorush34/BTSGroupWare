@@ -195,4 +195,30 @@
 	<!-- ==== #181. Spring Scheduler(스프링 스케줄러 1) 어노테이션을 사용하여 스프링 스케줄러를 구현하도록 하겠다. -->
 	<task:annotation-driven/>
 	
+	<!-- ======================== 인터셉터 시작  ======================== -->
+    <!-- 로그인 여부 체크하는 인터셉터 등록 -->
+   <beans:bean id="loginCheckInterceptor" class="com.spring.interceptor.controller.LoginCheckInterceptor" />
+   <beans:bean id="adminLoginCheckInterceptor" class="com.spring.interceptor.controller.AdminLoginCheckInterceptor" />
+   
+   <mvc:interceptors>
+ 
+         <!-- 모든 URL에 대해서 로그인 여부 체크하는 인터셉터 매핑시키기 -->
+         <mvc:interceptor> 
+            <mvc:mapping path="/**"/>                       <!-- 모든 url -->
+            <mvc:exclude-mapping path="/login.bts"/>     <!-- 제외하는 url -->
+            <mvc:exclude-mapping path="/loginEnd.bts"/>     <!-- 제외하는 url -->
+            <mvc:exclude-mapping path="/logout.bts"/>     <!-- 제외하는 url -->
+            <mvc:exclude-mapping path="/idFind.bts"/>  <!-- 제외하는 url -->
+            <mvc:exclude-mapping path="/idFindEnd.bts"/>  <!-- 제외하는 url -->
+            <mvc:exclude-mapping path="/pwdFind.bts"/>        <!-- 제외하는 url -->
+            <mvc:exclude-mapping path="/pwdFindEnd.bts"/>  <!-- 제외하는 url -->
+            <mvc:exclude-mapping path="/emp/verifyCertification.bts"/>  <!-- 제외하는 url -->
+            <mvc:exclude-mapping path="/pwdUpdate.bts"/>        <!-- 제외하는 url --> 
+            <mvc:exclude-mapping path="/pwdUpdateEnd.bts"/>        <!-- 제외하는 url --> 
+            <beans:ref bean="loginCheckInterceptor"/>       <!-- 회원 사용자인지 검사 -->
+         </mvc:interceptor> 
+        
+   </mvc:interceptors>
+   <!-- ======================== 인터셉터 끝  ======================== -->
+	
 </beans:beans>

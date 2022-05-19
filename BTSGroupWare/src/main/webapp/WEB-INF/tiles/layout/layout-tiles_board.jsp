@@ -37,24 +37,35 @@
   <%-- *** ajax로 파일을 업로드할때 가장 널리 사용하는 방법 ==> ajaxForm *** --%>
   <script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery.form.min.js"></script>
 
+<!-- 구글 폰트를 쓰기 위한 링크 -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo&family=Noto+Sans+KR&display=swap" rel="stylesheet">
+
 <style>
-	/* 헤더 스타일  시작 */
+/* 헤더 스타일  시작 */
 
 li.login_dropdown  { 
-   list-style: none;
-   display: inline-block;
+	list-style: none !important;
+	display: inline-block !important;
 }
 
 img#memberProfile {
-   max-width: 40px;
-   max-height: 40px;
-   border-radius: 100%;
+	max-width: 40px !important;
+	max-height: 40px !important;
+	border-radius: 100% !important;
 }
 
 ul#secondHeaderGroup, .secondHeaderList {
-      list-style-type: none;
-      display: inline-block;
+		list-style-type: none !important;
+		display: inline-block !important;
 }
+#navbarSupportedContent > ul > li {
+	margin-right: 20px !important;
+	font-size: 18px !important;
+}
+
+body {font-family: 'Noto Sans KR', sans-serif !important; }
 
 /* 헤더 스타일  끝 */
 

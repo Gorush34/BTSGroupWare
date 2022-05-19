@@ -57,6 +57,7 @@
 			
 		}); // end of $("button#in_time").click(function(){})---------------
 		
+		// 퇴근시간 클릭시
 		$("button#out_time").click(function(){
 			
 			if($("span#workin").text() == "미등록") {
@@ -303,7 +304,25 @@
 			</li>
 		</ul>
 		<hr>
-		
+		<c:if test="${sessionScope.loginuser.pk_emp_no eq '80000001' }">
+			<ul style="list-style-type: none; padding: 10px;">
+			<li style="margin-bottom: 15px;"> 
+				<div id="calenderbtn1" class="calenderbtn">관리자 페이지</div>
+					<div id="slideTogglebox1"  class="slideTogglebox">
+						<table style="margin: 0 20px;">
+							<tbody>
+								<tr id="">
+				   					<td><span id="link" style="margin-left: 5px;"><a href="<%= ctxPath %>/emp/registerEmp.bts">사원등록</a></span></td>
+				   				</tr>
+				   				<%-- <tr>
+				   					<td><span id="link" style="margin-left: 5px;"><a href="<%= ctxPath %>/emp/viewAll.bts">모든 사원목록</a></span></td>
+				   				</tr> --%>	
+		   				</tbody>	
+	   				</table>	
+				</div>
+			</li>
+			</ul>
+		</c:if>
 		
 	</div>
 </div>

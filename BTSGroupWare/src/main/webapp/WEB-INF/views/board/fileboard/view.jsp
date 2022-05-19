@@ -128,6 +128,13 @@
  <script>
  $(document).ready(function(){
 
+	 $("input#pw").keydown(function(event){
+			
+			if(event.keyCode == 13) { // 엔터를 했을 경우
+				 $("button#btnDelete").click();
+			}
+		});
+	 
 	 /// 글삭제
 	 $("button#btnDelete").click(function(){
 		  
@@ -188,7 +195,7 @@
 	 </div>
 	 		
 	 <div id="boardContentAll">		
-	 
+	 <c:if test="${not empty requestScope.fileboardvo}">
 	 	<table>
 	 		<thead style="font-size: 12pt;">
 	 			 <tr >
@@ -231,6 +238,11 @@
     		
 
 	 	</table>
+	 	</c:if>
+	 	<c:if test="${empty requestScope.fileboardvo}">
+    		<div style="padding: 73px 300px; font-size: 16pt; font-weight: bold;" > 삭제되었거나 존재하지 않는 글입니다.</div>
+  		</c:if>
+	 	
 	 </div>
 
 	 

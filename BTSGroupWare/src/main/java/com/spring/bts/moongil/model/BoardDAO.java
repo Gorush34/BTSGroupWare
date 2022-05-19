@@ -128,12 +128,6 @@ public class BoardDAO implements InterBoardDAO {
 	}
 
 	@Override
-	public List<CommentVO> getCommentList(String fk_seq) {
-		List<CommentVO> commentList = sqlsession.selectList("moongil.getCommentList", fk_seq);
-		return commentList;
-	}
-
-	@Override
 	public List<BoardVO> temp_list(Map<String, String> paraMap) {
 		List<BoardVO> temp_list = sqlsession.selectList("moongil.temp_list", paraMap);
 		return temp_list;
@@ -370,6 +364,24 @@ public class BoardDAO implements InterBoardDAO {
 	public LikeVO getlikeuser(Map<String, String> paraMap) {
 		LikeVO likevo = sqlsession.selectOne("moongil.getlikeuser", paraMap);
 		return likevo;
+	}
+
+	@Override
+	public List<BoardVO> boardListSearchWithPaging_my(Map<String, String> paraMap) {
+		List<BoardVO> boardList = sqlsession.selectList("moongil.boardListSearchWithPaging_my", paraMap);
+		return boardList;
+	}
+
+	@Override
+	public int getTotalCount_my(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("moongil.getTotalCount_my", paraMap);
+		return n;
+	}
+
+	@Override
+	public int my_cnt(int pk_emp_no) {
+		int n = sqlsession.selectOne("moongil.my_cnt", pk_emp_no);
+		return n;
 	}
 
 

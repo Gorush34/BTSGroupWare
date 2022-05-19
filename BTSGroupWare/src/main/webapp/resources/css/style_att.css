@@ -15,7 +15,9 @@ body {font-family: font-family: 'Noto Sans KR', sans-serif; }
  
 #myheader a {text-decoration:none;}
 
-body {font-family: 'Noto Sans KR', sans-serif; }
+body {
+	font-family: 'Noto Sans KR', sans-serif;
+ 	font-size: 18px;}
 
 /* 헤더 스타일  시작 */
 

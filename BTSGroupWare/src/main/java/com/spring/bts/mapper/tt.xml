@@ -115,7 +115,7 @@
 	
 	<!-- 한 사원에 대한 출퇴근기록 목록 가져오기 -->
 	<select id="getMyCommute" parameterType="HashMap" resultType="com.spring.bts.hwanmo.model.CommuteVO">
-		select regdate, in_time, out_time, total_workTime, fk_emp_no
+		select regdate, nvl(in_time, -9999) AS in_time, nvl(out_time, -9999) AS out_time, nvl(total_workTime, -9999) AS total_workTime, fk_emp_no
 		from tbl_commute
 		where fk_emp_no = #{fk_emp_no}
 		<if test='year != "" and month =="" '>

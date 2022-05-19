@@ -195,11 +195,6 @@ public class BoardService implements InterBoardService {
 		return m;
 	}
 
-	@Override
-	public List<CommentVO> getCommentList(String fk_seq) {
-		List<CommentVO> commentList = dao.getCommentList(fk_seq);
-		return commentList;
-	}
 
 	@Override
 	public List<BoardVO> temp_list(Map<String, String> paraMap) {
@@ -532,6 +527,24 @@ public class BoardService implements InterBoardService {
 	public LikeVO getlikeuser(Map<String, String> paraMap) {
 		LikeVO likevo = dao.getlikeuser(paraMap); // 글1개 조회하기
 		return likevo;
+	}
+
+	@Override
+	public List<BoardVO> boardListSearchWithPaging_my(Map<String, String> paraMap) {
+		List<BoardVO> boardList = dao.boardListSearchWithPaging_my(paraMap);
+		return boardList;
+	}
+
+	@Override
+	public int getTotalCount_my(Map<String, String> paraMap) {
+		int n = dao.getTotalCount_my(paraMap);
+		return n;
+	}
+
+	@Override
+	public int my_cnt(int pk_emp_no) {
+		int n = dao.my_cnt(pk_emp_no);
+		return n;
 	}
 
 

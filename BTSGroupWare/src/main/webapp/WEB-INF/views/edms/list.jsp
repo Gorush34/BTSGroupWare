@@ -17,7 +17,7 @@
 			}
 		});
 		
-		// 검색시 검색조건 및 검색어 값 유지시키기 << 왜 주석처리 해뒀더라..?
+		// 검색시 검색조건 및 검색어 값 유지시키기
 		if( ${ not empty requestScope.paraMap} ) {
 			$("select#searchType").val("${requestScope.paraMap.searchType}");
 			$("input#searchWord").val("${requestScope.paraMap.searchWord}");
@@ -110,7 +110,7 @@
 		});
 		/* ********** 자동글 완성하기 종료 ********** */
 		
-		
+	
 	});
 	
 	// Function Declaration
@@ -147,7 +147,7 @@
 <%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
 	
 	<div class="edmsHomeTitle">
-		<span class="edms_maintitle">${sessionScope.loginuser.emp_name}님의 전체문서함</span>
+		<span class="edms_maintitle">BTSGroupware 전체문서함</span>
 		<p style="margin-bottom: 10px;"></p>
 	</div>
 
@@ -194,82 +194,79 @@
 		
 		<%-- 목록이 있을 때 시작 --%>
 		<c:if test="${not empty requestScope.edmsList}">
-		<table class="table table-sm table-hover table-light edmsTable">
+		<table class="table table-sm table-hover table-light edmsTable ellipsisTable">
 			<thead class="thead-light">
 				<tr>
-					<th scope="col" width="10%">문서번호</th>
-					<th scope="col" width="15%">기안일</th>
-					<th scope="col" width="15%">결재양식</th>
-					<th scope="col" width="10%">긴급</th>
-					<th scope="col" width="30%">제목</th>
-					<th scope="col" width="10%">첨부</th>
-					<th scope="col" width="10%">상태</th>
+					<th scope="col" width="4%">#</th>
+					<th scope="col" width="10%">기안일</th>
+					<th scope="col" width="8%">결재양식</th>
+					<th scope="col" width="6%">긴급</th>
+					<th scope="col" width="8%">이름</th>
+					<th scope="col" width="44%">제목</th>
+					<th scope="col" width="6%">첨부</th>
+					<th scope="col" width="6%">문서번호</th>
+					<th scope="col" width="8%">상태</th>
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="apprvo" items="${requestScope.edmsList}" varStatus="status">
-				<tr onclick="goView('${apprvo.pk_appr_no}')" style="cursor: pointer;">
+				<c:forEach var="all" items="${requestScope.edmsList}" varStatus="status">
+				<tr onclick="goView('${all.pk_appr_no}')" style="cursor: pointer;">
+					<th scope="row" style="vertical-align: middle;"><c:out value="${status.count}" /></th>
 					
-					<td>${apprvo.pk_appr_no}</td>
+					<td>${all.writeday}</td>
 					
-					<td>${apprvo.writeday}</td>
-					
-					<td>
-					<c:if test="${apprvo.fk_appr_sortno eq 1}">
-						업무기안서
-					</c:if>
-					<c:if test="${apprvo.fk_appr_sortno eq 2}">
-						증명서신청
-					</c:if>
-					<c:if test="${apprvo.fk_appr_sortno eq 3}">
-						사유서
-					</c:if>
-					<c:if test="${apprvo.fk_appr_sortno eq 4}">
-						휴가신청서(나중에 빼기)
-					</c:if>
-					</td>
-					
+					<td>${all.appr_name}</td>
 					
 					<td>
-					<c:if test="${apprvo.emergency == 1}">
+					<c:if test="${all.emergency == 1}">
 						<button id="btn_emergency" class="btn btn-danger edmsBtn">긴급</button>
 					</c:if>
-					<c:if test="${apprvo.emergency == 0}">
+					<c:if test="${all.emergency == 0}">
 						&nbsp;
 					</c:if>
 					</td>
 					
-					<td>${apprvo.title}</td>
+					<td>${all.emp_name}</td>
 					
-					<td>
-						<%-- 첨부파일이 있는 경우 --%>
-						<c:if test="${not empty apprvo.filename}">
-							<img src="<%= ctxPath%>/resources/images/disk.gif" style="height: 16px; width: 16px;">
-						</c:if>
-						<%-- 첨부파일이 없는 경우 --%>
-						<c:if test="${empty apprvo.filename}">&nbsp;</c:if>
+					<td class="elltitle">
+						<span class="title" style="cursor: pointer;" onclick="goView('${all.pk_appr_no}')">${all.title}</span>
 					</td>
 					
 					<td>
-						<c:if test="${apprvo.mid_accept eq 0 and apprvo.fin_accept eq 0}">
+						<%-- 첨부파일이 있는 경우 --%>
+						<c:if test="${not empty all.filename}">
+							<img src="<%= ctxPath%>/resources/images/disk.gif" style="height: 16px; width: 16px;">
+						</c:if>
+						<%-- 첨부파일이 없는 경우 --%>
+						<c:if test="${empty all.filename}">&nbsp;</c:if>
+					</td>
+					
+					<td>${all.pk_appr_no}</td>
+					
+					<td>
+						<c:if test="${all.mid_accept eq 0 and all.fin_accept eq 0}">
 							<button class="btn btn-secondary edmsBtn">대기중</button>
 						</c:if>
-						<c:if test="${apprvo.mid_accept eq 1 and apprvo.fin_accept eq 0}">
+						<c:if test="${all.mid_accept eq 1 and all.fin_accept eq 0}">
 							<button class="btn btn-warning edmsBtn">진행중</button>
 						</c:if>
-						<c:if test="${apprvo.mid_accept eq 1 and apprvo.fin_accept eq 1}">
+						<c:if test="${all.mid_accept eq 1 and all.fin_accept eq 1}">
 							<button class="btn btn-info edmsBtn">승인됨</button>
 						</c:if>
-						<c:if test="${apprvo.mid_accept eq 2}">
+						<c:if test="${all.mid_accept eq 2}">
 							<button class="btn btn-dark edmsBtn">반려됨</button>
 						</c:if>
-						<c:if test="${apprvo.mid_accept eq 1 and apprvo.fin_accept eq 2}">
+						<c:if test="${all.mid_accept eq 1 and all.fin_accept eq 2}">
 							<button class="btn btn-dark edmsBtn">반려됨</button>
 						</c:if>
 					</td>
 				</tr>
 				</c:forEach>
 			</tbody>
+		</table>
+		
+		<table>
+			<tr><td><input type="hidden" name="emp_name" value="${requestScope.all.emp_name}" /></td></tr>
 		</table>
 		
 		<div class="divClear"></div>
@@ -305,4 +302,4 @@
 	
 	
 	<div class="divClear"></div>
-</div>
+
