@@ -192,6 +192,13 @@ public class AttendanceDAO implements InterAttendanceDAO {
 		List<Map<String, Object>> myAttList = sqlsession.selectList("hwanmo.getMyAttListNoSignWithPaging", paraMap);
 		return myAttList;
 	}
+
+	// 메인화면 연차결재대기문서 갯수 가져오기
+	@Override
+	public int vacCount(int pk_emp_no) {
+		int n = sqlsession.selectOne("hwanmo.vacCount", pk_emp_no);
+		return n;
+	}
 	
 	
 }

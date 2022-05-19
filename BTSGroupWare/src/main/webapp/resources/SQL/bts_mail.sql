@@ -759,3 +759,101 @@ where rno between 1 and 5
 
 delete from tbl_mail;
 commit;
+
+select *
+from tbl_addbook
+
+delete from tbl_addbook
+where pk_addbook_no = 44;
+commit;
+select *
+from tbl_mail
+where pk_mail_num=256
+
+
+
+
+select *
+from tbl_mail
+order by pk_mail_num desc;
+
+
+
+
+
+
+select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date, importance, importance_star_send, send_status,
+       rec_status, rec_date
+from
+(
+select row_number() over(order by pk_mail_num desc) AS rno,
+       pk_mail_num, fk_receiveuser_num, recempname, subject
+       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+       , importance, importance_star_send, send_status, rec_status, rec_date
+from tbl_mail M join tbl_mailread R
+on M.pk_mail_num = R.fk_mail_num
+where fk_senduser_num = '' and fk_receiveuser_num != '' and fk_mail_num = '' and
+del_status = 0 and reservation_status = 0 and temp_status = 0 and rec_status = 1
+and lower('') like '%' || lower('') || '%'
+) V
+where rno between 1 and 5
+
+
+-- 읽음 테이블
+select *
+from tbl_mailRead
+order by fk_mail_num desc
+
+
+
+delete from tbl_mailRead
+where fk_mail_num is null;
+commit;
+
+---- 상대방이 해당번호의 메일을 클릭했을 때, rec_status 가 1로 update 되고, 이것이 tbl_mailRead 에서 조회가 된다.
+
+select rec_status , rec_date
+from tbl_mailRead
+where fk_mail_num = 260 and rec_status = 1
+
+select *
+from tbl_mailRead
+
+select *
+from tbl_mail
+order by pk_mail_num desc;
+
+select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date, importance, importance_star_send, send_status
+       rec_status, rec_date 
+from
+(
+select row_number() over(order by pk_mail_num desc) AS rno,
+       pk_mail_num, fk_receiveuser_num, recempname, subject
+       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+       , importance, importance_star_send, send_status, rec_status, rec_date 
+from tbl_mail M join tbl_mailread R
+on M.pk_mail_num = R.fk_mail_num
+where fk_senduser_num = '80000010' and fk_receiveuser_num != '80000010' and
+del_status = 0 and reservation_status = 0 and temp_status = 0
+) V
+where rno between #{startRno} and #{endRno}
+
+
+
+
+select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date, importance, importance_star_send, send_status
+       
+from
+(
+select row_number() over(order by pk_mail_num desc) AS rno,
+       pk_mail_num, fk_receiveuser_num, recempname, subject
+       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+       , importance, importance_star_send, send_status
+from tbl_mail M join tbl_mailread R
+on M.pk_mail_num = R.fk_mail_num
+where fk_senduser_num = #{fk_senduser_num} and fk_receiveuser_num != #{fk_senduser_num} and
+del_status = 0 and reservation_status = 0 and temp_status = 0
+) V

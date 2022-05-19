@@ -199,7 +199,7 @@
 			    <c:if test="${vac.approval_status ne 0}">
 			    <tr style="text-align: center; " id="bold_hr">
 			      <th class="th_title" style="text-align: center;">결재자의견</th>
-			      <td colspan="3" style="text-align: left;"><input type="text" id="app_opinion" name="app_opinion" style="width: 80%; height: 100px;" value="${vac.fin_app_opinion}" readonly />			    
+			      <td colspan="3" style="text-align: left;"><input type="text" id="app_opinion" name="app_opinion" style="width: 80%; height: 100px; word-break: break-all;" value="${vac.fin_app_opinion}" readonly />			    
 			      </td>
 			    </tr>
 			    </c:if>	

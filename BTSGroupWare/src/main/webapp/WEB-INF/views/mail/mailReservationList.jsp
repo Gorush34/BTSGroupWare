@@ -204,12 +204,6 @@
 								삭제
 							</button>
 						</li>
-						<li class="secondHeaderList">
-							<button type="button" id=readSend onclick="goReadSend()">
-							<i class="fa fa-envelope-o fa-fw"></i>
-								읽음
-							</button>
-						</li>
 					</ul>
 				</div>
 				

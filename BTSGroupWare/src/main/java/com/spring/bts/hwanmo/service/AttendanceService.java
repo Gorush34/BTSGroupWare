@@ -190,5 +190,12 @@ public class AttendanceService implements InterAttendanceService {
 		return myAttList;
 	}
 
+	// 메인화면 연차결재대기문서 갯수 가져오기
+	@Override
+	public int vacCount(int pk_emp_no) {
+		int n = attDAO.vacCount(pk_emp_no);
+		return n;
+	}
+
 	
 }

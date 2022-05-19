@@ -137,6 +137,8 @@
 
 	    calendar = new FullCalendar.Calendar(calendarEl, {
 	      timeZone: 'local',
+	      locale: 'ko',
+	      themeSystem: 'bootstrap',
 	      initialView: 'timeGridWeek',
 	      headerToolbar: {
 	        left: 'prev,next today',

@@ -521,6 +521,9 @@ public class EmployeeController {
 			loginuser.setNum2( loginuser.getCom_tel().substring( (loginuser.getCom_tel().indexOf("-")+1), loginuser.getCom_tel().lastIndexOf("-") ) );
 			loginuser.setNum3( loginuser.getCom_tel().substring( (loginuser.getCom_tel().lastIndexOf("-")+1) ) );
 		}
+		
+		// System.out.println(" 지역번호 : " + loginuser.getCom_tel() );
+		
 		//원시인
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap = empService.getBirthday(pk_emp_no);
@@ -530,7 +533,7 @@ public class EmployeeController {
 		// System.out.println("생년월일 : " + loginuser.getBirthday());
 		// System.out.println("성별 : " + loginuser.getGender());
 		
-		System.out.println(" 컨트롤러 updateEmp.bts에서 받아진 이미지 이름 : " + loginuser.getImg_name());
+		// System.out.println(" 컨트롤러 updateEmp.bts에서 받아진 이미지 이름 : " + loginuser.getImg_name());
 		mav.addObject("img", loginuser.getImg_name());
 		mav.addObject("loginuser", loginuser);
 		
@@ -709,8 +712,8 @@ public class EmployeeController {
 	
 	
 	 // 실험용 페이지
-     @RequestMapping(value="/addBook/test.bts")
-     public ModelAndView orgChart_sample(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+     @RequestMapping(value="/emp/test.bts")
+     public ModelAndView test(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 	   
 	   
 		   HttpSession session = request.getSession();
@@ -737,7 +740,7 @@ public class EmployeeController {
 		   mav.addObject("loginuser", loginuser);
 		   mav.addObject("empList", empList);
 		   
-		   mav.setViewName("test.addBook");
+		   mav.setViewName("test.emp");
 		   
 	      return mav;
    }

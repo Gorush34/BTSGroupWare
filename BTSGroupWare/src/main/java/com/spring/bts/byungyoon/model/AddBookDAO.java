@@ -112,6 +112,16 @@ public class AddBookDAO implements InterAddBookDAO {
 	}
 
 
+	// 사원 목록에서 사원 삭제하기
+	@Override
+	public int addBook_depInfo_delete(int pk_emp_no) {
+		
+		int n = sqlsession.delete("byungyoon.addBook_depInfo_delete" , pk_emp_no);
+		
+		return n;
+	}
+
+
 
 	
 	
