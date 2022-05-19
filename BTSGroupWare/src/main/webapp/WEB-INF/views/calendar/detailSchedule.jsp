@@ -43,12 +43,126 @@
 		}
 		// ==== 종일체크박스에 체크를 할 것인지 안할 것인지를 결정하는 것 끝 ==== //
 	
+		$("input#comment").keydown(function(event){
+			
+			if(event.keyCode == 13) { // 엔터를 했을 경우
+				commentInput();	
+			}
+		});
+		
+		getScheduleComment();
+		
 	}); // end of $(document).ready(function(){}----------------------------------------------------------------------
 
 	
 	// ********** Function Declaration ************//
 	
-		// 일정 삭제하기
+	// 댓글 입력
+	function commentInput(){
+		const comment = $("input#comment").val().trim();
+		if(comment == ""){
+			alert("댓글 내용을 입력하세요!!");
+			return; // 종료
+		}
+		
+		$.ajax({
+			url:"<%= ctxPath%>/calendar/commentInput.bts",
+			data:{"fk_emp_no":"${sessionScope.loginuser.pk_emp_no}"
+				 ,"emp_name":"${sessionScope.loginuser.emp_name}"
+				 ,"content":$("input#comment").val()
+				 ,"pk_schno":$("input#pk_schno").val()},
+			dataType:"json",
+			type:"POST",
+			success:function(json){
+				
+				if(json.n == 0){
+					alert("댓글 작성 실패");
+				}
+				else{
+					getScheduleComment()
+				}
+				
+				$("input#comment").val("");
+				
+			},
+			  error: function(request, status, error){
+					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		});
+	}// end of function commentInput(){}--------------------------------
+	
+	// 댓글 보여주기
+	function getScheduleComment(){
+		$.ajax({
+			url:"<%= ctxPath%>/calendar/getScheduleComment.bts",
+			data:{"pk_schno":$("input#pk_schno").val()},
+			dataType:"json",
+			success:function(json){
+				let html = "";
+				if(json.length > 0){
+					$.each(json, function(index, item){
+						var writeuser = item.FK_EMP_NO;
+						var loginuser = "${sessionScope.loginuser.pk_emp_no}";
+						  
+						  html += "<tr class='commentDetail'>";
+						  html += "<td class='comment_name' style='padding-top: 15px; padding-left:20px;'>"+item.NAME+"&nbsp;&nbsp;"+item.REGDATE+"</td>";
+						  html += "</tr>";
+						  html += "<tr>";
+						  html += "<td class='comment_content' style='font-size: 13pt; padding-left:28px;'>"+item.CONTENT+"</td>";
+						  if( writeuser == loginuser ) {
+							  html += "<td style='text-align: center;' onclick='delComment(\""+item.PK_SCHECONO+"\")'><span style='cursor: pointer; color: gray; margin-left: 10px;'><i class='bi bi-x-circle'></i></span><input type='hidden' value='"+item.PK_SCHECONO+"' id='forDelNo' /></td>";
+						    } 
+						  html += "</tr>";
+					});
+				}
+				else{
+					html += "<tr>";
+					html += "<td colspan='4' class='comment' style='padding-top: 30px; padding-left: 120px;'>댓글이 없습니다</td>";
+					html += "</tr>";
+				}
+				
+				$("tbody#commentBody").html(html);
+				
+			},
+			  error: function(request, status, error){
+					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		});
+	}// end of function getScheduleComment(){}-------------------
+	
+	// 댓글 수정
+	
+	// 댓글 삭제
+	function delComment(pk_schecono){
+	
+	console.log(pk_schecono);
+	var pk_schno = $("input#pk_schno").val();	
+	var bool = confirm("댓글을 삭제하시겠습니까?");
+		
+		if(bool){
+			$.ajax({
+				url: "<%= ctxPath%>/calendar/delComment.bts",
+				type: "post",
+				data: {"pk_schecono":pk_schecono},
+				dataType: "json",
+				success:function(json){
+					if(json.n==1){
+						alert("댓글을 삭제하였습니다.");
+						getScheduleComment();
+					}
+					else {
+						alert("댓글을 삭제하지 못했습니다.");
+					}
+					
+				},
+				error: function(request, status, error){
+		            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		        }
+			});
+		}
+	}// end of function delComment(pk_schecono){-----------------------------------------
+	
+	// 일정 삭제하기
 	function delSchedule(pk_schno){
 	
 		var bool = confirm("일정을 삭제하시겠습니까?");
@@ -96,9 +210,10 @@
       <h1 class="h6 mb-0 text-white lh-1" style="font-size:22px; font-weight: bold; ">일정상세</h1>
     </div>
   </div>
-	<div style="margin:50px 100px;">
+	<div class="detailContainer" style="margin:50px 100px;">
+	  <div>
 			<div style="margin-bottom: 30px;">
-				<span id="subject" style="font-weight: bold; font-size: 16pt; color: #007acc;">${requestScope.map.SUBJECT}</span>&nbsp;&nbsp;
+				<span id="subject" style="font-weight: bold; font-size: 16pt; color: #007acc;">${requestScope.map.SUBJECT}</span>&nbsp;&nbsp;<input type="hidden" id="pk_schno" value="${requestScope.map.PK_SCHNO}" />
 			</div>
 			<hr />
 			<table id="detailScheduleContent" class="table table-striped" style="font-size: 14pt;">
@@ -138,11 +253,25 @@
 					<th>작성자</th>
 					<td>${requestScope.map.EMP_NAME}</td>
 				</tr>
-				
-			
-			 
-				
 			</table>
+		</div>
+		<div id="commentView" style="float: right; margin-left: 30px; padding-left:20px; border-left: 1px solid;">
+			<div style="margin: 10px 3px 10px 3px;">댓글</div>
+			<div style="margin-top: 20px; vertical-align: bottom;">
+			<img src="/bts/resources/images/mu.png" id="memberProfile" style="margin-right: 10px; margin-left: 10px;border: 1px solid #0083b0;">
+			<input type="hidden" id="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
+			<input type="hidden" id="emp_name" value="${sessionScope.loginuser.emp_name}" />
+			<input type="text" id="comment" style="margin-left: 3px;"/>
+			<button type="button"  id="commentInput" onclick="commentInput()"><i class="bi bi-arrow-up-circle-fill"></i></button>
+			
+			</div>
+			<div class="content-body">
+				<table>
+					<tbody id="commentBody">
+					</tbody>
+				</table>
+			</div>
+		</div>
 			
 	<input type="hidden" value="${sessionScope.loginuser.pk_emp_no}" />
 	<input type="hidden" value="${requestScope.map.FK_LGCATGONO}" />
@@ -179,9 +308,7 @@
 	</div>
 
 </div>
-	<div id="commentView">
 	
-	</div>
 
 
 </div>

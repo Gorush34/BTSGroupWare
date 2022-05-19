@@ -415,6 +415,72 @@ public class CalendarController {
 		return mav;
 	}
 	
+	// == 상세페이지에서 댓글 적기 == //
+	@ResponseBody
+	@RequestMapping(value="/calendar/commentInput.bts", method= {RequestMethod.POST})
+	public String commentInput(HttpServletRequest request) {
+		
+		String fk_emp_no = request.getParameter("fk_emp_no");
+		String emp_name = request.getParameter("emp_name");
+		String content = request.getParameter("content");
+		String pk_schno = request.getParameter("pk_schno");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("fk_emp_no", fk_emp_no);
+		paraMap.put("emp_name", emp_name);
+		paraMap.put("content", content);
+		paraMap.put("pk_schno", pk_schno);
+		
+		int n = service.commentInput(paraMap);
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n);
+		
+		return jsonObj.toString();
+	}
+	
+	// == 상세페이지에서 댓글 보여주기 == //
+	@ResponseBody
+	@RequestMapping(value="calendar/getScheduleComment.bts", produces="text/plain;charset=UTF-8")
+	public String getScheduleComment(HttpServletRequest request) {
+		
+		String pk_schno = request.getParameter("pk_schno");
+		List<Map<String,String>> commentList = service.getScheduleComment(pk_schno);
+
+		JSONArray jsArr = new JSONArray();
+		for(Map<String,String> map :commentList) {
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("CONTENT", map.get("CONTENT"));
+			jsonObj.put("REGDATE", map.get("REGDATE"));
+			jsonObj.put("PK_SCHECONO", map.get("PK_SCHECONO"));
+			jsonObj.put("FK_EMP_NO", map.get("FK_EMP_NO"));
+			jsonObj.put("NAME", map.get("NAME"));
+			jsonObj.put("PARENTSCHNO", map.get("PARENTSCHNO"));
+			jsonObj.put("STATUS", map.get("STATUS"));
+			
+			jsArr.put(jsonObj);
+		}
+		
+		
+		return jsArr.toString();
+	}
+	
+	
+	// == 상세페이지에서 댓글 삭제 == //
+	@ResponseBody
+	@RequestMapping(value="/calendar/delComment.bts", method= {RequestMethod.POST})
+	public String delComment(HttpServletRequest request) {
+		
+		String pk_schecono = request.getParameter("pk_schecono");
+		
+		int n = service.delComment(pk_schecono);
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n);
+		
+		return jsonObj.toString();
+	}
+	
 	// === 일정 삭제 하기 === //
 	@ResponseBody
 	@RequestMapping(value="/calendar/deleteSchedule.bts", method= {RequestMethod.POST})
