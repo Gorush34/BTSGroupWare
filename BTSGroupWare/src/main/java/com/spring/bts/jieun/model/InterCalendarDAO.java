@@ -54,6 +54,12 @@ public interface InterCalendarDAO {
 	// === 일정 상세 페이지 === //
 	Map<String, String> detailSchedule(String pk_schno);
 	
+	// == 상세페이지에서 댓글 보여주기 == //
+	List<Map<String, String>> getScheduleComment(String pk_schno);	
+	
+	// == 상세페이지에서 댓글 삭제 == //
+	int delComment(String pk_schecono);
+	
 	// === 일정 삭제 하기 === //
 	int deleteSchedule(String pk_schno);
 	
@@ -82,6 +88,12 @@ public interface InterCalendarDAO {
 
 	// == 메인페이지 : 임직원 생일 가져오기 :이월 == //
 	List<Map<String, String>> nextMonthBirthIndex(String month);
+	
+	// == 상세페이지에서 댓글 적기 == //
+	int commentInput(Map<String, String> paraMap);
+	
+
+
 	
 	
 }

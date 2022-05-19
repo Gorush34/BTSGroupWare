@@ -143,6 +143,34 @@
 		where SD.pk_schno = #{pk_schno}
 	</select>
 		
+	<!-- 상세페이지에서 댓글 적기 -->
+	<insert id="commentInput" parameterType="hashMap">
+		insert into tbl_schecomment (pk_schecono, fk_emp_no, name, content, regDate, parentschno, status)
+		values (seq_schecomment.nextval, #{fk_emp_no}, #{emp_name}, #{content}, default, #{pk_schno}, default)
+	</insert>
+	
+	<!-- 상세페이지에서 댓글 보여주기 -->
+	<resultMap type="HashMap" id="getScheduleComment_Map">
+		<result property="PK_SCHECONO" 	column="pk_schecono" 	javaType="String"/>
+		<result property="FK_EMP_NO" 	column="fk_emp_no" 		javaType="String" />
+		<result property="NAME" 		column="name" 		    javaType="String" />
+		<result property="CONTENT" 		column="content" 		javaType="String" />
+		<result property="REGDATE" 		column="regDate" 		javaType="String" />
+		<result property="PARENTSCHNO" 	column="parentschno" 	javaType="String" />
+		<result property="STATUS" 	    column="status" 		javaType="String" />
+	</resultMap>
+	<select id="getScheduleComment" parameterType="String" resultMap="getScheduleComment_Map">
+		select name, content, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate , fk_emp_no, pk_schecono
+		from tbl_schecomment
+		where status = 1 and parentschno = #{parentschno}
+		order by pk_schecono desc
+	</select>
+		
+	<!-- 상세페이지에서 댓글 삭제 -->	
+	<delete id="delComment" parameterType="String">
+		delete from tbl_schecomment
+		where pk_schecono = #{pk_schecono}
+	</delete>
 		
 	<!-- 일정 삭제 하기  -->
 	<delete id="deleteSchedule" parameterType="String">
