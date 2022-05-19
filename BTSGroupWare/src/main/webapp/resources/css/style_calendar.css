@@ -8,7 +8,7 @@ body {font-family: 'Noto Sans KR', sans-serif; font-size: 18px;}
 #mycontainer   { padding:20px; }
 #myheader      { display: flex; min-height:100px; position: relative; top: 60px; }
 #mycontent      { min-height:1200px; top:60px; padding-top: 40px; margin-right:25px;  background-color:#FFF;
-                  float:right; width:80%;}
+                  float:right; width:86%;}
 #mysideinfo {
 		min-height: 1200px;
 		position: fixed;
