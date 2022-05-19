@@ -3,10 +3,12 @@
 <% String ctxPath = request.getContextPath(); %>
 
 <style>
-
+	a {
+	color: gray;
+	}
 </style> 
     
-<div class="container" style="text-align: center; color: black;">
+<div class="container" style="text-align: center; padding-top: 30px;">
 
 	<div>메일을 성공적으로 보냈습니다.</div>
 	<div><img src="<%= ctxPath%>/resources/images/mail/SendMailSuccess.png"></div>
@@ -17,3 +19,6 @@
 	<a href="<%= ctxPath%>/mail/mailSendToMeList.bts">내게쓴메일함으로 이동하기</a>
 
 </div>    
+
+
+    
