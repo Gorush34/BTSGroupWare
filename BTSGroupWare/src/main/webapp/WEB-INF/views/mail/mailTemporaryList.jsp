@@ -217,7 +217,7 @@
 					<table>
 						<thead>
 							<tr>
-								<th style="width: 2%;">
+								<th style="width: 3%;">
 									<input type="checkbox" id="checkAll" />
 								</th>
 								<%--
@@ -225,7 +225,7 @@
 									<span class="fa fa-star-o"></span>
 								</th>
 								 --%>
-									<th style="width: 2%;">
+									<th style="width: 3%;">
 										<span class="fa fa-paperclip"></span>
 									</th>
 								<th style="width: 10%;" class="text-center">받는이</th>

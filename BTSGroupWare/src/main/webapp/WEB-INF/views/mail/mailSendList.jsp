@@ -227,8 +227,9 @@
 									<span class="fa fa-paperclip"></span>
 								</th>
 								<th style="width: 10%;" class="text-center">받는이</th>
-								<th style="width: 68%;">제목</th>
-								<th style="width: 22%;" class="text-left">날짜</th>
+								<th style="width: 60%;">제목</th>
+								<th style="width: 10%;">읽음여부</th>								
+								<th style="width: 20%;" class="text-left">날짜</th>
 							</tr>
 						</thead>
 						
@@ -275,6 +276,7 @@
 										</c:if>											
 									</span>
 								</td>
+								<td>읽지않음</td>																
 								<td class="text-left">									
 									<c:if test="${not empty SendMailList.reservation_date}">
 											${SendMailList.reservation_date}
