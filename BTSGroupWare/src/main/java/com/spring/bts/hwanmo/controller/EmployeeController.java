@@ -712,7 +712,7 @@ public class EmployeeController {
 	
 	
 	 // 실험용 페이지
-     @RequestMapping(value="/addBook/test.bts")
+     @RequestMapping(value="/emp/test.bts")
      public ModelAndView orgChart_sample(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 	   
 	   
@@ -740,7 +740,7 @@ public class EmployeeController {
 		   mav.addObject("loginuser", loginuser);
 		   mav.addObject("empList", empList);
 		   
-		   mav.setViewName("test.addBook");
+		   mav.setViewName("test.emp");
 		   
 	      return mav;
    }
