@@ -13,7 +13,40 @@
       border-spacing: 0 12px;
    }
    
-
+.arrow-next_1 {
+    position: relative;
+    float:left;
+    width:90px;
+    height:90px;
+}
+.arrow-next_1::after {
+    position: absolute;
+    left: 10px; 
+    top: 20px; 
+    content: '';
+    width: 50px; /* 사이즈 */
+    height: 50px; /* 사이즈 */
+    border-top: 5px solid #000; /* 선 두께 */
+    border-right: 5px solid #000; /* 선 두께 */
+    transform: rotate(45deg); /* 각도 */
+}
+   .arrow-next_2 {
+    position: relative;
+    float:left;
+    width:90px;
+    height:90px;
+}
+.arrow-next_2::after {
+    position: absolute;
+    left: 10px; 
+    top: 20px; 
+    content: '';
+    width: 50px; /* 사이즈 */
+    height: 50px; /* 사이즈 */
+    border-top: 5px solid #000; /* 선 두께 */
+    border-right: 5px solid #000; /* 선 두께 */
+    transform: rotate(45deg); /* 각도 */
+}
 </style>
 
 
@@ -68,7 +101,8 @@
            alert("선택된 제품이 없습니다.");
            return;
        }
-       
+       empMailStr = empMailArr.join();
+       $("input#input_mid").val(empMailStr);
        
        console.log( $("input#input_mid").val());
        

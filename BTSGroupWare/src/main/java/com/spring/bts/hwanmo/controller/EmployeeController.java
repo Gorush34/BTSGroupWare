@@ -713,7 +713,7 @@ public class EmployeeController {
 	
 	 // 실험용 페이지
      @RequestMapping(value="/emp/test.bts")
-     public ModelAndView orgChart_sample(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+     public ModelAndView test(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 	   
 	   
 		   HttpSession session = request.getSession();
