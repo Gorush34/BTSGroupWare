@@ -584,26 +584,178 @@ where  fk_senduser_num = '80000010' and fk_receiveuser_num = '80000010'
 
 
 
+select *
+from tbl_mailRead
 
-select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date, importance, importance_star_rec
+select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date, importance, importance_star_rec, rec_status
 from 
 (
 select row_number() over(order by pk_mail_num desc) AS rno,
        pk_mail_num, fk_senduser_num, sendempname, subject
        , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
        , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
-       , importance, importance_star_rec
-from tbl_mail
+       , importance, importance_star_rec, rec_status
+from tbl_mail M join tbl_mailread R
+on m.pk_mail_num = r.fk_mail_num
 where fk_receiveuser_num = '80000010' and fk_senduser_num != '80000010' and
 del_status = 0 and reservation_status = 0 and temp_status = 0	
 order by pk_mail_num desc
 ) V
 where rno between 1 and 5
 
+
 select * 
 from tbl_employees
 
-select pk_mail_num, fk_senduser_num, sendempname, subject, to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reservation_date, to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+select pk_mail_num, fk_senduser_num, sendempname, subject, to_char(reservation_date,'yyyy-mm-dd hh24:mi:ss') as reservation_date, to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
 from tbl_mail
 order by pk_mail_num desc
 
+
+select pk_mail_num, fk_senduser_num, sendempname, subject, to_char(reservation_date,'yyyy-mm-dd hh24:mi:ss') as reservation_date, to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+from tbl_mail
+order by reg_date desc
+
+
+create table tbl_mailread
+(fk_mail_num        number(14)
+, rec_status        number(2)
+, rec_date          date 
+, send_status       number(2)
+, send_date         date 
+, imp_status        number(2)
+, imp_date          date 
+, constraint FK_tbl_mailread_fk_mail_num foreign key(fk_mail_num) references tbl_mail(pk_mail_num) on delete set null
+);
+-- Table TBL_MAILREAD이(가) 생성되었습니다.
+
+
+----------- 받은메일함의 읽음 상태를 상세내용 보기 클릭 시, 0에서 1로 변경해준다.
+
+-- 읽음 테이블
+select *
+from tbl_mailRead
+order by fk_mail_num desc
+
+delete from tbl_mailRead
+where fk_mail_num is null;
+
+commit;
+
+-- 읽음 테이블
+select *
+from tbl_mail
+order by pk_mail_num desc;
+
+insert into tbl_mail(pk_mail_num, fk_senduser_num, fk_receiveuser_num, recempname, sendempname, recemail, sendemail, subject, content, reg_date, importance, reservation_date, reservation_status, read_status, temp_status) 
+values(SEQ_MAIL.nextval, to_number(#{fk_senduser_num}), to_number(#{fk_receiveuser_num}), #{recempname}, #{sendempname}, #{recemail}, #{sendemail}, #{subject}, #{content}, default, #{importance}, to_date(#{reservation_date}, 'yyyy-mm-dd hh24:mi'), #{reservation_status}, default, #{temp_status})
+
+
+select pk_mail_num
+FROM
+(
+select pk_mail_num, rownum as rno
+from tbl_mail
+order by pk_mail_num desc
+) V
+where rno=1
+
+
+INSERT INTO tbl_mailRead(fk_mail_num, rec_status, send_status, imp_status)
+SELECT pk_mail_num, 0, 0, 0 
+FROM tbl_mail
+
+commit;
+rollback;
+
+insert into tbl_mailRead(fk_mail_num, rec_status, send_status, imp_status)
+select pk_mail_num, 0, 0, 0 
+from tbl_mail
+
+commit;
+
+
+
+INSERT INTO tbl_mail(pk_mail_num, fk_senduser_num, empname, subject, reg_date) 
+VALUES(SEQ_MAIL.nextval, 80000001, '관리자', '220503 DB 받은메일함보기 테스트 입니다!', sysdate);  
+
+
+update tbl_mailRead set rec_status = 0
+commit;
+
+select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date, importance, importance_star_rec, rec_status
+from 
+(
+select row_number() over(order by pk_mail_num desc) AS rno,
+       pk_mail_num, fk_senduser_num, sendempname, subject
+       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+       , importance, importance_star_rec, rec_status
+from tbl_mail M left join tbl_mailread R
+on m.pk_mail_num = r.fk_mail_num
+where fk_receiveuser_num = '' and fk_senduser_num != '' and
+del_status = 0 and reservation_status = 0 and temp_status = 0	
+order by pk_mail_num desc
+) V
+where rno between 1 and 5
+
+select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date, importance, importance_star_send, send_status
+from
+(
+select row_number() over(order by pk_mail_num desc) AS rno,
+       pk_mail_num, fk_receiveuser_num, recempname, subject
+       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+       , importance, importance_star_send, send_status
+from tbl_mail M join tbl_mailread R
+where fk_senduser_num = #{fk_senduser_num} and fk_receiveuser_num != #{fk_senduser_num} and
+del_status = 0 and reservation_status = 0 and temp_status = 0
+<if test="searchType != ''">
+and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+</if>	
+) V
+where rno between #{startRno} and #{endRno}
+
+
+
+--- 보낸
+select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date, importance, importance_star_send, send_status
+from
+(
+select row_number() over(order by pk_mail_num desc) AS rno,
+       pk_mail_num, fk_receiveuser_num, recempname, subject
+       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+       , importance, importance_star_send, send_status
+from tbl_mail M join tbl_mailread R
+on m.pk_mail_num = r.fk_mail_num
+where fk_senduser_num = '' and fk_receiveuser_num != '' and
+del_status = 0 and reservation_status = 0 and temp_status = 0
+) V
+where rno between 1 and 5
+
+select *
+from tbl_mail
+
+
+
+-- 받은
+select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date, importance, importance_star_rec, rec_status
+from 
+(
+select row_number() over(order by pk_mail_num desc) AS rno,
+       pk_mail_num, fk_senduser_num, sendempname, subject
+       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+       , importance, importance_star_rec, rec_status
+from tbl_mail M join tbl_mailread R
+on m.pk_mail_num = r.fk_mail_num
+where fk_receiveuser_num = '80000010' and fk_senduser_num != '80000010' and
+del_status = 0 and reservation_status = 0 and temp_status = 0	
+order by pk_mail_num desc
+) V
+where rno between 1 and 5
+
+
+delete from tbl_mail;
+commit;

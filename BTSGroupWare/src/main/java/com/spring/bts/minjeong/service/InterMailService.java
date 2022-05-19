@@ -122,5 +122,20 @@ public interface InterMailService {
 	// 메인페이지에서 로그인한 사용자의 받은메일함 목록 보여주기
 	List<Map<String, String>> mailReceive_main(String fk_receiveuser_num);
 
+	// 받은 메일 1개 클릭 시 rec_status 업데이트 (받은메일함에서 읽음 표시하기 위함)
+	int updateRec_status(Map<String, String> paraMap);
+
+	// 보낸 메일 1개 클릭 시 send_status 업데이트 (보낸메일함에서 읽음 표시하기 위함)
+	int updateSend_status(Map<String, String> paraMap);
+
+	// 받은 메일 1개 클릭 시 imp_status 업데이트 (중요메일함에서 읽음 표시하기 위함)
+	int updateImp_status(Map<String, String> paraMap);
+
+	// 글씀과 동시에 tbl_mailRead 테이블에 해당 글번호의 값을 insert 시켜준다.
+	int addToMailRead(String fk_mail_num);
+
+	String getPkMailNum(MailVO mailvo);
+
+
 	
 }

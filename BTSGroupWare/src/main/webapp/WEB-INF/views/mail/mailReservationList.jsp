@@ -235,7 +235,7 @@
 						<tbody>
 						<c:if test="${empty requestScope.ReservationMailList}">
 							<tr>
-								<td colspan="10" style="text-align: center; width: 1000px;">메일이 존재하지 않습니다.</td>
+								<td colspan="10" style="text-align: center; width: 1278px;">메일이 존재하지 않습니다.</td>
 							</tr>							
 						</c:if>
 						<c:if test="${not empty requestScope.ReservationMailList}">

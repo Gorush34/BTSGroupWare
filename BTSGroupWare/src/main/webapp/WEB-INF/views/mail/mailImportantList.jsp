@@ -228,15 +228,15 @@
 										<span class="fa fa-paperclip"></span>
 									</th>
 								<th style="width: 10%;" class="text-center">보낸이</th>
-								<th style="width: 68%;">제목</th>
-								<th style="width: 22%;" class="text-left">날짜</th>
+								<th style="width: 70%;">제목</th>
+								<th style="width: 20%;" class="text-left">날짜</th>
 							</tr>
 						</thead>
 						
 						<tbody>
 						<c:if test="${empty requestScope.ImportantMailList}">
 							<tr>
-								<td colspan="10" style="text-align: center; width: 1000px;">메일이 존재하지 않습니다.</td>
+								<td colspan="10" style="text-align: center; width: 1278px;">메일이 존재하지 않습니다.</td>
 							</tr>							
 						</c:if>
 						<c:if test="${not empty requestScope.ImportantMailList}">
@@ -265,7 +265,13 @@
 											<c:if test="${ImportantMailList.importance == '1'}">
 												<span class="fa fa-exclamation" style="color: red;" class="text-center"></span>
 											</c:if>	
-											${ImportantMailList.subject}
+											<c:if test="${ImportantMailList.imp_status == '1'}">
+												<span>${ImportantMailList.subject}</span>
+											</c:if>
+											<c:if test="${ImportantMailList.imp_status == '0'}">
+												<span style="font-weight: bold;">${ImportantMailList.subject}</span>												
+											</c:if>											
+											
 									</span>
 								</td>
 								<td class="text-left">${ImportantMailList.reg_date}</td>
