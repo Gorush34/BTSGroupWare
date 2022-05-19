@@ -107,4 +107,40 @@ public class EmployeeService implements InterEmployeeService {
 		return empList;
 	}
 
+	@Override
+	public EmployeeVO getLoginMember(Map<String, String> paraMap) {
+		
+		EmployeeVO loginuser = empDAO.getLoginMember(paraMap);
+		
+		// === #48. aes 의존객체를 사용하여 로그인 되어진 사용자(loginuser)의 이메일 값을 복호화 하도록 한다. === 
+	    //          또한 암호변경 메시지와 휴면처리 유무 메시지를 띄우도록 업무처리를 하도록 한다.
+		if(loginuser != null && loginuser.getPwdchangegap() >= 3 ) {
+			// 마지막으로 암호를 변경한 날짜가 현재시각으로부터 3개월이 지났으면
+			loginuser.setRequirePwdChange(true); // 로그인시 암호를 변경하라는 alert를 띄우도록 한다.
+		}
+		/*
+		if(loginuser != null && loginuser.getLastlogingap() >= 12) {
+			// 마지막으로 로그인한지가 12개월이 지났으면 휴면으로 지정
+			loginuser.setIdle(1);
+			
+			// === tbl_member 테이블의 idle 컬럼의 값을 1로 변경하기 === //
+			int n = dao.updateIdle(paraMap.get("userid"));
+		}
+		*/
+		if(loginuser != null) {
+			
+			String email = "";
+			
+			try {
+				email = aes.decrypt(loginuser.getUq_email()); // 이메일을 복호화
+			} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+				e.printStackTrace();
+			}
+			
+			loginuser.setUq_email(email); // 복호화된 값을 다시 넣어줌	
+		}
+		
+		return loginuser;
+	}
+
 }

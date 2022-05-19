@@ -6,9 +6,9 @@
 <!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <mapper namespace="emp">
 
-	   <!-- === #139. 로그인 처리하기 === 
+	    <!-- === #139. 로그인 처리하기 === 
 	                     먼저, 위의 #47  을 주석처리 하고서 아래처럼 한다. -->
-	   
+	   <!--
 	   <select id="getLoginMember_2" parameterType="HashMap" resultType="com.spring.bts.hwanmo.model.EmployeeVO">     
 	      select pk_emp_no, fk_department_id, fk_rank_id, fk_board_authority_no, fk_site_authority_no
 	      	   , emp_name, emp_pwd, com_tel, postal, address, detailaddress, extraaddress
@@ -19,7 +19,7 @@
 	           , gradelevel 
 	      from tbl_employees
 	      where ishired = 1 and pk_emp_no = #{pk_emp_no} and emp_pwd = #{emp_pwd}
-	   </select>
+	   </select> -->
 
 </mapper>
 
