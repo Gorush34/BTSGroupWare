@@ -431,11 +431,35 @@ public class MailService implements InterMailService {
 		return n;
 	}
 
+	// 메일 글쓰기 pk_mail_num 가져오기 (글쓰기 다음 번호, 읽음처리 테이블 fk_mail_num 에 넣기 위함) -->
 	@Override
 	public String getPkMailNum(MailVO mailvo) {
 		String getPkMailNum = dao.getPkMailNum(mailvo);
 		return getPkMailNum;
 	}
+
+
+	// pk_mail_num 을 통해 구해온 fk_mail_num 으로 rec_status 가 0인지 1인지(1이라면 rec_date도 가져오기) 알아온다.
+	@Override
+	public List<MailVO> getRecCheck(String fk_mail_num) {
+		List<MailVO> getRecCheck = dao.getRecCheck(fk_mail_num);
+		return getRecCheck;
+	}
+
+	 // 페이징처리 한 보낸메일 수신확인 메일목록 (검색 있든, 없든 모두 다 포함) 
+	@Override
+	public List<MailVO> sendMailListSearchWithPaging_recCheck(Map<String, String> paraMap) {
+		List<MailVO> sendMailList_recCheck = dao.sendMailList_recCheck(paraMap);
+		return sendMailList_recCheck;
+	}
+
+	// 총 보낸 메일 수신확인 건수 구해오기 (service 단으로 보내기) 
+	@Override
+	public int getTotalCount_recCheck(Map<String, String> paraMap) {
+		int n = dao.getTotalCount_recCheck(paraMap);
+		return n;
+	}
+
 
 
 
