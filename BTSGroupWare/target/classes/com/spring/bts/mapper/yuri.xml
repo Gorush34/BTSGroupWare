@@ -37,6 +37,16 @@
 	</select>
 	
 	
+	<!-- 등급번호 가져오기 -->
+	<select id="getRankno" parameterType="com.spring.bts.hwanmo.model.EmployeeVO">
+	select pk_rank_no 
+	from tbl_employees e 
+    	left join tbl_dep_sort d 
+    	on e.fk_department_id = d.pk_dep_no
+    	left join tbl_rank_sort r
+    	on e.fk_rank_id = r.pk_rank_no
+	</select>
+	
 	<!-- 파일첨부가 없는 전자결재 문서작성 --> 
 	<insert id="edmsAdd" parameterType="com.spring.bts.yuri.model.ApprVO">
 		INSERT INTO

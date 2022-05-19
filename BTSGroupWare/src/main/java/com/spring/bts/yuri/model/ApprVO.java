@@ -38,7 +38,7 @@ public class ApprVO {
 	private String ko_rankname;			/* 직급이름 */
 	private String ko_depname;			/* 부서명 */
 	private String manager;				/* 부서장번호 */
-	
+	private String pk_rank_no;			/* 직급번호 */
 	
 	private MultipartFile attach;
 	/*
@@ -57,7 +57,7 @@ public class ApprVO {
 			int fk_fin_empno, String emergency, String title, String contents, String filename,
 			String orgfilename, String fileSize, String status, String mid_accept, String fin_accept,
 			String mid_opinion, String fin_opinion, String writeday, String viewcnt,
-			String emp_name, String ko_rankname, String ko_depname, String manager) {
+			String emp_name, String ko_rankname, String ko_depname, String manager, String pk_rank_no) {
 		
 		this.pk_appr_no = pk_appr_no;
 		this.fk_appr_sortno = fk_appr_sortno;
@@ -81,6 +81,7 @@ public class ApprVO {
 		this.ko_rankname = ko_rankname;
 		this.ko_depname = ko_depname;
 		this.manager = manager;
+		this.pk_rank_no = pk_rank_no;
 	}
 
 	
@@ -311,6 +312,14 @@ public class ApprVO {
 	public void setManager(String manager) {
 		this.manager = manager;
 	}
+	
+	public String getPk_rank_no() {
+		return pk_rank_no;
+	}
+
+	public void setPk_rank_no(String pk_rank_no) {
+		this.pk_rank_no = pk_rank_no;
+	}
 
 	@Override
 	public String toString() {
@@ -322,7 +331,7 @@ public class ApprVO {
 				+ ", writeday=" + writeday + ", viewcnt=" + viewcnt + ", previousseq=" + previousseq
 				+ ", previoussubject=" + previoussubject + ", nextseq=" + nextseq + ", nextsubject=" + nextsubject
 				+ ", emp_name=" + emp_name + ", ko_rankname=" + ko_rankname + ", ko_depname=" + ko_depname
-				+ ", manager=" + manager + ", attach=" + attach + "]";
+				+ ", manager=" + manager + ", pk_rank_no" + pk_rank_no + ", attach=" + attach + "]";
 	}
 	
 }

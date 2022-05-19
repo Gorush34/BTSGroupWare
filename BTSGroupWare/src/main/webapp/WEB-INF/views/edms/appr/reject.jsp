@@ -62,7 +62,7 @@
 	</table>
 	
 	<table id="opinion">
-		<c:if test="${appr.mid_accept eq 0 and appr.fin_accept eq 0}">
+		<c:if test="${appr.mid_accept eq 0 and appr.fin_accept eq 0}"> <!-- 중간 0, 최종 0 => 대기중 -->
 			<tr>
 				<th>중간결재자의견</th>
 				<td>
@@ -70,7 +70,8 @@
 				</td>
 			</tr>
 		</c:if>
-		<c:if test="${appr.mid_accept eq 1 and appr.fin_accept eq 0}">
+		
+		<c:if test="${appr.mid_accept eq 1 and appr.fin_accept eq 0}"> <!-- 중간 1, 최종 0 => 대기(진행)중 -->
 			<tr>
 				<th>중간결재자의견</th>
 				<td>

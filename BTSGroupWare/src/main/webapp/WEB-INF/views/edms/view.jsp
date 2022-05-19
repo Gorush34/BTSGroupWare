@@ -39,8 +39,8 @@
 			frm.method = "POST";
 			frm.action = "<%= ctxPath%>/edms/delEnd.bts";
 			frm.submit();
-	}
-	
+	}); // end of $("button#btnDelete").click() --------------------
+
 </script>
 
 
@@ -177,7 +177,7 @@
 			<tr>
 				<th>첨부파일</th>
 				<!-- 첨부파일이 있는 경우 시작 -->
-				<c:if test="${requestScope.apprvo.filename ne '' || requestScope.apprvo.filename ne null }"> 
+				<c:if test="${requestScope.apprvo.fileSize != 0}"> 
 					<td>
 						<%-- 로그인을 한 경우 --%>
 						<c:if test="${sessionScope.loginuser != null}">
@@ -191,7 +191,11 @@
 						</c:if>
 						<%-- 로그인을 안 한 경우 --%>
 					</td>
-				</c:if>				
+				</c:if>
+				
+				<c:if test="${requestScope.apprvo.fileSize == 0}">
+					<td>파일이 없습니다.</td>
+				</c:if>		
 			</tr>
 			
 			<tr>
@@ -374,20 +378,18 @@
 		<%-- 3. 중간결재자가 로그인 한 경우 - 중간버튼만 보인다. --%>
 		<c:if test="${ requestScope.apprvo.fk_mid_empno eq sessionScope.loginuser.pk_emp_no and requestScope.apprvo.mid_accept eq 0 and requestScope.apprvo.fin_accept eq 0 }">
 			<button type="button" class="btn btn-success btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">중간결재</button>
-			<button type="button" class="btn btn-success btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">중간반려</button>
+			<button type="button" class="btn btn-danger btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">중간반려</button>
 		</c:if>
 		
 		<div class="divclear"></div>
 		
 		<%-- 4. 최종결재자가 로그인 한 경우 - 최종버튼만 보인다. --%>
 		<c:if test="${ requestScope.apprvo.fk_fin_empno eq sessionScope.loginuser.pk_emp_no and requestScope.apprvo.mid_accept ne 0 and requestScope.apprvo.fin_accept eq 0 }">
-			<button type="button" class="btn btn-danger btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">최종결재</button>
+			<button type="button" class="btn btn-success btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">최종결재</button>
 			<button type="button" class="btn btn-danger btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">최종반려</button>
 		</c:if>
 		
 		<div class="divclear"></div>
 		
 	</div>
-	<%-- ************************************************** 수정 버튼 영역 종료 ************************************************** --%>
-	
 </c:if>
