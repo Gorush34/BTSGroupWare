@@ -15,7 +15,7 @@
 
 	<table id="Main_main_tbl">
 		<tr>
-			<td colspan="8" style="text-align: left;"><br><h2>${sessionScope.loginuser.emp_name} 의 주소록&nbsp;<button class="btn btn-info btn-sm" id="" style="border: solid lightgray 1.5px;" onclick="location.href='http://localhost:9090/bts/addBook/addBook_telAdd.bts'">추가</button></h2><br><br></td>
+			<td colspan="8" style="text-align: left;"><br><h2>${sessionScope.loginuser.emp_name} 의 주소록&nbsp;<!--  <button class="btn btn-info btn-sm" id="" style="border: solid lightgray 1.5px;" onclick="location.href='http://localhost:9090/bts/addBook/addBook_telAdd.bts'">추가</button>--></h2><br><br></td>
 			<td>
 				  <div class="d-flex align-items-center">
 				    <form name="searchFrm">

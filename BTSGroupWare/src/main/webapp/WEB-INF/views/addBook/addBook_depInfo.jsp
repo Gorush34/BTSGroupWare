@@ -23,8 +23,9 @@
 .highcharts-figure,
 .highcharts-data-table table {
     min-width: 360px;
-    max-width: 800px;
-    margin: 1em auto;
+    max-width: 1200px;
+    margin-left:8%;
+    
 }
 
 .highcharts-data-table table {
@@ -86,18 +87,10 @@
     }
 }
 
-
-
-	
-
-
 </style>
 
 
-
-
-<h1>조직도</h1>
-<br>
+<h1><strong>조직도</strong><br><br></h1>
 
 <ul class="nav nav-tabs">
   <li class="nav-item">
@@ -111,7 +104,7 @@
   <div class="tab-pane fade show active" id="depName">
     
 <figure class="highcharts-figure">
-    <div id="container" style="margin-top:15%; /* 글꼴  */-webkit-text-stroke-width: thin;"></div>
+    <div id="container" style="margin-top:5%; /* 글꼴  */-webkit-text-stroke-width: thin;"></div>
     
 </figure>
 
@@ -214,9 +207,37 @@
   	</table>
   	
   	
-	 <div id="telAdd_main_tbl" style="text-align:center;">
+	 <div id="telAdd_main_tbl" style="text-align:center; padding-left: 24%;">
+		<form name="updateImgFrm" id="updateImgFrm" action="<%= ctxPath%>/emp/updateImg.bts" method="post" enctype="multipart/form-data" role="form">
+		<c:choose>
+		<c:when test="${sessionScope.loginuser.pk_emp_no eq 80000001}">
+		<table id="tblEmpUpdate" style="margin-left:10%;">
+		<tr>
+			<td><h2>내 정보수정<br><br></h2></td>
+		</tr>
+		<tr>
+			<td><strong>사진&nbsp;</strong></td>
+			<td><input type="hidden" name="emp_no" id="emp_no" value="${emp.pk_emp_no}" /></td>
+			<td style="align:left;">
+				<img id="empProfile" src="<%= ctxPath%>/resources/images/nol.png" style="width:60%;">
+			</td>
+			<td>	
+				<input type="file" name="attach" id="attach" style="display:inline;"/><br><br>
+				<button type="button" style=" display:inline;" id="updateImage" class="btn btn-primary">사진변경</button> 
+			</td>
+				<%-- <img id="empProfile" src="<%= ctxPath%>/resources/files/${emp.img_name}">  --%>
+			
+			<!-- <td style="padding-left: 20px;"><input type="file" name="attach" id="attach" />
+			<br><button type="button" style="margin-top: 30px;" id="updateImage" class="btn btn-primary">사진변경</button></td> -->
+		</tr>
+		</table>
+		</c:when>
+		</c:choose>
+		</form>
 		<form name="updateFrm">
 		<table style="margin-left:10%;">
+			<c:choose>
+		 	<c:when test="${sessionScope.loginuser.pk_emp_no ne 80000001}">
 			<tr>
 				<td><h2>개인정보</h2>
 					<input type="hidden" id="user" name="user" value="">
@@ -225,8 +246,10 @@
 			</tr>
 			<tr>
 				<td><strong>사진</strong></td>
-				<td><img src="<%=ctxPath %>/resources/images/addBook_perInfo_sample.jpg" class="img-rounded"><!-- <button class="btn btn-default" id="telAdd_mini_btn">삭제</button> --></td>
+				<td><img id="empProfile" src="<%= ctxPath%>/resources/images/nol.png" style="width:80%;"><!-- <button class="btn btn-default" id="telAdd_mini_btn">삭제</button> --></td>
 			</tr>
+			</c:when>
+			</c:choose>
 			<tr>
 				<td><strong>이름*</strong></td>
 				<td style="padding-top:25px;">
@@ -299,7 +322,7 @@
 					<input class="form-control requiredInfo" id="hp2" name="hp2" style="width:135px; display:inline;" type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">&nbsp;-&nbsp; 
 					<input class="form-control requiredInfo" id="hp3" name="hp3" style="width:135px; display:inline;" type="text" size="5" maxlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
 					<span class="error">올바른 휴대전화 번호가 아닙니다.</span>
-				<br>
+				<br><br>
 				</td>
 			</tr>
 			</c:when>
@@ -344,7 +367,6 @@
 		 	<c:otherwise>
 		 	</c:otherwise>
 		 	</c:choose>
-			
 		 </table>
 		 </form>
 	</div>
@@ -398,6 +420,34 @@
 		  $('#address').attr("disabled", "disabled");
 		  $('#detailaddress').attr("disabled", "disabled");
 	  }
+	
+	
+	// 사진변경버튼 클릭시
+	 	$("button#updateImage").on("click", function (event) {
+	 		/// event.preventDefault(); 
+	 		var url = $("#updateImgFrm").attr("action"); 
+	 		var form = $('#updateImgFrm')[0]; 
+	 		var formData = new FormData(form); 
+	 		$.ajax({ 
+	 			url: url
+	 		  , type: 'POST'
+	 		  , data: formData
+	 		  , dataType: "json"
+	 		  , async: false
+	 		  , success: function (json) { 
+	 			 alert("사진이 변경되었습니다. 변경된 사진은 재접속시 적용됩니다.");
+	 			 <%-- $("#empProfile").attr("src", "<%= ctxPath%>/resources/files/${json.img_name}"); --%>
+	 			 /* $("#empProfile").attr("src", json.path +"/"+json.img_name);  */
+	 			 // history.go(0);
+	 		  }, error: function (json) { 
+	 			  alert("실패!");
+	 		  }, 
+	 		    cache: false
+	 		  , contentType: false
+	 		  , processData: false 
+	 		  });
+	 	
+	 	}); // end of $("button#updateImage").on("click", function (event) {}---------------------------
 	
 	  
 	}); // end of $( document ).ready( function()
