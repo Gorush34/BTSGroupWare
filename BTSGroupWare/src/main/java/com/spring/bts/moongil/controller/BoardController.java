@@ -1,4 +1,4 @@
-package com.spring.bts.moongil.controller;
+ package com.spring.bts.moongil.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -506,7 +506,7 @@ public class BoardController {
 
 		
 		mav.addObject("boardList", boardList);
-		
+		mav.addObject("write", 3);
 		/////////////////////////////////////
 		
 		
@@ -542,6 +542,8 @@ public class BoardController {
 	      } 
 		
 	 	mav.setViewName("redirect:/board/view.bts?pk_seq="+pk_seq+"&searchType="+searchType+"&searchWord="+searchWord+"&gobackURL="+gobackURL);
+	 	
+	 	
 	 	
 		return mav;
 	}	
@@ -1628,7 +1630,7 @@ public class BoardController {
 
 			mav.addObject("gobackURL", gobackURL.replaceAll("&", " "));
 			
-
+			mav.addObject("write", 1);
 			
 			mav.addObject("noticeList", noticeList);
 			
@@ -2171,6 +2173,8 @@ public class BoardController {
 		mav.setViewName("fileboard/list.board");
 		//  /WEB-INF/views/tiles1/board/list.jsp 파일을 생성한다.
 		
+		mav.addObject("write", 2);
+		
 		return mav;
 	
 	}
@@ -2694,7 +2698,7 @@ public class BoardController {
 	
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
-
+/*
 	// 오류발생시
 	@ExceptionHandler(java.lang.Throwable.class)
 	public void handleThrowable(Throwable e, HttpServletRequest request, HttpServletResponse response) {
@@ -2729,7 +2733,7 @@ public class BoardController {
 	}
 
 	}
-	
+*/	
 	
 	
 	// === 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 생성 === //

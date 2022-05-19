@@ -246,7 +246,38 @@ function goReadBest() {
 				<li id="side" class="hover " style="padding: 10px 0;" onclick="javascript:location.href='<%= request.getContextPath()%>/board/list.bts'" >
 					자유게시판
 				</li>
-				
+				<c:if test="${requestScope.write == 1 }">
+				<li id="side" class="hover " style="padding: 10px 0;" onclick="javascript:location.href='<%= request.getContextPath()%>/board/list.bts'" >
+                		 	<form class="btn btn-primary"  action="<%= ctxPath%>/notice/write.bts" method="post"> 
+                		 		<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
+                		 		<input class="btn btn-primary" style="border:none;" type="submit" value="공지사항바로작성" />
+                		 	</form>
+                 </li>
+				</c:if>
+				<c:if test="${requestScope.write == 2 }">
+				<li id="side" class="hover " style="padding: 10px 0;" onclick="javascript:location.href='<%= request.getContextPath()%>/board/list.bts'" >
+                		 	<form class="btn btn-primary"  action="<%= ctxPath%>/fileboard/write.bts" method="post"> 
+                		 		<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
+                		 		<input class="btn btn-primary" style="border:none;" type="submit" value="자료실바로작성" />
+                		 	</form>
+                 </li>
+				</c:if>
+				<c:if test="${requestScope.write == 3 }">
+				<li id="side" class="hover " style="padding: 10px 0;" onclick="javascript:location.href='<%= request.getContextPath()%>/board/list.bts'" >
+                		 	<form class="btn btn-primary"  action="<%= ctxPath%>/board/write.bts" method="post"> 
+                		 		<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
+                		 		<input class="btn btn-primary" style="border:none;" type="submit" value="게시판바로작성" />
+                		 	</form>
+                 </li>
+				</c:if>
+			</ul>
+			
+			<hr>
+			
+			<ul style="list-style-type: none; padding: 10px; text-align: center;">
+				<li id="side" class="hover " style="padding: 10px 0; font-size: 14pt;" onclick="javascript:location.href='<%= request.getContextPath()%>/board/my.bts'" >
+					나의 작성글
+				</li>
 			</ul>
 			
 			<hr style="margin-bottom: 30px;">
@@ -263,11 +294,7 @@ function goReadBest() {
 				
 			</table>		
 			
-			<ul style="list-style-type: none; padding: 10px; text-align: center;">
-				<li id="side" class="hover " style="padding: 10px 0; margin-top: 50px; font-size: 14pt;" onclick="javascript:location.href='<%= request.getContextPath()%>/board/my.bts'" >
-					나의 작성글
-				</li>
-			</ul>
+			
 			
 		</div>
 		
