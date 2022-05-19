@@ -936,7 +936,7 @@ td.mail_subject:hover {
   	   $.ajax({
   			url:"<%= ctxPath%>/att/getWorkInOutTime.bts",
   			data:{"yymmdd":$("span#yymmdd").text(),
-  				  "fk_emp_no":${sessionScope.loginuser.pk_emp_no}},  
+  				  "fk_emp_no":"${sessionScope.loginuser.pk_emp_no}"},  
   			dataType:"json",
   			success:function(json){
   				if(json.in_time != "미등록" && json.out_time == "미등록"){
@@ -965,7 +965,7 @@ td.mail_subject:hover {
   	   $.ajax({
   			url:"<%= ctxPath%>/att/refreshInOutTime.bts",
   			data:{"yymmdd":$("span#yymmdd").text(),
-  				  "fk_emp_no":${sessionScope.loginuser.pk_emp_no}},  
+  				  "fk_emp_no":"${sessionScope.loginuser.pk_emp_no}"},  
   			dataType:"json",
   			success:function(json){
   				if(json.isTomorrow == 0){
