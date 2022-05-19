@@ -26,7 +26,7 @@
 				<td><input type="button" class="btn btn-default" id="top_team" style="width:150px; border-bottom:1px solid lightgray; float:center; font-size:17pt; color:#4da6ff;" value="임원진"></td>
 			</tr>
 				<tr>
-					<td><input type="button" class="btn btn-default" id="ceo" style="width:200px; float:center;" value="└ 사장"></td>
+					<td><input type="button" class="btn btn-default" id="ceo" style="width:200px; float:center;" value="└ [사장]"></td>
 				</tr>
 				<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
 				<c:if test="${emp.ko_rankname  eq '사장'}">
@@ -40,7 +40,7 @@
 				</c:if>
 		   		</c:forEach>
 				<tr>
-					<td><input type="button" class="btn btn-default" id="exe_director" style="width:200px; float:center;" value="└ 전무"></td>
+					<td><input type="button" class="btn btn-default" id="exe_director" style="width:200px; float:center;" value="└ [전무]"></td>
 				</tr>
 				<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
 				<c:if test="${emp.ko_rankname  eq '전무'}">
@@ -57,7 +57,7 @@
 				<td><input type="button" class="btn btn-default" id="mid_team" style=" width:150px; border-bottom:1px solid lightgray; float:center; font-size:17pt; color:#4da6ff;" value="중간관리자"></td>
 			</tr>	
 				<tr>
-					<td><input type="button" class="btn btn-default" id="dep_manager" style="width:200px; float:center;" value="└ 부장"></td>
+					<td><input type="button" class="btn btn-default" id="dep_manager" style="width:200px; float:center;" value="└ [부장]"></td>
 				</tr>
 				<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
 				<c:if test="${emp.ko_rankname  eq '부장'}">
@@ -71,7 +71,7 @@
 				</c:if>
 		   		</c:forEach>
 				<tr>
-					<td><input type="button" class="btn btn-default" id="gen_manager" style="width:200px; float:center;" value="└ 차장"></td>
+					<td><input type="button" class="btn btn-default" id="gen_manager" style="width:200px; float:center;" value="└ [차장]"></td>
 				</tr>
 				<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
 				<c:if test="${emp.ko_rankname  eq '차장'}">
@@ -85,7 +85,7 @@
 				</c:if>
 		   		</c:forEach>
 				<tr>
-					<td><input type="button" class="btn btn-default" id="sec_manager" style="width:200px; float:center;" value="└ 과장"></td>
+					<td><input type="button" class="btn btn-default" id="sec_manager" style="width:200px; float:center;" value="└ [과장]"></td>
 				</tr>
 				<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
 				<c:if test="${emp.ko_rankname  eq '과장'}">
@@ -102,7 +102,7 @@
 				<td><input type="button" class="btn btn-default" id="bottom_team" style="width:150px; border-bottom:1px solid lightgray; float:center; font-size:17pt; color:#4da6ff;" value="실무자"></td>
 			</tr>	
 				<tr>
-					<td><input type="button" class="btn btn-default" id="ast_manager" style="width:200px; float:center;" value="└ 대리"></td>
+					<td><input type="button" class="btn btn-default" id="ast_manager" style="width:200px; float:center;" value="└ [대리]"></td>
 				</tr>
 				<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
 				<c:if test="${emp.ko_rankname  eq '대리'}">
@@ -116,7 +116,7 @@
 				</c:if>
 		   		</c:forEach>
 		   		<tr>
-					<td><input type="button" class="btn btn-default" id="ast_employee" style="width:200px; float:center;" value="└ 주임"></td>
+					<td><input type="button" class="btn btn-default" id="ast_employee" style="width:200px; float:center;" value="└ [주임]"></td>
 				</tr>
 				<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
 				<c:if test="${emp.ko_rankname  eq '주임'}">
@@ -130,7 +130,7 @@
 				</c:if>
 		   		</c:forEach>
 		   		<tr>
-					<td><input type="button" class="btn btn-default" id="employee" style="width:200px; float:center;" value="└ 사원"></td>
+					<td><input type="button" class="btn btn-default" id="employee" style="width:200px; float:center;" value="└ [사원]"></td>
 				</tr>
 				<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
 				<c:if test="${emp.ko_rankname  eq '사원'}">
