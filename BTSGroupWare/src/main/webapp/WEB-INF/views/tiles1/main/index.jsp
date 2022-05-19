@@ -973,7 +973,7 @@ td.mail_subject:hover {
 	        					<img src="<%= ctxPath%>/resources/files/${sessionScope.loginuser.img_name}" title="" />
 	        				</c:if>
 	        				<c:if test="${sessionScope.loginuser.img_name eq null}">
-	        					<img src="<%= ctxPath%>/resources/images/mu.png" id="memberProfile" />
+	        					<img src="<%= ctxPath%>/resources/images/mu.png" />
 	        				</c:if>
 	        			</span>
 	        		</span>
