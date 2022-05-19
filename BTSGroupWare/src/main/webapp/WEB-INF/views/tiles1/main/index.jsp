@@ -1000,7 +1000,7 @@ td.mail_subject:hover {
 		        		</a>
 		        	</li>
 		        	<li class="summary-calendar">
-	     		        <a href="">
+	     		        <a href="<%= ctxPath%>/calendar/calenderMain.bts">
 		        			<span class="type">
 		        				<span class="ic_dashboard2 ic_type_calendar" title="calendar"></span>
 		        			</span>
@@ -1018,7 +1018,7 @@ td.mail_subject:hover {
 		        		</a>
 		        	</li>
 		        	<li class="summary-asset">
-		        		<a href="">
+		        		<a href="<%= ctxPath%>/reservation/reservationMain.bts">
 		        			<span class="type">
 		        				<span class="ic_dashboard2 ic_type_asset" title="asset"></span>
 		        			</span>
