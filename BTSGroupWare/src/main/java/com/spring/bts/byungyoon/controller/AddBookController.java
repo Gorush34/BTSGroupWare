@@ -188,9 +188,7 @@ public class AddBookController {
 	   String addb_name = request.getParameter("addb_name");
 	   int fk_dept_no = Integer.parseInt(request.getParameter("department"));
 	   int fk_rank_no = Integer.parseInt(request.getParameter("rank"));
-	   String email1 = request.getParameter("email1");
-	   String email2 = request.getParameter("email2");
-	   String email = email1+"@"+email2;
+	   String email = request.getParameter("email");
 	   String hp1 = request.getParameter("hp1");
 	   String hp2 = request.getParameter("hp2");
 	   String hp3 = request.getParameter("hp3");
