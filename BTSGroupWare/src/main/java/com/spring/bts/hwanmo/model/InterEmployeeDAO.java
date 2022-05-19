@@ -36,4 +36,7 @@ public interface InterEmployeeDAO {
 	// 회원정보 받아오기
 	List<Map<String, Object>> getEmpInfo(int pk_emp_no);
 
+	// 로그인 처리하기
+	EmployeeVO getLoginMember(Map<String, String> paraMap);
+
 }

@@ -63,7 +63,7 @@
     <div class="row">
     	<%-- 연차내역 시작 --%>
         <div class="col-md-6">
-        	<div id="title"><span style="font-size: 30px; margin-bottom: 20px; font-weight: bold;">공가 / 경조신청</span></div>
+        	<div id="title"><span style="font-size: 30px; margin-bottom: 20px; font-weight: bold;">공가 / 경조신청 현황</span></div>
         	
         	<div id="vacCnt" style="margin-top: 20px;">
         		<!--
@@ -85,7 +85,7 @@
 					      <th style="width:20%; text-align: center;">전체연차</th>
 					      <th style="width:20%; text-align: center;">사용연차</th>
 					      <th style="width:20%; text-align: center;">잔여연차</th>
-					      <th style="width:20%; text-align: center;">사용한 대체휴가</th>
+					      <!-- <th style="width:20%; text-align: center;">사용한 대체휴가</th> -->
 					    </tr>
 					  </thead>
 					  <tbody>
@@ -94,7 +94,7 @@
 					      <td style="width:20%; text-align: center;">${requestScope.leaveVO.total_vac_days}</td>
 					      <td style="width:20%; text-align: center;">${requestScope.leaveVO.use_vac_days}</td>
 					      <td style="width:20%; text-align: center;">${requestScope.leaveVO.rest_vac_days}</td>
-					      <td style="width:20%; text-align: center;">${requestScope.leaveVO.instead_vac_days}</td>
+					      <%-- <td style="width:20%; text-align: center;">${requestScope.leaveVO.instead_vac_days}</td> --%>
 					    </tr>
 					  </tbody>
 				  </table>

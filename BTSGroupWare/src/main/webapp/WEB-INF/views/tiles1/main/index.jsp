@@ -993,7 +993,7 @@ td.mail_subject:hover {
 		        			<span class="type">
 		        				<span class="ic_dashboard2 ic_type_approval2" title="approval2"></span>
 		        			</span>
-		        			<span class="text">결재 수신 문서</span>
+		        			<span class="text">전자결재 수신 문서</span>
 		        			<span class="badge">0</span>
 		        		</a>
 		        	</li>

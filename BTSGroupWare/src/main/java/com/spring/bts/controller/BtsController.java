@@ -145,7 +145,7 @@ public class BtsController {
 		paraMap.put("pk_emp_no", userid);
 		paraMap.put("emp_pwd", Sha256.encrypt(pwd));
 		
-		EmployeeVO loginuser = service.getLoginMember(paraMap);
+		EmployeeVO loginuser = empService.getLoginMember(paraMap);
 		
 		if(loginuser == null) { // 로그인 실패시
 			String message = "아이디 또는 암호가 틀립니다.";
