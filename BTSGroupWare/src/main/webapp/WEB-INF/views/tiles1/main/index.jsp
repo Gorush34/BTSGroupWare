@@ -573,7 +573,7 @@ td.mail_subject:hover {
 	                                  Number(item.ta)]);
 	                  });// end of $.each(json, function(index, item){})------------
 	                  
-	                  
+	                  /*
 	                  Highcharts.chart('container', {
 	                      chart: {
 	                          type: 'column'
@@ -623,6 +623,7 @@ td.mail_subject:hover {
 	                          }
 	                      }]
 	                  });
+	                  */
 	                  //////////////////////////////////////////////////
 	               },
 	               error: function(request, status, error){

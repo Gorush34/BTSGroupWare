@@ -69,9 +69,9 @@ div.left_section {
 }
 
 span.photo img {
-    width: 82px;
-    height: 82px;
-    border-radius: 100px;
+    width: 82px !important;
+    height: 82px !important;
+    border-radius: 100px !important;
 }
 
 div.profile > span {
