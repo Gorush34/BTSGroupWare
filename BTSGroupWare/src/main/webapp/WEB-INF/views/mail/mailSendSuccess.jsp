@@ -5,7 +5,6 @@
 <style>
 	a {
 	color: gray;
-	font-size: 12px;
 	}
 </style> 
     
