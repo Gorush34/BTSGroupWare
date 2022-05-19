@@ -122,6 +122,14 @@ public class AddBookDAO implements InterAddBookDAO {
 	}
 
 
+	// 사이드인포 계급순 구성원 띄우기
+	@Override
+	public List<EmployeeVO> sideinfo_addBook() {
+		List<EmployeeVO> empList = sqlsession.selectList("byungyoon.sideinfo_addBook");
+		return empList;
+	}
+
+
 
 	
 	

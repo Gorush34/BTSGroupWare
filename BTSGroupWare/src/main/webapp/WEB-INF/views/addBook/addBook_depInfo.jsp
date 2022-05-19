@@ -90,7 +90,7 @@
 </style>
 
 
-<h1><strong>조직도</strong><br><br></h1>
+<h1>조직도<br><br></h1>
 
 <ul class="nav nav-tabs">
   <li class="nav-item">
@@ -815,12 +815,12 @@ Highcharts.chart('container', {
         }],
         nodes: [{
             id: 'CEO',
-            title: '[사장]',
-            name: '이순신',
+            title: 'executive team',
+            name: '임원진',
         }, {
             id: 'exe_director',
-            title: '[전무]',
-            name: '엄정화',
+            title: 'middle manager',
+            name: '중간관리자',
         }, {
             id: 'sales_team',
             title: 'sales_team',

@@ -43,6 +43,9 @@ public interface InterAddBookService {
 
 	// 사원목록에서 사원 삭제하기
 	int addBook_depInfo_delete(int pk_emp_no);
+
+	// 사이드인포 계급순 구성원 띄우기
+	List<EmployeeVO> sideinfo_addBook();
 	
 	
 }

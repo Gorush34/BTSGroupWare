@@ -111,6 +111,15 @@
 	</delete>
 	
 	
+	<!-- 사이드인포 계급순 구성원 띄우기 -->
+	<select id="sideinfo_addBook" resultType="com.spring.bts.hwanmo.model.EmployeeVO">
+		select E.emp_name AS emp_name , R.ko_rankname AS ko_rankname
+		from tbl_employees E
+		join tbl_rank_sort R
+		on E.fk_rank_id = R.pk_rank_no
+		order by R.pk_rank_no
+	</select>
+	
 	
 
 </mapper>
