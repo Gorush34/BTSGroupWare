@@ -436,11 +436,14 @@
 	
 	<ul id="buttonGroup" style="margin-top: 10px;">
 		<li class="buttonList">
+		<!--	
 			<button type="button" id="Reservation" name="Reservation" class="btn btn-secondary btn-sm"
 					data-toggle="modal" data-target="#sendReservation_Modal">
+			
 			<i class="fa fa-clock-o fa-fw" aria-hidden="true"></i>
-			발송예약
+		 발송예약 
 			</button>
+			-->
 			<span id="reservationTime" style="margin-left: 20px;"></span>
 		</li>	
 	</ul>	

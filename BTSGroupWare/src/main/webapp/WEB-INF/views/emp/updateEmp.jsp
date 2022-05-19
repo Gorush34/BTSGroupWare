@@ -29,17 +29,22 @@
 	
 	$(document).ready(function() {
 		
+
 		
 		getEmpImgName();
-		$("#empProfile").attr("src", "<%= ctxPath%>/resources/files/" + imgname); 
-		
+		if( $("#img_name").val() != "" ){
+			$("#empProfile").attr("src", "<%= ctxPath%>/resources/files/" + imgname); 
+		}
+		else {
+			$("#empProfile").attr("src", "<%= ctxPath%>/resources/images/mu.png"); 
+		}
 		// select 된 곳의 값들 넣어주기 시작
 		$("select[name=fk_department_id]").val((("${requestScope.loginuser.fk_department_id}" == '') ? "" : "${requestScope.loginuser.fk_department_id}")).prop("selected", true); 
 		$("select[name=fk_rank_id]").val((("${requestScope.loginuser.fk_rank_id}" == '') ? "" : "${requestScope.loginuser.fk_rank_id}")).prop("selected", true); 
 
 		$("input#postcode").val("${requestScope.loginuser.postal}");
 		
-		$("select[name=num1]").val((("${requestScope.loginuser.num1}" == '') ? "" : "${requestScope.loginuser.num1}")).prop("selected", true); 
+		$("select[name=num1]").val( ( ("${requestScope.loginuser.num1}" == '') ? "" : "${requestScope.loginuser.num1}") ).prop("selected", true); 
 		$("input[name=num2]").val( ("${requestScope.loginuser.num2}" == '') ? "" : "${requestScope.loginuser.num2}" ); 
 		$("input[name=num3]").val( ("${requestScope.loginuser.num3}" == '') ? "" : "${requestScope.loginuser.num3}" ); 
 		

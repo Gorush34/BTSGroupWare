@@ -40,6 +40,9 @@ public interface InterAddBookService {
 
 	// 이메일 중복체크
 	boolean emailDuplicateCheck(String email);
+
+	// 사원목록에서 사원 삭제하기
+	int addBook_depInfo_delete(int pk_emp_no);
 	
 	
 }

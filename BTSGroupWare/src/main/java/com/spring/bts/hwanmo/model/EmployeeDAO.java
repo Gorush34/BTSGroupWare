@@ -114,6 +114,12 @@ public class EmployeeDAO implements InterEmployeeDAO {
 		return empList;
 	}
 	
-	
+	// 로그인 처리하기
+	@Override
+	public EmployeeVO getLoginMember(Map<String, String> paraMap) {
+		EmployeeVO loginuser = sqlsession.selectOne("hwanmo.getLoginMember", paraMap);
+		
+		return loginuser;
+	} 
 	
 }

@@ -216,10 +216,10 @@
   	
 	 <div id="telAdd_main_tbl" style="text-align:center;">
 		<form name="updateFrm">
-		<table>
+		<table style="margin-left:10%;">
 			<tr>
 				<td><h2>개인정보</h2>
-					<input type="hidden" id="user" name="user" value="${sessionScope.loginuser.pk_emp_no}">
+					<input type="hidden" id="user" name="user" value="">
 					<input type="hidden" id="select_user_no" name="select_user_no" value="" readonly />
 				</td>
 			</tr>
@@ -333,16 +333,18 @@
 			</tr>
 			<c:choose>
 		 	<c:when test="${sessionScope.loginuser.pk_emp_no eq 80000001}">
+		 	<tr>
+				<td></td>
+				<td colspan="10" style="text-align:center; padding-top: 18%; ">
+					<input type="button" class="btn btn-info" id="btn_update" style="border: solid lightgray 2px;" onclick="update()" value="저장">
+					<input type="button" class="btn btn-default" id="btn_update" style="border: solid lightgray 2px;" onclick="del()" value="삭제">
+				</td>
+			</tr>
 		 	</c:when>
 		 	<c:otherwise>
 		 	</c:otherwise>
 		 	</c:choose>
-			<tr>
-				<td></td>
-				<td colspan="10" style="text-align:center; padding-top: 18%; ">
-					<input type="button" class="btn btn-info" id="btn_update" style="border: solid lightgray 2px;" onclick="update()" value="저장">
-				</td>
-			</tr>
+			
 		 </table>
 		 </form>
 	</div>
@@ -402,6 +404,9 @@
 
 			
 	function teamwonInfo(i)	{
+		
+		$("input#user").val($("input#pk_emp_no_"+i).val()); 
+		
 		$.ajax({
 			url:"<%= ctxPath%>/addBook/addBook_depInfo_select_ajax.bts",
 			data:{"pk_emp_no" : $("input#pk_emp_no_"+i).val()},
@@ -473,7 +478,7 @@
 	/* 이메일 선택or직접입력 */
 --%>	
 ///////////////////////////////////////////////////////////////
-//// ----- 유효성검사 시작 ----- /////
+	/* -------------- 유효성 검사 시작 --------------  */
 
 	let b_flagEmailDuplicateClick = false;
 	// 가입하기 버튼 클릭시 "이메일중복확인" 을 클릭했는지 클릭안했는지를 알아보기 위한 용도이다.
@@ -645,7 +650,7 @@
 		} // end of function isExistEmailCheck(){}---------------------------------------
 		
 	
-		// 가입하기		
+		// 수정		
 		function update() {
 			
 			// *** 필수입력사항에 모두 입력이 되었는지 검사한다. *** //
@@ -680,11 +685,24 @@
 			frm.submit();
 			
 			
+		}// end of update()
+		
+		function del() {
 			
-		}// end of 	function goRegister()--------------------------------
+			if(!confirm("정말 삭제하시겠습니까?")){  
+				
+			}
+			else { 
+				const frm = document.updateFrm;
+			    frm.action = "<%=ctxPath%>/addBook/addBook_depInfo_delete.bts"
+			    frm.method = "post"
+		    	frm.submit();
+			}
+			
+		}
 		
 	
-/* ---------------------------------------------------------------------- */			
+		/* -------------- 유효성 검사 끝 --------------  */			
 			
 /* 조직도  */
 

@@ -79,5 +79,8 @@ public interface InterAttendanceService {
 	// 페이징처리 한 결재대기중인 공가/경조신청목록 
 	List<Map<String, Object>> getMyAttListNoSignWithPaging(Map<String, String> paraMap);
 
+	// 메인화면 연차결재대기문서 갯수 가져오기
+	int vacCount(int pk_emp_no);
+
 
 }
