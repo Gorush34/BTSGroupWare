@@ -114,7 +114,10 @@
                                 let arr_checkbox_com_calno_a = str_checkbox_com_calno_a.split(",");
                                 
                                 let str_checkbox_my_calno = sessionStorage.getItem('arr_checkbox_my_calno'); // 체크박스 값 가져오기 
-                                let arr_checkbox_my_calno = str_checkbox_my_calno.split(",");
+                                let arr_checkbox_my_calno = "";
+                                if(str_checkbox_my_calno != null && str_checkbox_my_calno != "" && str_checkbox_my_calno.length != 0){
+                                	arr_checkbox_my_calno = str_checkbox_my_calno.split(",");
+                                }
                                 
                                 let str_checkbox_my_calno_a = sessionStorage.getItem('arr_checkbox_my_calno_a'); // 체크박스 값 가져오기 
                                 let arr_checkbox_my_calno_a = str_checkbox_my_calno_a.split(",");
