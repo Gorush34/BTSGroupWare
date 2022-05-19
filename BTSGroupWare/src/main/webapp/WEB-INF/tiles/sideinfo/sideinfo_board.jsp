@@ -10,6 +10,16 @@
 
 <style type="text/css">
 
+input#write {
+	border: none;
+    margin: 15px auto;
+    width: 200px;
+    display: block;
+    font-size: 15pt;
+    height: 50px;
+    font-weight: bold;
+}
+
 li.hover:hover{
 background-color: #E9ECEF;
 cursor: pointer;
@@ -200,38 +210,50 @@ function goReadBest() {
 	<div>
 	   <div id="sidebar" style="font-size: 11pt; ">
 
-			
+				<c:if test="${requestScope.write == 2 }">
+               		 	<form action="<%= ctxPath%>/fileboard/write.bts" method="post"> 
+               		 		<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
+               		 		<input id="write" class="btn btn-primary" style="border:none;" type="submit" value="게시물 작성" />
+               		 	</form>
+                
+				</c:if>
+				<c:if test="${requestScope.write == 3 }">
+               		 	<form  action="<%= ctxPath%>/board/write.bts" method="post"> 
+               		 		<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
+               		 		<input id="write" class="btn btn-primary" style="border:none;" type="submit" value="게시물 작성" />
+               		 	</form>
+				</c:if>
 
-
-          <div class="dropdown"> 
-
-                    <button style="margin: 15px auto; width:200px; display:block; font-size: 15pt;  height: 50px; font-weight: bold;"  class="btn btn-primary  dropdown-toggle"  data-toggle="dropdown"> 
-
-                    	  게시물 작성
-
-                    </button> 
-
-                    <div class="dropdown-menu"> 
-							 <c:if test="${sessionScope.loginuser.fk_rank_id >= 50}">
-                             <form class="dropdown-item "  action="<%= ctxPath%>/notice/write.bts" method="post">                    
-								<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
-								<input class="dropdown-item" style="border:none;" type="submit" value="공지사항" />
-							 </form>
-							 </c:if>	
-                             <form class="dropdown-item "  action="<%= ctxPath%>/fileboard/write.bts" method="post">                    
-								<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
-								<input class="dropdown-item" style="border:none;" type="submit" value="자료실" />
-							 </form>
-
-                             <form class="dropdown-item "  action="<%= ctxPath%>/board/write.bts" method="post">                    
-								<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
-								<input class="dropdown-item" style="border:none;" type="submit" value="자유게시판" />
-							 </form>
-
-                    </div> 
-
-          </div> 
-
+			<c:if test="${requestScope.write != 2 && requestScope.write != 3}">
+	          	<div class="dropdown"> 
+	
+	                    <button style="margin: 15px auto; width:200px; display:block; font-size: 15pt;  height: 50px; font-weight: bold;"  class="btn btn-primary  dropdown-toggle"  data-toggle="dropdown"> 
+	
+	                    	  게시물 작성
+	
+	                    </button> 
+	
+	                    <div class="dropdown-menu"> 
+								 <c:if test="${sessionScope.loginuser.fk_rank_id >= 50}">
+	                             <form class="dropdown-item "  action="<%= ctxPath%>/notice/write.bts" method="post">                    
+									<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
+									<input class="dropdown-item" style="border:none;" type="submit" value="공지사항" />
+								 </form>
+								 </c:if>	
+	                             <form class="dropdown-item "  action="<%= ctxPath%>/fileboard/write.bts" method="post">                    
+									<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
+									<input class="dropdown-item" style="border:none;" type="submit" value="자료실" />
+								 </form>
+	
+	                             <form class="dropdown-item "  action="<%= ctxPath%>/board/write.bts" method="post">                    
+									<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
+									<input class="dropdown-item" style="border:none;" type="submit" value="자유게시판" />
+								 </form>
+	
+	                    </div> 
+	
+	      	    </div> 
+			</c:if>
 			
 			<ul style="list-style-type: none; padding: 10px; text-align: center;">
 				<li id="side" class="hover " style="padding: 10px 0;" onclick="javascript:location.href='<%= request.getContextPath()%>/board/main.bts'" >
@@ -246,30 +268,7 @@ function goReadBest() {
 				<li id="side" class="hover " style="padding: 10px 0;" onclick="javascript:location.href='<%= request.getContextPath()%>/board/list.bts'" >
 					자유게시판
 				</li>
-				<c:if test="${requestScope.write == 1 }">
-				<li id="side" class="hover " style="padding: 10px 0;" onclick="javascript:location.href='<%= request.getContextPath()%>/board/list.bts'" >
-                		 	<form class="btn btn-primary"  action="<%= ctxPath%>/notice/write.bts" method="post"> 
-                		 		<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
-                		 		<input class="btn btn-primary" style="border:none;" type="submit" value="공지사항바로작성" />
-                		 	</form>
-                 </li>
-				</c:if>
-				<c:if test="${requestScope.write == 2 }">
-				<li id="side" class="hover " style="padding: 10px 0;" onclick="javascript:location.href='<%= request.getContextPath()%>/board/list.bts'" >
-                		 	<form class="btn btn-primary"  action="<%= ctxPath%>/fileboard/write.bts" method="post"> 
-                		 		<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
-                		 		<input class="btn btn-primary" style="border:none;" type="submit" value="자료실바로작성" />
-                		 	</form>
-                 </li>
-				</c:if>
-				<c:if test="${requestScope.write == 3 }">
-				<li id="side" class="hover " style="padding: 10px 0;" onclick="javascript:location.href='<%= request.getContextPath()%>/board/list.bts'" >
-                		 	<form class="btn btn-primary"  action="<%= ctxPath%>/board/write.bts" method="post"> 
-                		 		<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
-                		 		<input class="btn btn-primary" style="border:none;" type="submit" value="게시판바로작성" />
-                		 	</form>
-                 </li>
-				</c:if>
+				
 			</ul>
 			
 			<hr>
@@ -277,6 +276,10 @@ function goReadBest() {
 			<ul style="list-style-type: none; padding: 10px; text-align: center;">
 				<li id="side" class="hover " style="padding: 10px 0; font-size: 14pt;" onclick="javascript:location.href='<%= request.getContextPath()%>/board/my.bts'" >
 					나의 작성글
+				</li>
+				
+				<li id="side" class="hover " style="padding: 10px 0; font-size: 14pt;" onclick="javascript:location.href='<%= request.getContextPath()%>/board/my_comment.bts'" >
+					댓글쓴 글
 				</li>
 			</ul>
 			

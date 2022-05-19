@@ -970,4 +970,66 @@
 	         )
 			where status = 1 and fk_emp_no = #{pk_emp_no}
 	</select>
+	
+	
+    <!-- 내가쓴 댓글 -->
+    <!-- === 총 게시물 건수(totalCount) 구하기 - 검색이 있을때 와 검색이 없을때로 나뉜다. === -->
+    <select id="getTotalCount_comment" parameterType="HashMap" resultType="int">
+	    select count(*)
+		from tbl_board
+		where status = 1 and pk_seq in (
+                            SELECT DISTINCT FK_SEQ 
+                            from tbl_comment
+                            where FK_EMP_NO = #{login_userid} )                   
+       <if test='searchType != ""'>
+			and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+		</if>   
+	</select>
+
+	<select id="boardListSearchWithPaging_comment" parameterType="HashMap" resultType="com.spring.bts.moongil.model.BoardVO">
+		select pk_seq, fk_emp_no, user_name, subject, read_count, write_day, comment_count, content,
+		       groupno, fk_seq, depthno,
+		       filename, ko_rankname
+		from
+		(
+		    select rownum AS rno,
+		           pk_seq, fk_emp_no, user_name, subject, read_count, write_day, comment_count, content,
+		           groupno, fk_seq, depthno,
+		           filename, ko_rankname
+		        from
+		        (
+		            select B.pk_seq AS pk_seq, B.fk_emp_no AS fk_emp_no, B.user_name AS user_name, B.subject AS subject, B.read_count AS read_count, B.content AS content,
+		                   to_char(B.write_day, 'yyyy-mm-dd hh24:mi:ss') AS write_day, 
+		                   B.comment_count AS comment_count,
+		                   B.groupno AS groupno, B.fk_seq AS fk_seq, B.depthno AS depthno, 
+		                   B.filename AS filename,
+		          		   S.ko_rankname AS ko_rankname
+		            from tbl_board B join tbl_employees E
+                    ON B.user_name = E.emp_name
+                    join tbl_rank_sort S
+                    ON E.FK_RANK_ID = S.PK_RANK_NO
+                    where status = 1 and pk_seq in (
+                            SELECT DISTINCT FK_SEQ 
+                            from tbl_comment
+                            where FK_EMP_NO = #{login_userid} and status = 1
+                        ) 
+                    <if test='searchType !="" and searchWord != "" '>
+					    and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+					</if>
+		            
+		        ) V
+	     )T
+		order by pk_seq desc 
+    </select>	
+	
+	
+	
+	 <select id="view_comment" parameterType="HashMap" resultType="com.spring.bts.moongil.model.CommentVO">
+		   SELECT B.fk_seq as fk_seq, MAX(B.regdate) as regdate, MAX(B.content) as content
+			FROM tbl_board A, tbl_comment B
+			WHERE A.pk_seq = B.fk_seq and B.fk_emp_no = #{login_userid} and B.status = 1 and A.status = 1
+			GROUP BY B.fk_seq
+			ORDER BY fk_seq desc
+    </select>
+	
 </mapper>

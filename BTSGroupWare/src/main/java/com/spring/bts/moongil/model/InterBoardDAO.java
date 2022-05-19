@@ -125,6 +125,13 @@ public interface InterBoardDAO {
 
 	int my_cnt(int pk_emp_no);
 
+	int getTotalCount_comment(Map<String, String> paraMap);
+
+	List<BoardVO> boardListSearchWithPaging_comment(Map<String, String> paraMap);
+
+	List<CommentVO> view_comment(Map<String, String> paraMap);
+
+
 
 
 

@@ -384,6 +384,26 @@ public class BoardDAO implements InterBoardDAO {
 		return n;
 	}
 
+	@Override
+	public int getTotalCount_comment(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("moongil.getTotalCount_comment", paraMap);
+		return n;
+	}
+
+	@Override
+	public List<BoardVO> boardListSearchWithPaging_comment(Map<String, String> paraMap) {
+		List<BoardVO> boardList = sqlsession.selectList("moongil.boardListSearchWithPaging_comment", paraMap);
+		return boardList;
+	}
+
+	@Override
+	public List<CommentVO> view_comment(Map<String, String> paraMap) {
+		List<CommentVO> commentList = sqlsession.selectList("moongil.view_comment", paraMap);
+		return commentList;
+	}
+
+
+
 
 
 	

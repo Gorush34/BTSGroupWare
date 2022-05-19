@@ -547,6 +547,28 @@ public class BoardService implements InterBoardService {
 		return n;
 	}
 
+	@Override
+	public int getTotalCount_comment(Map<String, String> paraMap) {
+		int n = dao.getTotalCount_comment(paraMap);
+		return n;
+	}
+
+	@Override
+	public List<BoardVO> boardListSearchWithPaging_comment(Map<String, String> paraMap) {
+		List<BoardVO> boardList = dao.boardListSearchWithPaging_comment(paraMap);
+		return boardList;
+	}
+
+	@Override
+	public List<CommentVO> view_comment(Map<String, String> paraMap) {
+		List<CommentVO> commentList = dao.view_comment(paraMap); // 글1개 조회하기
+		return commentList;
+	}
+
+
+
+
+
 
 
 
