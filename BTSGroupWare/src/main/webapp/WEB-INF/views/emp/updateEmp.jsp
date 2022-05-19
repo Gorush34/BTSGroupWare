@@ -29,6 +29,7 @@
 	
 	$(document).ready(function() {
 		
+		var pk_emp_no = $("input#emp_no").val();
 		
 		getEmpImgName();
 		$("#empProfile").attr("src", "<%= ctxPath%>/resources/files/" + imgname); 
@@ -53,6 +54,14 @@
 			$("input#female").prop("checked", true);
 		}
 		
+	    $("select[name=fk_department_id]").prop('disabled',true);
+	    $("select[name=fk_rank_id]").prop('disabled',true);
+	    
+		if( pk_emp_no == 80000001 ) {
+			$("select[name=fk_department_id]").prop('disabled', false);
+		    $("select[name=fk_rank_id]").prop('disabled', false);
+	    }
+	    
 		// select 된 곳의 값들 넣어주기 끝
 		
 		$("span.error").hide();	
@@ -74,9 +83,15 @@
 				$target.focus();
 				
 				
-			} else {
+			} else if( pk_emp_no == 80000001 ) {
+				$("table#tblEmpUpdate :input").prop("disabled", false);
+				$("select[name=fk_department_id]").prop('disabled', false);
+			    $("select[name=fk_rank_id]").prop('disabled', false);
+		    } else {
 				// 공백이 아닌 글자를 입력했을 경우
 				$("table#tblEmpUpdate :input").prop("disabled", false);
+				$("select[name=fk_department_id]").prop('disabled',true);
+			    $("select[name=fk_rank_id]").prop('disabled',true);
 				//	$target.next().hide();
 				// 	또는
 				$target.parent().find(".error").hide();
@@ -104,10 +119,16 @@
 				  $target.focus();
 			
 				
-			} else {
+			} else if( pk_emp_no == 80000001 ) {
+				$("table#tblEmpUpdate :input").prop("disabled", false);
+				$("select[name=fk_department_id]").prop('disabled', false);
+			    $("select[name=fk_rank_id]").prop('disabled', false);
+		    } else {
 				// bool == true 암호가 정규표현식에 맞는 경우
 				$("table#tblEmpUpdate :input").prop("disabled", false);
-				
+				$("select[name=fk_department_id]").prop('disabled',true);
+			    $("select[name=fk_rank_id]").prop('disabled',true);
+			    
 				$target.parent().find(".error").hide();
 			}
 		 
@@ -130,9 +151,15 @@
 			//	$target.parent().find(".error").show();
 				$("input#emp_pwd").focus();
 				
-			} else {
+			} else if( pk_emp_no == 80000001 ) {
+				$("table#tblEmpUpdate :input").prop("disabled", false);
+				$("select[name=fk_department_id]").prop('disabled', false);
+			    $("select[name=fk_rank_id]").prop('disabled', false);
+		    } else {
 				// 암호와 암호확인값이 같은 경우
 				$("table#tblEmpUpdate :input").prop("disabled", false);
+				$("select[name=fk_department_id]").prop('disabled',true);
+			    $("select[name=fk_rank_id]").prop('disabled',true);
 				//	$target.next().hide();
 				// 	또는
 				$target.parent().find(".error").hide();
@@ -155,9 +182,15 @@
 				$target.focus();
 				
 				
-			} else {
+			} else if( pk_emp_no == 80000001 ) {
+				$("table#tblEmpUpdate :input").prop("disabled", false);
+				$("select[name=fk_department_id]").prop('disabled', false);
+			    $("select[name=fk_rank_id]").prop('disabled', false);
+		    } else {
 				// 공백이 아닌 글자를 입력했을 경우
 				$("table#tblEmpUpdate :input").prop("disabled", false);
+				$("select[name=fk_department_id]").prop('disabled',true);
+			    $("select[name=fk_rank_id]").prop('disabled',true);
 				//	$target.next().hide();
 				// 	또는
 				$target.parent().find(".error").hide();
@@ -184,10 +217,15 @@
 			
 				$target.focus();
 				
-			} else {
+			} else if( pk_emp_no == 80000001 ) {
+				$("table#tblEmpUpdate :input").prop("disabled", false);
+				$("select[name=fk_department_id]").prop('disabled', false);
+			    $("select[name=fk_rank_id]").prop('disabled', false);
+		    } else {
 				// bool == true 이메일이 정규표현식에 맞는 경우
 				$("table#tblEmpUpdate :input").prop("disabled", false);
-				
+				$("select[name=fk_department_id]").prop('disabled',true);
+			    $("select[name=fk_rank_id]").prop('disabled',true);
 				//	$target.next().hide();
 				// 	또는
 				$target.parent().find(".error").hide();
@@ -213,10 +251,15 @@
 				$target.parent().find(".error").show();
 				
 				$target.focus();
-			} else {
+			} else if( pk_emp_no == 80000001 ) {
+				$("table#tblEmpUpdate :input").prop("disabled", false);
+				$("select[name=fk_department_id]").prop('disabled', false);
+			    $("select[name=fk_rank_id]").prop('disabled', false);
+		    } else {
 				// bool == true 국번이 정규표현식에 맞는 경우
 				$("table#tblEmpUpdate :input").prop("disabled", false);
-				
+				$("select[name=fk_department_id]").prop('disabled',true);
+			    $("select[name=fk_rank_id]").prop('disabled',true);
 				//	$target.next().hide();
 				// 	또는
 				$target.parent().find(".error").hide();
@@ -242,10 +285,15 @@
 				$target.parent().find(".error").show();
 				
 				$target.focus();
-			} else {
+			} else if( pk_emp_no == 80000001 ) {
+				$("table#tblEmpUpdate :input").prop("disabled", false);
+				$("select[name=fk_department_id]").prop('disabled', false);
+			    $("select[name=fk_rank_id]").prop('disabled', false);
+		    } else {
 				// bool == true 국번이 정규표현식에 맞는 경우
 				$("table#tblEmpUpdate :input").prop("disabled", false);
-				
+				$("select[name=fk_department_id]").prop('disabled',true);
+			    $("select[name=fk_rank_id]").prop('disabled',true);
 				//	$target.next().hide();
 				// 	또는
 				$target.parent().find(".error").hide();
@@ -357,6 +405,9 @@
 	
 	// 수정하기		
 	function goUpdate() {
+		
+		$("select[name=fk_department_id]").prop('disabled',false);
+	    $("select[name=fk_rank_id]").prop('disabled',false);
 		
 		// *** 필수입력사항에 모두 입력이 되었는지 검사한다. *** //
 		let b_FlagRequiredInfo = false;
