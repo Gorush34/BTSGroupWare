@@ -2012,7 +2012,7 @@ public class EdmsController {
 		
 		getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출
 		
-		List<ApprVO> myacceptlist = null;
+		List<Map<String, Object>> myacceptlist = null;
 		
 		HttpSession session = request.getSession();
 		session.setAttribute("readCountPermission", "yes");
@@ -2078,8 +2078,16 @@ public class EdmsController {
 		paraMap.put("startRno", String.valueOf(startRno));
 		paraMap.put("endRno", String.valueOf(endRno));		
 		
+		System.out.println("~~~ " + paraMap.get("startRno"));
+		System.out.println("~~~ " + paraMap.get("endRno"));
+		System.out.println("~~~ " + paraMap.get("loginuser_empno"));
+		
 		// 상태가 대기/진행중인 나의 문서 불러오기
 		myacceptlist = service.myacceptlist_paging(paraMap);
+		
+		for(int i = 0; i < myacceptlist.size(); i++) {
+			System.out.println(myacceptlist.get(i).get("appr_name")); // emp_name은 있지도 않은데 불러옴 => 안 뜸
+		}
 		
 		// 검색대상 컬럼과 검색어 유지
 		if( !"".equals(searchType) && !"".equals(searchWord) ) {
@@ -2127,7 +2135,7 @@ public class EdmsController {
 		mav.addObject("gobackURL", gobackURL.replaceAll("&", " "));
 		// ==== 페이징 처리를 한 검색어가 있는 전체 글목록 보여주기 끝 ====
 		
-		mav.addObject("myacceptlist", myacceptlist);
+		mav.addObject("myAcceptList", myacceptlist);
 		mav.setViewName("mydoc/acceptlist.edms");
 		
 		return mav;		

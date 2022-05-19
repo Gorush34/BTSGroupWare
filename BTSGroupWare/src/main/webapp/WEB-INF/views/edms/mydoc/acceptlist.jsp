@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <%
 	String ctxPath = request.getContextPath();
 %>
@@ -18,7 +19,7 @@
 		});
 		
 		// 검색시 검색조건 및 검색어 값 유지시키기
-		if( ${not empty requestScope.paraMap} ) {
+		if( "${not empty requestScope.paraMap}" ) {
 			$("select#searchType").val("${requestScope.paraMap.searchType}");
 			$("input#searchWord").val("${requestScope.paraMap.searchWord}");
 		}
@@ -146,24 +147,10 @@
 		
 		<div class="divClear"></div>
 
-		<%-- 결재승인 목록이 없을 때 시작 --%>
-		<c:if test="${empty requestScope.myacceptList}">
-		<table class="table table-sm table-light">
-			<tr>
-				<td style="border-top: solid 1px #D3D3D3;">&nbsp;</td>
-			</tr>
-			<tr>
-				<td style="text-align: center; font-size: 14pt;">문서가 없습니다.</td>
-			</tr>
-			<tr>
-				<td style="border-bottom: solid 1px #D3D3D3;">&nbsp;</td>
-			</tr>
-		</table>
-		</c:if>
-		<%-- 결재승인 목록이 없을 때 종료 --%>
+		<input type="text" value="${requestScope.myAcceptList.get(9).pk_appr_no}">
 		
 		<%-- 결재승인 목록이 있을 때 종료 --%>
-		<c:if test=" ${not empty requestScope.myacceptList}">
+		<c:if test=" ${not empty requestScope.myAcceptList}">
 		<table class="table table-sm table-hover table-light edmsTable ellipsisTable">
 			<thead class="thead-light">
 				<tr>
@@ -178,10 +165,10 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="accept" items="${requestScope.myacceptList}" varStatus="status">
+				<c:forEach var="accept" items="${requestScope.myAcceptList}">
 				<tr onclick="goView('${accept.pk_appr_no}')" style="cursor: pointer;">
-					<th scope="row" style="vertical-align: middle;"><c:out value="${status.count}" /></th>
-					
+					<%-- <th scope="row" style="vertical-align: middle;"><c:out value="${status.count}" /></th> --%>
+					<th>아아아이</th>
 					<td>${accept.writeday}</td>
 					
 					<td>${accept.appr_name}</td>
@@ -231,12 +218,30 @@
 				</c:forEach>
 			</tbody>
 		</table>
+		</c:if>
 		
 		<div class="divClear"></div>
-		</c:if>
+		
 		<%-- 결재승인 목록이 있을 때 종료 --%>
 		
 		<div class="divClear"></div>
+		
+		
+		<%-- 결재승인 목록이 없을 때 시작 --%>
+		<c:if test="${empty requestScope.myAcceptList}">
+		<table class="table table-sm table-light">
+			<tr>
+				<td style="border-top: solid 1px #D3D3D3;">&nbsp;</td>
+			</tr>
+			<tr>
+				<td style="text-align: center; font-size: 14pt;">문서가 없습니다.</td>
+			</tr>
+			<tr>
+				<td style="border-bottom: solid 1px #D3D3D3;">&nbsp;</td>
+			</tr>
+		</table>
+		</c:if>
+		<%-- 결재승인 목록이 없을 때 종료 --%>
 		
 		
 		<%-- === 페이지바 보여주기 --%>
