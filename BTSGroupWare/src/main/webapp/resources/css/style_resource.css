@@ -1,6 +1,6 @@
 @charset "UTF-8";
 
-body {font-family: font-family: 'Noto Sans KR', sans-serif; }
+body {font-family: 'Noto Sans KR', sans-serif; font-size: 18px;}
 
 #mycontainer   { padding:20px; }
 #myheader      { display: flex; min-height:100px; position: relative; top: 60px; }
@@ -35,6 +35,8 @@ ul#secondHeaderGroup, .secondHeaderList {
 }
 
 /* 헤더 스타일  끝 */
+
+
 
 
 /* 자원 등록 */
