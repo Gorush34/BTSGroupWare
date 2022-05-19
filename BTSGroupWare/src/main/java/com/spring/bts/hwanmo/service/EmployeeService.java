@@ -118,7 +118,15 @@ public class EmployeeService implements InterEmployeeService {
 			// 마지막으로 암호를 변경한 날짜가 현재시각으로부터 3개월이 지났으면
 			loginuser.setRequirePwdChange(true); // 로그인시 암호를 변경하라는 alert를 띄우도록 한다.
 		}
-		
+		/*
+		if(loginuser != null && loginuser.getLastlogingap() >= 12) {
+			// 마지막으로 로그인한지가 12개월이 지났으면 휴면으로 지정
+			loginuser.setIdle(1);
+			
+			// === tbl_member 테이블의 idle 컬럼의 값을 1로 변경하기 === //
+			int n = dao.updateIdle(paraMap.get("userid"));
+		}
+		*/
 		if(loginuser != null) {
 			
 			String email = "";

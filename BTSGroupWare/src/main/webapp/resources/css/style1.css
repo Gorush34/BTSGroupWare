@@ -32,6 +32,10 @@ ul#secondHeaderGroup, .secondHeaderList {
 	font-size: 18px;
 }
 
+#myheader > nav > div:nth-child(4) {
+	font-size: 18px;
+}
+
 body {font-family: 'Noto Sans KR', sans-serif; }
 
 /* 헤더 스타일  끝 */
