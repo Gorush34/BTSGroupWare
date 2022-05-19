@@ -18,7 +18,7 @@
 		});
 		
 		// 검색시 검색조건 및 검색어 값 유지시키기
-		if( ${ not empty requestScope.paraMap} ) {
+		if( ${not empty requestScope.paraMap} ) {
 			$("select#searchType").val("${requestScope.paraMap.searchType}");
 			$("input#searchWord").val("${requestScope.paraMap.searchWord}");
 		}
@@ -42,9 +42,11 @@
 						 ,"searchWord":$("input#searchWord").val()},
 					dataType:"JSON",
 					success:function(json) {
+						// json => [{"word":"Korea VS Japan 라이벌 축구대결"},{"word":"JSP 가 뭔가요?"},{"word":"프로그램은 JAVA 가 쉬운가요?"},{"word":"java가 재미 있나요?"}]
 						
 						<%-- === 검색어 입력시 자동글 완성하기 === --%>
-						if(json.length > 0) { // 검색된 데이터가 있는 경우
+						if(json.length > 0) {
+							// 검색된 데이터가 있는 경우임
 							let html = "";
 							$.each(json, function(index, item) { // item ==> {"word":"프로그램은 JAVA 가 쉬운가요?"}, key값은 word
 								const word = item.word;
@@ -55,29 +57,9 @@
 								// 검색어(JaVa)가 나오는  idx는  6이 된다(0부터 세고 공백도 세니까)
 								
 								const len = $("input#searchWord").val().length;
-								// 검색어(JaVa)의 길이 len 은 4가 된다.
-								
+																
 								// substr은 오라클과 같고, substring은 java와 같다!
 							
-								// JAVA 방식	
-								/*
-								console.log("~~~~~~~~~~~ 시작 ~~~~~~~~~~~");
-								console.log(word.substring(0, idx));		// 검색어(JaVa) 앞까지의 글자 => "프로그램은"
-								console.log(word.substring(idx, idx+len));	// 검색어(JaVa) 글자 => "JAVA"
-								console.log(word.substring(idx+len));	// 검색어(JaVa) 뒤부터 끝까지 글자 => " 가 쉬운가요?"
-								console.log("~~~~~~~~~~~ 끝 ~~~~~~~~~~~");
-								*/
-								
-								// 오라클 방식
-								/*
-								console.log("~~~~~~~~~~~ 시작 ~~~~~~~~~~~");
-								console.log(word.substr(0, idx));		// 검색어(JaVa) 앞까지의 글자 => "프로그램은"
-								console.log(word.substr(idx, len));	// 검색어(JaVa) 글자 => "JAVA"
-								console.log(word.substring(len?);	// 검색어(JaVa) 뒤부터 끝까지 글자 => " 가 쉬운가요?"
-								console.log("~~~~~~~~~~~ 끝 ~~~~~~~~~~~");
-								*/
-								
-								// 하고자 하는 것 => JAVA만 css를 파란색으로 주고 다시 합치기
 								const result = word.substring(0, idx) + "<span style='color: blue;'>" + word.substring(idx, idx+len) + "</span>" + word.substring(idx+len);
 								
 								html += "<span style='cursor: pointer;' class='result'>" +result + "</span><br>";
@@ -99,18 +81,15 @@
 			}
 		}); // $("input#searchWord").keyup() --------------------
 		
-		
-		// [중요] on을 쓰면 id와 클래스가? 100% 잡힌다! (jQeury 참조!) 별 200개!!!
 		// on 을 사용하면 변경 이후의 이벤트가 변경된다.
 		$(document).on("click", "span.result", function() {
 			const word = $(this).text();
-			$("input#searchWord").val(word);	// 텍스트 박스에 검색된 결과의 문자열을 입력해준다.
+			$("input#searchWord").val(word);		// 텍스트 박스에 검색된 결과의 문자열을 입력해준다.
 			$("div#searchAutoComplete").hide();		// 선택한 것 외에는 숨기기
 			goSearch();
 		});
 		/* ********** 자동글 완성하기 종료 ********** */
 		
-	
 	});
 	
 	// Function Declaration
@@ -137,7 +116,7 @@
 	function goSearch(){
 		const frm = document.searchFrm;
 		frm.method = "GET";
-		frm.action = "<%= ctxPath%>/edms/list.bts";
+		frm.action = "<%= ctxPath%>/edms/mydoc/acceptlist.bts";
 		frm.submit();
 	} // end of function goSearch() --------------------
 	
@@ -145,12 +124,14 @@
 </script>
 
 <%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
-	
+
+
+
 	<div class="edmsHomeTitle">
-		<span class="edms_maintitle">BTSGroupware 전체문서함</span>
+		<span class="edms_maintitle">${sessionScope.loginuser.emp_name}님의 승인문서함</span>
 		<p style="margin-bottom: 10px;"></p>
 	</div>
-
+	
 	<!-- 모든문서 시작 -->
 	<span class="edms_title"> 
 		<input type="hidden" name="fk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
@@ -161,102 +142,88 @@
 
 	<!-- 문서목록 시작 -->
 	<div id="edmsList">
-		<span class="edms_title">전체문서 목록보기</span>
-		<!--
-		<div class="dropdown">
-			<button class="btn btn-primart-outline dropdown-toggle" type="button" data-toggle="dropdown"
-					aria-haspopup="true" aria-expanded="false">10개 보기</button>
-			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-				<a class="dropdown-item" href="#">10개 보기</a>
-				<a class="dropdown-item" href="#">30개 보기</a>
-				<a class="dropdown-item" href="#">50개 보기</a>
-			</div>
-		</div>
-		-->
-			
+		<span class="edms_title">문서목록보기</span>
+		
 		<div class="divClear"></div>
 
-		<%-- 목록이 없을 때 시작 --%>
-		<c:if test="${empty requestScope.edmsList}">
+		<%-- 결재승인 목록이 없을 때 시작 --%>
+		<c:if test="${empty requestScope.myacceptList}">
 		<table class="table table-sm table-light">
 			<tr>
 				<td style="border-top: solid 1px #D3D3D3;">&nbsp;</td>
 			</tr>
 			<tr>
-				<td class="edmsListNone">문서가 없습니다.</td>
+				<td style="text-align: center; font-size: 14pt;">문서가 없습니다.</td>
 			</tr>
 			<tr>
 				<td style="border-bottom: solid 1px #D3D3D3;">&nbsp;</td>
 			</tr>
 		</table>
 		</c:if>
-		<%-- 목록이 없을 때 종료 --%>
+		<%-- 결재승인 목록이 없을 때 종료 --%>
 		
-		<%-- 목록이 있을 때 시작 --%>
-		<c:if test="${not empty requestScope.edmsList}">
+		<%-- 결재승인 목록이 있을 때 종료 --%>
+		<c:if test=" ${not empty requestScope.myacceptList}">
 		<table class="table table-sm table-hover table-light edmsTable ellipsisTable">
 			<thead class="thead-light">
 				<tr>
 					<th scope="col" width="4%">#</th>
-					<th scope="col" width="10%">기안일</th>
-					<th scope="col" width="8%">결재양식</th>
-					<th scope="col" width="6%">긴급</th>
-					<th scope="col" width="8%">이름</th>
-					<th scope="col" width="44%">제목</th>
+					<th scope="col" width="13%">기안일</th>
+					<th scope="col" width="10%">결재양식</th>
+					<th scope="col" width="9%">긴급</th>
+					<th scope="col" width="30%">제목</th>
 					<th scope="col" width="6%">첨부</th>
-					<th scope="col" width="6%">문서번호</th>
+					<th scope="col" width="20%">문서번호</th>
 					<th scope="col" width="8%">상태</th>
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="all" items="${requestScope.edmsList}" varStatus="status">
-				<tr onclick="goView('${all.pk_appr_no}')" style="cursor: pointer;">
+				<c:forEach var="accept" items="${requestScope.myacceptList}" varStatus="status">
+				<tr onclick="goView('${accept.pk_appr_no}')" style="cursor: pointer;">
 					<th scope="row" style="vertical-align: middle;"><c:out value="${status.count}" /></th>
 					
-					<td>${all.writeday}</td>
+					<td>${accept.writeday}</td>
 					
-					<td>${all.appr_name}</td>
+					<td>${accept.appr_name}</td>
 					
 					<td>
-					<c:if test="${all.emergency == 1}">
+					<c:if test="${accept.emergency == 1}">
 						<button id="btn_emergency" class="btn btn-danger edmsBtn">긴급</button>
 					</c:if>
-					<c:if test="${all.emergency == 0}">
+					<c:if test="${accept.emergency == 0}">
 						&nbsp;
 					</c:if>
 					</td>
 					
-					<td>${all.emp_name}</td>
-					
 					<td class="elltitle">
-						<span class="title" style="cursor: pointer;" onclick="goView('${all.pk_appr_no}')">${all.title}</span>
+						<span class="title" onclick="goView('${accept.pk_appr_no}')" style="cursor: pointer;">${accept.title}</span>
 					</td>
 					
 					<td>
 						<%-- 첨부파일이 있는 경우 --%>
-						<c:if test="${not empty all.filename}">
+						<c:if test="${not empty accept.filename}">
 							<img src="<%= ctxPath%>/resources/images/disk.gif" style="height: 16px; width: 16px;">
 						</c:if>
 						<%-- 첨부파일이 없는 경우 --%>
-						<c:if test="${empty all.filename}">&nbsp;</c:if>
+						<c:if test="${empty accept.filename}">&nbsp;</c:if>
 					</td>
 					
-					<td>${all.pk_appr_no}</td>
+					<td>${accept.pk_appr_no}</td>
 					
 					<td>
-						<c:if test="${all.mid_accept eq 0 and all.fin_accept eq 0}">
+						<c:if test="${accept.mid_accept eq 0 and accept.fin_accept eq 0}">
 							<button class="btn btn-secondary edmsBtn">대기중</button>
 						</c:if>
-						<c:if test="${all.mid_accept eq 1 and all.fin_accept eq 0}">
+						<c:if test="${accept.mid_accept eq 1 and accept.fin_accept eq 0}">
 							<button class="btn btn-warning edmsBtn">진행중</button>
 						</c:if>
-						<c:if test="${all.mid_accept eq 1 and all.fin_accept eq 1}">
+						<c:if test="${accept.mid_accept eq 1 and accept.fin_accept eq 1}">
 							<button class="btn btn-info edmsBtn">승인됨</button>
 						</c:if>
-						<c:if test="${all.mid_accept eq 2}">
+						<c:if test="${accept.mid_accept eq 2}">
 							<button class="btn btn-dark edmsBtn">반려됨</button>
 						</c:if>
-						<c:if test="${all.mid_accept eq 1 and all.fin_accept eq 2}">
+						<c:if test="${accept.mid_accept eq 1 and accept.fin_accept eq 2}">
 							<button class="btn btn-dark edmsBtn">반려됨</button>
 						</c:if>
 					</td>
@@ -265,13 +232,9 @@
 			</tbody>
 		</table>
 		
-		<table>
-			<tr><td><input type="hidden" name="emp_name" value="${requestScope.all.emp_name}" /></td></tr>
-		</table>
-		
 		<div class="divClear"></div>
 		</c:if>
-		<%-- 목록이 있을 때 종료 --%>
+		<%-- 결재승인 목록이 있을 때 종료 --%>
 		
 		<div class="divClear"></div>
 		
@@ -298,8 +261,8 @@
 		</div>
 		
 	</div>
-	<!-- 결재대기 문서목록 종료 -->
+	<!-- 결재승인 문서목록 종료 -->
 	
 	
 	<div class="divClear"></div>
-
+</div>

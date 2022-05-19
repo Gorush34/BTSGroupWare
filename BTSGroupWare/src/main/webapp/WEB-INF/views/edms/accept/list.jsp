@@ -128,7 +128,7 @@
 
 
 	<div class="edmsHomeTitle">
-		<span class="edms_maintitle">${sessionScope.loginuser.emp_name}님의 승인문서함</span>
+		<span class="edms_maintitle">BTSGroupware 승인문서함</span>
 		<p style="margin-bottom: 10px;"></p>
 	</div>
 	
@@ -143,18 +143,7 @@
 	<!-- 문서목록 시작 -->
 	<div id="edmsList">
 		<span class="edms_title">문서목록보기</span>
-		<!--
-		<div class="dropdown">
-			<button class="btn btn-primart-outline dropdown-toggle" type="button" data-toggle="dropdown"
-					aria-haspopup="true" aria-expanded="false">10개 보기</button>
-			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-				<a class="dropdown-item" href="#">10개 보기</a>
-				<a class="dropdown-item" href="#">30개 보기</a>
-				<a class="dropdown-item" href="#">50개 보기</a>
-			</div>
-		</div>
-		-->
-			
+		
 		<div class="divClear"></div>
 
 		<%-- 결재승인 목록이 없을 때 시작 --%>
@@ -175,41 +164,27 @@
 		
 		<%-- 결재승인 목록이 있을 때 종료 --%>
 		<c:if test="${not empty requestScope.acceptList}">
-		<table class="table table-sm table-hover table-light edmsTable">
+		<table class="table table-sm table-hover table-light edmsTable ellipsisTable">
 			<thead class="thead-light">
 				<tr>
-					<th scope="col" width="10%">문서번호</th>
-					<th scope="col" width="15%">기안일</th>
-					<th scope="col" width="15%">결재양식</th>
-					<th scope="col" width="10%">긴급</th>
+					<th scope="col" width="4%">#</th>
+					<th scope="col" width="13%">기안일</th>
+					<th scope="col" width="10%">결재양식</th>
+					<th scope="col" width="9%">긴급</th>
 					<th scope="col" width="30%">제목</th>
-					<th scope="col" width="10%">첨부</th>
-					<th scope="col" width="10%">상태</th>
+					<th scope="col" width="6%">첨부</th>
+					<th scope="col" width="20%">문서번호</th>
+					<th scope="col" width="8%">상태</th>
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="accept" items="${requestScope.acceptList}">
+				<c:forEach var="accept" items="${requestScope.acceptList}" varStatus="status">
 				<tr onclick="goView('${accept.pk_appr_no}')" style="cursor: pointer;">
-					
-					<td>${accept.pk_appr_no}</td>
+					<th scope="row" style="vertical-align: middle;"><c:out value="${status.count}" /></th>
 					
 					<td>${accept.writeday}</td>
 					
-					<td>
-						${accept.pk_appr_no}
-						<%-- <c:if test="${apprvo.fk_appr_sortno eq 1}">
-							<span>업무기안서</span>
-						</c:if>
-						<c:if test="${apprvo.fk_appr_sortno eq 2}">
-							<span>증명서신청</span>
-						</c:if>
-						<c:if test="${apprvo.fk_appr_sortno eq 3}">
-							<span>사유서</span>
-						</c:if>
-						<c:if test="${apprvo.fk_appr_sortno eq 4}">
-							<span>-- 휴가 신청서 (팀장님 거니까 없애기) --</span>
-						</c:if> --%>
-					</td> <%-- ${apprvo.fk_appr_sortno} --%>
+					<td>${accept.appr_name}</td>
 					
 					<td>
 					<c:if test="${accept.emergency == 1}">
@@ -220,9 +195,8 @@
 					</c:if>
 					</td>
 					
-					<td>
+					<td class="elltitle">
 						<span class="title" onclick="goView('${accept.pk_appr_no}')" style="cursor: pointer;">${accept.title}</span>
-						
 					</td>
 					
 					<td>
@@ -234,9 +208,11 @@
 						<c:if test="${empty accept.filename}">&nbsp;</c:if>
 					</td>
 					
+					<td>${accept.pk_appr_no}</td>
+					
 					<td>
 						<c:if test="${accept.mid_accept eq 0 and accept.fin_accept eq 0}">
-							<button class="btn btn-secondary edmsBtn">대기</button>
+							<button class="btn btn-secondary edmsBtn">대기중</button>
 						</c:if>
 						<c:if test="${accept.mid_accept eq 1 and accept.fin_accept eq 0}">
 							<button class="btn btn-warning edmsBtn">진행중</button>

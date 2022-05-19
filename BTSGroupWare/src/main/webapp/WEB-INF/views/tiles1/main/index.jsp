@@ -579,7 +579,7 @@ td.mail_subject:hover {
 	                                  Number(item.ta)]);
 	                  });// end of $.each(json, function(index, item){})------------
 	                  
-	                  
+	                  /*
 	                  Highcharts.chart('container', {
 	                      chart: {
 	                          type: 'column'
@@ -629,6 +629,7 @@ td.mail_subject:hover {
 	                          }
 	                      }]
 	                  });
+	                  */
 	                  //////////////////////////////////////////////////
 	               },
 	               error: function(request, status, error){
@@ -972,7 +973,7 @@ td.mail_subject:hover {
 	        					<img src="<%= ctxPath%>/resources/files/${sessionScope.loginuser.img_name}" title="" />
 	        				</c:if>
 	        				<c:if test="${sessionScope.loginuser.img_name eq null}">
-	        					<img src="<%= ctxPath%>/resources/images/mu.png" id="memberProfile" />
+	        					<img src="<%= ctxPath%>/resources/images/mu.png" />
 	        				</c:if>
 	        			</span>
 	        		</span>

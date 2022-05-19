@@ -92,4 +92,17 @@ public interface InterEdmsDAO {
 
 	// 내문서함 - 반려문서함 총 게시물 건수(totalCount)
 	int getTotalCount_reject(Map<String, String> paraMap);
+
+	
+	/// 내 문서함(본인 것만)
+	int mywaitlist_cnt(Map<String, String> paraMap);
+	List<ApprVO> mywaitlist_paging(Map<String, String> paraMap);
+
+	int myacceptlist_cnt(Map<String, String> paraMap);
+	List<ApprVO> myacceptlist_paging(Map<String, String> paraMap);
+
+	int myrejectlist_cnt(Map<String, String> paraMap);
+	List<ApprVO> myrejectlist_paging(Map<String, String> paraMap);
+	
+	
 }

@@ -144,7 +144,6 @@ public class EdmsDAO implements InterEdmsDAO {
 	// 대기문서 목록 페이징 처리
 	@Override
 	public List<ApprVO> edmsListSearchWithPaging_wait(Map<String, String> paraMap) {
-		
 		List<ApprVO> edmsList = sqlsession.selectList("yuri.edmsListSearchWithPaging_wait", paraMap);
 		return edmsList;
 	}
@@ -229,9 +228,6 @@ public class EdmsDAO implements InterEdmsDAO {
 	// 상태가 대기중인 모든 결재문서 불러오기
 	@Override
 	public List<ApprVO> getEdmsListWithPaging_wait(Map<String, String> paraMap) {
-
-		System.out.println(paraMap.get("fk_emp_no"));
-		
 		List<ApprVO> edmsList = sqlsession.selectList("yuri.getEdmsListWithPaging_wait", paraMap);
 		return edmsList;
 	}
@@ -249,4 +245,50 @@ public class EdmsDAO implements InterEdmsDAO {
 		int totalCount = sqlsession.selectOne("yuri.getTotalCount_reject", paraMap);
 		return totalCount;
 	}
+
+	
+	
+	
+	
+	////////////////////////////////////////////////////
+	
+	// 내문서함(로그인유저)
+	
+	@Override
+	public int mywaitlist_cnt(Map<String, String> paraMap) {
+		int totalCount = sqlsession.selectOne("yuri.mywaitlist_cnt", paraMap);
+		return totalCount;
+	}
+	
+	@Override
+	public List<ApprVO> mywaitlist_paging(Map<String, String> paraMap) {
+		List<ApprVO> mywaitlist = sqlsession.selectList("yuri.mywaitlist_paging", paraMap);
+		return mywaitlist;
+	}
+
+	@Override
+	public int myacceptlist_cnt(Map<String, String> paraMap) {
+		int totalCount = sqlsession.selectOne("yuri.myacceptlist_cnt", paraMap);
+		return totalCount;
+	}
+
+	@Override
+	public List<ApprVO> myacceptlist_paging(Map<String, String> paraMap) {
+		List<ApprVO> myacceptlist = sqlsession.selectList("yuri.myacceptlist_paging", paraMap);
+		return myacceptlist;
+	}
+
+	@Override
+	public int myrejectlist_cnt(Map<String, String> paraMap) {
+		int totalCount = sqlsession.selectOne("yuri.myrejectlist_cnt", paraMap);
+		return totalCount;
+	}
+
+	@Override
+	public List<ApprVO> myrejectlist_paging(Map<String, String> paraMap) {
+		List<ApprVO> myrejectlist = sqlsession.selectList("yuri.myrejectlist_paging", paraMap);
+		return myrejectlist;
+	}
+
+
 }
