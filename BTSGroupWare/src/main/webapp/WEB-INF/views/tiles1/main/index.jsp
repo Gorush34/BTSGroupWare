@@ -24,6 +24,12 @@ td.mail_subject:hover {
 	font-weight: bold;
 }
 
+#memberProfile {
+    width: 82px !important;
+    height: 82px !important;
+    border-radius: 100px !important;
+}
+
 </style>
 
 <script type="text/javascript">
