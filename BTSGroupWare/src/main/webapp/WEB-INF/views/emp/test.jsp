@@ -52,7 +52,8 @@
 
 <script type="text/javascript">
 
-
+var mid_cnt = 0;
+var mailStr = 
    
    $( document ).ready( function() {
       
@@ -98,7 +99,7 @@
       	        	empMailArr.push($(this).val());
        });
        if(mid_cnt == 0){
-           alert("선택된 제품이 없습니다.");
+           alert("선택된 이메일이 없습니다.");
            return;
        }
        empMailStr = empMailArr.join();

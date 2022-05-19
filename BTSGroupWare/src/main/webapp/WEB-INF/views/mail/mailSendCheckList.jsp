@@ -10,10 +10,14 @@
 
 <style type="text/css">
 
-	span.subject
-	{cursor: pointer;}
+span.subject
+{cursor: pointer;}
+
+a { text-decoration: none !important}
 	
-	a { text-decoration: none !important}
+#btnRecChk {
+border: 1px solid black; background-color: rgba(0,0,0,0); color: black; margin-left: 1px;
+}
 
 </style>
 
@@ -204,12 +208,6 @@
 								삭제
 							</button>
 						</li>
-						<li class="secondHeaderList">
-							<button type="button" id=readSend onclick="goReadSend()">
-							<i class="fa fa-envelope-o fa-fw"></i>
-								읽음
-							</button>
-						</li>
 					</ul>
 				</div>
 				
@@ -227,10 +225,9 @@
 									<span class="fa fa-paperclip"></span>
 								</th>
 								<th style="width: 10%;" class="text-center">받는이</th>
-								<th style="width: 48%;">제목</th>
-								<th style="width: 10%;">읽음여부</th>								
-								<th style="width: 13%;">수신날짜</th>								
-								<th style="width: 30%;" class="text-left">날짜</th>
+								<th style="width: 57%;">제목</th>
+								<th style="width: 13%;" class="text-left">전송일자</th>
+								<th style="width: 38%;">수신확인일자</th>								
 							</tr>
 						</thead>
 						
@@ -269,32 +266,21 @@
 										<c:if test="${sendMailList_recCheck.importance == '1'}">
 											<span class="fa fa-exclamation" style="color: red;" class="text-center"></span>
 										</c:if>
-										<c:if test="${sendMailList_recCheck.send_status == '1'}">
 											<span>${sendMailList_recCheck.subject}</span>
-										</c:if>
-										<c:if test="${sendMailList_recCheck.send_status == '0'}">
-											<span style="font-weight: bold;">${sendMailList_recCheck.subject}</span>												
-										</c:if>											
 									</span>
 								</td>
-									<c:if test="${sendMailList_recCheck.rec_status == 1}">
-										<td style="width: 10%;">읽음</td>	
-									</c:if>	
-									<c:if test="${sendMailList_recCheck.rec_status == 0}">
-										<td style="width: 10%;">읽지않음</td>	
-									</c:if>	
-									<c:if test="${not empty sendMailList_recCheck.rec_date}">
-										<td style="width: 10%;">${sendMailList_recCheck.rec_date}</td>	
-									</c:if>	
-									<c:if test="${empty sendMailList_recCheck.rec_date}">
-										<td style="width: 10%;">읽지않음</td>	
-									</c:if>										
 									<c:if test="${not empty sendMailList_recCheck.reservation_date}">
 										<td>${sendMailList_recCheck.reservation_date}</td>
 									</c:if>
 									<c:if test="${empty sendMailList_recCheck.reservation_date}">
 										<td>${sendMailList_recCheck.reg_date}</td>
 									</c:if>	
+									<c:if test="${not empty sendMailList_recCheck.rec_date}">
+										<td style="width: 10%;">${sendMailList_recCheck.rec_date}&nbsp;&nbsp;<i class="fa fa-envelope-open-o" aria-hidden="true"></i></td>	
+									</c:if>	
+									<c:if test="${empty sendMailList_recCheck.rec_date}">
+										<td style="width: 10%;">읽지않음</td>	
+									</c:if>							
 							</tr>	
 						</c:forEach>	
 						</c:if>																			

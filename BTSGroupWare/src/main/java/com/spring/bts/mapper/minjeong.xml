@@ -266,7 +266,6 @@
 		where pk_mail_num = to_number(#{pk_mail_num})
 	</select>
 
-
 	<!-- ===== 메일쓰기 끝 ===== -->
 
 
@@ -663,14 +662,8 @@
     </select>
 
 	<!-- 메일 목록에서 사용자가 읽음처리 끝 -->
-	
-	<!-- 상대방이 메일을 읽었을 때 rec_status 가 1로 바뀌면서, rec_status 가 1인 목록들 조회해오기 -->
-	<select id="getRecCheck" parameterType="String" resultType="com.spring.bts.minjeong.model.MailVO">
-		select rec_status , rec_date
-		from tbl_mailRead
-		where fk_mail_num = #{fk_mail_num} and rec_status = 1
-	</select>
 
+	<!-- 보낸메일함 수신확인 읽음체크 목록 시작 -->
 	<!--  총 보낸메일 개수 구해오기 -->
 	<select id="getTotalCount_recCheck" parameterType="HashMap" resultType="int">
 		select count(*)
@@ -682,7 +675,7 @@
 		</if>		
 	</select>
 	
-	<!-- 페이징처리 한 보낸 수신확인 메일목록 2 (검색 있든, 없든 모두 다 포함 && 읽음상태 표시) -->
+	<!-- 페이징처리 한 보낸 수신확인 메일목록 (검색 있든, 없든 모두 다 포함 && 읽음상태 표시) -->
  	<select id="sendMailList_recCheck" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
 		select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date, importance, importance_star_send, send_status
 			 , rec_status, rec_date 
@@ -702,6 +695,17 @@
 		</if>
 		) V
 		where rno between #{startRno} and #{endRno}
+	</select>
+	<!-- 보낸메일함 수신확인 읽음체크 목록 끝 -->
+
+	<select id="addBook_depInfo_select" resultType="com.spring.bts.hwanmo.model.EmployeeVO">
+		select E.pk_emp_no, E.emp_name , R.ko_rankname , D.ko_depname , R.pk_rank_no, E.uq_email
+		from tbl_EMPLOYEES E
+		join tbl_rank_sort R
+		on E.fk_rank_id = R.pk_rank_no
+		join tbl_dep_sort D
+		on E.fk_department_id = D.pk_dep_no
+		order by R.pk_rank_no
 	</select>
 	
 

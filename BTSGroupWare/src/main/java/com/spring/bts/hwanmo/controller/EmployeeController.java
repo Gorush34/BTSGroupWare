@@ -734,7 +734,7 @@ public class EmployeeController {
 					e.printStackTrace();
 				}
 			   
-		   } // end of for
+		   } // end of for 
 			   
 		   
 		   mav.addObject("loginuser", loginuser);
@@ -867,6 +867,9 @@ public class EmployeeController {
 	    				mailvo.setReservation_status("0");
 	    				mailvo.setTemp_status("0");			// 임시보관함 - 상세내용 보기 - 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
 	    				n = service.add(mailvo);
+						String fk_mail_num = service.getPkMailNum(mailvo);
+	    			//	System.out.println("확인용 fk_mail_num : " + fk_mail_num);
+						n = service.addToMailRead(fk_mail_num);	// 글씀과 동시에 tbl_mailRead 테이블에 해당 글번호의 값을 insert 시켜준다.
 	    			}	
 	    		}
 	    		else {
@@ -874,7 +877,10 @@ public class EmployeeController {
 	    			mailvo.setReservation_status("0");
 	    			mailvo.setTemp_status("0");			// 임시보관함 - 상세내용 보기 - 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
 	    			n = service.add_withFile(mailvo);
-	    		}
+					String fk_mail_num = service.getPkMailNum(mailvo);
+				//	System.out.println("확인용 fk_mail_num : " + fk_mail_num);
+					n = service.addToMailRead(fk_mail_num);
+				}
 	    		
 	    		// 성공 시 보낸 메일함으로 이동 or 메일 발송 성공 페이지로 이동
 	    		// insert 가 성공적으로 됐을 때 / 실패했을 때
