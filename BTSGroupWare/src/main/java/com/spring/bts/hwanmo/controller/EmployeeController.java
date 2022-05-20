@@ -709,208 +709,31 @@ public class EmployeeController {
 		
 		
 	} // end of public ModelAndView updateEmpEnd(ModelAndView mav, HttpServletRequest request) {})----------------
-	
-	
-	 // 실험용 페이지
-     @RequestMapping(value="/emp/test.bts")
-     public ModelAndView test(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
-	   
-	   
-		   HttpSession session = request.getSession();
-		   EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
-		 
-		   List<EmployeeVO> empList = addBookService.addBook_depInfo_select();
-		   
-		   for(int i=0; i<empList.size(); i++) {
-			   
-			   // 이메일을 복호화한다.
-				try {
-				    String email = empList.get(i).getUq_email(); // i번째 암호화된 이메일을 받아온다. 
-				    //				이 리스트의/i번째/어떤 값을 get(가져온다) / set(넣어준다)
-				    empList.get(i).setUq_email( aes.decrypt(email) ); // list의 i번째 이메일 값을 복호화해서 넣어준다.
-				    
-				    // 언제까지? list의 size만큼 반복
-				} catch (UnsupportedEncodingException | GeneralSecurityException e) {
-					e.printStackTrace();
-				}
-			   
-		   } // end of for
-			   
-		   
-		   mav.addObject("loginuser", loginuser);
-		   mav.addObject("empList", empList);
-		   
-		   mav.setViewName("test.emp");
-		   
-	      return mav;
-   }
      
-     // 실험용 페이지
-     @RequestMapping(value="/testWriteEnd.bts")
-     public ModelAndView testWriteEnd(ModelAndView mav, MultipartHttpServletRequest mrequest, MailVO mailvo) {
-	   
-	   
-		   HttpSession session = mrequest.getSession();
-		   EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
-		 
-		   // ==== 임시보관함 경우의수 생각하기 ==== //
-			// 임시보관함에서 상세내용 보기 후 메일쓰기를 클릭했을 때 temp_status 가 1인 값들이 넘어온다.
-			// 해당 임시보관함에 있던 메일 번호를 받아온다.
-			String pk_mail_num = mrequest.getParameter("pk_mail_num");
-			HttpSession session_temp = mrequest.getSession();
-			session_temp.setAttribute("pk_mail_num", pk_mail_num);
-			
-			// 임시보관함 첨부파일 
-			String filename = mrequest.getParameter("filename");
-			String orgfilename = mrequest.getParameter("orgfilename");
-			String filesize = mrequest.getParameter("filesize");
-			
-			String importanceVal = mrequest.getParameter("importanceVal");
-			
-			String temp_status = mrequest.getParameter("temp_status");
-			//	System.out.println("확인용 temp_status : " + temp_status);
-		   
-			// 다중메일보내기 시작 
-		    int cnt = Integer.parseInt( mrequest.getParameter("cnt"));
-		    String empMailStr = mrequest.getParameter("empMailStr");
-		    String [] strArray = empMailStr.split(",");
-		   
-            for(int i=0; i<cnt; i++) {
-                 String uq_email = (String)strArray[i];
-                 try {
-	                  // DB에 encrypt(암호화) 해서 보내주도록 한다.
-	       			  uq_email = aes.encrypt(mrequest.getParameter("recemail"));
-       		     } catch (UnsupportedEncodingException | GeneralSecurityException e) {
-       			      e.printStackTrace();
-       		     }
-               
-                 Map<String, String> recEmpnameAndNum = new HashMap<>();
-               
-                 recEmpnameAndNum = service.getEmpnameAndNum(uq_email);
-               
-                 String emp_name = recEmpnameAndNum.get("emp_name");
-                 String pk_emp_no = recEmpnameAndNum.get("pk_emp_no");
-               
-                 mailvo.setRecempname(emp_name);
-                 mailvo.setFk_receiveuser_num(pk_emp_no);
-               
-                 // importanceVal 값을 mailvo 에 있는 importance 에 넣어주기
-                 mailvo.setImportance(importanceVal);
-               
-	            // 사용자가 쓴 메일에 파일이 첨부되어 있는지 아닌지를 구분지어준다.
-	       		
-	       		/////////////////// 첨부파일 있는 경우 시작 (스마트에디터 X) ///////////////////////
-	       		MultipartFile attach = mailvo.getAttach();		// 실제 첨부된 파일
-	       		
-	       		if( !attach.isEmpty() ) {	// 첨부파일 존재시 true, 존재X시 false
-	       			// 첨부파일이 존재한다면 (true) 업로드 해야한다.
-	       			// 1. 사용자가 보낸 첨부파일을 WAS(톰캣)의 특정 폴더에 저장해준다.
-	       			// WAS 의 절대경로를 알아와야 한다.
-	       			
-	       			String root = session.getServletContext().getRealPath("/");
-	       			
-	       			String path = root+"resources"+File.separator+"files";
-	       			// path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다. --> path 에 파일을 업로드 한다.
-	       			
-	       			// 2. 파일첨부를 위한 변수 설정 및 값을 초기화 한 후 파일 업로드 하기
-	       			String newFileName = "";
-	       			// WAS(톰캣)의 디스크에 저장될 파일명
 	
-	       			// 내용물을 읽어온다.
-	       			byte[] bytes = null;	// bytes 가 null 이라면 내용물이 없다는 것이다.
-	       			// 첨부파일의 내용물을 담는 것, return 타입은 byte 의 배열
+	@RequestMapping(value="/emp/viewAll.bts", method = {RequestMethod.POST})
+	public ModelAndView viewAll(ModelAndView mav, HttpServletRequest request) {
+		
+		String method = request.getMethod();
+		String pk_emp_no = request.getParameter("pk_emp_no");
+		String emp_pwd = request.getParameter("emp_pwd");
+		emp_pwd = Sha256.encrypt(emp_pwd);
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("emp_pwd", emp_pwd);
+		paraMap.put("pk_emp_no", pk_emp_no);
+		
+		
+		int n = empService.pwdUpdate(paraMap);
+		
+		mav.addObject("n", n);
+		mav.addObject("pk_emp_no", pk_emp_no);
+		mav.addObject("method", method);
+		mav.setViewName("/tiles1/main/pwdUpdate");
+		
+		return mav;
+	}
 	
-	       			long fileSize = 0;		// 첨부파일의 크기
-	       		
-	       			try {
-	       				bytes = attach.getBytes();	// 파일에서 내용물을 꺼내오자. 파일을 올렸을 때 깨진파일이 있다면 (입출력이 안된다!!) 그때 Exception 을 thorws 한다.
-	       				// 첨부파일의 내용물을 읽어오는 것. 그 다음, 첨부한 파일의 파일명을 알아와야 DB 에 넣을 수가 있다. 그러므로 파일명을 알아오도록 하자.
-	       				// 즉 파일을 올리고 성공해야 - 내용물을 읽어올 수 있고 - 파일명을 알아와서 DB 에 넣을 수가 있다.
-	       				
-	       				String originalFilename = attach.getOriginalFilename();
-	       				// attach.getOriginalFilename() 이 첨부파일의 파일명(예: 강아지.png) 이다.
-	       	
-	       				// 의존객체인 FileManager 를 불러온다. (String 타입으로 return 함.)
-	       				// 리턴값 : 서버에 저장된 새로운 파일명(예: 2022042912181535243254235235234.png)
-	       				newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
-	       				// 첨부된 파일을 업로드 한다.
-	       				
-	       				// 파일을 받아와야만 service 에 보낼 수 있다. (DB 에 보내도록 한다.)
-	       				mailvo.setFilename(newFileName);			// 톰캣(WAS)에 저장될 파일명
-	       				mailvo.setOrgfilename(originalFilename); 	// 사용자가 파일 다운로드시 사용되는 파일명
-	       				
-	       				fileSize = attach.getSize();					// 첨부파일의 크기
-	       				mailvo.setFilesize(String.valueOf(fileSize));	// long 타입인 fileSize 를 String 타입으로 바꾼 후 vo 에 set 한다.
-	       				
-	       			} catch (Exception e) {
-	       				e.printStackTrace();
-	       			}
-	       		}	
-	       		/////////////////// 첨부파일 있는 경우 끝 (스마트에디터 X) ///////////////////////
-	               
-	       		// pk_mail_num 를 통해서 temp_status 조회해오기		
-	    		Map<String, String> paraMap = new HashMap<>();
-	    		paraMap.put("pk_mail_num", pk_mail_num);
-	       		
-	    		// 메일 data 를 DB 로 보낸다. (첨부파일 있을 때 / 첨부파일 없을 때)
-	    		int n = 0;
-	    		
-	    		if(attach.isEmpty()) {
-	    			// 첨부파일이 없을 때
-	//    			mailvo.setTemp_status("0");			// 임시보관함 - 상세내용 보기 - 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
-	    			if("1".equals(temp_status)) {
-	    				mailvo.setReservation_status("0");
-	    				service.deleteFromTbltemp(paraMap);	
-	    			}
-	    			
-	    			else {
-	    				mailvo.setReservation_status("0");
-	    				mailvo.setTemp_status("0");			// 임시보관함 - 상세내용 보기 - 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
-	    				n = service.add(mailvo);
-	    			}	
-	    		}
-	    		else {
-	    			// 첨부파일 있을 때
-	    			mailvo.setReservation_status("0");
-	    			mailvo.setTemp_status("0");			// 임시보관함 - 상세내용 보기 - 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
-	    			n = service.add_withFile(mailvo);
-	    		}
-	    		
-	    		// 성공 시 보낸 메일함으로 이동 or 메일 발송 성공 페이지로 이동
-	    		// insert 가 성공적으로 됐을 때 / 실패했을 때
-	    		if(n==1) {			
-	    			
-	    			if("1".equals(temp_status)) {
-	    				// insert 성공 후, 임시보관함에서 session 에 저장된 메일번호를 넘겨서 삭제하도록 한다.
-	    				String str_pk_mail_num = (String)session_temp.getAttribute("pk_mail_num");
-	    				
-	    				paraMap = new HashMap<>();
-	    				paraMap.put("pk_mail_num", str_pk_mail_num);
-	    				
-	    				// 임시보관함에서 메일 상세내용 보기 후 메일쓰기를 클릭 한 경우 임시보관함에 있던 해당 pk_mail_num 를 삭제한다.
-	    				
-	    				int m = service.deleteFromTbltemp(paraMap);			
-	    				
-	    				if(m==1) {
-	    					System.out.println("임시보관함에서 "+pk_mail_num+"번 글이 delete 되었습니다. ");
-	    				}
-	    				else {
-	    					System.out.println("임시보관함에서 "+pk_mail_num+"번 글이 delete 에 실패했습니다. ");
-	    	
-	    				}
-	    			}				
-	    			// 메일쓰기 성공적으로 됐다는 화면 보여주기.
-	    			mav.setViewName("mailSendSuccess.mail");		
-	    		}
-	    		else {// 실패 시 메일쓰기로 이동 (back)		
-	    			//		mav.setViewName("redirect:/mailWriteList.bts");
-	    		}
-
-			} // end of for----------------------------------
-		   
-	      return mav;
-    }
-     
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	

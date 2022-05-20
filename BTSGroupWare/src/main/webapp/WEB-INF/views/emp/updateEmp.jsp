@@ -1,50 +1,36 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
-
 <%
    String ctxPath = request.getContextPath();
-
 %>
-
 <style type="text/css">
-
 	th#th_title {
 		width: 120px;
 	
 	}
-
 </style>
-
 <script type="text/javascript">
-
 	let b_flagIdDuplicateClick = false;
 	// 가입하기 버튼 클릭시 "아이디중복확인" 을 클릭했는지 클릭안했는지를 알아보기 위한 용도이다.
 	
 	let b_flagEmailDuplicateClick = false;
 	// 가입하기 버튼 클릭시 "이메일중복확인" 을 클릭했는지 클릭안했는지를 알아보기 위한 용도이다.
-
 	var imgname = "";
 	
 	$(document).ready(function() {
 		
-
+		var pk_emp_no = $("input#emp_no").val();
 		
 		getEmpImgName();
-		if( $("#img_name").val() != "" ){
-			$("#empProfile").attr("src", "<%= ctxPath%>/resources/files/" + imgname); 
-		}
-		else {
-			$("#empProfile").attr("src", "<%= ctxPath%>/resources/images/mu.png"); 
-		}
+		$("#empProfile").attr("src", "<%= ctxPath%>/resources/files/" + imgname); 
+		
 		// select 된 곳의 값들 넣어주기 시작
 		$("select[name=fk_department_id]").val((("${requestScope.loginuser.fk_department_id}" == '') ? "" : "${requestScope.loginuser.fk_department_id}")).prop("selected", true); 
 		$("select[name=fk_rank_id]").val((("${requestScope.loginuser.fk_rank_id}" == '') ? "" : "${requestScope.loginuser.fk_rank_id}")).prop("selected", true); 
-
 		$("input#postcode").val("${requestScope.loginuser.postal}");
 		
-		$("select[name=num1]").val( ( ("${requestScope.loginuser.num1}" == '') ? "" : "${requestScope.loginuser.num1}") ).prop("selected", true); 
+		$("select[name=num1]").val((("${requestScope.loginuser.num1}" == '') ? "" : "${requestScope.loginuser.num1}")).prop("selected", true); 
 		$("input[name=num2]").val( ("${requestScope.loginuser.num2}" == '') ? "" : "${requestScope.loginuser.num2}" ); 
 		$("input[name=num3]").val( ("${requestScope.loginuser.num3}" == '') ? "" : "${requestScope.loginuser.num3}" ); 
 		
@@ -58,6 +44,14 @@
 			$("input#female").prop("checked", true);
 		}
 		
+	    $("select[name=fk_department_id]").prop('disabled',true);
+	    $("select[name=fk_rank_id]").prop('disabled',true);
+	    
+		if( pk_emp_no == 80000001 ) {
+			$("select[name=fk_department_id]").prop('disabled', false);
+		    $("select[name=fk_rank_id]").prop('disabled', false);
+	    }
+	    
 		// select 된 곳의 값들 넣어주기 끝
 		
 		$("span.error").hide();	
@@ -78,10 +72,16 @@
 			
 				$target.focus();
 				
-				
-			} else {
+	
+			} else if( pk_emp_no == 80000001 ) {
+				$("table#tblEmpUpdate :input").prop("disabled", false);
+				$("select[name=fk_department_id]").prop('disabled', false);
+			    $("select[name=fk_rank_id]").prop('disabled', false);
+		    } else {
 				// 공백이 아닌 글자를 입력했을 경우
 				$("table#tblEmpUpdate :input").prop("disabled", false);
+				$("select[name=fk_department_id]").prop('disabled',true);
+			    $("select[name=fk_rank_id]").prop('disabled',true);
 				//	$target.next().hide();
 				// 	또는
 				$target.parent().find(".error").hide();
@@ -108,11 +108,17 @@
 				  
 				  $target.focus();
 			
-				
-			} else {
+			
+			} else if( pk_emp_no == 80000001 ) {
+				$("table#tblEmpUpdate :input").prop("disabled", false);
+				$("select[name=fk_department_id]").prop('disabled', false);
+			    $("select[name=fk_rank_id]").prop('disabled', false);
+		    } else {
 				// bool == true 암호가 정규표현식에 맞는 경우
 				$("table#tblEmpUpdate :input").prop("disabled", false);
-				
+				$("select[name=fk_department_id]").prop('disabled',true);
+			    $("select[name=fk_rank_id]").prop('disabled',true);
+			    
 				$target.parent().find(".error").hide();
 			}
 		 
@@ -121,7 +127,6 @@
 		// pwdcheck 제약 조건 패스워드 확인 검사
 		$("input#pwdCheck").blur( () => {
 			const $target = $(event.target);
-
 			const pwd = $("input#emp_pwd").val();
 			const pwdcheck = $target.val();
 			
@@ -134,10 +139,16 @@
 			// 	또는
 			//	$target.parent().find(".error").show();
 				$("input#emp_pwd").focus();
-				
-			} else {
+			
+			} else if( pk_emp_no == 80000001 ) {
+				$("table#tblEmpUpdate :input").prop("disabled", false);
+				$("select[name=fk_department_id]").prop('disabled', false);
+			    $("select[name=fk_rank_id]").prop('disabled', false);
+		    } else {
 				// 암호와 암호확인값이 같은 경우
 				$("table#tblEmpUpdate :input").prop("disabled", false);
+				$("select[name=fk_department_id]").prop('disabled',true);
+			    $("select[name=fk_rank_id]").prop('disabled',true);
 				//	$target.next().hide();
 				// 	또는
 				$target.parent().find(".error").hide();
@@ -159,10 +170,16 @@
 			
 				$target.focus();
 				
-				
-			} else {
+			
+			} else if( pk_emp_no == 80000001 ) {
+				$("table#tblEmpUpdate :input").prop("disabled", false);
+				$("select[name=fk_department_id]").prop('disabled', false);
+			    $("select[name=fk_rank_id]").prop('disabled', false);
+		    } else {
 				// 공백이 아닌 글자를 입력했을 경우
 				$("table#tblEmpUpdate :input").prop("disabled", false);
+				$("select[name=fk_department_id]").prop('disabled',true);
+			    $("select[name=fk_rank_id]").prop('disabled',true);
 				//	$target.next().hide();
 				// 	또는
 				$target.parent().find(".error").hide();
@@ -189,10 +206,15 @@
 			
 				$target.focus();
 				
-			} else {
+			} else if( pk_emp_no == 80000001 ) {
+				$("table#tblEmpUpdate :input").prop("disabled", false);
+				$("select[name=fk_department_id]").prop('disabled', false);
+			    $("select[name=fk_rank_id]").prop('disabled', false);
+		    } else {
 				// bool == true 이메일이 정규표현식에 맞는 경우
 				$("table#tblEmpUpdate :input").prop("disabled", false);
-				
+				$("select[name=fk_department_id]").prop('disabled',true);
+			    $("select[name=fk_rank_id]").prop('disabled',true);
 				//	$target.next().hide();
 				// 	또는
 				$target.parent().find(".error").hide();
@@ -218,10 +240,15 @@
 				$target.parent().find(".error").show();
 				
 				$target.focus();
-			} else {
+			} else if( pk_emp_no == 80000001 ) {
+				$("table#tblEmpUpdate :input").prop("disabled", false);
+				$("select[name=fk_department_id]").prop('disabled', false);
+			    $("select[name=fk_rank_id]").prop('disabled', false);
+		    } else {
 				// bool == true 국번이 정규표현식에 맞는 경우
 				$("table#tblEmpUpdate :input").prop("disabled", false);
-				
+				$("select[name=fk_department_id]").prop('disabled',true);
+			    $("select[name=fk_rank_id]").prop('disabled',true);
 				//	$target.next().hide();
 				// 	또는
 				$target.parent().find(".error").hide();
@@ -247,10 +274,15 @@
 				$target.parent().find(".error").show();
 				
 				$target.focus();
-			} else {
+			} else if( pk_emp_no == 80000001 ) {
+				$("table#tblEmpUpdate :input").prop("disabled", false);
+				$("select[name=fk_department_id]").prop('disabled', false);
+			    $("select[name=fk_rank_id]").prop('disabled', false);
+		    } else {
 				// bool == true 국번이 정규표현식에 맞는 경우
 				$("table#tblEmpUpdate :input").prop("disabled", false);
-				
+				$("select[name=fk_department_id]").prop('disabled',true);
+			    $("select[name=fk_rank_id]").prop('disabled',true);
 				//	$target.next().hide();
 				// 	또는
 				$target.parent().find(".error").hide();
@@ -263,19 +295,16 @@
 	 	      new daum.Postcode({
 	            oncomplete: function(data) {
 	                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-
 	                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
 	                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
 	                let addr = ''; // 주소 변수
 	                let extraAddr = ''; // 참고항목 변수
-
 	                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
 	                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
 	                    addr = data.roadAddress;
 	                } else { // 사용자가 지번 주소를 선택했을 경우(J)
 	                    addr = data.jibunAddress;
 	                }
-
 	                // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
 	                if(data.userSelectedType === 'R'){
 	                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
@@ -297,7 +326,6 @@
 	                } else {
 	                    document.getElementById("extraaddress").value = '';
 	                }
-
 	                // 우편번호와 주소 정보를 해당 필드에 넣는다.
 	                document.getElementById('postcode').value = data.zonecode;
 	                document.getElementById("address").value = addr;
@@ -354,14 +382,15 @@
 	 		  });
 	 	
 	 	}); // end of $("button#updateImage").on("click", function (event) {}---------------------------
-
-
 	}); // end of $(document).ready(function() {})---------------
 	
 	// 함수 정의
 	
 	// 수정하기		
 	function goUpdate() {
+		
+		$("select[name=fk_department_id]").prop('disabled',false);
+	    $("select[name=fk_rank_id]").prop('disabled',false);
 		
 		// *** 필수입력사항에 모두 입력이 되었는지 검사한다. *** //
 		let b_FlagRequiredInfo = false;
@@ -405,7 +434,6 @@
 	}
 	
 </script>
-
 <div id="tbl_regEmp">
 <c:set var="emp" value="${requestScope.loginuser}"/>
 	<form name="updateImgFrm" id="updateImgFrm" action="<%= ctxPath%>/emp/updateImg.bts" method="post" enctype="multipart/form-data" role="form">
@@ -567,5 +595,3 @@
 	
 	 	
 </div>
-
-
