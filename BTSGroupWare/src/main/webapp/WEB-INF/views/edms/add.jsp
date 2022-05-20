@@ -76,7 +76,8 @@
 <script type="text/javascript">
    
 	$(document).ready(function(){
-      
+     
+	
 	<%-- ************************************************** 결재요청 버튼 시작 ************************************************** --%>
 	// 결재요청 버튼
 	$("button#btnWrite").click(function() {
@@ -122,7 +123,7 @@
 		let flag = $('input:checkbox[name="emg"]').is(':checked');
 		
 		let emergency = "";
-		// 여기서 값이 넘어가지 않음 - 
+		// 여기서 값이 넘어가지 않음 -> 넘어감.
 		   
 		if (flag == true) { // 체크된 경우
 			console.log("true");
@@ -202,6 +203,8 @@
 			$( "div#h_teamwon" ).slideToggle();
 		});
         
+		
+		// 이름에 체크했을 때
 		$('input:checkbox[name=empno]').click(function(){
            
 			checkOnlyOne(this);
@@ -215,6 +218,11 @@
 			$("input#emp_name2").val("");
 			$("input#emp_rank2").val("");
 			$("input#emp_dept2").val("");
+			
+			// 처음 지정한 값이 최종으로 바뀌어서 오류가 떴던 것이다.
+			// employee_no가 fk_mid_empno에도 되고, fk_fin_empno에도 되니까
+			// 그런데 등록이 아니라 추가할 때 아예 바뀌어야 하므로
+			// middle_approve과 last_approve 에서 if문으로 조건을 걸어준다.
 			
 			var employee_no =  $(this).val();
 			$("input#emp_no").val(employee_no);
@@ -237,24 +245,12 @@
 			
 		});
 		<%-- 결재선 지정하기 종료 --%>
+		;
 		
-		
-				
-		
-		 
-			 
-		 });
-		
-		
-		
-		
-		
-      
 	}); // end of $(document).ready(function(){}) --------------------
 	
 	<%-- ************************************************** 결재요청 버튼 종료 ************************************************** --%>
-	
-	
+
    /* 체크박스 하나만 선택되게 하는 함수 시작 */
    function checkOnlyOne(element) {
      
@@ -269,77 +265,114 @@
    }      
    /* 체크박스 하나만 선택되게 하는 함수 끝 */
    
-   function middle_approve(){
-      
-      var emp_no = $("input#emp_no").val();
-      var emp_name = $("input#emp_name").val();
-      var emp_rank = $("input#emp_rank").val();
-      var emp_dept = $("input#emp_dept").val();
-      
-      $("input#middle_empno").val(emp_no);
-       $("input#middle_name").val(emp_name);
-       $("input#middle_rank").val(emp_rank);
-       $("input#middle_dept").val(emp_dept);
-   }
-       
-   function last_approve(){
-         
-         var emp_no2 = $("input#emp_no2").val();
-         var emp_name2 = $("input#emp_name2").val();
-         var emp_rank2 = $("input#emp_rank2").val();
-         var emp_dept2 = $("input#emp_dept2").val();
-         
-          $("input#last_empno").val(emp_no2);
-          $("input#last_name").val(emp_name2);
-          $("input#last_rank").val(emp_rank2);
-          $("input#last_dept").val(emp_dept2);
-      }
-    
    
-   function middle_reset() {
+   // 중간결재자 값을 테이블에 넣어주는 함수
+	function middle_approve(){
+      
+		var emp_no = $("input#emp_no").val();		// 담아준 중간결재자번호(로그인사번 아니다!)
+		var emp_name = $("input#emp_name").val();
+		var emp_rank = $("input#emp_rank").val();
+		var emp_dept = $("input#emp_dept").val();
+      
+		var mid = emp_no;
+		var fk = $("input#fk_emp_no").val();		// fk에는 로그인한 유저의 사번을 담아준다.
+       
+	//	console.log(mid);
+	//	console.log(fk);
+
+		// 결재자의 사번이 자신과 동일한 경우, 즉 본인을 결재자로 지정하는 경우 아예 값이 안 들어가도록 공백을 넣어준다.
+		if( mid == fk ) {
+			alert("본인을 결재선으로 추가하는 것은 불허합니다!");
+			$("input#fk_mid_empno").val("");
+			$("input#fk_mid_empno2").val("");
+			return false;
+		}
+		
+		// 결재자의 사번이 자신과 다른 경우, 즉 본인을 결재자로 지정하지 않은 '정상적인' 경우에는 값이 담아준다.
+		else {
+			$("input#middle_empno").val(emp_no);
+			$("input#middle_name").val(emp_name);
+			$("input#middle_rank").val(emp_rank);
+			$("input#middle_dept").val(emp_dept);
+		}
+	} // end of function middle_approve() --------------------
+
+	// 최종결재자 값을 테이블에 넣어주는 함수
+	function last_approve(){
+		
+		var emp_no2 = $("input#emp_no2").val();		// 담아준 중간결재자번호(로그인사번 아니다!)
+		var emp_name2 = $("input#emp_name2").val();
+		var emp_rank2 = $("input#emp_rank2").val();
+		var emp_dept2 = $("input#emp_dept2").val();
+      
+		var fin = emp_no2;
+		var fk = $("input#fk_emp_no").val();		// fk에는 로그인한 유저의 사번을 담아준다.
+       
+	//	console.log(fin);
+	//	console.log(fk);
+
+		// 결재자의 사번이 자신과 동일한 경우, 즉 본인을 결재자로 지정하는 경우 아예 값이 안 들어가도록 공백을 넣어준다.
+		if( fin == fk ) {
+			alert("본인을 결재선으로 추가하는 것은 불허합니다!");
+			$("input#fk_fin_empno").val("");
+			$("input#fk_fin_empno2").val("");
+			
+			return false;
+		}
+		
+		// 결재자의 사번이 자신과 다른 경우, 즉 본인을 결재자로 지정하지 않은 '정상적인' 경우에는 값이 담아준다.
+		else {
+			$("input#last_empno").val(emp_no2);
+			$("input#last_name").val(emp_name2);
+			$("input#last_rank").val(emp_rank2);
+			$("input#last_dept").val(emp_dept2);
+		}		
+	} // end of function middle_approve() --------------------
+	
+	
+	// 중간결재자 삭제
+	function middle_reset() {
       
       $("input#middle_empno").val("");
        $("input#middle_name").val("");
        $("input#middle_rank").val("");
        $("input#middle_dept").val("");
    
-   }
+       $("input#fk_mid_empno").val() = "";
+		$("input#fk_mid_empno2").val() = "";
+	} // end of function middle_reset() --------------------
    
-   function last_reset() {
+	
+	// 최종결재자 삭제
+	function last_reset() {
       
       $("input#last_empno").val("");
        $("input#last_name").val("");
        $("input#last_rank").val("");
        $("input#last_dept").val("");
+       
+       $("input#fk_fin_empno").val() = "";
+	   $("input#fk_fin_empno2").val() = "";
    
-   }
+   } // end of function last_reset() --------------------
+   
    
    // 결재라인을 지정해서 담아주는 메소드
    function getAppr() {
       $(document).on("click", "#insert_customer_btn", function(event){
-    	 
-    	  
-    	 if( $("#mid_name").val() == ""){
-              alert("중간승인자 값이 없습니다");
-              return false;
-         }
-    	  
+
     	 if( $("#last_name").val() == ""){
               alert("최종승인자 값이 없습니다");
               return false;
          }
+ 
+    	// console.log(${sessionScope.loginuser.pk_emp_no});
+    	// console.log($('input#fk_mid_empno').val()); // 여기까지는 잘 들어옴
          
-         else if( $("input#fk_mid_empno").val() == $("input#fk_emp_no").val() ) { // 결재자의 사번이 자신과 동일한 경우
+         if( $("input#fk_fin_empno").val() == $("input#fk_emp_no").val() ) { // 결재자의 사번이 자신과 동일한 경우
         	 alert("본인을 결재선으로 추가하는 것은 불허합니다!");
-			// 비우기
-			$("input#fk_mid_empno").val() = "";
-			$("input#fk_mid_empno2").val() = "";
-         	return false;
-         }
-         else if( $("input#fk_fin_empno").val() == $("input#fk_emp_no").val() ) { // 결재자의 사번이 자신과 동일한 경우
-        	 alert("본인을 결재선으로 추가하는 것은 불허합니다!");
-        	 $("input#fk_fin_empno").val() = "";
- 			$("input#fk_fin_empno2").val() = "";
+        	 $("input#fk_fin_empno").val("");
+ 			$("input#fk_fin_empno2").val("");
         	 return false;
          }
          
@@ -378,33 +411,9 @@
 			$("input#fk_mid_empno").val(emp_no);
 			$("input#fk_fin_empno").val(emp_no2);
 
-            /* // 중간결재자가 있는 경우
-            if($("input#middle_empno").val != null) {
-                // 보여주기 위해서 담아주는 곳
-                $("input#fk_mid_empno2").val(emp_name+"("+emp_no+")");
-                $("input#fk_fin_empno2").val(emp_name2+"("+emp_no2+")");
-                
-                // 오류 / 실제로 컨트롤러로 넘어가는 곳 <<<< 위와 같이 "(" ~ 넘기면 fk_mid_empno에 "(" ~ 가 담기는데, 그러면 컨트롤러에서 값을 못 받아서 자꾸 작성이 안되는 것이다!
-                $("input#fk_mid_empno").val(emp_no);
-                $("input#fk_fin_empno").val(emp_no2);
-            }
-            
-         // 중간결재자가 없는 경우
-            else($("input#middle_empno").val == null) {
-                $("input#fk_mid_empno2").val("중간결재자 없음");
-                $("input#fk_fin_empno2").val(emp_name2+"("+emp_no2+")");
-                
-                // 오류 / 실제로 컨트롤러로 넘어가는 곳 <<<< 위와 같이 "(" ~ 넘기면 fk_mid_empno에 "(" ~ 가 담기는데, 그러면 컨트롤러에서 값을 못 받아서 자꾸 작성이 안되는 것이다!
-                $("input#fk_mid_empno").val(emp_no);
-                $("input#fk_fin_empno").val(emp_no2);
-            } */
-            
             // 값 input
-             
-            
-            
-            
           }
+    	
       });
    }   // end of getAppr()
    
@@ -414,6 +423,8 @@
 
 
 <%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
+
+<div class="edmsDiv">
 
    <div class="edmsHomeTitle">
       <span class="edms_maintitle">문서작성</span>
@@ -427,7 +438,7 @@
 	<table style="width: 100%" class="table table-bordered">
 		<tr>
 		<th class="edmsView_th">문서양식</th>
-		<td colspan="3" style="width: 60%;">
+		<td colspan="4" style="width: 60%;">
 			<select name="fk_appr_sortno" id="fk_appr_sortno" class="form-control" style="width: 100%;">
 			<option value="">양식선택</option>
 			<option value="1">업무기안서</option>
@@ -435,7 +446,6 @@
 			<option value="3">사유서</option>
 			</select>
 		</td>
-		<td>긴급버튼 넣을까말까</td>
 		</tr>
       
 		<tr>
@@ -481,17 +491,7 @@
       <tr>
          <th class="edmsView_th">내용</th>
          <td colspan="4">
-            <textarea style="width: 100%; height: 612px;" name="contents" id="contents" class="form-control">
-            
-            
-            <c:if test=" select#fk_appr_sortno == 1" > 업무기안서입니다. </c:if>
-            
-            
-            
-            
-            
-            
-            </textarea>
+            <textarea style="width: 100%; height: 612px;" name="contents" id="contents" class="form-control"></textarea>
          </td>
       </tr>
       
@@ -523,7 +523,7 @@
       <button type="button" class="btn btn-secondary mr-3" id="btnWrite">결재요청</button>
       <button type="button" class="btn btn-secondary" onclick="javascript:history.back()">작성취소</button>
    </div>
-   
+ </div>
    
    <!-- ------------------------------------------------------- -->
       
@@ -536,7 +536,7 @@
 
 
 <div class="modal fade" data-backdrop="static" id="viewModal">
-   <div class="modal-dialog" style="max-width: 100%; width: auto; display: table;">
+   <div class="modal-dialog" style="max-width: 100%; display: table;">
    <div class="modal-content" style= "height:90%;">
    <div class="modal-header">
    <h4 class="modal-title" id="exampleModalLabel">결재 참조</h4>
@@ -684,16 +684,18 @@
         
         <div id="tbl_two" style="float:left; width:18%;">
            <table>
-              <tr><td><button class="arrow-next_1" onclick="middle_approve();" ></button></td></tr>
-              <tr><td><button class="arrow-next_2" onclick="last_approve();" style="margin-top:115%;"></button></td></tr>
+              <!-- <tr><td><button class="arrow-next_1" onclick="middle_approve();" ></button></td></tr> -->
+              <tr><td><button class="btn btn-primary" onclick="middle_approve();" >중간결재자<br/>추가</button></td></tr>
+              <!-- <tr><td><button class="arrow-next_2" onclick="last_approve();" style="margin-top:115%;"></button></td></tr> -->
+              <tr><td><button class="btn btn-primary" onclick="last_approve();" style="margin-top:115%;">최종결재자<br/>추가</button></td></tr>
            </table>
         </div>
         
-        <div id="tbl_three" style="float:left; width:60%;">
+        <div id="tbl_three" style="width:50%;">
            <form name="submitFrm">
-           <table style="text-align:center; max-width: 100%;">
+           <table style="text-align:center; width: 40%;">
               <tr>
-                 <td colspan="4">중간 결재&nbsp;<input type="reset" value="삭제" onclick="middle_reset()"/></td>
+                 <td colspan="4">중간 결재&nbsp;<input type="reset" value="삭제" onclick="middle_reset()" style="background-color: #007bff; border: none; color: #fff; border-radius: 10%; margin: 4px;" /></td>
               </tr>
               <tr style="border: solid darkgray 2px; margin-left:2%">
                  <td style="width:0%;"><input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly /></td>
@@ -710,7 +712,7 @@
                </tr>
          </table>
          <table style="text-align:center; margin-top:30%;">
-            <tr><td colspan="4">최종 결재&nbsp;<input type="reset" value="삭제" onclick="last_reset()" /></td></tr>
+            <tr><td colspan="4">최종 결재&nbsp;<input type="reset" value="삭제" onclick="last_reset()" style="background-color: #007bff; border: none; color: #fff; border-radius: 10%; margin: 4px;" /></td></tr>
             <tr style="border: solid darkgray 2px; margin-left:2%">
                <td style="width:0%;"><input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly /></td>
                <td style="width:13%;"><strong>이름</strong></td>
@@ -727,6 +729,9 @@
          </table>
          </form>
         </div>
+        
+        <div id="tbl_right" style="float:left; width:10%;">
+        </div>
    </div><!-- modal-body -->
    
    <div class="modal-footer">
@@ -741,7 +746,7 @@
    
    <!-- 문서작성 종료 -->
    
-   
+
    
    
    

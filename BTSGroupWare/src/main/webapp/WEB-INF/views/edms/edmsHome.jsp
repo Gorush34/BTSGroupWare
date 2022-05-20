@@ -42,7 +42,7 @@
 <%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
 	
 	
-	<div class="edmsHome">
+	<div class="edmsDiv">
 	
 	<div class="edmsHomeTitle">
 		<span class="edms_maintitle">전자결재 현황</span>
@@ -88,7 +88,7 @@
 					
 					<td>
 						<c:if test="${all.emergency ne 0}">
-							<button id="btn_emergency" class="btn btn-danger edmsBtn">긴급</button>
+							<button id="btn_emergency" class="btn btn-outline-danger disabled edmsBtn">긴급</button>
 						</c:if>
 					</td>
 					
@@ -106,10 +106,10 @@
 					
 					<td>
 						<c:if test="${all.mid_accept eq 0 and all.fin_accept eq 0}">
-							<button class="btn btn-secondary edmsBtn">대기중</button>
+							<button class="btn btn-outline-dark disabled edmsBtn">대기중</button>
 						</c:if>
 						<c:if test="${all.mid_accept eq 1 and all.fin_accept eq 0}">
-							<button class="btn btn-warning edmsBtn">진행중</button>
+							<button class="btn btn-outline-info disabled edmsBtn">진행중</button>
 						</c:if>
 						<c:if test="${all.mid_accept eq 1 and all.fin_accept eq 1}">
 							<button class="btn btn-info edmsBtn">승인됨</button>
@@ -153,7 +153,7 @@
 		<%-- 모든문서 목록이 없을 때 종료 --%>
 		
 	</div>
-	</div>
+	
 	<!-- 모든문서 종료 -->
 	
 	
@@ -189,7 +189,7 @@
 					<td>${accept.appr_name}</td>
 					<td>
 						<c:if test="${accept.emergency ne 0}">
-						<button id="btn_emergency" class="btn btn-danger edmsBtn">긴급</button>
+						<button id="btn_emergency" class="btn btn-outline-danger disabled edmsBtn">긴급</button>
 						</c:if>
 					</td>
 					
@@ -207,7 +207,7 @@
 
 					<td>
 						<c:if test="${accept.mid_accept eq 1 and accept.fin_accept eq 0}">
-							<button class="btn btn-warning edmsBtn">진행중</button>
+							<button class="btn btn-outline-info disabled edmsBtn">진행중</button>
 						</c:if>
 						<c:if test="${accept.fin_accept eq 1 and accept.fin_accept eq 1}">
 							<button class="btn btn-info edmsBtn">승인됨</button>
@@ -280,7 +280,7 @@
 					<td>${reject.appr_name}</td>
 					<td>
 						<c:if test="${reject.emergency ne 0}">
-						<button id="btn_emergency" class="btn btn-danger edmsBtn">긴급</button>
+						<button id="btn_emergency" class="btn btn-outline-danger disabled edmsBtn">긴급</button>
 						</c:if>
 					</td>
 					<td class="elltitle">
@@ -327,3 +327,5 @@
 		</div>
 	</div>
 	<!-- 결재반려 문서목록 종료 -->
+	
+	</div>

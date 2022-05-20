@@ -116,7 +116,7 @@
 	function goSearch(){
 		const frm = document.searchFrm;
 		frm.method = "GET";
-		frm.action = "<%= ctxPath%>/edms/list.bts";
+		frm.action = "<%= ctxPath%>/edms/mydoc/waitlist.bts";
 		frm.submit();
 	} // end of function goSearch() --------------------
 	
@@ -125,7 +125,7 @@
 
 <%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
 
-
+<div class="edmsDiv">
 
 	<div class="edmsHomeTitle">
 		<span class="edms_maintitle">${sessionScope.loginuser.emp_name}님의 대기문서함</span>
@@ -142,19 +142,7 @@
 
 	<!-- 문서목록 시작 -->
 	<div id="mywaitlist">
-		<span class="edms_title">문서목록보기</span>
-		<!--
-		<div class="dropdown">
-			<button class="btn btn-primart-outline dropdown-toggle" type="button" data-toggle="dropdown"
-					aria-haspopup="true" aria-expanded="false">10개 보기</button>
-			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-				<a class="dropdown-item" href="#">10개 보기</a>
-				<a class="dropdown-item" href="#">30개 보기</a>
-				<a class="dropdown-item" href="#">50개 보기</a>
-			</div>
-		</div>
-		-->
-			
+		<span class="edms_title">문서목록보기</span>			
 		<div class="divClear"></div>
 
 		<%-- 결재대기 목록이 없을 때 시작 --%>
@@ -201,7 +189,7 @@
 					
 					<td>
 					<c:if test="${wait.emergency == 1}">
-						<button id="btn_emergency" class="btn btn-danger edmsBtn">긴급</button>
+						<button id="btn_emergency" class="btn btn-outline-danger disabled edmsBtn">긴급</button>
 					</c:if>
 					<c:if test="${wait.emergency == 0}">
 						&nbsp;
@@ -225,10 +213,10 @@
 					
 					<td>
 						<c:if test="${wait.mid_accept eq 0 and wait.fin_accept eq 0}">
-							<button class="btn btn-secondary edmsBtn">대기중</button>
+							<button class="btn btn-outline-dark disabled edmsBtn">대기중</button>
 						</c:if>
 						<c:if test="${wait.mid_accept eq 1 and wait.fin_accept eq 0}">
-							<button class="btn btn-warning edmsBtn">진행중</button>
+							<button class="btn btn-outline-info disabled edmsBtn">진행중</button>
 						</c:if>
 						<c:if test="${wait.mid_accept eq 1 and wait.fin_accept eq 1}">
 							<button class="btn btn-info edmsBtn">승인됨</button>
@@ -259,12 +247,12 @@
 		
 		<%-- === 글검색 폼 추가하기 : 글제목, 글쓴이로 검색을 하도록 한다. === --%>
 		<form name="searchFrm" style="margin-top: 20px;">
-			<select name="searchType" id="searchType" style="height: 26px;">
-				<option value="title">글제목</option>
+			<select name="searchType" id="searchType" style="height: 26px; display: none;">
+				<option value="title">&nbsp;</option>
 				<!-- <option value="emp_name">글쓴이</option> -->
 			</select>
-			<input type="text" name="searchWord" id="searchWord" class="form-controll" size="40" autocomplete="off" />
-			<input type="text" style="display: none;" />
+			<input type="text" name="searchWord" id="searchWord" class="form-control" placeholder="제목을 입력하세요" style="width: 20%;" size="40" autocomplete="off" />
+			<input type="text" style="display: none;" class="form-control"/>
 			<%-- form 태그내에 input 태그가 오로지 1개일 경우에는 엔터를 했을 경우 검색이 되어지므로 이것을 방지하고자 만든것이다. hidden으로 해도 바로 submit되어버리므로 안된다! --%>
 			<button type="button" class="btn btn-secondary btn-sm" onclick="goSearch()">검색</button>
 		</form>

@@ -96,13 +96,17 @@ public interface InterEdmsDAO {
 	
 	/// 내 문서함(본인 것만)
 	int mywaitlist_cnt(Map<String, String> paraMap);
-	List<ApprVO> mywaitlist_paging(Map<String, String> paraMap);
+	List<Map<String, Object>> mywaitlist_paging(Map<String, String> paraMap);
 
 	int myacceptlist_cnt(Map<String, String> paraMap);
 	List<Map<String, Object>> myacceptlist_paging(Map<String, String> paraMap);
 
 	int myrejectlist_cnt(Map<String, String> paraMap);
-	List<ApprVO> myrejectlist_paging(Map<String, String> paraMap);
+	List<Map<String, Object>> myrejectlist_paging(Map<String, String> paraMap);
+
+	// 전체문서함 대기+진행 중인 문서의 이름, 검색 포함 개수
+	int getcompanyWaitList_Cnt(Map<String, String> paraMap);
+	List<Map<String, Object>> getcompanyWaitList(Map<String, String> paraMap);
 	
 	
 }

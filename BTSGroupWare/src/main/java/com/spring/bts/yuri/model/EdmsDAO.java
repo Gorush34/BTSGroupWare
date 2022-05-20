@@ -261,8 +261,8 @@ public class EdmsDAO implements InterEdmsDAO {
 	}
 	
 	@Override
-	public List<ApprVO> mywaitlist_paging(Map<String, String> paraMap) {
-		List<ApprVO> mywaitlist = sqlsession.selectList("yuri.mywaitlist_paging", paraMap);
+	public List<Map<String, Object>> mywaitlist_paging(Map<String, String> paraMap) {
+		List<Map<String, Object>> mywaitlist = sqlsession.selectList("yuri.mywaitlist_paging", paraMap);
 		return mywaitlist;
 	}
 
@@ -285,9 +285,22 @@ public class EdmsDAO implements InterEdmsDAO {
 	}
 
 	@Override
-	public List<ApprVO> myrejectlist_paging(Map<String, String> paraMap) {
-		List<ApprVO> myrejectlist = sqlsession.selectList("yuri.myrejectlist_paging", paraMap);
+	public List<Map<String, Object>> myrejectlist_paging(Map<String, String> paraMap) {
+		List<Map<String, Object>> myrejectlist = sqlsession.selectList("yuri.myrejectlist_paging", paraMap);
 		return myrejectlist;
+	}
+
+	// 전체문서함 대기+진행 중인 문서의 이름, 검색 포함 개수
+	@Override
+	public int getcompanyWaitList_Cnt(Map<String, String> paraMap) {
+		int totalCount = sqlsession.selectOne("yuri.getcompanyWaitList_Cnt", paraMap);
+		return totalCount;
+	}
+
+	@Override
+	public List<Map<String, Object>> getcompanyWaitList(Map<String, String> paraMap) {
+		List<Map<String, Object>> companyWaitList = sqlsession.selectList("yuri.getcompanyWaitList", paraMap);
+		return companyWaitList;
 	}
 
 
