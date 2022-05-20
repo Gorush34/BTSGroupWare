@@ -197,5 +197,19 @@ public class AttendanceService implements InterAttendanceService {
 		return n;
 	}
 
+	// 관리자페이지 - 총 연차신청서 개수 가져오기
+	@Override
+	public int getTotalCountVacReport_all(String fk_emp_no) {
+		int totalPage = attDAO.getTotalCountVacReport_all(fk_emp_no);
+		return totalPage;
+	}
+
+	// 관리자페이지 - 페이징처리 한 결재대기중인 공가/경조신청목록 
+	@Override
+	public List<Map<String, Object>> getAttListAllWithPaging(Map<String, String> paraMap) {
+		List<Map<String, Object>> allAttList = attDAO.getAttListAllWithPaging(paraMap);
+		return allAttList;
+	}
+
 	
 }

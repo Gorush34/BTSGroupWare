@@ -17,8 +17,8 @@
 </style>
 
 <script type="text/javascript">
-	
-	// 반려의견 담는 곳
+		
+	//반려의견 담는 곳
 	let opinion = "";
 	
 	$(document).ready(function() {
@@ -39,7 +39,7 @@
 			$('#modal_app_opinion').modal('show'); // 모달창 보여주기	
 		})
 		
-	}); // end of $(document).ready(function() {})-----------------------------
+	});
 	
 	// Function Declaration
 	function viewReport(pk_att_num) {
@@ -47,73 +47,17 @@
 		location.href="<%= ctxPath%>/att/viewReport.bts?pk_att_num="+pk_att_num; 
 		
 	} // end of function viewReport(pk_att_num)-----------------------
-	/*
-	// === 의견보기 버튼 클릭시 ===
-	function showOpinion(){
-		
-		opinion = $(this).parent().find("input#fin_app_opinion").val();
-		 $("input#opinion").val(opinion);
-		
-		$('#modal_app_opinion').modal('show'); // 모달창 보여주기	
-	}// end of function showOpinion(){}--------------------
-	*/
+	
 </script>
 
 <div class="container_myAtt">
-    <div class="row">
-    	<%-- 연차내역 시작 --%>
-        <div class="col-md-6">
-        	<div id="title"><span style="font-size: 30px; margin-bottom: 20px; font-weight: bold;">공가 / 경조신청 현황</span></div>
-        	
-        	<div id="vacCnt" style="margin-top: 20px;">
-        		<!--
-        		<div id="selectYear">
-	        		<form name="vacCntFrm" style="margin-top: 20px;">
-		        		<span style="">년도 :</span>
-					    <select name="year" id="year" style="height: 26px;">
-					         <option value="2022">2022</option>
-					         <option value="2021">2021</option>
-					    </select>
-					    <button type="button" id="btn_vacCnt" class="btn btn-secondary btn-sm" onclick="goSearchMyVacCnt()">검색</button>
-			        </form>
-			     </div>
-			     -->
-			     <table class="table" id="tbl_vacCnt">
-					  <thead class="thead-light">
-					    <tr style="text-align: center;">
-					      <th style="width:20%; text-align: center;">년도</th>
-					      <th style="width:20%; text-align: center;">전체연차</th>
-					      <th style="width:20%; text-align: center;">사용연차</th>
-					      <th style="width:20%; text-align: center;">잔여연차</th>
-					      <!-- <th style="width:20%; text-align: center;">사용한 대체휴가</th> -->
-					    </tr>
-					  </thead>
-					  <tbody>
-						<tr style="text-align: center;">
-					      <td style="width:20%; text-align: center;">${requestScope.leaveVO.regdate}</td>
-					      <td style="width:20%; text-align: center;">${requestScope.leaveVO.total_vac_days}</td>
-					      <td style="width:20%; text-align: center;">${requestScope.leaveVO.use_vac_days}</td>
-					      <td style="width:20%; text-align: center;">${requestScope.leaveVO.rest_vac_days}</td>
-					      <%-- <td style="width:20%; text-align: center;">${requestScope.leaveVO.instead_vac_days}</td> --%>
-					    </tr>
-					  </tbody>
-				  </table>
-        	</div>
-        </div>
-        <%-- 연차내역 시작 --%>
-        
-        <%-- 공가/ 경조신청서 시작 --%>
-        <div class="col-md-6">
-        
-        </div>
-        <%-- 공가/ 경조신청서 끝 --%>
-    </div>
+    
     
     <%-- 공가/경조신청내역 시작 --%>
     <div class="row" style="padding-left:15px;">
         <div class="col-xs-12" style="width:90%;">
         	<div id="title" style="margin-bottom: 20px;">
-        		<span style="font-size: 24px; margin-bottom: 20px; font-weight: bold;">공가 / 경조신청내역</span>
+        		<span style="font-size: 24px; margin-bottom: 20px; font-weight: bold;">전체 공가 / 경조신청내역</span>
         		<br>
         		<span style="margin-bottom: 20px; "> ※ 현재 시스템에 표기된 연자일수는 관리의 편의상 <b>회계연도</b> 기준으로 계산되었으며, <b>퇴사 시</b> 입사일 기준으로 <b>재정산</b> 합니다.</span>
         	</div>

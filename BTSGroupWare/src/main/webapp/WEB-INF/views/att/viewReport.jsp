@@ -69,6 +69,21 @@
 			else{
 				isRejected = 1; // 반려사용시 값 지정
 				$("input#isRejected").val(isRejected);
+				
+				var fin_app_opinion = $("input#fin_app_opinion").val().trim();
+				
+				fin_app_opinion = fin_app_opinion.replace(/<p><br><\/p>/gi, "<br>"); //<p><br></p> -> <br>로 변환
+				fin_app_opinion = fin_app_opinion.replace(/<\/p><p>/gi, "<br>"); //</p><p> -> <br>로 변환  
+				fin_app_opinion = fin_app_opinion.replace(/(<\/p><br>|<p><br>)/gi, "<br><br>"); //</p><br>, <p><br> -> <br><br>로 변환
+				fin_app_opinion = fin_app_opinion.replace(/(<p>|<\/p>)/gi, ""); //<p> 또는 </p> 모두 제거시
+				
+				fin_app_opinion = fin_app_opinion.replaceAll("<", "&lt;");
+				fin_app_opinion = fin_app_opinion.replaceAll(">", "&gt;");
+				fin_app_opinion = fin_app_opinion.replaceAll("&", "&amp;");
+				fin_app_opinion = fin_app_opinion.replaceAll("\\", "&quot;");
+				
+				$("input#fin_app_opinion").val(fin_app_opinion);
+				
 				goSign();
 			}
 		}) // end of $("button#btnSignOff").click(function(){})------------

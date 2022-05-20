@@ -559,7 +559,8 @@ public class EmployeeController {
 			// WAS 의 절대경로를 알아와야 한다.
 			
 			// String root = session.getServletContext().getRealPath("/");
-			String root = "C:/NCS/workspace(spring)/BTSGroupWare/BTSGroupWare/src/main/webapp/";
+			String root = session.getServletContext().getRealPath("/");
+			// String root = "C:/NCS/workspace(spring)/BTSGroupWare/BTSGroupWare/src/main/webapp/";
 			EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
 			empVO.setPk_emp_no(loginuser.getPk_emp_no()); 
 			
@@ -709,30 +710,6 @@ public class EmployeeController {
 		
 		
 	} // end of public ModelAndView updateEmpEnd(ModelAndView mav, HttpServletRequest request) {})----------------
-     
-	
-	@RequestMapping(value="/emp/viewAll.bts", method = {RequestMethod.POST})
-	public ModelAndView viewAll(ModelAndView mav, HttpServletRequest request) {
-		
-		String method = request.getMethod();
-		String pk_emp_no = request.getParameter("pk_emp_no");
-		String emp_pwd = request.getParameter("emp_pwd");
-		emp_pwd = Sha256.encrypt(emp_pwd);
-		
-		Map<String, String> paraMap = new HashMap<>();
-		paraMap.put("emp_pwd", emp_pwd);
-		paraMap.put("pk_emp_no", pk_emp_no);
-		
-		
-		int n = empService.pwdUpdate(paraMap);
-		
-		mav.addObject("n", n);
-		mav.addObject("pk_emp_no", pk_emp_no);
-		mav.addObject("method", method);
-		mav.setViewName("/tiles1/main/pwdUpdate");
-		
-		return mav;
-	}
 	
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////
