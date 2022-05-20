@@ -711,6 +711,30 @@ public class EmployeeController {
 	} // end of public ModelAndView updateEmpEnd(ModelAndView mav, HttpServletRequest request) {})----------------
      
 	
+	@RequestMapping(value="/emp/viewAll.bts", method = {RequestMethod.POST})
+	public ModelAndView viewAll(ModelAndView mav, HttpServletRequest request) {
+		
+		String method = request.getMethod();
+		String pk_emp_no = request.getParameter("pk_emp_no");
+		String emp_pwd = request.getParameter("emp_pwd");
+		emp_pwd = Sha256.encrypt(emp_pwd);
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("emp_pwd", emp_pwd);
+		paraMap.put("pk_emp_no", pk_emp_no);
+		
+		
+		int n = empService.pwdUpdate(paraMap);
+		
+		mav.addObject("n", n);
+		mav.addObject("pk_emp_no", pk_emp_no);
+		mav.addObject("method", method);
+		mav.setViewName("/tiles1/main/pwdUpdate");
+		
+		return mav;
+	}
+	
+	
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	
 	// === 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 생성 === //
