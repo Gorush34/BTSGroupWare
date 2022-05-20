@@ -147,11 +147,11 @@
 					var result = json.result;
 					
 					if(result == 1) {
-						alert("중요메일함 해제에 성공했습니다!!");
+					//	alert("중요메일함 해제에 성공했습니다!!");
 						window.location.reload();
 					}
 					else {
-						alert("중요메일함 해제에 실패했습니다.");
+					//	alert("중요메일함 해제에 실패했습니다.");
 						window.location.reload();
 					}
 					
