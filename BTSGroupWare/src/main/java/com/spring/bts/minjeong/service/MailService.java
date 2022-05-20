@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.spring.bts.hwanmo.model.EmployeeVO;
 import com.spring.bts.minjeong.model.InterMailDAO;
 import com.spring.bts.minjeong.model.MailVO;
 
@@ -155,7 +156,7 @@ public class MailService implements InterMailService {
 	
 	// 스프링 스케줄러를 이용해서 발송예약 실행하기	  
 	@Override	  
-//	@Scheduled(cron = "0 * * * * *") 
+	@Scheduled(cron = "0 * * * * *") 
 	public void reservationMailSendSchedular() throws Exception { 
 	  // ***주의*** 스케줄러로 사용되어지는 메소드는 반드시 파라미터는 없어야 한다.
 	  
@@ -438,14 +439,6 @@ public class MailService implements InterMailService {
 		return getPkMailNum;
 	}
 
-
-	// pk_mail_num 을 통해 구해온 fk_mail_num 으로 rec_status 가 0인지 1인지(1이라면 rec_date도 가져오기) 알아온다.
-	@Override
-	public List<MailVO> getRecCheck(String fk_mail_num) {
-		List<MailVO> getRecCheck = dao.getRecCheck(fk_mail_num);
-		return getRecCheck;
-	}
-
 	 // 페이징처리 한 보낸메일 수신확인 메일목록 (검색 있든, 없든 모두 다 포함) 
 	@Override
 	public List<MailVO> sendMailListSearchWithPaging_recCheck(Map<String, String> paraMap) {
@@ -460,6 +453,12 @@ public class MailService implements InterMailService {
 		return n;
 	}
 
+	// 상세부서정보 페이지 사원목록 불러오기 
+	@Override
+	public List<EmployeeVO> addBook_depInfo_select() {
+		List<EmployeeVO> empList = dao.addBook_depInfo_select();
+		return empList;
+	}
 
 
 

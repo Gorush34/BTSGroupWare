@@ -104,6 +104,7 @@
 
 
 	<!-- 페이징처리 / 검색기능 포함 된 받은메일함 목록에서 상세내용 조회하기 (이전글, 다음글 제외) -->
+	<!--
 	<select id="getRecMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">	
 		select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content, reg_date, reservation_date
 			 , filename, orgfilename, filesize
@@ -119,32 +120,35 @@
 				) V
 		where V.pk_mail_num = #{pk_mail_num}
 	</select>
-
+	-->	
 
 	<!-- 페이징처리 / 검색기능 포함 된 받은메일함 목록에서 상세내용 조회하기 (이전글, 다음글 포함) -->
-	<!--
+
 	<select id="getRecMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">	
-		select prev_seq, prev_subject
-			  , pk_mail_num, fk_senduser_num, fk_receiveuser_num, empname, email, subject, content, reg_date
-			  , next_seq, next_subject
-			  , filename, orgfilename, filesize
-				from
-				(
-				    select lag(pk_mail_num,1) over(order by pk_mail_num desc) AS prev_seq            
-				         , lag(subject,1) over(order by pk_mail_num desc) AS prev_subject
-				         , fk_senduser_num, fk_receiveuser_num, empname, email, subject, content
-				         , to_char(reg_date, 'yyyy-mm-dd hh24:mi:ss') as reg_date				         
-				         , lead(pk_mail_num,1) over(order by pk_mail_num desc) AS next_seq
-				         , lead(subject,1) over(order by pk_mail_num desc) AS next_subject	         
-				         , fileName, orgFilename, fileSize
-				    from tbl_mail
+		select prev_seq ,pk_mail_num
+     		 , prev_subject, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content, reg_date, reservation_date
+		     , next_seq, next_subject
+		     , filename, orgfilename, filesize
+		        from
+		        (
+		            select lag(pk_mail_num,1) over(order by pk_mail_num desc) AS prev_seq            
+		                 , lag(subject,1,'이전글이 없습니다.') over(order by pk_mail_num desc) AS prev_subject
+		                 , pk_mail_num, fk_senduser_num, fk_receiveuser_num, recempname, sendempname, recemail, sendemail, subject, content
+		                 , to_char(reg_date, 'yyyy-mm-dd hh24:mi:ss') as reg_date	
+		                 , to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+		                 , lead(pk_mail_num,1) over(order by pk_mail_num desc) AS next_seq
+		                 , lead(subject,1,'다음글이 없습니다.') over(order by pk_mail_num desc) AS next_subject	         
+		                 , fileName, orgFilename, fileSize
+		            from tbl_mail
+					where fk_receiveuser_num = #{fk_receiveuser_num} and fk_senduser_num != #{fk_receiveuser_num}
+					and del_status = 0 and reservation_status = 0 and temp_status = 0
 					<if test='searchType != "" and searchWord != "" '>
-					where and lower(${searchType}) like '%'|| lower(#{searchWord}) || '%'
-					</if>	    
-				) V
+					and lower(${searchType}) like '%'|| lower(#{searchWord}) || '%'
+					</if>		            
+		        ) V	
 		where V.pk_mail_num = #{pk_mail_num}
 	 </select>
-	-->	
+
 	
 	<!-- ===== 받은메일함 끝 ===== -->
 
@@ -206,6 +210,7 @@
 
 
 	<!-- 페이징처리 / 검색기능 포함 된 보낸메일함 목록에서 상세내용 조회하기 (이전글, 다음글 제외) -->
+	<!-- 
 	<select id="getSendMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">	
 		select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content, reg_date
 			 , filename, orgfilename, filesize, reservation_date
@@ -221,6 +226,36 @@
 				) V
 		where V.pk_mail_num = #{pk_mail_num}
 	</select>
+	 -->
+
+	<!-- 페이징처리 / 검색기능 포함 된 보낸메일함 목록에서 상세내용 조회하기 (이전글, 다음글 포함) -->
+
+	<select id="getSendMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">	
+		select prev_seq ,pk_mail_num
+     		 , prev_subject, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content, reg_date, reservation_date
+		     , next_seq, next_subject
+		     , filename, orgfilename, filesize
+		        from
+		        (
+		            select lag(pk_mail_num,1) over(order by pk_mail_num desc) AS prev_seq            
+		                 , lag(subject,1,'이전글이 없습니다.') over(order by pk_mail_num desc) AS prev_subject
+		                 , pk_mail_num, fk_senduser_num, fk_receiveuser_num, recempname, sendempname, recemail, sendemail, subject, content
+		                 , to_char(reg_date, 'yyyy-mm-dd hh24:mi:ss') as reg_date	
+		                 , to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+		                 , lead(pk_mail_num,1) over(order by pk_mail_num desc) AS next_seq
+		                 , lead(subject,1,'다음글이 없습니다.') over(order by pk_mail_num desc) AS next_subject	         
+		                 , fileName, orgFilename, fileSize
+		            from tbl_mail
+					where fk_senduser_num = #{fk_senduser_num} and fk_receiveuser_num != #{fk_senduser_num} and
+					del_status = 0 and reservation_status = 0 and temp_status = 0
+					<if test='searchType != "" and searchWord != "" '>
+					and lower(${searchType}) like '%'|| lower(#{searchWord}) || '%'
+					</if>		            
+		        ) V	
+		where V.pk_mail_num = #{pk_mail_num}
+	 </select>
+
+
 
 	<!-- ===== 보낸메일함 끝 ===== -->
 
@@ -265,7 +300,6 @@
 		from tbl_mail 
 		where pk_mail_num = to_number(#{pk_mail_num})
 	</select>
-
 
 	<!-- ===== 메일쓰기 끝 ===== -->
 
@@ -314,8 +348,8 @@
 		where rno between #{startRno} and #{endRno}
 	</select>
 	
-
 	<!-- 페이징처리 / 검색기능 포함 된 휴지통 목록에서 상세내용 조회하기 (이전글, 다음글 제외) -->
+	<!-- 
 	<select id="getRecyclebinMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">	
 		select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content, reg_date
 			 , filename, orgfilename, filesize, reservation_date
@@ -331,6 +365,35 @@
 				) V
 		where V.pk_mail_num = #{pk_mail_num}
 	</select>
+ 	-->	
+
+	<!-- 페이징처리 / 검색기능 포함 된 휴지통 목록에서 상세내용 조회하기 (이전글, 다음글 포함) -->
+
+	<select id="getRecyclebinMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">	
+		select prev_seq ,pk_mail_num
+     		 , prev_subject, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content, reg_date, reservation_date
+		     , next_seq, next_subject
+		     , filename, orgfilename, filesize
+		        from
+		        (
+		            select lag(pk_mail_num,1) over(order by pk_mail_num desc) AS prev_seq            
+		                 , lag(subject,1,'이전글이 없습니다.') over(order by pk_mail_num desc) AS prev_subject
+		                 , pk_mail_num, fk_senduser_num, fk_receiveuser_num, recempname, sendempname, recemail, sendemail, subject, content
+		                 , to_char(reg_date, 'yyyy-mm-dd hh24:mi:ss') as reg_date	
+		                 , to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+		                 , lead(pk_mail_num,1) over(order by pk_mail_num desc) AS next_seq
+		                 , lead(subject,1,'다음글이 없습니다.') over(order by pk_mail_num desc) AS next_subject	         
+		                 , fileName, orgFilename, fileSize
+		            from tbl_mail
+					where (fk_receiveuser_num = #{fk_receiveuser_num} or fk_senduser_num = #{fk_receiveuser_num} ) and del_status = 1
+					<if test='searchType != "" and searchWord != "" '>
+					and lower(${searchType}) like '%'|| lower(#{searchWord}) || '%'
+					</if>		            
+		        ) V	
+		where V.pk_mail_num = #{pk_mail_num}
+	 </select>
+
+
 	
 	<!-- 휴지통에서 선택한 글들을 mail 테이블에서 삭제하기 -->
 	<delete id="deleteFromTblMail" parameterType="HashMap">
@@ -394,6 +457,7 @@
 	</select> 
 		
 	<!-- 페이징처리 / 검색기능 포함 된 예약메일함 목록에서 상세내용 조회하기 (이전글, 다음글 제외) -->
+	<!--
 	<select id="getReservationMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
 		select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail
 			 , recempname, sendempname, subject, content, reg_date, reservation_date
@@ -411,6 +475,27 @@
 				) V
 		where V.pk_mail_num = #{pk_mail_num}	
 	</select>	
+  -->
+  
+	<!-- 페이징처리 / 검색기능 포함 된 예약메일함 목록에서 상세내용 조회하기 (이전글, 다음글 포함) -->
+	<select id="getReservationMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">	
+		select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content, reg_date
+			 , filename, orgfilename, filesize, reservation_date
+				from
+				(
+				    select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content
+				         , to_char(reg_date, 'yyyy-mm-dd hh24:mi:ss') as reg_date         
+				         , fileName, orgFilename, fileSize, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+				    from tbl_mail
+					where fk_senduser_num = #{fk_senduser_num} and del_status = 0 and temp_status = 0 and reservation_status = 1
+					<if test='searchType != "" and searchWord != "" '>
+					and lower(${searchType}) like '%'|| lower(#{searchWord}) || '%'
+					</if>	    
+				) V
+		where V.pk_mail_num = #{pk_mail_num}
+	</select>
+	
+
 	
 	<!-- 발송예약된 예약메일의 상태값을 1에서 0으로 변경한다. -->
 	<update id="add_updateResStatus" parameterType="com.spring.bts.minjeong.model.MailVO">
@@ -482,7 +567,7 @@
 	<select id="getTotalCount_important" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_mail
-		where (fk_receiveuser_num = #{fk_receiveuser_num} or fk_senduser_num = #{fk_receiveuser_num} ) and importance_star_send = 1 or importance_star_rec = 1
+		where (fk_receiveuser_num = #{fk_receiveuser_num} or fk_senduser_num = #{fk_receiveuser_num} ) and (importance_star_send = 1 or importance_star_rec = 1)
 		<if test="searchType != ''">
 		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
 		</if>		
@@ -521,7 +606,7 @@
 		       , importance, importance_star_send, importance_star_rec, imp_status
 		from tbl_mail M join tbl_mailread R
 		on M.pk_mail_num = R.fk_mail_num
-		where (fk_receiveuser_num = #{fk_receiveuser_num} or fk_senduser_num = #{fk_receiveuser_num} ) and importance_star_send = 1 or importance_star_rec = 1
+		where (fk_receiveuser_num = #{fk_receiveuser_num} or fk_senduser_num = #{fk_receiveuser_num} ) and (importance_star_send = 1 or importance_star_rec = 1)
 		<if test="searchType != ''">
 		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
 		</if>
@@ -530,6 +615,7 @@
 	</select>
 
 	<!-- 페이징처리 / 검색기능 포함 된 중요메일함 목록에서 상세내용 조회하기 (이전글, 다음글 제외) -->
+	<!-- 
 	<select id="getImportantMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
 		select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content, reg_date
 			 , filename, orgfilename, filesize, reservation_date
@@ -545,7 +631,32 @@
 				) V
 		where V.pk_mail_num = #{pk_mail_num}	
 	</select>
+ 	-->
 
+	<!-- 페이징처리 / 검색기능 포함 된 중요메일함 목록에서 상세내용 조회하기 (이전글, 다음글 포함) -->
+	<select id="getImportantMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
+		select prev_seq ,pk_mail_num
+     		 , prev_subject, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content, reg_date, reservation_date
+		     , next_seq, next_subject
+		     , filename, orgfilename, filesize
+		        from
+		        (
+		            select lag(pk_mail_num,1) over(order by pk_mail_num desc) AS prev_seq            
+		                 , lag(subject,1,'이전글이 없습니다.') over(order by pk_mail_num desc) AS prev_subject
+		                 , pk_mail_num, fk_senduser_num, fk_receiveuser_num, recempname, sendempname, recemail, sendemail, subject, content
+		                 , to_char(reg_date, 'yyyy-mm-dd hh24:mi:ss') as reg_date	
+		                 , to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+		                 , lead(pk_mail_num,1) over(order by pk_mail_num desc) AS next_seq
+		                 , lead(subject,1,'다음글이 없습니다.') over(order by pk_mail_num desc) AS next_subject	         
+		                 , fileName, orgFilename, fileSize
+		            from tbl_mail
+					where (fk_receiveuser_num = #{fk_receiveuser_num} or fk_senduser_num = #{fk_receiveuser_num} ) and (importance_star_send = 1 or importance_star_rec = 1)
+					<if test='searchType != "" and searchWord != "" '>
+					and lower(${searchType}) like '%'|| lower(#{searchWord}) || '%'
+					</if>		            
+		        ) V	
+		where V.pk_mail_num = #{pk_mail_num}
+	</select>
 
 	<!--  updateImportance_star_rec Update 를 통해 값을 0,1로 변경해주기 -->
 	<update id="updateImportance_star_rec" parameterType="HashMap">
@@ -598,7 +709,8 @@
 
 
 
-	<!-- 페이징처리 / 검색기능 포함 된 보낸메일함 목록에서 상세내용 조회하기 (이전글, 다음글 제외) -->
+	<!-- 페이징처리 / 검색기능 포함 된 내게쓴메일함 목록에서 상세내용 조회하기 (이전글, 다음글 제외) -->
+	<!-- 
 	<select id="getSendToMeMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">	
 		select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content, reg_date
 			 , filename, orgfilename, filesize, reservation_date
@@ -614,6 +726,32 @@
 				) V
 		where V.pk_mail_num = #{pk_mail_num}
 	</select>
+ 	-->
+ 	
+	<!-- 페이징처리 / 검색기능 포함 된 보낸메일함 목록에서 상세내용 조회하기 (이전글, 다음글 포함) -->
+	<select id="getSendToMeMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">	
+		select prev_seq ,pk_mail_num
+     		 , prev_subject, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content, reg_date, reservation_date
+		     , next_seq, next_subject
+		     , filename, orgfilename, filesize
+		        from
+		        (
+		            select lag(pk_mail_num,1) over(order by pk_mail_num desc) AS prev_seq            
+		                 , lag(subject,1,'이전글이 없습니다.') over(order by pk_mail_num desc) AS prev_subject
+		                 , pk_mail_num, fk_senduser_num, fk_receiveuser_num, recempname, sendempname, recemail, sendemail, subject, content
+		                 , to_char(reg_date, 'yyyy-mm-dd hh24:mi:ss') as reg_date	
+		                 , to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+		                 , lead(pk_mail_num,1) over(order by pk_mail_num desc) AS next_seq
+		                 , lead(subject,1,'다음글이 없습니다.') over(order by pk_mail_num desc) AS next_subject	         
+		                 , fileName, orgFilename, fileSize
+		            from tbl_mail
+					where fk_senduser_num = #{fk_senduser_num} and fk_receiveuser_num = #{fk_senduser_num} and del_status = 0 and reservation_status = 0 and temp_status = 0
+					<if test='searchType != "" and searchWord != "" '>
+					and lower(${searchType}) like '%'|| lower(#{searchWord}) || '%'
+					</if>		            
+		        ) V	
+		where V.pk_mail_num = #{pk_mail_num}
+	 </select>
 	
 	<!-- ===== 내게쓴메일함 끝 ===== -->
 
@@ -663,14 +801,8 @@
     </select>
 
 	<!-- 메일 목록에서 사용자가 읽음처리 끝 -->
-	
-	<!-- 상대방이 메일을 읽었을 때 rec_status 가 1로 바뀌면서, rec_status 가 1인 목록들 조회해오기 -->
-	<select id="getRecCheck" parameterType="String" resultType="com.spring.bts.minjeong.model.MailVO">
-		select rec_status , rec_date
-		from tbl_mailRead
-		where fk_mail_num = #{fk_mail_num} and rec_status = 1
-	</select>
 
+	<!-- 보낸메일함 수신확인 읽음체크 목록 시작 -->
 	<!--  총 보낸메일 개수 구해오기 -->
 	<select id="getTotalCount_recCheck" parameterType="HashMap" resultType="int">
 		select count(*)
@@ -682,7 +814,7 @@
 		</if>		
 	</select>
 	
-	<!-- 페이징처리 한 보낸 수신확인 메일목록 2 (검색 있든, 없든 모두 다 포함 && 읽음상태 표시) -->
+	<!-- 페이징처리 한 보낸 수신확인 메일목록 (검색 있든, 없든 모두 다 포함 && 읽음상태 표시) -->
  	<select id="sendMailList_recCheck" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
 		select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date, importance, importance_star_send, send_status
 			 , rec_status, rec_date 
@@ -703,6 +835,18 @@
 		) V
 		where rno between #{startRno} and #{endRno}
 	</select>
-	
+	<!-- 보낸메일함 수신확인 읽음체크 목록 끝 -->
+
+	<!-- 다중메일 발송을 위해 사원 정보 가져오기 시작 -->
+	<select id="addBook_depInfo_select" resultType="com.spring.bts.hwanmo.model.EmployeeVO">
+		select E.pk_emp_no, E.emp_name , R.ko_rankname , D.ko_depname , R.pk_rank_no, E.uq_email
+		from tbl_EMPLOYEES E
+		join tbl_rank_sort R
+		on E.fk_rank_id = R.pk_rank_no
+		join tbl_dep_sort D
+		on E.fk_department_id = D.pk_dep_no
+		order by R.pk_rank_no
+	</select>
+	<!-- 다중메일 발송을 위해 사원 정보 가져오기 끝 -->
 
 </mapper>

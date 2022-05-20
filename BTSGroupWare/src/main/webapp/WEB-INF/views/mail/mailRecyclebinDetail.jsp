@@ -13,7 +13,12 @@
     ul#mailReceiveDetailGroup, .detailList {
   	 list-style-type: none;
   }
-
+	
+	#btnRecChk {
+	border: 1px solid black; background-color: rgba(0,0,0,0); color: black; margin-left: 1px;
+	}
+   
+	span.move{cursor: pointer; color: black;}
 </style>
 
 <script src="<%= request.getContextPath()%>/resources/plugins/bower_components/jquery/dist/jquery.min.js"></script>
@@ -86,10 +91,10 @@ $(document).ready(function (){
 
 
 	<%-- 이전글, 다음글 영역 --%>
-		<div style="margin-top: 500px;">
-			<span class="move" onclick="''"><i class="fa fa-sort-desc" aria-hidden="true"></i>&nbsp;&nbsp;이전글제목 : 구매품의서</span>
+		<div style="margin-top: 400px;">
+			<span class="move" onclick="javascript:location.href='mailRecyclebinDetail.bts?pk_mail_num=${requestScope.mailvo.prev_seq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}'"><i class="fa fa-sort-desc" aria-hidden="true"></i>&nbsp;&nbsp;이전글제목 : ${requestScope.mailvo.prev_subject}</span>
 			<hr>
-			<span class="move" onclick="''"><i class="fa fa-sort-asc" aria-hidden="true"></i>&nbsp;&nbsp;다음글제목 : 안녕하세요 과장님.</span>			
+			<span class="move" onclick="javascript:location.href='mailRecyclebinDetail.bts?pk_mail_num=${requestScope.mailvo.next_seq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}'"><i class="fa fa-sort-desc" aria-hidden="true"></i>&nbsp;&nbsp;다음글제목 : ${requestScope.mailvo.next_subject}</span>
 			<br/>
 		</div>
 	</div>

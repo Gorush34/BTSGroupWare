@@ -857,3 +857,116 @@ on M.pk_mail_num = R.fk_mail_num
 where fk_senduser_num = #{fk_senduser_num} and fk_receiveuser_num != #{fk_senduser_num} and
 del_status = 0 and reservation_status = 0 and temp_status = 0
 ) V
+
+
+select *
+from tbl_mail
+order by pk_mail_num desc;
+
+where subject like '%민정씨%' 
+
+delete from tbl_mail
+where pk_mail_num = 290
+
+commit;
+
+select *
+from tbl_employees
+
+
+----- 특정글만 중요메일함에서 공유가 되고 있음
+	
+update tbl_mail set importance_star_rec = 0
+
+commit;    
+    
+select *
+from tbl_mail
+where subject like '%안녕하세요 엄정화입니다.%' 
+
+delete from tbl_mail
+
+select *
+from tbl_mail
+where importance_star_rec = 1
+
+
+select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date, importance, importance_star_send, importance_star_rec, imp_status
+from
+(
+select row_number() over(order by pk_mail_num desc) AS rno,
+       pk_mail_num, fk_senduser_num, sendempname, subject
+       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+       , importance, importance_star_send, importance_star_rec, imp_status
+from tbl_mail M join tbl_mailread R
+on M.pk_mail_num = R.fk_mail_num
+where (fk_receiveuser_num = #{fk_receiveuser_num} or fk_senduser_num = #{fk_receiveuser_num} ) and importance_star_send = 1 or importance_star_rec = 1
+
+) V
+where rno between #{startRno} and #{endRno}
+
+
+
+
+
+select prev_seq, prev_subject
+       pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content, reg_date, reservation_date
+     , next_seq, next_subject
+     , filename, orgfilename, filesize
+        from
+        (
+            select lag(pk_mail_num,1) over(order by pk_mail_num desc) AS prev_seq            
+                 , lag(subject,1) over(order by pk_mail_num desc) AS prev_subject
+                 , fk_senduser_num, fk_receiveuser_num, recempname, sendempname, recemail, sendemail, content
+                 , to_char(reg_date, 'yyyy-mm-dd hh24:mi:ss') as reg_date	
+                 , to_char(reg_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+                 , lead(pk_mail_num,1) over(order by pk_mail_num desc) AS next_seq
+                 , lead(subject,1) over(order by pk_mail_num desc) AS next_subject	         
+                 , fileName, orgFilename, fileSize
+            from tbl_mail
+        ) V
+where V.pk_mail_num = '259'
+
+select prev_seq, prev_subject
+       pk_mail_num, fk_senduser_num, fk_receiveuser_num, recempname, sendempname, recemail, sendemail, subject, content, reg_date, reservation_date
+     , next_seq, next_subject
+     , filename, orgfilename, filesize
+        from
+        (
+            select lag(pk_mail_num,1) over(order by pk_mail_num desc) AS prev_seq            
+                 , lag(subject,1) over(order by pk_mail_num desc) AS prev_subject
+                 , pk_mail_num, fk_senduser_num, fk_receiveuser_num, recempname, sendempname, recemail, sendemail, subject, content
+                 , to_char(reg_date, 'yyyy-mm-dd hh24:mi:ss') as reg_date	
+                 , to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+                 , lead(pk_mail_num,1) over(order by pk_mail_num desc) AS next_seq
+                 , lead(subject,1) over(order by pk_mail_num desc) AS next_subject	         
+                 , filename, orgfilename, filesize
+            from tbl_mail
+            where fk_receiveuser_num = '80000010' and fk_senduser_num != '80000010' and temp_status = 0	and del_status = 0 and reservation_status = 0 and temp_status = 0      
+        ) V	
+where V.pk_mail_num = '275'
+
+select *
+from tbl_mail
+
+-- 인라인 뷰를 사용한다.
+
+select previousseq, previoussubject
+     , seq, fk_userid, name, subject, content, readCount, regDate
+     , nextseq, nextsubject
+from
+(
+    select lag(seq,1) over(order by seq desc) AS previousseq            
+         , lag(subject,1) over(order by seq desc) AS previoussubject                                         
+         , seq, fk_userid, name, subject, content, readCount
+         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+         , lead(seq,1) over(order by seq desc) AS nextseq
+         , lead(subject,1) over(order by seq desc)AS nextsubject
+    from tbl_board
+) V
+where V.seq = '2'
+
+
+
+

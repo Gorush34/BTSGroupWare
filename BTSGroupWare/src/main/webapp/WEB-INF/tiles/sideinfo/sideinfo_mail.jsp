@@ -40,7 +40,7 @@
 				<li style="margin-bottom: 15px;">
 					<div id="mailBtn1" class="mailBtn">
 						<a href="<%= ctxPath%>/mail/mailSendList.bts"><i class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp;&nbsp;보낸메일함</a>
-						<a href="<%= ctxPath%>/mail/mailSendCheckList.bts">&nbsp;&nbsp;<button type="button" id="btnSearch">수신확인</button></a>
+						<a href="<%= ctxPath%>/mail/mailSendCheckList.bts">&nbsp;&nbsp;<button type="button" id="btnRecChk">수신확인</button></a>
 					</div>
 				</li>
 				<li style="margin-bottom: 15px;">

@@ -14,7 +14,11 @@
 	{cursor: pointer;}
 	
 	a { text-decoration: none !important}
-
+	
+	#btnRecChk {
+	border: 1px solid black; background-color: rgba(0,0,0,0); color: black; margin-left: 1px;
+	}
+	
 </style>
 
 <script type="text/javascript">
@@ -136,18 +140,18 @@
 		 	    url:"<%= ctxPath%>/mail/MailMoveToImportantList.bts", 
 				type:"GET",
 				data: {"pk_mail_num":pk_mail_num,
-					   "isRec":0},
+					   "isRec":1},
 				dataType:"JSON",
 				success:function(json){
 					
 					var result = json.result;
 					
 					if(result == 1) {
-					//	alert("중요메일함 이동에 성공했습니다!!");
+						alert("중요메일함 해제에 성공했습니다!!");
 						window.location.reload();
 					}
 					else {
-						alert("중요메일함 이동에 실패했습니다.");
+						alert("중요메일함 해제에 실패했습니다.");
 						window.location.reload();
 					}
 					
@@ -205,12 +209,6 @@
 								삭제
 							</button>
 						</li>
-						<li class="secondHeaderList">
-							<button type="button" id=readSend onclick="goReadSend()">
-							<i class="fa fa-envelope-o fa-fw"></i>
-								읽음
-							</button>
-						</li>
 					</ul>
 				</div>
 				
@@ -246,7 +244,7 @@
 									<input type="checkbox" id="${ImportantMailList.pk_mail_num}" name="chkBox" class="text-center"/>
 								</td>
 								<td style="width: 40px;">
-									<%-- 별모양(☆) 클릭 시 importance_star를 1(★)로 바꾼다. (중요메일함 = importance_star=1인 목록) --%>
+									<%-- 별모양(★) 클릭 시 importance_star를 1(☆)로 바꾼다. (중요메일함 = importance_star = 1인 목록) --%>
 									<c:if test="${ImportantMailList.importance_star_send == '1' or ImportantMailList.importance_star_rec == '1'}">
 										<span class="fa fa-star" id="importance_star" style="cursor: pointer;" onclick="goImportantList('${ImportantMailList.pk_mail_num}')"></span>
 									</c:if>
