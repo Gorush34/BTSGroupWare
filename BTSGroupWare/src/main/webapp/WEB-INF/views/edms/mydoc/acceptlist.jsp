@@ -123,7 +123,7 @@
 </script>
 
 
-
+<div class="edmsDiv">
 	<div class="edmsHomeTitle">
 		<span class="edms_maintitle">${sessionScope.loginuser.emp_name}님의 승인문서함</span>
 		<p style="margin-bottom: 10px;"></p>
@@ -159,17 +159,17 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="accept" items="${requestScope.myAcc}">
+				<c:forEach var="accept" items="${requestScope.myAcc}" varStatus="status" >
 				<tr onclick="goView('${accept.pk_appr_no}')" style="cursor: pointer;">
-					<%-- <th scope="row" style="vertical-align: middle;"><c:out value="${status.count}" /></th> --%>
-					<th>아아아이</th>
+					<th scope="row" style="vertical-align: middle;"><c:out value="${status.count}" /></th>
+					
 					<td>${accept.writeday}</td>
 					
 					<td>${accept.appr_name}</td>
 					
 					<td>
 					<c:if test="${accept.emergency == 1}">
-						<button id="btn_emergency" class="btn btn-danger edmsBtn">긴급</button>
+						<button id="btn_emergency" class="btn btn-outline-danger disabled edmsBtn">긴급</button>
 					</c:if>
 					<c:if test="${accept.emergency == 0}">
 						&nbsp;
@@ -193,10 +193,10 @@
 					
 					<td>
 						<c:if test="${accept.mid_accept eq 0 and accept.fin_accept eq 0}">
-							<button class="btn btn-secondary edmsBtn">대기중</button>
+							<button class="btn btn-outline-dark disabled edmsBtn">대기중</button>
 						</c:if>
 						<c:if test="${accept.mid_accept eq 1 and accept.fin_accept eq 0}">
-							<button class="btn btn-warning edmsBtn">진행중</button>
+							<button class="btn btn-outline-info disabled edmsBtn">진행중</button>
 						</c:if>
 						<c:if test="${accept.mid_accept eq 1 and accept.fin_accept eq 1}">
 							<button class="btn btn-info edmsBtn">승인됨</button>

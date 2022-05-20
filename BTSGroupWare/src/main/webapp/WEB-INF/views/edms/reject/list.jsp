@@ -126,7 +126,7 @@
 <%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
 
 
-
+<div class="edmsDiv">
 	<div class="edmsHomeTitle">
 		<span class="edms_maintitle">BTSGroupware 반려문서함</span>
 		<p style="margin-bottom: 10px;"></p>

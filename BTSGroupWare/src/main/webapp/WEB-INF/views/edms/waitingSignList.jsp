@@ -148,6 +148,8 @@
 
 <%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
 
+<div class="edmsDiv">
+
 	<div class="edmslist">
 	<div class="edmsHomeTitle">
 		<span class="edms_maintitle">${sessionScope.loginuser.emp_name}님의 결재대기함</span>
@@ -203,7 +205,7 @@
 					
 					<td>
 					<c:if test="${waiting.emergency == 1}">
-						<button id="btn_emergency" class="btn btn-outline-danger edmsBtn">긴급</button>
+						<button id="btn_emergency" class="btn btn-outline-danger disabled edmsBtn">긴급</button>
 					</c:if>
 					<c:if test="${waiting.emergency == 0}">
 						&nbsp;
@@ -227,10 +229,10 @@
 					<td>
 						<c:choose>
 							<c:when test="${waiting.mid_accept eq 0 and waiting.fin_accept eq 0}">
-							<button class="btn btn-secondary edmsBtn">대기중</button>
+							<button class="btn btn-outline-dark disabled edmsBtn">대기중</button>
 							</c:when>
 							<c:when test="${waiting.mid_accept eq 1 and waiting.fin_accept eq 0}">
-							<button class="btn btn-warning edmsBtn">진행중</button>
+							<button class="btn btn-outline-info disabled edmsBtn">진행중</button>
 							</c:when>
 						</c:choose>
 					</td>
@@ -272,4 +274,5 @@
 	
 	
 	<div class="divClear"></div>
+</div>
 </div>

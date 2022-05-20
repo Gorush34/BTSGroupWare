@@ -37,7 +37,7 @@ import com.spring.bts.yuri.service.InterEdmsService;
 /* 
 	XML에서 빈을 만드는 대신에 클래스명 앞에 @Component 어노테이션을 적어주면 해당 클래스는 bean으로 자동 등록된다. 
 	그리고 bean의 이름(첫글자는 소문자)은 해당 클래스명이 된다.
-	즉, 여기서 bean의 이름은 boardController 이 된다. 
+	즉, 여기서 bean의 이름은 boardController 이 된다.
 	여기서는 @Controller 를 사용하므로 @Component 기능이 이미 있으므로 @Component를 명기하지 않아도 BoardController 는 bean 으로 등록되어 스프링컨테이너가 자동적으로 관리해준다. 
 */
 @Controller /* Bean + controller 기능을 모듀 포함 */
@@ -106,6 +106,7 @@ public class EdmsController {
       
         List<EmployeeVO> empList = service.addBook_depInfo_select();
          
+        /*
           String mid_test_1 = request.getParameter("mid_test_1");
           String mid_test_2 = request.getParameter("mid_test_2");
           String mid_test_3 = request.getParameter("mid_test_3");
@@ -119,12 +120,13 @@ public class EdmsController {
           System.out.println(last_test_1);
           System.out.println(last_test_2);
           System.out.println(last_test_3);
+        */
         
         mav.addObject("loginuser", loginuser);
         mav.addObject("empList", empList);
         
         /* 병윤 - 조직도 끝 */
-	    
+	            
 		mav.setViewName("add.edms");
 		// /WEB-INF/views/edms/{1}.jsp
 		// /WEB-INF/views/edms/add.jsp 페이지를 만들어야 한다.
@@ -809,8 +811,8 @@ public class EdmsController {
 	 	String searchType = request.getParameter("searchType");
 	 	String searchWord = request.getParameter("searchWord");
 	 	
-	 	if(searchType == null) {
-	 		searchType = "";
+	 	if(searchType == null || (!"title".equals(searchType) )) {
+	 		searchType = "title";
 	 	}
 	 	
 	 	if(searchWord == null) {
@@ -845,20 +847,21 @@ public class EdmsController {
 	 		
 	 		paraMap.put("searchType", searchType);
 	 		paraMap.put("searchWord", searchWord);
-	 		
-	 		mav.addObject("paraMap", paraMap);
 	 		// view.jsp 에서 이전글제목 및 다음글제목 클릭시 사용하기 위해서 임.
+	 		
+	 		paraMap.put("fk_emp_no", fk_emp_no);
+	 		paraMap.put("fk_mid_empno", fk_mid_empno);
 	 		
 	 		HttpSession session = request.getSession();
 	 		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
 	 		
-	 		String loginuser_empno = null;
+	 		int loginuser_empno = 0;
 	 		if(loginuser != null) {
-	 			loginuser_empno = String.valueOf(loginuser.getPk_emp_no());
+	 			loginuser_empno = loginuser.getPk_emp_no();
 		 	   // loginuser_empno 는 로그인 되어진 사용자의 사원번호 이다.
 		 	}
-		 	paraMap.put("loginuser_empno", loginuser_empno);
-	 		
+	 		paraMap.put("loginuser_empno", String.valueOf(loginuser_empno));
+	 			 		
 		 	// 웹브라우저에서 페이지 새로고침(F5)을 했을 때는 단순히 select만 해주고 sDML문(지금은 글조회수 증가인 update문)은 실행하지 않도록 해주어야 한다.
 		 	 
 		 	ApprVO apprvo = null;
@@ -882,7 +885,7 @@ public class EdmsController {
 		 	}
 		 	
 		 	mav.addObject("apprvo", apprvo);
-		 	
+		 	mav.addObject("paraMap", paraMap);
 		 	// System.out.println("확인용 apprvo 작성일자 => " + apprvo.getWriteday());
 		 	
 		 	//////////////////////////////////////////
@@ -1886,7 +1889,7 @@ public class EdmsController {
 		
 		getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출
 		
-		List<ApprVO> mywaitlist = null;
+		List<Map<String, Object>> mywaitlist = null;
 		
 		HttpSession session = request.getSession();
 		session.setAttribute("readCountPermission", "yes");
@@ -2138,7 +2141,7 @@ public class EdmsController {
 		
 		getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출
 		
-		List<ApprVO> myrejectlist = null;
+		List<Map<String, Object>> myrejectlist = null;
 		
 		HttpSession session = request.getSession();
 		session.setAttribute("readCountPermission", "yes");

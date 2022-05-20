@@ -125,7 +125,7 @@
 
 <%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
 
-
+<div class="edmsDiv">
 
 	<div class="edmsHomeTitle">
 		<span class="edms_maintitle">BTSGroupware 승인문서함</span>
@@ -188,7 +188,7 @@
 					
 					<td>
 					<c:if test="${accept.emergency == 1}">
-						<button id="btn_emergency" class="btn btn-danger edmsBtn">긴급</button>
+						<button id="btn_emergency" class="btn btn-outline-danger disabled edmsBtn">긴급</button>
 					</c:if>
 					<c:if test="${accept.emergency == 0}">
 						&nbsp;
@@ -212,10 +212,10 @@
 					
 					<td>
 						<c:if test="${accept.mid_accept eq 0 and accept.fin_accept eq 0}">
-							<button class="btn btn-secondary edmsBtn">대기중</button>
+							<button class="btn btn-outline-dark disabled edmsBtn">대기중</button>
 						</c:if>
 						<c:if test="${accept.mid_accept eq 1 and accept.fin_accept eq 0}">
-							<button class="btn btn-warning edmsBtn">진행중</button>
+							<button class="btn btn-outline-info disabled edmsBtn">진행중</button>
 						</c:if>
 						<c:if test="${accept.mid_accept eq 1 and accept.fin_accept eq 1}">
 							<button class="btn btn-info edmsBtn">승인됨</button>

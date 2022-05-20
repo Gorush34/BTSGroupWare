@@ -457,7 +457,7 @@
 				LEFT JOIN tbl_employees E
 				ON A.fk_emp_no = E.pk_emp_no
 			<if test='searchType !="" and searchWord != "" '>
-	        where lower(${searchType}) like '%'||lower(#{searchWord}) ||'%'
+	        where lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
 	        </if>
 			order by A.pk_appr_no desc
 			) V

@@ -72,6 +72,12 @@ div.edmsSideMenu{cursor: pointer;}
 		z-index: 1050;
 	}
 	
+	/* 전체 컨테이너 */
+	.edmsDiv {
+		width: 100%;
+		padding: 40px;
+	}
+	
 	/* 전체 제목 */
 	div.edmsHomeTitle {
 		border-bottom: solid 3px #000060;

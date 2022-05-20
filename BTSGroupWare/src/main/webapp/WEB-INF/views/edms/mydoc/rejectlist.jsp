@@ -126,7 +126,7 @@
 <%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
 
 
-
+<div class="edmsDiv">
 	<div class="edmsHomeTitle">
 		<span class="edms_maintitle">${sessionScope.loginuser.emp_name}님의 반려문서함</span>
 		<p style="margin-bottom: 10px;"></p>
@@ -143,17 +143,6 @@
 	<!-- 문서목록 시작 -->
 	<div id="edmsList">
 		<span class="edms_title">문서목록보기</span>
-		<!--
-		<div class="dropdown">
-			<button class="btn btn-primart-outline dropdown-toggle" type="button" data-toggle="dropdown"
-					aria-haspopup="true" aria-expanded="false">10개 보기</button>
-			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-				<a class="dropdown-item" href="#">10개 보기</a>
-				<a class="dropdown-item" href="#">30개 보기</a>
-				<a class="dropdown-item" href="#">50개 보기</a>
-			</div>
-		</div>
-		-->
 			
 		<div class="divClear"></div>
 
@@ -199,7 +188,7 @@
 					
 					<td>
 					<c:if test="${reject.emergency == 1}">
-						<button id="btn_emergency" class="btn btn-danger edmsBtn">긴급</button>
+						<button id="btn_emergency" class="btn btn-outline-danger disabled edmsBtn">긴급</button>
 					</c:if>
 					<c:if test="${reject.emergency == 0}">
 						&nbsp;
@@ -223,10 +212,10 @@
 					
 					<td>
 						<c:if test="${reject.mid_accept eq 0 and reject.fin_accept eq 0}">
-							<button class="btn btn-secondary edmsBtn">대기중</button>
+							<button class="btn btn-outline-dark disabled edmsBtn">대기중</button>
 						</c:if>
 						<c:if test="${reject.mid_accept eq 1 and reject.fin_accept eq 0}">
-							<button class="btn btn-warning edmsBtn">진행중</button>
+							<button class="btn btn-outline-info disabled edmsBtn">진행중</button>
 						</c:if>
 						<c:if test="${reject.mid_accept eq 1 and reject.fin_accept eq 1}">
 							<button class="btn btn-info edmsBtn">승인됨</button>

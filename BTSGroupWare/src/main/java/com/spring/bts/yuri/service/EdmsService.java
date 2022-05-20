@@ -291,8 +291,8 @@ public class EdmsService implements InterEdmsService {
 	}
 
 	@Override
-	public List<ApprVO> mywaitlist_paging(Map<String, String> paraMap) {
-		List<ApprVO> mywaitlist = dao.mywaitlist_paging(paraMap);
+	public List<Map<String, Object>> mywaitlist_paging(Map<String, String> paraMap) {
+		List<Map<String, Object>> mywaitlist = dao.mywaitlist_paging(paraMap);
 		return mywaitlist;
 	}
 
@@ -315,8 +315,8 @@ public class EdmsService implements InterEdmsService {
 	}
 
 	@Override
-	public List<ApprVO> myrejectlist_paging(Map<String, String> paraMap) {
-		List<ApprVO> myrejectlist = dao.myrejectlist_paging(paraMap);
+	public List<Map<String, Object>> myrejectlist_paging(Map<String, String> paraMap) {
+		List<Map<String, Object>> myrejectlist = dao.myrejectlist_paging(paraMap);
 		return myrejectlist;
 	}
 

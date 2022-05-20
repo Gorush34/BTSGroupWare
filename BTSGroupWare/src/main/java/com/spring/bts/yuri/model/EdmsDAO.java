@@ -261,8 +261,8 @@ public class EdmsDAO implements InterEdmsDAO {
 	}
 	
 	@Override
-	public List<ApprVO> mywaitlist_paging(Map<String, String> paraMap) {
-		List<ApprVO> mywaitlist = sqlsession.selectList("yuri.mywaitlist_paging", paraMap);
+	public List<Map<String, Object>> mywaitlist_paging(Map<String, String> paraMap) {
+		List<Map<String, Object>> mywaitlist = sqlsession.selectList("yuri.mywaitlist_paging", paraMap);
 		return mywaitlist;
 	}
 
@@ -285,8 +285,8 @@ public class EdmsDAO implements InterEdmsDAO {
 	}
 
 	@Override
-	public List<ApprVO> myrejectlist_paging(Map<String, String> paraMap) {
-		List<ApprVO> myrejectlist = sqlsession.selectList("yuri.myrejectlist_paging", paraMap);
+	public List<Map<String, Object>> myrejectlist_paging(Map<String, String> paraMap) {
+		List<Map<String, Object>> myrejectlist = sqlsession.selectList("yuri.myrejectlist_paging", paraMap);
 		return myrejectlist;
 	}
 

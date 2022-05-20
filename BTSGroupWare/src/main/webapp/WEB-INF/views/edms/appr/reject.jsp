@@ -48,15 +48,35 @@
 				<input type="text" value="반려하시겠습니까?">
 			</th>
 			<td>
-<%-- 				<input type="text" value="로그인 유저의 사번 : ${sessionScope.loginuser.pk_emp_no}" />
+							<span class="edms_maintitle">반려하시겠습니까?</span>
+				<%-- 				
+				<input type="text" value="로그인 유저의 사번 : ${sessionScope.loginuser.pk_emp_no}" />
 				<input type="text" class="form-control" value="문서번호 = ${requestScope.apprvo.pk_appr_no}" readonly />
-				<input type="hidden" name="fk_emp_no" value="${requestScope.apprvo.fk_emp_no}" /> --%>
-				<input type="text" name="pk_appr_no" class="form-control" value="${appr.pk_appr_no}" />
-				<input type="text" name="mid_accept" class="mid_accept" value="${appr.mid_accept}" />
-				<input type="text" name="fin_accept" class="fin_accept" value="${appr.fin_accept}" />
-				<%-- <input type="hidden" name="fk_mid_empno" class="form-control" value="${sessionScope.loginuser.pk_emp_no}" readonly>
+				<input type="hidden" name="fk_emp_no" value="${requestScope.apprvo.fk_emp_no}" />
+				--%>
+				<input type="hidden" name="pk_appr_no"	 value="${appr.pk_appr_no}" />
+				<input type="hidden" name="mid_accept"	 value="${appr.mid_accept}" />
+				<input type="hidden" name="fin_accept"	 value="${appr.fin_accept}" />
+				<input type="hidden" name="fk_mid_empno" value="${appr.fk_mid_empno}" />
+				<input type="hidden" name="fk_fin_empno" value="${appr.fk_fin_empno}" />
+				<%--
+				<input type="hidden" name="fk_mid_empno" value="${sessionScope.loginuser.pk_emp_no}" readonly>
 				<input type="hidden" name="mid_emp_no" id="mid_emp_no" value="${requestScope.apprvo.fk_fin_empno}"/>
-				<input type="hidden" name="fin_emp_no" id="fin_emp_no" value="${requestScope.apprvo.fk_mid_empno}"/> --%>
+				<input type="hidden" name="fin_emp_no" id="fin_emp_no" value="${requestScope.apprvo.fk_mid_empno}"/>
+				--%>
+				
+<%-- 				로그인유저 사번 : <input type="text" value="${sessionScope.loginuser.pk_emp_no}" />
+				문서번호 <input type="text" class="form-control" value="${requestScope.apprvo.pk_appr_no}" readonly />
+				-글쓴사람 사번 <input type="text" name="fk_emp_no" class="form-control" value="${requestScope.apprvo.fk_emp_no}" />
+				
+				문서번호: <input type="text" name="pk_appr_no" class="form-control" value="${appr.pk_appr_no}" />
+				중간결재값: <input type="text" name="mid_accept" class="form-control" value="${appr.mid_accept}" />
+				최종결재값 : <input type="text" name="fin_accept" class="form-control" value="${appr.fin_accept}" />
+				
+				-로그인유저사번을 중간결재자값에담아줌<input type="text" name="fk_mid_empno" class="form-control" value="${sessionScope.loginuser.pk_emp_no}" readonly>
+				-중간결재자사번<input type="text" name="mid_emp_no" id="mid_emp_no" value="${requestScope.apprvo.fk_mid_empno}"/>
+				-최종결재자사번<input type="text" name="fin_emp_no" id="fin_emp_no" value="${requestScope.apprvo.fk_fin_empno}"/>
+				 --%>
 			</td>
 		</tr>		
 	</table>

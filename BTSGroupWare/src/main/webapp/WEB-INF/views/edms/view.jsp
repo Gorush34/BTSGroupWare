@@ -10,6 +10,11 @@
 %>
 
 <!-- style_edms.css 는 이미 layout-tiles_edms.jsp 에 선언되어 있으므로 쓸 필요 X! -->
+<style type="text/css">
+	.edmsviewtbl {
+		background-color: #F7F7F7; vertical-align : middle; text-align: center;
+	}
+</style>
 
 <!-- datepicker를 사용하기 위한 링크 / 나중에 헤더에 추가되면 지우기 -->
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
@@ -39,7 +44,7 @@
 			frm.method = "POST";
 			frm.action = "<%= ctxPath%>/edms/delEnd.bts";
 			frm.submit();
-	}
+	}); // end of $("button#btnDelete").click(function()) --------------------
 	
 </script>
 
@@ -54,7 +59,7 @@
 </style>
 
 <%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
-
+<div class="edmsDiv">
 	<div class="edmsHomeTitle">
 		<span class="edms_maintitle">문서보기</span>
 		<p style="margin-bottom: 10px;"></p>
@@ -84,19 +89,18 @@
 
 	<table style="width: 100%" class="table table-bordered">
 		<colgroup>
-		<col style="width: 16%; background-color: #e8e8e8;" />
+		<col style="width: 16%; background-color: #F2F2F2;" />
 		<col style="width: 24%;" />
 		<col style="width: 32%;" />
-		<col style="width: 4%; background-color: #e8e8e8;" />
+		<col style="width: 4%; background-color: #F2F2F2;" />
 		<col style="width: 8%;" />
-		<col style="width: 4%; background-color: #e8e8e8;" />
+		<col style="width: 4%; background-color: #F2F2F2;" />
 		<col style="width: 8%;" />
 		</colgroup>
 		
-		
 		<tr>
 			<th>문서양식</th>
-          	<td style="background-color: #F7F7F7;">
+          	<td>
 				<c:if test="${requestScope.apprvo.fk_appr_sortno == 1}">업무기안서</c:if>
 				<c:if test="${requestScope.apprvo.fk_appr_sortno == 2}">증명서신청</c:if>
 				<c:if test="${requestScope.apprvo.fk_appr_sortno == 3}">사유서</c:if>
@@ -107,10 +111,10 @@
           	</td>
           	
           	<td rowspan="4" style="vertical-align : center;">중<br/>간<br/>결<br/>재<br/>자</td>
-          	<td style="background-color: #F7F7F7; vertical-align : middle; text-align: center;">${requestScope.apprvo.ko_depname}</td>
+          	<td class="edmsviewtbl">${requestScope.apprvo.ko_depname}</td>
              
 			<td rowspan="4" style="vertical-align: center;">최<br/>종<br/>결<br/>재<br/>자</td>
-          	<td style="background-color: #F7F7F7; vertical-align : middle; text-align: center;">${requestScope.apprvo.ko_depname}</td>
+          	<td class="edmsviewtbl">${requestScope.apprvo.ko_depname}</td>
 		</tr>
 		
 		<tr>
@@ -131,7 +135,7 @@
           	<td style="background-color: #F7F7F7; text-align: center;">
           		<c:if test="${requestScope.apprvo.mid_accept eq 0}">대기중</c:if>
           		<c:if test="${requestScope.apprvo.mid_accept eq 1}"><span style="color:blue;">결재완료</span></c:if>
-          		<c:if test="${requestScope.apprvo.mid_accept eq 2}"><span style="color:red;">반려</span><</c:if>
+          		<c:if test="${requestScope.apprvo.mid_accept eq 2}"><span style="color:red;">반려</span></c:if>
           	</td>
 			<td style="background-color: #F7F7F7; text-align: center;">
           		<c:if test="${requestScope.apprvo.mid_accept ne 2 and requestScope.apprvo.fin_accept eq 0}">대기중</c:if>
@@ -274,6 +278,71 @@
 	
 	
 	
+	
+	
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	<%-- ************************************************** 삭제 버튼 영역 종료 ************************************************** --%>
+		
+		
+		<input type="hidden" value="${requestScope.apprvo.mid_accept }">
+		<input type="hidden" value="${requestScope.apprvo.fin_accept }">
+		
+		<div class="divclear" style="margin-top: 16px;"></div>
+		
+		
+	<%-- ************************************************** 중간결재/반려 버튼 영역 시작 ************************************************** --%>
+	
+	
+	<%-- ************************************************** 중간결재/반려 버튼 영역 시작 ************************************************** --%>
+	
+	<%-- ************************************************** 최종결재/반려 버튼 영역 시작 ************************************************** --%>
+	<%-- ************************************************** 중간결재/반려 버튼 영역 시작 ************************************************** --%>
+	
+
+		
+		
+		
+		
+	<%-- ************************************************** 수정/삭제 버튼 영역 시작 ************************************************** --%>
+
+		<%-- 3. 중간결재자가 로그인 한 경우 - 중간버튼만 보인다. --%>
+		<c:if test="${ requestScope.apprvo.fk_mid_empno eq sessionScope.loginuser.pk_emp_no and requestScope.apprvo.mid_accept eq 0 and requestScope.apprvo.fin_accept eq 0 }">
+			<button type="button" class="btn btn-success btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">중간결재</button>
+			<button type="button" class="btn btn-success btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">중간반려</button>
+		</c:if>
+		
+		<div class="divclear"></div>
+		
+		<%-- 4. 최종결재자가 로그인 한 경우 - 최종버튼만 보인다. --%>
+		<c:if test="${ requestScope.apprvo.fk_fin_empno eq sessionScope.loginuser.pk_emp_no and requestScope.apprvo.mid_accept ne 0 and requestScope.apprvo.fin_accept eq 0 }">
+			<button type="button" class="btn btn-danger btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">최종결재</button>
+			<button type="button" class="btn btn-danger btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">최종반려</button>
+		</c:if>
+		
+		<div class="divclear"></div>
+	
+	
+	
+	
+	
+		
+	</div>
+	<%-- ************************************************** 수정 버튼 영역 종료 ************************************************** --%>
+	
+	
+	
+	
 	<%-- ************************************************** 삭제 버튼 모달 시작 ************************************************** --%>
 	<div class="modal fade" id="myModal" role="dialog"> 
 	<div class="modal-dialog"> 
@@ -317,77 +386,8 @@
 	<%-- ************************************************** 삭제 버튼 모달 종료 ************************************************** --%>
 	
 	
-
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	<%-- ************************************************** 삭제 버튼 영역 종료 ************************************************** --%>
-		
-		
-		<input type="hidden" value="${requestScope.apprvo.mid_accept }">
-		<input type="hidden" value="${requestScope.apprvo.fin_accept }">
-		
-		<div class="divclear" style="margin-top: 16px;"></div>
-		
-		
-	<%-- ************************************************** 중간결재/반려 버튼 영역 시작 ************************************************** --%>
 	
-	
-	<%-- ************************************************** 중간결재/반려 버튼 영역 시작 ************************************************** --%>
-	
-	<%-- ************************************************** 최종결재/반려 버튼 영역 시작 ************************************************** --%>
-	<%-- ************************************************** 중간결재/반려 버튼 영역 시작 ************************************************** --%>
-	
-
-		
-		
-		
-		
-<%-- ************************************************** 수정/삭제 버튼 영역 시작 ************************************************** --%>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		
-		
-		
-		
-		
-		<%-- 3. 중간결재자가 로그인 한 경우 - 중간버튼만 보인다. --%>
-		<c:if test="${ requestScope.apprvo.fk_mid_empno eq sessionScope.loginuser.pk_emp_no and requestScope.apprvo.mid_accept eq 0 and requestScope.apprvo.fin_accept eq 0 }">
-			<button type="button" class="btn btn-success btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">중간결재</button>
-			<button type="button" class="btn btn-success btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">중간반려</button>
-		</c:if>
-		
-		<div class="divclear"></div>
-		
-		<%-- 4. 최종결재자가 로그인 한 경우 - 최종버튼만 보인다. --%>
-		<c:if test="${ requestScope.apprvo.fk_fin_empno eq sessionScope.loginuser.pk_emp_no and requestScope.apprvo.mid_accept ne 0 and requestScope.apprvo.fin_accept eq 0 }">
-			<button type="button" class="btn btn-danger btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">최종결재</button>
-			<button type="button" class="btn btn-danger btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">최종반려</button>
-		</c:if>
-		
-		<div class="divclear"></div>
-		
-	</div>
-	<%-- ************************************************** 수정 버튼 영역 종료 ************************************************** --%>
 	
 </c:if>
+
+</div>

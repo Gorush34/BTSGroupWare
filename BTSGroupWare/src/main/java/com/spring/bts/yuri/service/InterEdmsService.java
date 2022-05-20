@@ -105,13 +105,13 @@ public interface InterEdmsService {
 	
 	// 내문서함
 	int mywaitlist_cnt(Map<String, String> paraMap);
-	List<ApprVO> mywaitlist_paging(Map<String, String> paraMap);
+	List<Map<String, Object>> mywaitlist_paging(Map<String, String> paraMap);
 
 	int myacceptlist_cnt(Map<String, String> paraMap);
 	List<Map<String, Object>> myacceptlist_paging(Map<String, String> paraMap);
 
 	int myrejectlist_cnt(Map<String, String> paraMap);
-	List<ApprVO> myrejectlist_paging(Map<String, String> paraMap);
+	List<Map<String, Object>> myrejectlist_paging(Map<String, String> paraMap);
 
 	
 	
