@@ -88,5 +88,8 @@ public interface InterAttendanceService {
 	// 관리자페이지 - 페이징처리 한 결재대기중인 공가/경조신청목록 
 	List<Map<String, Object>> getAttListAllWithPaging(Map<String, String> paraMap);
 
+	// 연차신청서 삭제하기
+	int deleteReport(int pk_att_num);
+
 
 }

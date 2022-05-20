@@ -1158,6 +1158,36 @@ public class AttendanceController {
 		return mav;
 	}
 	
+	// 연차신청서 삭제하기 
+	@RequestMapping(value="/att/deleteReport.bts", method = {RequestMethod.POST})
+	public ModelAndView reportVacationSubmit(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) { 
+	
+		int pk_att_num = Integer.parseInt(request.getParameter("pk_att_num"));
+		
+		// 연차신청서 삭제하기
+		int n = attService.deleteReport(pk_att_num);
+		
+		String message = "";
+		String loc = "";
+		
+		if(n==1) {
+			message = "삭제가 성공하였습니다.";
+			loc =  request.getContextPath()+"/att/viewAllReport.bts"; 
+		} 
+		String gobackURL = MyUtil.getCurrentURL(request);
+
+		mav.addObject("gobackURL", gobackURL.replaceAll("&", " "));
+
+		mav.addObject("message", message);
+		mav.addObject("loc", loc);
+		
+		mav.setViewName("msg");
+		
+		
+		return mav;
+	}
+	
+	
 	/////////////////////////////////////////////////////////////////////////////////////////////
 		
 	// === 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 생성 === //
