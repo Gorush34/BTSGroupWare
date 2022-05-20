@@ -954,7 +954,7 @@ td.mail_subject:hover {
 		        		</a>
 		        	</li>
 		        	<li class="summary-calendar">
-	     		        <a href="<%= ctxPath%>/calendar/calenderMain.bts">
+	     		        <a href="javascript:location.href='<%= ctxPath%>/calendar/calenderMain.bts'">
 		        			<span class="type">
 		        				<span class="ic_dashboard2 ic_type_calendar" title="calendar"></span>
 		        			</span>
