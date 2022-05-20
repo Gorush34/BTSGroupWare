@@ -173,13 +173,20 @@ margin: 10px;
 		<thead>
 			<tr>
 				<th scope="col" class="text-center" style="width: 90px;">번호</th>	
-				<th scope="col" class="text-center" colspan="4" style="width: 200px;">제목</th>
+				<th scope="col" class="text-center" colspan="4" style="width: 413px;">제목</th>
 				<th scope="col" class="text-center" style="width: 120px;">글쓴이</th>
 				<th scope="col" class="text-center" style="width: 250px;">작성일</th>
 				<th scope="col" class="text-center" style="width: 100px;">조회수</th>
 			</tr>
 		</thead>
 		<tbody>
+		
+		<c:if test="${requestScope.boardList.size() == 0 }">	
+			<tr>
+				<td colspan="8" style="height: 200px; font-size: 17pt;">게시물이 없습니다.</td>	
+			</tr>
+		</c:if>
+		
 			<c:forEach var="boardvo" items="${requestScope.boardList}" varStatus="status">
 			   <tr>
 			      <td align="center">
@@ -200,7 +207,7 @@ margin: 10px;
 				  </c:if>
 				  </td>
 		
-					<td style="width: 115px;" align="center">
+					<td style="width: 90px;" align="center">
 						<span style="font-size: 9pt; color: gray;">[${boardvo.tblname}]</span>
 					</td>
 		

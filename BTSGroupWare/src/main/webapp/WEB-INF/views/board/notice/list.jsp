@@ -175,10 +175,17 @@ margin: 10px;
 				<th scope="col" class="text-center" colspan="3" style="width: 170px;">제목</th>
 				<th scope="col" class="text-center" style="width: 120px;">글쓴이</th>
 				<th scope="col" class="text-center" style="width: 250px;">작성일</th>
-				<th scope="col" class="text-center" style="width: 100px;">조회수</th>
+				<th scope="col" class="text-center" style="wㄴidth: 100px;">조회수</th>
 			</tr>
 		</thead>
 		<tbody>
+		
+		<c:if test="${requestScope.noticeList.size() == 0 }">	
+			<tr>
+				<td colspan="7" style="height: 200px; font-size: 17pt;">게시물이 없습니다.</td>	
+			</tr>
+		</c:if>
+		
 			<c:forEach var="noticevo" items="${requestScope.noticeList}" varStatus="status">
 			   <tr>
 			      <td align="center">

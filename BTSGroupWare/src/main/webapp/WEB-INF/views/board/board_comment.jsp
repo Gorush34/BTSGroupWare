@@ -162,6 +162,13 @@ margin: 10px;
 		</thead>
 		<tbody>
 
+		<c:if test="${requestScope.boardList.size() == 0 }">	
+			<tr>
+				<td colspan="7" style="height: 200px; font-size: 17pt;">댓글이 존재하지 않습니다.</td>	
+			</tr>
+		</c:if>
+
+
 		
 			<c:forEach var="boardvo" items="${requestScope.boardList}" varStatus="status">
 			   <tr>

@@ -97,8 +97,8 @@
 	           var len = contentval.length; 
 
 	           document.querySelector(".count span").innerHTML = len; 
-	           if(len > 4000) { 
-	        	   alert("최대 4000글자 까지 입력 가능합니다."); 
+	           if(len > 2000) { 
+	        	   alert("최대 2000글자 까지 입력 가능합니다."); 
 	        	   $("textarea#content").focus();
 	        	   return;
 	        	}
@@ -203,7 +203,7 @@
 			<th style="width: 15%; background-color: #DDDDDD; text-align: right;">내용</th>
 			<td>
 				<textarea style="width: 100%; height: 612px;" name="content" id="content"></textarea>
-				<p class="count"><span>0</span> / 4000</p>
+				<p class="count"><span>0</span> / 2000</p>
 			</td>
 		</tr>
 		
