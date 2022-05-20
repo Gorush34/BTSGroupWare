@@ -179,9 +179,6 @@ public interface InterBoardDAO {
 	int update_comment_status(Map<String, String> paraMap);
 
 
-
-
-
 	
 	
 }

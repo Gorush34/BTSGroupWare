@@ -935,7 +935,7 @@ public class BoardController {
 	
 	// == 게시판 글보기 끝  == //	
 	
-	// === #77. 글삭제 페이지 완료하기 === //
+	// ===  글삭제 페이지 완료하기 === //
 	@RequestMapping(value="/board/delEnd.bts", method= {RequestMethod.POST})
 	public ModelAndView delEnd(ModelAndView mav, HttpServletRequest request) {
 		
@@ -2400,6 +2400,8 @@ public class BoardController {
 		 	return mav;
 		}	
 		
+		
+		
 	// --- 자료 게시판 끝 --- -------------------
 	
 			
@@ -2544,9 +2546,8 @@ public class BoardController {
 			//  /WEB-INF/views/tiles1/board/list.jsp 파일을 생성한다.
 			
 			return mav;
-		}// 	
-	
-
+		}// 		
+		
 			
 		// -- 내가 쓴 댓글목록 가져오기 --- //
 		@ResponseBody
