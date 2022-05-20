@@ -67,13 +67,13 @@
 		</tr>
 		-->
 		<tr style="border: solid darkgray 2px; margin-left:2%">
-			<td style="width:5%;"><input type="hidden" id="pk_addbook_no_${i.count}" name="pk_addbook_no_${i.count}" value="${adb.pk_addbook_no}" readonly /></td>
-			<td style="width:13%;"><strong>이름</strong></td>
-			<td style="width:13%;"><strong>직급</strong></td>
-			<td style="width:22%;"><strong>휴대폰</strong></td>
-			<td style="width:22%;"><strong>이메일</strong></td>
-			<td style="width:13%;"><strong>회사</strong></td>
-			<td style="width:22%;"><strong>회사전화</strong></td>
+			<td style="width:0%;"><input type="hidden" id="pk_addbook_no_${i.count}" name="pk_addbook_no_${i.count}" value="${adb.pk_addbook_no}" readonly /></td>
+			<td style="width:16%;"><strong>이름</strong></td>
+			<td style="width:16%;"><strong>직급</strong></td>
+			<td style="width:19%;"><strong>휴대폰</strong></td>
+			<td style="width:16%;"><strong>이메일</strong></td>
+			<td style="width:16%;"><strong>회사</strong></td>
+			<td colspan="4" style="width:16%;"><strong>회사전화</strong></td>
 		</tr>
 		<c:if test="${not empty (requestScope.adbList)}">
         <c:forEach var="adb" items="${requestScope.adbList}" varStatus="i">
@@ -84,7 +84,7 @@
 			<td><input type="text" class="form-control" style="text-align:center; border:none;" onclick="telUpdate(${i.count})" data-toggle="modal" data-target="#viewModal" onclick="modal_view('이름','부서','직급','이메일','휴대폰','회사','회사전화번호','회사주소','메모사항');" value="${adb.phone}" readonly></td>
 			<td><input type="text" class="form-control" style="text-align:center; border:none;" onclick="telUpdate(${i.count})" data-toggle="modal" data-target="#viewModal" onclick="modal_view('이름','부서','직급','이메일','휴대폰','회사','회사전화번호','회사주소','메모사항');" value="${adb.email}" readonly></td>
 			<td><input type="text" class="form-control" style="text-align:center; border:none;" onclick="telUpdate(${i.count})" data-toggle="modal" data-target="#viewModal" onclick="modal_view('이름','부서','직급','이메일','휴대폰','회사','회사전화번호','회사주소','메모사항');" value="${adb.companyname}" readonly></td>
-			<td><input type="text" class="form-control" style="text-align:center; border:none;" onclick="telUpdate(${i.count})" data-toggle="modal" data-target="#viewModal" onclick="modal_view('이름','부서','직급','이메일','휴대폰','회사','회사전화번호','회사주소','메모사항');" value="${adb.com_tel}" readonly></td>
+			<td colspan="4"><input type="text" class="form-control" style="text-align:center; border:none;" onclick="telUpdate(${i.count})" data-toggle="modal" data-target="#viewModal" onclick="modal_view('이름','부서','직급','이메일','휴대폰','회사','회사전화번호','회사주소','메모사항');" value="${adb.com_tel}" readonly></td>
 		</tr>
 		</c:forEach>
 		</c:if>
