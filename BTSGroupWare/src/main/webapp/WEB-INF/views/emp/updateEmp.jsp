@@ -23,8 +23,12 @@
 		var pk_emp_no = $("input#emp_no").val();
 		
 		getEmpImgName();
-		$("#empProfile").attr("src", "<%= ctxPath%>/resources/files/" + imgname); 
-		
+		if( imgname != "" ){
+			$("#empProfile").attr("src", "<%= ctxPath%>/resources/files/" + imgname); 
+		}
+		else {
+			$("#empProfile").attr("src", "<%= ctxPath%>/resources/images/mu.png"); 
+		}
 		// select 된 곳의 값들 넣어주기 시작
 		$("select[name=fk_department_id]").val((("${requestScope.loginuser.fk_department_id}" == '') ? "" : "${requestScope.loginuser.fk_department_id}")).prop("selected", true); 
 		$("select[name=fk_rank_id]").val((("${requestScope.loginuser.fk_rank_id}" == '') ? "" : "${requestScope.loginuser.fk_rank_id}")).prop("selected", true); 
