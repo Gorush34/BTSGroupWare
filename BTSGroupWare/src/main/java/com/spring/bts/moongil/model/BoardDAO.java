@@ -446,7 +446,5 @@ public class BoardDAO implements InterBoardDAO {
 
 
 
-
-
 	
 }
