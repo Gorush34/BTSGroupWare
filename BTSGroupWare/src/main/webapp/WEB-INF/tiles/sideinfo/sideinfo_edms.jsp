@@ -7,6 +7,8 @@
 <% String ctxPath = request.getContextPath(); %>
 
 <style type="text/css">
+	
+	
 </style>
 
 
@@ -14,6 +16,8 @@
 
 	$(document).ready(function(){
 		
+	//	var totalCount = service.getTotalCountWaitingSign(paraMap);
+				
 		// 캘린더 클릭시 일정 체크 박스 보이기, 숨기기
 	//	$("div.slideTogglebox").hide();
 		
@@ -43,9 +47,10 @@
 	
 </script>
 
-<div>
+<div style="padding-left: 20px; margin-top: 20px; ">
 	<div id="sidebar" style="font-size: 11pt;">
-		<span class="h4" id="sideInfo_edmsTitle" onclick="javascript:location.href='<%= ctxPath%>/edms/edmsHome.bts'">전자결재</span>
+		
+		<span style="font-size: 18pt; margin-left: 5px;" id="sideInfo_edmsTitle" onclick="javascript:location.href='<%= ctxPath%>/edms/edmsHome.bts'">전자결재</span>
 
 		<%--	 <input type="hidden" value="${sessionScope }" id="fk_emp_no"> --%>
 
@@ -57,12 +62,12 @@
 			<li style="margin-bottom: 15px;">
 				
 				<div class="edmsSideMenu">
-					<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/edmsHome.bts'">전자결재 홈으로</span></label>
+					<label for="mySche"><span onclick="javascript:location.href='<%= ctxPath%>/edms/edmsHome.bts'">전자결재 홈으로</span></label>
 				</div>
 				
 				<!-- 문서작성 시작 -->
 				<div class="edmsSideMenu">
-					<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/edmsAdd.bts'">문서작성</span></label>
+					<label for="mySche"><span onclick="javascript:location.href='<%= ctxPath%>/edms/edmsAdd.bts'">문서작성</span></label>
 				</div>
 				<!-- 문서작성 종료 -->
 				
@@ -74,22 +79,22 @@
 					<table style="margin: 0 20px;">
 						<tr>
 							<td>
-								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/list.bts'">전체문서함</span></label>
+								<label for="mySche"><span class="edmsSideMenu" style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/list.bts'">전체문서함</span></label>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/wait/list.bts'">대기문서함</span></label>
+								<label for="mySche"><span class="edmsSideMenu" style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/wait/list.bts'">대기문서함</span></label>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/accept/list.bts'">승인문서함</span></label>
+								<label for="mySche"><span class="edmsSideMenu" style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/accept/list.bts'">승인문서함</span></label>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/reject/list.bts'">반려문서함</span></label>
+								<label for="mySche"><span class="edmsSideMenu" style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/reject/list.bts'">반려문서함</span></label>
 							</td>
 						</tr>
 					</table>
@@ -103,17 +108,17 @@
 					<table style="margin: 0 20px;">
 						<tr>
 							<td>
-								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/mydoc/waitlist.bts'">대기문서함</span></label>
+								<label for="mySche"><span class="edmsSideMenu" style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/mydoc/waitlist.bts'">대기문서함</span></label>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/mydoc/acceptlist.bts'">승인문서함</span></label>
+								<label for="mySche"><span class="edmsSideMenu" style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/mydoc/acceptlist.bts'">승인문서함</span></label>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<label for="mySche"><span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/mydoc/rejectlist.bts'">반려문서함</span></label>
+								<label for="mySche"><span class="edmsSideMenu" style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/mydoc/rejectlist.bts'">반려문서함</span></label>
 							</td>
 						</tr>
 					</table>
@@ -127,10 +132,10 @@
 						<tr>
 							<td>
 								<label for="mySche">
-								 <span style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/waitingSignList.bts'">
+								 <span class="edmsSideMenu" style="margin-left: 5px;" onclick="javascript:location.href='<%= ctxPath%>/edms/waitingSignList.bts'">
 								 	결재대기목록
-								 </span>&nbsp;
-								 <a href="#" class="badge badge-pill badge-info">대기개수</a>
+								 </span><!-- &nbsp;
+								 <a href="#" class="badge badge-pill badge-info">대기개수</a> -->
 								</label>
 							</td>
 						</tr>

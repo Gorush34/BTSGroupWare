@@ -114,6 +114,14 @@ public interface InterEdmsService {
 	List<Map<String, Object>> myrejectlist_paging(Map<String, String> paraMap);
 
 	
+	///////////////
+	
+	
+	// 전체문서함 대기+진행 중인 문서의 이름, 검색 포함 개수
+	int getcompanyWaitList_Cnt(Map<String, String> paraMap);
+	List<Map<String, Object>> getcompanyWaitList(Map<String, String> paraMap);
+
+	
 	
 	
 }

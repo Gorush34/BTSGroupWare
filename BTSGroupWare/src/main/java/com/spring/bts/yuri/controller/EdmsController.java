@@ -283,7 +283,7 @@ public class EdmsController {
 		String searchType = request.getParameter("searchType");
 		String searchWord = request.getParameter("searchWord");
 		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
-		String emp_name = request.getParameter("emp_name"); // #yuly
+		String emp_name = request.getParameter("emp_name"); // 이거 추가
 		
 		// System.out.println("~~~ searchWord : " + searchWord);
 		
@@ -298,7 +298,7 @@ public class EdmsController {
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("searchType", searchType);
 		paraMap.put("searchWord", searchWord);
-		paraMap.put("emp_name", emp_name); // #yuly
+		paraMap.put("emp_name", emp_name); // 이거 추가
 		
 		// 먼저 총 게시물 건수(totalCount)를 구해와야 한다.
 		// 총 게시물 건수(totalCount)는 검색조건이 있을 때와 없을때로 나뉘어진다. 
@@ -413,25 +413,19 @@ public class EdmsController {
 		
 		getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출
 		
-		List<ApprVO> edmsList = null;
+		List<Map<String, Object>> companyWaitList = null;
 		
+		// 조회수 증가 확인을 위한 session값 얻어오기
 		HttpSession session = request.getSession();
 		session.setAttribute("readCountPermission", "yes");
-		
-		// 본인글만 보기 위해 paraMap에 로그인한 사원의 사번 추가함
-		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
- 		
-		int loginuser_empno = 0;
- 		if(loginuser != null) {
- 			loginuser_empno = loginuser.getPk_emp_no();
-	 	   // loginuser_empno 는 로그인 되어진 사용자의 사원번호 이다.
-	 	}
-		
- 	//	System.out.println("loginuser_empno" + loginuser_empno);
- 		
+
+		// === 페이징 처리를 한 검색어가 있는 전체 글목록 보여주기 시작 === //
 		String searchType = request.getParameter("searchType");
 		String searchWord = request.getParameter("searchWord");
 		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
+		String emp_name = request.getParameter("emp_name"); // 이거 추가
+		
+		// System.out.println("~~~ searchWord : " + searchWord);
 		
 		if(searchType == null || (!"title".equals(searchType) && !"emp_name".equals(searchType)) ) {
 			searchType = "";
@@ -444,7 +438,7 @@ public class EdmsController {
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("searchType", searchType);
 		paraMap.put("searchWord", searchWord);
-		paraMap.put("loginuser_empno", String.valueOf(loginuser_empno));
+		paraMap.put("emp_name", emp_name); // 이거 추가
 		
 		// 먼저 총 게시물 건수(totalCount)를 구해와야 한다.
 		// 총 게시물 건수(totalCount)는 검색조건이 있을 때와 없을때로 나뉘어진다. 
@@ -456,19 +450,23 @@ public class EdmsController {
 		int startRno = 0;			// 시작 행번호
 		int endRno = 0;				// 끝 행번호
 		
-		// 내문서함 - 대기문서함 총 게시물 건수(totalCount)
-		totalCount = service.getTotalCount_wait(paraMap);
-		// System.out.println("~~~~~ 내문서함 - 대기문서함 totalCount : " + totalCount);
-		
+		// 총 게시물 건수(totalCount)
+		totalCount = service.getcompanyWaitList_Cnt(paraMap);
+		// System.out.println("~~~~~ 확인용 totalCount : " + totalCount);
+	
 		totalPage = (int) Math.ceil((double)totalCount/sizePerPage);
+		// (double)127/10 ==> 12.7 ==> Math.ceil(12.7) ==> 13.0 ==> (int)13.0 ==> 13
+		// (double)120/10 ==> 12.0 ==> Math.ceil(12.0) ==> 12.0 ==> (int)12.0 ==> 12
 		
-		if(str_currentShowPageNo == null) { // 게시판에 보여지는 초기화면
+		if(str_currentShowPageNo == null) {		// 게시판에 보여지는 초기화면
 			currentShowPageNo = 1;
 		}
 		else {
 			try {
-				currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
-				if( currentShowPageNo < 1 || currentShowPageNo > totalPage) { currentShowPageNo = 1; }
+				currentShowPageNo = Integer.parseInt(str_currentShowPageNo); 
+				if( currentShowPageNo < 1 || currentShowPageNo > totalPage) {
+					currentShowPageNo = 1;
+				}
 			} catch(NumberFormatException e) {
 				currentShowPageNo = 1;
 			}
@@ -481,8 +479,8 @@ public class EdmsController {
 		paraMap.put("startRno", String.valueOf(startRno));
 		paraMap.put("endRno", String.valueOf(endRno));		
 		
-		// 상태가 대기중인 모든 결재문서 불러오기
-		edmsList = service.getEdmsListWithPaging_wait(paraMap);
+		companyWaitList = service.getcompanyWaitList(paraMap);
+		// 페이징한 대기문서 목록 가져오기(검색유무 상관없이 모두 가져온다.)
 		
 		// 검색대상 컬럼과 검색어 유지
 		if( !"".equals(searchType) && !"".equals(searchWord) ) {
@@ -503,7 +501,9 @@ public class EdmsController {
 			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1'>[맨처음]</a></li>";
 			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
 		}
+		
 		while( !(loop > blockSize || pageNo > totalPage) ) {
+			
 			if(pageNo == currentShowPageNo) {
 				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";  
 			}
@@ -516,6 +516,7 @@ public class EdmsController {
 			
 		}// end of while-----------------------
 		
+		
 		// === [다음][마지막] 만들기 === //
 		if( pageNo <= totalPage ) {
 			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
@@ -523,17 +524,26 @@ public class EdmsController {
 		}
 		
 		pageBar += "</ul>";
+		
 		mav.addObject("pageBar", pageBar);
 		
+		/*
+		 * 페이징 처리되어진 후 특정 글제목을 클릭하여 상세내용을 본 이후
+		 * 사용자가 목록보기 버튼을 클릭했을때 돌아갈 페이지를 알려주기 위해 
+		 * 현재 페이지 주소를 뷰단으로 넘겨준다.
+		 */		
 		String gobackURL = MyUtil.getCurrentURL(request);
+		// System.out.println("~~~++~~ 확인용 gobackURL : " + gobackURL);
 		
 		mav.addObject("gobackURL", gobackURL.replaceAll("&", " "));
 		// ==== 페이징 처리를 한 검색어가 있는 전체 글목록 보여주기 끝 ====
+		///////////////////////////////////////////////////////////////
 		
-		mav.addObject("edmsList", edmsList);
+		mav.addObject("companyWaitList", companyWaitList);
 		mav.setViewName("wait/list.edms");
+		// /WEB-INF/views/edms/list.jsp 페이지를 만들어야 한다.
 		
-		return mav;		
+		return mav;	
 	}
 	
 	
@@ -989,8 +999,7 @@ public class EdmsController {
 	public ModelAndView editEnd(ModelAndView mav, ApprVO apprvo, HttpServletRequest request) {
 		
 		int n = service.edit(apprvo);
-		// n 이 1 이라면 정상적으로 변경됨.
-		// n 이 0 이라면 글수정에 필요한 글암호가 틀린경우임.
+		// n 이 1 이라면 정상적으로 변경, 0 이라면 변경 실패
 		
 		if(n==0) {
 			mav.addObject("message", "암호가 일치하지 않아 글 수정이 불가합니다.");
@@ -1006,38 +1015,100 @@ public class EdmsController {
 		return mav;
 	}
 	
+	// 오류 원인
+	// 1. 서비스에서 filename을 fileName이라고 가져옴
+	// 2. view.jsp에서 viewfrm이라고 적었는데 그런 거 없음
+	// 3. delFrm으로 감싼 부분에 pk_appr_no이 없어서 sys로 찍어보니 null 이 나와서 담아줌
 	
-	// === 글삭제 페이지 요청 === //
-	/*
-	@RequestMapping(value="/edms/del.bts")
-	public ModelAndView requiredLogin_del(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
-		
+	// === 글삭제 페이지 완료하기 === //
+	@RequestMapping(value="/edms/delEnd.bts", method= {RequestMethod.POST})
+	public ModelAndView delEnd(ModelAndView mav, HttpServletRequest request) {
+
 		// 삭제해야 할 글번호 가져오기
-		String pk_appr_no = request.getParameter("pk_appr_no");
+		String pk_appr_no = request.getParameter("pk_appr_no"); // 글 번호
+		String fk_emp_no1 = request.getParameter("fk_emp_no");	// 작성자 사번
 		
-		// 삭제해야할 글1개 내용 가져와서 로그인한 사람이 쓴 글이라면 글삭제가 가능하지만
-		// 다른 사람이 쓴 글은 삭제가 불가하도록 해야 한다.
+	//	System.out.println("pk_appr_no = " + pk_appr_no);
+		
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("pk_appr_no", pk_appr_no);
 		
-		///////////////////////////////
+		/////////////////////////////// GoBackURL 때문에 넣어준 것이다.
 		paraMap.put("searchType", "");
 		paraMap.put("searchWord", "");
 		///////////////////////////////
 		
+		// 글조회수(readCount) 증가 없이 1개의 글 조회하기
 		ApprVO apprvo = service.getViewWithNoAddCount(paraMap);
-		// 글조회수(readCount) 증가 없이 단순히 글1개만 조회해주는 것이다.
 		
+		// 로그인한 사용자의 정보 가져오기
 		HttpSession session = request.getSession();
 		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
 
 	//	System.out.println("del에서 확인용 pk_appr_no " + pk_appr_no);
 	//	System.out.println("del에서  확인용 apprvo.getTitle() " + apprvo.getTitle());
-		
 	//	System.out.println("del에서 확인용 apprvo.getFk_emp_no() " + apprvo.getFk_emp_no());
+	//	System.out.println("del 확인용 fk_emp_no1 > " + fk_emp_no1);
+		int loginuser_empno = 0;
+		if(loginuser != null) {
+			loginuser_empno = loginuser.getPk_emp_no();	// 로그인한 사용자의 사번을 담아준다.
+		}
 		
-		if( loginuser.getPk_emp_no() != apprvo.getFk_emp_no() ) {
-	//	if( !String.valueOf(loginuser.getPk_emp_no()).equals(apprvo.getFk_emp_no()) ) {
+		// 로그인한 사람이 쓴 글이라면 글삭제가 가능하지만 다른 사람이 쓴 글은 삭제가 불가하도록 해야 한다.
+		int int_fk_emp_no1 = Integer.parseInt(fk_emp_no1);
+		
+	//	System.out.println("loginuser_empno > " + loginuser_empno);
+	//	System.out.println("Integer.toString(loginuser_empno) > " + Integer.toString(loginuser_empno));
+	//	System.out.println("loginuser_empno > " + loginuser_empno);
+		
+		// 로그인유저의 사번과 글쓴 사람의 사번이 같은 경우
+		if( loginuser_empno == int_fk_emp_no1 ) {
+			
+			apprvo = service.getViewWithNoAddCount(paraMap);
+			// 위에서 글을 가져온 다음에 한 번 더 가져오는 이유?
+			// 첫번재는 사번 비교하고, 확인한 다음에  같은 사람이 쓴 거면 지우려고..?
+			
+		//	paraMap = new HashMap<>();
+			// 위와 같이 하면 searchType과 searchWord가 초기화되서 아래처럼 다시 넣어줘야 되서
+			// 비효율적이지 않나?
+		//	paraMap.put("pk_appr_no", pk_appr_no);
+			
+			//////////////////////////////////////////////////////////////////////////
+			// === 파일첨부가 된 글이라면 글 삭제 시 먼저 첨부파일을 삭제해주어야 한다. === //
+		//	paraMap.put("searchType", "");
+		//	paraMap.put("searchWord", "");
+			
+		//	apprvo = service.getViewWithNoAddCount(paraMap);
+			String filename = apprvo.getFilename();
+			
+			if( filename != null && !"".equals("") ) {
+				session = request.getSession();
+				String root = session.getServletContext().getRealPath("/");
+				String path = root+"resources"+File.separator+"files";
+				
+				paraMap.put("path", path); // 삭제해야할 파일이 저장된 경로
+				paraMap.put("filename", filename); // 삭제해야할 파일명
+			}
+			// === 파일첨부가 된 글이라면 글 삭제 시 먼저 첨부파일을 삭제해주어야 한다. 끝 === //
+			
+			//////////////////////////////////////////////////////////////////////////
+			
+			int n = service.del(paraMap);
+			
+			if(n==1) {
+				mav.addObject("message", "글 삭제 성공!!");
+				mav.addObject("loc", request.getContextPath()+"/edms/mydoc/waitlist.bts");
+				// 글 삭제할 수 있는 건 본인일 때+결재 전이니까 대기문서 목록으로 보내주자. 어디로든 상관은 없음.
+			}
+			else {
+				mav.addObject("message", "글 삭제 실패!!");
+				mav.addObject("loc", "javascript:history.back()");
+			}
+			
+			mav.setViewName("msg");	
+		}
+		
+		else {
 			String message = "다른 사용자의 글은 삭제가 불가합니다.";
 			String loc = "javascript:history.back()";
 			
@@ -1045,153 +1116,10 @@ public class EdmsController {
 			mav.addObject("loc", loc);
 			mav.setViewName("msg");
 		}
-		else {
-			// 자신의 글을 삭제할 경우
-			// 글작성자인지 확인하기 위해 사번을 입력받는 del.jsp 페이지를 띄우도록 한다. 
-			mav.addObject("pk_appr_no", pk_appr_no);
-			mav.setViewName("del.edms");
-			mav.addObject("apprvo", apprvo);
-			// ============ 오류 = if 문 안에 들어가서 널값이 뜬 것이었다
-			// ============ 오류 이게 없어서 del에서 삭제가 되지 않았다. 뷰단에서 apprvo 에서 fk_emp_no가 없어서				
-
-		}
-		
 		return mav;
-	}
-	*/
-	
-	// === 글삭제 페이지 완료하기 === //
-/*
-	@RequestMapping(value="/edms/delEnd.bts", method= {RequestMethod.POST})
-	public ModelAndView delEnd(ModelAndView mav, HttpServletRequest request) {
-		
-		String pk_appr_no = request.getParameter("pk_appr_no");
-		
-		Map<String, String> paraMap = new HashMap<>();
-		paraMap.put("pk_appr_no", pk_appr_no);
-		
-		//////////////////////////////////////////////////////////////////////////
-		// === 파일첨부가 된 글이라면 글 삭제 시 먼저 첨부파일을 삭제해주어야 한다. === //
-		paraMap.put("searchType", "");
-		paraMap.put("searchWord", "");
-		
-		ApprVO apprvo = service.getViewWithNoAddCount(paraMap);
-		String filename = apprvo.getFilename();
-		
-		if( filename != null && !"".equals("") ) {
-			HttpSession session = request.getSession();
-			String root = session.getServletContext().getRealPath("/");
-			String path = root+"resources"+File.separator+"files";
-			
-			paraMap.put("path", path); // 삭제해야할 파일이 저장된 경로
-			paraMap.put("filename", filename); // 삭제해야할 파일명
-		}
-		// === 파일첨부가 된 글이라면 글 삭제 시 먼저 첨부파일을 삭제해주어야 한다. 끝 === //
-		
-		//////////////////////////////////////////////////////////////////////////
-		
-		int n = service.del(paraMap);
-		
-		if(n==1) {
-			mav.addObject("message", "글 삭제 성공!!");
-			mav.addObject("loc", request.getContextPath()+"/edms/list.bts");
-		}
-		else {
-			mav.addObject("message", "글 삭제 실패!!");
-			mav.addObject("loc", "javascript:history.back()");
-		}
-		
-		mav.setViewName("msg");
-		
-		return mav;
-	}
-*/
-	
-	// === 글삭제 페이지 완료하기 === //
-		@RequestMapping(value="/edms/delEnd.bts", method= {RequestMethod.POST})
-		public ModelAndView delEnd(ModelAndView mav, HttpServletRequest request) {
 
-			// 삭제해야 할 글번호 가져오기
-			String pk_appr_no = request.getParameter("pk_appr_no");
-			String fk_emp_no1 = request.getParameter("fk_emp_no");
-			
-			int fk_emp_no = Integer.parseInt(fk_emp_no1);
-			// 삭제해야할 글1개 내용 가져와서 로그인한 사람이 쓴 글이라면 글삭제가 가능하지만
-			// 다른 사람이 쓴 글은 삭제가 불가하도록 해야 한다.
-			Map<String, String> paraMap = new HashMap<>();
-			paraMap.put("pk_appr_no", pk_appr_no);
-			
-			///////////////////////////////
-			paraMap.put("searchType", "");
-			paraMap.put("searchWord", "");
-			///////////////////////////////
-			
-			ApprVO apprvo = service.getViewWithNoAddCount(paraMap);
-			// 글조회수(readCount) 증가 없이 단순히 글1개만 조회해주는 것이다.
-			
-			HttpSession session = request.getSession();
-			EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+	} // end of public ModelAndView delEnd ----------------------------------------------------------
 
-			System.out.println("del에서 확인용 pk_appr_no " + pk_appr_no);
-			System.out.println("del에서  확인용 apprvo.getTitle() " + apprvo.getTitle());
-			
-			System.out.println("del에서 확인용 apprvo.getFk_emp_no() " + apprvo.getFk_emp_no());
-			
-			if( loginuser.getPk_emp_no() != fk_emp_no ) {
-		//	if( !String.valueOf(loginuser.getPk_emp_no()).equals(apprvo.getFk_emp_no()) ) {
-				String message = "다른 사용자의 글은 삭제가 불가합니다.";
-				String loc = "javascript:history.back()";
-				
-				mav.addObject("message", message);
-				mav.addObject("loc", loc);
-				mav.setViewName("msg");
-			}
-			else {
-				pk_appr_no = request.getParameter("pk_appr_no");
-				
-				paraMap = new HashMap<>();
-				paraMap.put("pk_appr_no", pk_appr_no);
-				
-				//////////////////////////////////////////////////////////////////////////
-				// === 파일첨부가 된 글이라면 글 삭제 시 먼저 첨부파일을 삭제해주어야 한다. === //
-				paraMap.put("searchType", "");
-				paraMap.put("searchWord", "");
-				
-				apprvo = service.getViewWithNoAddCount(paraMap);
-				String filename = apprvo.getFilename();
-				
-				if( filename != null && !"".equals("") ) {
-					session = request.getSession();
-					String root = session.getServletContext().getRealPath("/");
-					String path = root+"resources"+File.separator+"files";
-					
-					paraMap.put("path", path); // 삭제해야할 파일이 저장된 경로
-					paraMap.put("filename", filename); // 삭제해야할 파일명
-				}
-				// === 파일첨부가 된 글이라면 글 삭제 시 먼저 첨부파일을 삭제해주어야 한다. 끝 === //
-				
-				//////////////////////////////////////////////////////////////////////////
-				
-				int n = service.del(paraMap);
-				
-				if(n==1) {
-					mav.addObject("message", "글 삭제 성공!!");
-					mav.addObject("loc", request.getContextPath()+"/edms/list.bts");
-				}
-				else {
-					mav.addObject("message", "글 삭제 실패!!");
-					mav.addObject("loc", "javascript:history.back()");
-				}
-				
-				mav.setViewName("msg");
-						
-				}
-						
-			
-			return mav;
-
-		} // end of public ModelAndView delEnd ----------------------------------------------------------
-	
 	
 	
 	
@@ -1211,83 +1139,6 @@ public class EdmsController {
 		// 문서번호 통해 문서정보 가져오기
 		apprvo = service.getApprInfo(pk_appr_no);
 		
-		// System.out.println("왜안받아와? : " + apprvo.getMid_accept());
-		// System.out.println("왜안받아와? : " + apprvo.getFin_accept());
-		/*
-		 
-		// 중간/최종결재자 사번 가져오기
-		String fk_mid_empno = request.getParameter("fk_mid_empno");
-		String fk_fin_empno = request.getParameter("fk_fin_empno");
-		String status = request.getParameter("status");
-		
-		// 승인해야 할 글1개 내용을 가져와서 로그인+중간결재자인 사람이라면 승인이 가능하지만 다른 사람은 승인이 불가능하도록 해야 한다.
-		Map<String, String> paraMap = new HashMap<>();
-		paraMap.put("pk_appr_no", pk_appr_no);
-		paraMap.put("fk_mid_empno", fk_mid_empno);
-		paraMap.put("fk_fin_empno", fk_fin_empno);
-		paraMap.put("status", status);
-				
-		ApprVO apprvo = service.getViewWithNoAddCount(paraMap);
-		// 글조회수(readCount) 증가 없이 단순히 글1개만 조회해주는 것이다.
-		
-		HttpSession session = request.getSession();
-		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
-		
-		*/
-		
-/*	
-		System.out.println("승인 확인용 문서번호 pk_appr_no " + pk_appr_no);
-		System.out.println("승인 확인용 apprvo.getTitle() " + apprvo.getTitle());
-		System.out.println("승인 확인용 loginuser.getPk_emp_no() = [" + loginuser.getPk_emp_no() + "]");
-		System.out.println("승인 확인용 apprvo.getFk_mid_empno() = [" + apprvo.getFk_mid_empno() + "]");
-		System.out.println("승인 확인용 apprvo.getFk_fin_empno() = [" + apprvo.getFk_fin_empno() + "]");
-*/
-		
-		// 로그인한 사용자가 1. mid_emp_no 이거나 2. fin_emp_no일 때만 가능하도록 막아주기
-		
-		
-/*
-		=== 논리 연산자 === 
-		and연산자: 둘 중 하나라도 false면 false. 즉 모든 항이 참이어야 참이 된다.
-		( & 는 전체검사, &&는 앞쪽 조건만 false면 우항을 검사하지 않아서 속도 빠름 )
-		or연산자: 둘 중 하나라도 true이면 true.
-		( | 는 전체검사, ||는 앞쪽 조건만 true면 우항을 검사하지 않아서 속도 빠름 )
-*/		
-		/*
-		// 1. 로그인한 사용자가 결재자가 아닌 경우 
-		if( loginuser.getPk_emp_no() != apprvo.getFk_mid_empno() 
-				&& loginuser.getPk_emp_no() != apprvo.getFk_fin_empno() ) { 
-		// 최종결재자로 로그인 하면 당연히 전자는 true, 후자가 false => 그럼 &&에 따라서 이걸 타면 안된다.
-			
-			// &&(and연산자) 모든 조건이 참이어야 성립			
-			String message = "승인할 수 있는 권한이 없습니다.";
-			String loc = "javascript:history.back()";
-			
-			mav.addObject("message", message);
-			mav.addObject("loc", loc);
-			mav.setViewName("msg");
-		}
-		
-		// 2. 로그인한 사용자가 중간 결재자인 경우
-		else if( loginuser.getPk_emp_no() == apprvo.getFk_mid_empno() ) {
-			mav.addObject("pk_appr_no", pk_appr_no);
-			mav.addObject("fk_mid_empno", apprvo.getFk_mid_empno());
-			mav.setViewName("appr/accept.edms");
-			
-		//	System.out.println("중간결재 mav 확인용 empno " + apprvo.getFk_mid_empno());			
-		}
-		
-		// 3. 로그인한 사용자가 최종결재자인 경우
-		else if( loginuser.getPk_emp_no() == apprvo.getFk_fin_empno() ) {
-			mav.addObject("pk_appr_no", pk_appr_no);
-			mav.addObject("fk_fin_empno", apprvo.getFk_fin_empno());
-			mav.setViewName("appr/accept.edms");
-			
-		//	System.out.println("최종결재 mav 확인용 empno " + apprvo.getFk_fin_empno());	
-		}
-		*/
-		
-		
 		mav.addObject("apprvo", apprvo);
 		mav.setViewName("appr/accept.edms");
 		return mav;
@@ -1297,22 +1148,6 @@ public class EdmsController {
 	@RequestMapping(value="/edms/appr/acceptEnd.bts", method= {RequestMethod.POST})
 	public ModelAndView acceptEnd(ModelAndView mav, HttpServletRequest request, ApprVO apprvo) {
 		
-		/*
-		String pk_appr_no = request.getParameter("pk_appr_no");
-		
-		Map<String, String> paraMap = new HashMap<>();
-		paraMap.put("pk_appr_no", pk_appr_no);
-		
-		ApprVO apprvo = service.getViewWithNoAddCount(paraMap);
-		HttpSession session = request.getSession();
-		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
-		
-		apprvo.setFk_emp_no(loginuser.getPk_emp_no()); 
-		// 로그인한 사람이 중간결재자인지 최종결재자인지 모르기 때문에 중간결재일때는 로그인한 사용자가 중간결재자로 등록된 것만 업데이트 되게 해야 한다
-		// 그런데 apprvo에는 pk_emp_no 같은 게 없으므로 fk_emp_no에 임시로 로그인한 사용자 값을 넣어준다.
-		
-		int n = service.accept(apprvo);
-		*/
 		HttpSession session = request.getSession();
 		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
 		int pk_emp_no = loginuser.getPk_emp_no();
@@ -1362,62 +1197,6 @@ public class EdmsController {
 		// 문서번호 통해 문서정보 가져오기
 		apprvo = service.getApprInfo(pk_appr_no);
 		
-		/*
-		// 중간/최종결재자 사번 가져오기
-		String fk_mid_empno = request.getParameter("fk_mid_empno");
-		String fk_fin_empno = request.getParameter("fk_fin_empno");
-		String status = request.getParameter("status");
-		
-		// 반려해야 할 글1개 내용을 가져와서 로그인+중간결재자인 사람이라면 반려할 수 있지만 다른 사람은 불가능하도록 한다.
-		Map<String, String> paraMap = new HashMap<>();
-		paraMap.put("pk_appr_no", pk_appr_no);
-		paraMap.put("fk_mid_empno", fk_mid_empno);
-		paraMap.put("fk_fin_empno", fk_fin_empno);
-		paraMap.put("status", status);
-				
-		ApprVO apprvo = service.getViewWithNoAddCount(paraMap);
-		// 글조회수(readCount) 증가 없이 단순히 글1개만 조회해주는 것이다.
-		
-		HttpSession session = request.getSession();
-		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
-
-
-		System.out.println("반려 확인용 문서번호 pk_appr_no " + pk_appr_no);
-		System.out.println("반려 확인용 apprvo.getTitle() " + apprvo.getTitle());
-		System.out.println("반려 확인용 loginuser.getPk_emp_no() = [" + loginuser.getPk_emp_no() + "]");
-		System.out.println("반려 확인용 apprvo.getFk_mid_empno() = [" + apprvo.getFk_mid_empno() + "]");
-		System.out.println("반려 확인용 apprvo.getFk_fin_empno() = [" + apprvo.getFk_fin_empno() + "]");
-		
-		// 로그인한 사용자가 1. mid_emp_no 이거나 2. fin_emp_no일 때만 가능하도록 막아주기
-		
-		// 1. 로그인한 사용자가 결재자가 아닌 경우 
-		if (loginuser.getPk_emp_no() != apprvo.getFk_mid_empno() && loginuser.getPk_emp_no() != apprvo.getFk_fin_empno()) { 
-			
-			String message = "반려할 수 있는 권한이 없습니다.";
-			String loc = "javascript:history.back()";
-			
-			mav.addObject("message", message);
-			mav.addObject("loc", loc);
-			mav.setViewName("msg");
-		}
-		
-		// 2. 로그인한 사용자가 중간 결재자인 경우
-		else if( loginuser.getPk_emp_no() == apprvo.getFk_mid_empno() ) {
-			mav.addObject("pk_appr_no", pk_appr_no);
-			mav.addObject("fk_mid_empno", apprvo.getFk_mid_empno());
-			mav.setViewName("appr/reject.edms");
-			
-			System.out.println("중간결재 mav 확인용 empno " + apprvo.getFk_mid_empno());			
-		}
-		
-		// 3. 로그인한 사용자가 최종결재자인 경우
-		else if( loginuser.getPk_emp_no() == apprvo.getFk_fin_empno() ) {
-			mav.addObject("pk_appr_no", pk_appr_no);
-			mav.addObject("fk_mid_empno", apprvo.getFk_fin_empno());
-			
-		}
-		*/
-		
 		mav.addObject("apprvo", apprvo);
 		mav.setViewName("appr/reject.edms");
 		
@@ -1428,23 +1207,6 @@ public class EdmsController {
 	// === 반려하기 페이지 완료하기 === //
 	@RequestMapping(value="/edms/appr/rejectEnd.bts", method= {RequestMethod.POST})
 	public ModelAndView rejectEnd(ModelAndView mav, HttpServletRequest request, ApprVO apprvo) {
-		
-		/*
-		String pk_appr_no = request.getParameter("pk_appr_no");
-		
-		Map<String, String> paraMap = new HashMap<>();
-		paraMap.put("pk_appr_no", pk_appr_no);
-		
-		ApprVO apprvo = service.getViewWithNoAddCount(paraMap);
-		
-		// 로그인 정보를 가져온다.
-		HttpSession session = request.getSession();
-		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
-		
-		apprvo.setFk_emp_no(loginuser.getPk_emp_no());
-		
-		int n = service.reject(apprvo);
-		*/
 		
 		HttpSession session = request.getSession();
 		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
@@ -1539,7 +1301,7 @@ public class EdmsController {
 	public void requiredLogin_download(HttpServletRequest request, HttpServletResponse response) {
 		
 		String pk_appr_no = request.getParameter("pk_appr_no");
-		System.out.println("++ 다운로드 확인용 pk_appr_no : "+pk_appr_no);
+	//	System.out.println("++ 다운로드 확인용 pk_appr_no : "+pk_appr_no);
 		// 첨부파일이 있는 글번호 
 		
 		/*
@@ -2262,14 +2024,6 @@ public class EdmsController {
 		return mav;		
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 }

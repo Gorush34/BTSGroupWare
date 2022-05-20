@@ -290,5 +290,18 @@ public class EdmsDAO implements InterEdmsDAO {
 		return myrejectlist;
 	}
 
+	// 전체문서함 대기+진행 중인 문서의 이름, 검색 포함 개수
+	@Override
+	public int getcompanyWaitList_Cnt(Map<String, String> paraMap) {
+		int totalCount = sqlsession.selectOne("yuri.getcompanyWaitList_Cnt", paraMap);
+		return totalCount;
+	}
+
+	@Override
+	public List<Map<String, Object>> getcompanyWaitList(Map<String, String> paraMap) {
+		List<Map<String, Object>> companyWaitList = sqlsession.selectList("yuri.getcompanyWaitList", paraMap);
+		return companyWaitList;
+	}
+
 
 }

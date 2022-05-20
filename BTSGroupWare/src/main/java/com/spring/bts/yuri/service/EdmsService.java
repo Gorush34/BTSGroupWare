@@ -105,11 +105,11 @@ public class EdmsService implements InterEdmsService {
 		// ==== 파일첨부가 된 글이라면 글 삭제 시 먼저 첨부파일을 삭제해주어야 한다. ==== //
 		if(n==1) {
 			String path = paraMap.get("path"); // 컨트롤러에서 받아온 key값
-			String fileName = paraMap.get("fileName"); // 컨트롤러에서 받아온 key값
+			String filename = paraMap.get("filename"); // 컨트롤러에서 받아온 key값
 			
-			if( fileName != null && "".equals(fileName) ) {
+			if( filename != null && "".equals(filename) ) {
 				try {
-					fileManager.doFileDelete(fileName, path);
+					fileManager.doFileDelete(filename, path);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -318,6 +318,23 @@ public class EdmsService implements InterEdmsService {
 	public List<Map<String, Object>> myrejectlist_paging(Map<String, String> paraMap) {
 		List<Map<String, Object>> myrejectlist = dao.myrejectlist_paging(paraMap);
 		return myrejectlist;
+	}
+
+	
+	
+	
+	
+	// 전체문서함 대기+진행 중인 문서의 이름, 검색 포함 개수
+	@Override
+	public int getcompanyWaitList_Cnt(Map<String, String> paraMap) {
+		int totalCount = dao.getcompanyWaitList_Cnt(paraMap);
+		return totalCount;
+	}
+
+	@Override
+	public List<Map<String, Object>> getcompanyWaitList(Map<String, String> paraMap) {
+		List<Map<String, Object>> companyWaitList = dao.getcompanyWaitList(paraMap);
+		return companyWaitList;
 	}
 
 

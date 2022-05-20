@@ -12,7 +12,8 @@
 <!-- style_edms.css 는 이미 layout-tiles_edms.jsp 에 선언되어 있으므로 쓸 필요 X! -->
 <style type="text/css">
 	.edmsviewtbl {
-		background-color: #F7F7F7; vertical-align : middle; text-align: center;
+		vertical-align : middle;
+		text-align: center;
 	}
 </style>
 
@@ -26,25 +27,22 @@
 
 <script type="text/javascript">
 	
-	$(document).ready(function(){	
+	$(document).ready(function(){
 		
-		const frm = document.viewfrm;
-		frm.method = "post";
-		frm.action = "<%= ctxPath%>/edms/view.bts";
-		frm.submit();
+		// 글삭제
+		$("button#btnDelete").click(function(){
+		/* $("button#btnDelete").on("click", function(e) { */
+			// 폼(form)을 전송(submit)
+			const frm = document.delFrm;
+			frm.method = "post";
+			frm.action = "<%= ctxPath%>/edms/delEnd.bts";
+			frm.submit();
+		}); // end of $("button#btnDelete").click(function()) --------------------
+		
+		
 	}); // end of $(document).ready(function(){}) --------------------
 	
 	
-	
-	// 글삭제
-	 $("button#btnDelete").click(function(){
-		  
-			// 폼(form)을 전송(submit)
-			const frm = document.delFrm;
-			frm.method = "POST";
-			frm.action = "<%= ctxPath%>/edms/delEnd.bts";
-			frm.submit();
-	}); // end of $("button#btnDelete").click(function()) --------------------
 	
 </script>
 
@@ -53,7 +51,7 @@
 	/* 문서보기 페이지 테이블 th 부분 */
 	.edmsView_th {
 		width: 15%;
-		background-color: #e8e8e8;
+		background-color: #F7F7F7;
 	}
 	
 </style>
@@ -87,15 +85,15 @@
 	
 	<!-- ------------------------------------------------------------------------ -->
 
-	<table style="width: 100%" class="table table-bordered">
+	<table style="width: 100%" class="table">
 		<colgroup>
-		<col style="width: 16%; background-color: #F2F2F2;" />
-		<col style="width: 24%;" />
-		<col style="width: 32%;" />
-		<col style="width: 4%; background-color: #F2F2F2;" />
-		<col style="width: 8%;" />
-		<col style="width: 4%; background-color: #F2F2F2;" />
-		<col style="width: 8%;" />
+		<col style="width: 16%; background-color: #F7F7F7; border: solid 1px #F7F7F7;" />
+		<col style="width: 24%; border: solid 1px #F7F7F7;" />
+		<col style="width: 32%; border: solid 1px #F7F7F7;" />
+		<col style="width: 4%; background-color: #F7F7F7; border: solid 1px #F7F7F7;" />
+		<col style="width: 8%; border: solid 1px #F7F7F7;" />
+		<col style="width: 4%; background-color: #F7F7F7; border: solid 1px #F7F7F7;" />
+		<col style="width: 8%; border: solid 1px #F7F7F7;" />
 		</colgroup>
 		
 		<tr>
@@ -110,34 +108,34 @@
           		&nbsp; <%-- 큰구분선1 --%>
           	</td>
           	
-          	<td rowspan="4" style="vertical-align : center;">중<br/>간<br/>결<br/>재<br/>자</td>
+          	<td rowspan="4" class="edmsviewtbl">중<br/>간<br/>결<br/>재<br/>자</td>
           	<td class="edmsviewtbl">${requestScope.apprvo.ko_depname}</td>
              
-			<td rowspan="4" style="vertical-align: center;">최<br/>종<br/>결<br/>재<br/>자</td>
+			<td rowspan="4" class="edmsviewtbl">최<br/>종<br/>결<br/>재<br/>자</td>
           	<td class="edmsviewtbl">${requestScope.apprvo.ko_depname}</td>
 		</tr>
 		
 		<tr>
 			<th>작성자 <input type="hidden" value="${requestScope.apprvo.fk_emp_no}"></th>
-          	<td style="background-color: #F7F7F7;">${requestScope.apprvo.emp_name}&nbsp;[${requestScope.apprvo.ko_rankname}]</td>
-          	<td rowspan="2" style="background-color: #F7F7F7; vertical-align: middle; text-align: center;">${requestScope.apprname.fk_mid_empname}<br/>[${requestScope.apprvo.fk_mid_empno}]</td>
-			<td rowspan="2" style="background-color: #F7F7F7; vertical-align: middle; text-align: center;">${requestScope.apprname.fk_fin_empname}<br/>[${requestScope.apprvo.fk_fin_empno}]</td>
+          	<td>${requestScope.apprvo.emp_name}&nbsp;[${requestScope.apprvo.ko_rankname}]</td>
+          	<td rowspan="2" class="edmsviewtbl">${requestScope.apprname.fk_mid_empname}<br/>[${requestScope.apprvo.fk_mid_empno}]</td>
+			<td rowspan="2" class="edmsviewtbl">${requestScope.apprname.fk_fin_empname}<br/>[${requestScope.apprvo.fk_fin_empno}]</td>
 		</tr>
 		
         <tr>
 			<th>소속</th>
-          	<td style="background-color: #F7F7F7;">${requestScope.apprvo.ko_depname}</td>
+          	<td>${requestScope.apprvo.ko_depname}</td>
 		</tr>
 		
 		<tr>
 			<th>작성일자</th>
-          	<td style="background-color: #F7F7F7;">${requestScope.apprvo.writeday}</td>
-          	<td style="background-color: #F7F7F7; text-align: center;">
+          	<td>${requestScope.apprvo.writeday}</td>
+          	<td class="edmsviewtbl">
           		<c:if test="${requestScope.apprvo.mid_accept eq 0}">대기중</c:if>
           		<c:if test="${requestScope.apprvo.mid_accept eq 1}"><span style="color:blue;">결재완료</span></c:if>
           		<c:if test="${requestScope.apprvo.mid_accept eq 2}"><span style="color:red;">반려</span></c:if>
           	</td>
-			<td style="background-color: #F7F7F7; text-align: center;">
+			<td class="edmsviewtbl">
           		<c:if test="${requestScope.apprvo.mid_accept ne 2 and requestScope.apprvo.fin_accept eq 0}">대기중</c:if>
           		<c:if test="${requestScope.apprvo.fin_accept eq 1}"><span style="color:blue;">결재완료</span></c:if>
           		<c:if test="${requestScope.apprvo.mid_accept eq 2 or requestScope.apprvo.fin_accept eq 2}"><span style="color:red;">반려</span></c:if>
@@ -151,7 +149,7 @@
 	<span class="edms_title">상세정보</span>
 		<table style="width: 100%" class="table table-bordered">
 			<colgroup>
-				<col style="width: 16%; background-color: #e8e8e8;" />
+				<col style="width: 16%; background-color: #F7F7F7;" />
 			</colgroup>
 			
 			<tr>
@@ -224,118 +222,72 @@
 	
 		<c:set var="v_gobackURL" value='${ fn:replace(requestScope.gobackURL, "&", " ") }' />
 		
-		<div style="margin-bottom: 1%;">
-			<span style="font-size: 11pt;">이전글</span>&nbsp;&nbsp;
-			<span class="move" style="cursor: pointer;" onclick="javascript:location.href='/bts/edms/view.bts?pk_appr_no=${requestScope.apprvo.previousseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.apprvo.previoussubject}</span>
-		</div>
-		<div style="margin-bottom: 1%;">
-			<span style="font-size: 11pt;">다음글</span>&nbsp;&nbsp;
-			<span class="move" style="cursor: pointer; font-size: 12pt;" onclick="javascript:location.href='/bts/edms/view.bts?pk_appr_no=${requestScope.apprvo.nextseq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}&gobackURL=${v_gobackURL}'">${requestScope.apprvo.nextsubject}</span>
-		</div>
-		
 		<br/>
 		
-
-
 	<div class="edmsViewBtnArea">
 	
 	<%-- ************************************************** 목록으로 버튼 영역 시작 ************************************************** --%>
 	
 		<%-- 1. loginuser != null && 글쓴 사람이 아니고 승인자도 아닌 경우" --%>
 		<%-- 페이징 처리되어진 후 특정 글제목을 클릭하여 상세내용을 본 이후 사용자가 목록보기 버튼을 클릭했을 때 돌아갈 페이지를 알려주기 위해 현재 페이지 주소를 뷰단으로 넘겨준다. --%>
+		<div style="float: left;">
 		<button type="button" class="btn btn-dark btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>${requestScope.gobackURL}'">목록으로</button>
+		</div>
+		
+		<div style="float: left;">
 		<button type="button" class="btn btn-dark btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>${requestScope.gobackURL}'">뒤로가기</button>
-	
-	<%-- ************************************************** 목록으로 버튼 영역 종료 ************************************************** --%>
-
-
+		</div>
+		
 		<div class="divclear" style="margin-top: 16px;"></div>
-
 
 	<%-- ************************************************** 수정 버튼 영역 시작 ************************************************** --%>
-	<%-- 2. 로그인한유저=글쓴이사번 && 중간결재전이면 수정/삭제 버튼 보이도록 --%>
-	
-		<c:if test="${sessionScope.loginuser.pk_emp_no eq apprvo.getFk_emp_no() and requestScope.apprvo.mid_accept eq 0}">
-			<button type="button" class="btn btn-dark btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edit.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">수정하기</button>
-		</c:if>
-	
-	<%-- ************************************************** 수정 버튼 영역 종료 ************************************************** --%>
-	
-	
-	
-	
-	<%-- ************************************************** 삭제 버튼 영역 시작 ************************************************** --%>
-	<%-- 2. 로그인한유저=글쓴이사번 && 중간결재전이면 수정/삭제 버튼 보이도록 --%>
-	
-		<c:if test="${sessionScope.loginuser.pk_emp_no eq apprvo.getFk_emp_no() and requestScope.apprvo.mid_accept eq 0}">
-			<button type="button" class="btn btn-dark btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/del.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">삭제하기</button>
-			<span data-toggle="modal" data-target="#myModal">
-				<button type="button" class="btn btn-secondary">삭제하기</button>
-			</span>
-		</c:if>
-	<%-- ************************************************** 삭제 버튼 영역 종료 ************************************************** --%>
-	
-	
-	
-	
-	
-	
-
+		
+		<%-- 2. 로그인한유저=글쓴이사번 && 중간결재전이면 수정/삭제 버튼 보이도록 --%>
+		
+		<div style="float: left;">
+			<%-- 수정버튼 --%>
+			<c:if test="${sessionScope.loginuser.pk_emp_no eq apprvo.getFk_emp_no() and requestScope.apprvo.mid_accept eq 0}">
+				<button type="button" class="btn btn-dark btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edit.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">수정하기</button>
+			</c:if>
+		</div>
+		
+		<div style="float: left;">
+			<%-- 삭제버튼 --%>
+			<form name="delFrm">
+				<input type="hidden" name="pk_appr_no" value="${requestScope.apprvo.pk_appr_no}">
+				<input type="hidden" name="fk_emp_no" value="${requestScope.apprvo.fk_emp_no}">
+				<c:if test="${sessionScope.loginuser.pk_emp_no eq apprvo.getFk_emp_no() and requestScope.apprvo.mid_accept eq 0}">
+					<button type="button" class="btn btn-primary btn-sm" id="btnDelete">삭제하기</button>
+				</c:if>
+			</form>			
+		</div>
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	<%-- ************************************************** 삭제 버튼 영역 종료 ************************************************** --%>
-		
-		
-		<input type="hidden" value="${requestScope.apprvo.mid_accept }">
-		<input type="hidden" value="${requestScope.apprvo.fin_accept }">
+		<input type="hidden" value="${requestScope.apprvo.mid_accept}">
+		<input type="hidden" value="${requestScope.apprvo.fin_accept}">
 		
 		<div class="divclear" style="margin-top: 16px;"></div>
 		
-		
-	<%-- ************************************************** 중간결재/반려 버튼 영역 시작 ************************************************** --%>
+	<%-- ************************************************** 결재/반려 버튼 영역 시작 ************************************************** --%>
 	
-	
-	<%-- ************************************************** 중간결재/반려 버튼 영역 시작 ************************************************** --%>
-	
-	<%-- ************************************************** 최종결재/반려 버튼 영역 시작 ************************************************** --%>
-	<%-- ************************************************** 중간결재/반려 버튼 영역 시작 ************************************************** --%>
-	
-
-		
-		
-		
-		
-	<%-- ************************************************** 수정/삭제 버튼 영역 시작 ************************************************** --%>
-
 		<%-- 3. 중간결재자가 로그인 한 경우 - 중간버튼만 보인다. --%>
 		<c:if test="${ requestScope.apprvo.fk_mid_empno eq sessionScope.loginuser.pk_emp_no and requestScope.apprvo.mid_accept eq 0 and requestScope.apprvo.fin_accept eq 0 }">
 			<button type="button" class="btn btn-success btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">중간결재</button>
-			<button type="button" class="btn btn-success btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">중간반려</button>
+			<button type="button" class="btn btn-danger btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">중간반려</button>
 		</c:if>
 		
 		<div class="divclear"></div>
 		
 		<%-- 4. 최종결재자가 로그인 한 경우 - 최종버튼만 보인다. --%>
 		<c:if test="${ requestScope.apprvo.fk_fin_empno eq sessionScope.loginuser.pk_emp_no and requestScope.apprvo.mid_accept ne 0 and requestScope.apprvo.fin_accept eq 0 }">
-			<button type="button" class="btn btn-danger btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">최종결재</button>
+			<button type="button" class="btn btn-success btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/accept.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">최종결재</button>
 			<button type="button" class="btn btn-danger btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">최종반려</button>
 		</c:if>
 		
 		<div class="divclear"></div>
 	
 	
-	
-	
-	
+
 		
 	</div>
 	<%-- ************************************************** 수정 버튼 영역 종료 ************************************************** --%>
@@ -344,12 +296,14 @@
 	
 	
 	<%-- ************************************************** 삭제 버튼 모달 시작 ************************************************** --%>
+	
+	<%--
 	<div class="modal fade" id="myModal" role="dialog"> 
 	<div class="modal-dialog"> 
 	<div class="modal-content"> 
 		<div class="modal-header"> 
 		
-		<h2 class="modal-title">정말 삭제하시겠습니까?</h2> 
+		<h2 class="modal-title">삭제하시겠습니까?</h2> 
 		
 		<button type="button" class="close" data-dismiss="modal">
 		×
@@ -364,7 +318,7 @@
 			<table style="width: 455px" class="table table-bordered">
 				<tr>
 					<td>
-						<input type="hidden" name="pk_seq" value="${apprvo.pk_appr_no}" readonly />
+						<input type="hidden" name="pk_appr_no" value="${apprvo.pk_appr_no}" readonly />
 						<input type="hidden" name="filename" value="${apprvo.filename}" readonly />
 						<input type="hidden" name="fk_emp_no" value="${apprvo.fk_emp_no}" readonly />
 					</td>
@@ -382,6 +336,7 @@
 	</div> 
 	</div> 
 	</div>
+	--%>
 	
 	<%-- ************************************************** 삭제 버튼 모달 종료 ************************************************** --%>
 	
