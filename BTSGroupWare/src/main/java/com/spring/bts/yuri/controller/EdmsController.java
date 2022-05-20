@@ -2012,21 +2012,20 @@ public class EdmsController {
 		
 		getCurrentURL(request); // 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기  위한 메소드 호출
 		
-		List<ApprVO> myacceptlist = null;
-		
 		HttpSession session = request.getSession();
-		session.setAttribute("readCountPermission", "yes");
+		// session.setAttribute("readCountPermission", "yes");
 		
 		// 본인글만 보기 위해 paraMap에 로그인한 사원의 사번 추가함
 		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
  		
-		int loginuser_empno = 0;
- 		if(loginuser != null) {
+		int loginuser_empno = loginuser.getPk_emp_no();
+ 		/*
+		if(loginuser != null) {
  			loginuser_empno = loginuser.getPk_emp_no();
 	 	   // loginuser_empno 는 로그인 되어진 사용자의 사원번호 이다.
 	 	}
-		
- 		System.out.println("accept의 loginuser_empno =>" + loginuser_empno );
+		*/
+ 		// System.out.println("accept의 loginuser_empno =>" + loginuser_empno );
  		
 		String searchType = request.getParameter("searchType");
 		String searchWord = request.getParameter("searchWord");
@@ -2079,7 +2078,7 @@ public class EdmsController {
 		paraMap.put("endRno", String.valueOf(endRno));		
 		
 		// 상태가 대기/진행중인 나의 문서 불러오기
-		myacceptlist = service.myacceptlist_paging(paraMap);
+		List<Map<String, Object>> myAcc = service.myacceptlist_paging(paraMap);
 		
 		// 검색대상 컬럼과 검색어 유지
 		if( !"".equals(searchType) && !"".equals(searchWord) ) {
@@ -2121,13 +2120,13 @@ public class EdmsController {
 		
 		pageBar += "</ul>";
 		mav.addObject("pageBar", pageBar);
-		
+		mav.addObject("myAcc", myAcc);
 		String gobackURL = MyUtil.getCurrentURL(request);
 		
 		mav.addObject("gobackURL", gobackURL.replaceAll("&", " "));
 		// ==== 페이징 처리를 한 검색어가 있는 전체 글목록 보여주기 끝 ====
 		
-		mav.addObject("myacceptlist", myacceptlist);
+		
 		mav.setViewName("mydoc/acceptlist.edms");
 		
 		return mav;		

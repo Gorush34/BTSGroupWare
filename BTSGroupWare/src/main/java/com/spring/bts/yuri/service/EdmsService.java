@@ -303,8 +303,8 @@ public class EdmsService implements InterEdmsService {
 	}
 
 	@Override
-	public List<ApprVO> myacceptlist_paging(Map<String, String> paraMap) {
-		List<ApprVO> myacceptlist = dao.myacceptlist_paging(paraMap);
+	public List<Map<String, Object>> myacceptlist_paging(Map<String, String> paraMap) {
+		List<Map<String, Object>> myacceptlist = dao.myacceptlist_paging(paraMap);
 		return myacceptlist;
 	}
 

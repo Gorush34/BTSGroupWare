@@ -1,11 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <%
 	String ctxPath = request.getContextPath();
 %>
-
-<!-- style_edms.css 는 이미 layout-tiles_edms.jsp 에 선언되어 있으므로 쓸 필요 X! -->
 
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -123,8 +122,6 @@
 	
 </script>
 
-<%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
-
 
 
 	<div class="edmsHomeTitle">
@@ -146,24 +143,8 @@
 		
 		<div class="divClear"></div>
 
-		<%-- 결재승인 목록이 없을 때 시작 --%>
-		<c:if test="${empty requestScope.myacceptList}">
-		<table class="table table-sm table-light">
-			<tr>
-				<td style="border-top: solid 1px #D3D3D3;">&nbsp;</td>
-			</tr>
-			<tr>
-				<td style="text-align: center; font-size: 14pt;">문서가 없습니다.</td>
-			</tr>
-			<tr>
-				<td style="border-bottom: solid 1px #D3D3D3;">&nbsp;</td>
-			</tr>
-		</table>
-		</c:if>
-		<%-- 결재승인 목록이 없을 때 종료 --%>
-		
 		<%-- 결재승인 목록이 있을 때 종료 --%>
-		<c:if test=" ${not empty requestScope.myacceptList}">
+		<c:if test="${not empty requestScope.myAcc}">
 		<table class="table table-sm table-hover table-light edmsTable ellipsisTable">
 			<thead class="thead-light">
 				<tr>
@@ -178,10 +159,10 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="accept" items="${requestScope.myacceptList}" varStatus="status">
+				<c:forEach var="accept" items="${requestScope.myAcc}">
 				<tr onclick="goView('${accept.pk_appr_no}')" style="cursor: pointer;">
-					<th scope="row" style="vertical-align: middle;"><c:out value="${status.count}" /></th>
-					
+					<%-- <th scope="row" style="vertical-align: middle;"><c:out value="${status.count}" /></th> --%>
+					<th>아아아이</th>
 					<td>${accept.writeday}</td>
 					
 					<td>${accept.appr_name}</td>
@@ -231,12 +212,30 @@
 				</c:forEach>
 			</tbody>
 		</table>
+		</c:if>
 		
 		<div class="divClear"></div>
-		</c:if>
+		
 		<%-- 결재승인 목록이 있을 때 종료 --%>
 		
 		<div class="divClear"></div>
+		
+		
+		<%-- 결재승인 목록이 없을 때 시작 --%>
+		<c:if test= "${empty requestScope.myAcc}" >
+		<table class="table table-sm table-light">
+			<tr>
+				<td style="border-top: solid 1px #D3D3D3;">&nbsp;</td>
+			</tr>
+			<tr>
+				<td style="text-align: center; font-size: 14pt;">문서가 없습니다.</td>
+			</tr>
+			<tr>
+				<td style="border-bottom: solid 1px #D3D3D3;">&nbsp;</td>
+			</tr>
+		</table>
+		</c:if>
+		<%-- 결재승인 목록이 없을 때 종료 --%>
 		
 		
 		<%-- === 페이지바 보여주기 --%>

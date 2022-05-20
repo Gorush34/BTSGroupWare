@@ -137,6 +137,14 @@ public class AddBookService implements InterAddBookService  {
 		
 		return n;
 	}
+
+
+	// 사이드인포 계급순 구성원 띄우기
+	@Override
+	public List<EmployeeVO> sideinfo_addBook() {
+		List<EmployeeVO> empList = dao.sideinfo_addBook();
+		return empList;
+	}
 	
 
 

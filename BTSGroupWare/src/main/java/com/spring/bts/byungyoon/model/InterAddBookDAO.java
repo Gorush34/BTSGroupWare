@@ -54,6 +54,10 @@ public interface InterAddBookDAO {
 	public int addBook_depInfo_delete(int pk_emp_no);
 
 
+	// 사이드인포 계급순 구성원 띄우기
+	public List<EmployeeVO> sideinfo_addBook();
+
+
 
 	
 }

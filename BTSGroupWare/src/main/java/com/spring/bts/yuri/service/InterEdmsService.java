@@ -108,7 +108,7 @@ public interface InterEdmsService {
 	List<ApprVO> mywaitlist_paging(Map<String, String> paraMap);
 
 	int myacceptlist_cnt(Map<String, String> paraMap);
-	List<ApprVO> myacceptlist_paging(Map<String, String> paraMap);
+	List<Map<String, Object>> myacceptlist_paging(Map<String, String> paraMap);
 
 	int myrejectlist_cnt(Map<String, String> paraMap);
 	List<ApprVO> myrejectlist_paging(Map<String, String> paraMap);

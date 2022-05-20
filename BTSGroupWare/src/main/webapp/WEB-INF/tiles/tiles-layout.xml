@@ -123,6 +123,7 @@
 		<put-attribute name="footer"  value="/WEB-INF/tiles/common/footer.jsp" />
 	</definition>
 	
+	
 	<definition name="*.addBook" extends="layout_addBook">
 		<put-attribute name="content" value="/WEB-INF/views/addBook/{1}.jsp"/>
 	</definition>

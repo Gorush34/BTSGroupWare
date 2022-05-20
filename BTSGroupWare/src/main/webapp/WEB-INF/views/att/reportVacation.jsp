@@ -172,6 +172,21 @@
     		return;
     	}
 		
+		// 유효성 검사- 제목에 script 막기 및 break-all
+		var att_content = $("input#att_content").val().trim();
+		
+		att_content = att_content.replace(/<p><br><\/p>/gi, "<br>"); //<p><br></p> -> <br>로 변환
+		att_content = att_content.replace(/<\/p><p>/gi, "<br>"); //</p><p> -> <br>로 변환  
+		att_content = att_content.replace(/(<\/p><br>|<p><br>)/gi, "<br><br>"); //</p><br>, <p><br> -> <br><br>로 변환
+		att_content = att_content.replace(/(<p>|<\/p>)/gi, ""); //<p> 또는 </p> 모두 제거시
+		
+		att_content = att_content.replaceAll("<", "&lt;");
+		att_content = att_content.replaceAll(">", "&gt;");
+		att_content = att_content.replaceAll("&", "&amp;");
+		att_content = att_content.replaceAll("\\", "&quot;");
+		
+		$("input#att_content").val(att_content);
+		
 		const frm = document.reportVacationFrm;
 		frm.action = "<%= ctxPath%>/att/reportVacationSubmit.bts";
 		frm.method = "POST";
@@ -268,62 +283,6 @@
 				    </tr>
 				    <!-- 휴가구분 끝 -->
 				    
-				    <!-- 
-					<tr style="text-align: center;">
-				      <th class="th_title" style="text-align: center;">휴가구분</th>
-				      <td colspan="3" style="text-align: center;">
-				      	<div id="vac_sort_container" style="width: 80%; text-align: center; margin: 0 auto;">
-					      	<table id="vac_sort" style="width: 100%;">
-					      		<tr class="tr_gray">
-						      		<th>일반휴가선택</th>
-						      	</tr>
-						      	<tr>
-						      		<td>
-						      			<input type="radio" id="van_common" name="van_common" value="vac_ban_morning">
-						      			<label for="vac_ban_morning">반차(오전)</label>
-						      			<input type="radio" id="van_common" name="van_common" value="vac_ban_afternoon">
-						      			<label for="vac_ban_afternoon">반차(오후)</label>
-						      			<input type="radio" id="van_common" name="van_common" value="vac_day">
-						      			<label for="vac_day">연차</label>
-						      			<input type="radio" id="van_common" name="van_common" value="vac_gift">
-						      			<label for="vac_gift">포상휴가(장기근속 1일)</label>
-						      		</td>
-						      	</tr>	
-						      	
-						      	<tr>
-						      		<td>
-						      			<input type="radio" id="van_common" name="van_common" value="vac_instead_mor">
-						      			<label for="vac_instead_mor">대체휴가 반차(오전)</label>
-						      			<input type="radio" id="van_common" name="van_common" value="vac_instead_afternoon">
-						      			<label for="vac_instead_afternoon">대체휴가 반차(오후)</label>
-						      			<input type="radio" id="van_common" name="van_common" value="vac_instead_day">
-						      			<label for="vac_instead_day">대체휴가</label>
-						      			<input type="radio" id="van_common" name="van_common" value="vac_trainning">
-						      			<label for="vac_trainning">훈련(1일)</label>
-						      		</td>
-						      	</tr>
-						      	
-						      	<tr class="tr_gray">
-						      		<th>가족사랑 특별휴가-기념일</th>
-						      	</tr>
-						      	
-						      	<tr>
-						      		<td>
-						      			<input type="radio" id="van_common" name="van_common" value="vac_my_birthday">
-						      			<label for="vac_my_birthday">본인생일(오후반차)</label>
-						      			<input type="radio" id="van_common" name="van_common" value="vac_marry">
-						      			<label for="vac_marry">결혼기념일(오후반차)</label>
-						      			<input type="radio" id="van_common" name="van_common" value="var_parent_birthday">
-						      			<label for="var_parent_birthday">부모님 생신(오후반차)</label>
-						      			<input type="radio" id="van_common" name="van_common" value="var_family_birthday">
-						      			<label for="var_family_birthday">자녀 및 배우자생일(오후반차)</label>
-						      		</td>
-						      	</tr>
-					      	</table>
-				      	</div>
-				      </td>
-				    </tr>
-				     -->
 				    <tr style="text-align: center;">
 				      <th class="th_title" style="width:20%; text-align: center;">희망휴가일수</th>
 				      <td style="text-align: left;"><input type="number" id="vac_days" name="vac_days" min="1" max="100" style="width: 50px; text-align: center;" />&nbsp;일</td>

@@ -139,6 +139,9 @@ public class AddBookController {
 		
 		pageBar += "</ul>";
 		
+	   List<EmployeeVO> empList = service.sideinfo_addBook(); // sideInfo
+	   mav.addObject("empList", empList); // sideInfo
+	   
 	   mav.addObject("message", message);
 	   mav.addObject("loc", loc);
 	   mav.addObject("pageBar", pageBar);	
@@ -528,8 +531,6 @@ public class AddBookController {
 			
 			int pk_emp_no = Integer.parseInt(request.getParameter("user"));
 			
-			System.out.println("pk_emp_no :" + pk_emp_no);
-			
 			int n = service.addBook_depInfo_delete(pk_emp_no);
 		        
 			if(n == 0) {
@@ -543,6 +544,23 @@ public class AddBookController {
 		     
 			return mav;
 		}
+		
+		
+		// 사이드인포 계급순 구성원 띄우기
+	    @RequestMapping(value="/sideinfo/sideinfo_addBook.bts")
+	    public ModelAndView sideinfo_addBook(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		   
+		    HttpSession session = request.getSession();
+		    EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+		   
+		    List<EmployeeVO> empList = service.sideinfo_addBook();
+		   
+		    mav.addObject("empList", empList);
+		   
+		    mav.setViewName("sideinfo_addBook.sideinfo");
+		   
+		    return mav;
+	    }	
 	
 	
 	// 이메일 중복체크

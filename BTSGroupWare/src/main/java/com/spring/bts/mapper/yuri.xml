@@ -756,7 +756,7 @@
 	<select id="myacceptlist_cnt" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_appr
-		where ( mid_accept = 1 and fin_accept = 1 )
+		where fin_accept = 1
 		and fk_emp_no = #{loginuser_empno}
 		<if test='searchType != ""'>
 		and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
@@ -792,7 +792,7 @@
 				    , A.fk_emp_no as fk_emp_no
 				from tbl_appr A JOIN tbl_appr_sort S
 				ON A.fk_appr_sortno = S.pk_appr_sortno
-				where ( mid_accept = 1 and fin_accept = 1 )
+				where A.fin_accept = 1
 		        and A.fk_emp_no = #{loginuser_empno}
 				<if test='searchType !="" and searchWord != "" '>
 		        and lower(${searchType}) like '%'||lower(#{searchWord}) ||'%'
