@@ -362,7 +362,9 @@ public class MailController {
 		
 		// 다중메일보내기 시작
 		int cnt = Integer.parseInt(mrequest.getParameter("cnt"));
+
 		String recemail = mrequest.getParameter("recemail");
+
 		String [] strArray = recemail.split(",");
 		
 	//	System.out.println("cnt 확인용 " + cnt);
@@ -721,10 +723,20 @@ public class MailController {
 
 		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
 		
+		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
+
+		//	System.out.println("받은메일함 페이지에서 로그인한 사용자 id (사원번호) 받아오기 " + loginuser.getPk_emp_no());
+		
+		String fk_receiveuser_num = String.valueOf(loginuser.getPk_emp_no());
+		String empname = String.valueOf(loginuser.getEmp_name());
+		
 		// view 단에서 요청한 검색타입 및 검색어, 글번호 받아오기
 		String pk_mail_num = request.getParameter("pk_mail_num");	// 글번호
 		String searchType = request.getParameter("searchType");		// 검색타입
 		String searchWord = request.getParameter("searchWord");		// 검색어
+
 		
 		// 사용자가 검색타입 및 검색어를 입력하지 않았을 경우
 		if(searchType == null) {
@@ -746,6 +758,7 @@ public class MailController {
 			// mapper 로 사용자가 입력한 검색타입과 검색어를 map 에 담아서 보낸다.
 			paraMap.put("searchType", searchType);
 			paraMap.put("searchWord", searchWord);
+			paraMap.put("fk_receiveuser_num",fk_receiveuser_num);	// 로그인한 사용자의 사원번호 map 에 담아서 보내주기		
 			
 			// map 에 담은 검색타입과 검색어를 view 단으로 보낸다.
 			mav.addObject("paraMap", paraMap);
@@ -765,7 +778,6 @@ public class MailController {
 			}
 
 
-			
 			// 이전글 및 다음글 보여주기
 			
 			
@@ -1105,6 +1117,13 @@ public class MailController {
 	public ModelAndView mailSendDetail(HttpServletRequest request, ModelAndView mav) {
 		
 		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
+		//	System.out.println("받은메일함 페이지에서 로그인한 사용자 id (사원번호) 받아오기 " + loginuser.getPk_emp_no());
+		
+		String fk_senduser_num = String.valueOf(loginuser.getPk_emp_no());
+		String empname = String.valueOf(loginuser.getEmp_name());
 		
 		// view 단에서 요청한 검색타입 및 검색어, 글번호 받아오기
 		String pk_mail_num = request.getParameter("pk_mail_num");	// 글번호
@@ -1131,6 +1150,7 @@ public class MailController {
 			// mapper 로 사용자가 입력한 검색타입과 검색어를 map 에 담아서 보낸다.
 			paraMap.put("searchType", searchType);
 			paraMap.put("searchWord", searchWord);
+			paraMap.put("fk_senduser_num",fk_senduser_num);	// 로그인한 사용자의 사원번호 map 에 담아서 보내주기		
 			
 			// map 에 담은 검색타입과 검색어를 view 단으로 보낸다.
 			mav.addObject("paraMap", paraMap);
@@ -1333,6 +1353,16 @@ public class MailController {
 		
 
 		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
+
+		
+	//	System.out.println("보낸메일함 페이지에서 로그인한 사용자 id (사원번호) 받아오기 " + loginuser.getPk_emp_no());
+		
+		String fk_receiveuser_num = String.valueOf(loginuser.getPk_emp_no());
+		String empname = String.valueOf(loginuser.getEmp_name());
+				
 		
 		// view 단에서 요청한 검색타입 및 검색어, 글번호 받아오기
 		String pk_mail_num = request.getParameter("pk_mail_num");	// 글번호
@@ -1359,6 +1389,7 @@ public class MailController {
 			// mapper 로 사용자가 입력한 검색타입과 검색어를 map 에 담아서 보낸다.
 			paraMap.put("searchType", searchType);
 			paraMap.put("searchWord", searchWord);
+			paraMap.put("fk_receiveuser_num",fk_receiveuser_num);	// 로그인한 사용자의 사원번호 map 에 담아서 보내주기		
 			
 			// map 에 담은 검색타입과 검색어를 view 단으로 보낸다.
 			mav.addObject("paraMap", paraMap);
@@ -1797,6 +1828,11 @@ public class MailController {
 		 HttpSession session = request.getSession(); 
 		 EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
 
+			
+		 //	System.out.println("보낸메일함 페이지에서 로그인한 사용자 id (사원번호) 받아오기 " + loginuser.getPk_emp_no());			
+		 String fk_senduser_num = String.valueOf(loginuser.getPk_emp_no());
+		 String empname = String.valueOf(loginuser.getEmp_name());
+				
 		 List<EmployeeVO> empList = service.addBook_depInfo_select();		 
 
 		 for(int i=0; i<empList.size(); i++) {
@@ -1840,6 +1876,7 @@ public class MailController {
 			// mapper 로 사용자가 입력한 검색타입과 검색어를 map 에 담아서 보낸다.
 			paraMap.put("searchType", searchType);
 			paraMap.put("searchWord", searchWord);
+			paraMap.put("fk_senduser_num", fk_senduser_num);
 			
 			// map 에 담은 검색타입과 검색어를 view 단으로 보낸다.
 			mav.addObject("paraMap", paraMap);
@@ -2033,7 +2070,19 @@ public class MailController {
 	public ModelAndView mailReservationDetail(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 			//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+
+
+			// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
+			HttpSession session = request.getSession();
+			EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
+	
 			
+		//	System.out.println("보낸메일함 페이지에서 로그인한 사용자 id (사원번호) 받아오기 " + loginuser.getPk_emp_no());
+			
+			String fk_senduser_num = String.valueOf(loginuser.getPk_emp_no());
+			String empname = String.valueOf(loginuser.getEmp_name());
+					
+		
 			// view 단에서 요청한 검색타입 및 검색어, 글번호 받아오기
 			String pk_mail_num = request.getParameter("pk_mail_num");	// 글번호
 			String searchType = request.getParameter("searchType");		// 검색타입
@@ -2060,6 +2109,7 @@ public class MailController {
 				// mapper 로 사용자가 입력한 검색타입과 검색어를 map 에 담아서 보낸다.
 				paraMap.put("searchType", searchType);
 				paraMap.put("searchWord", searchWord);
+				paraMap.put("fk_senduser_num ",fk_senduser_num );	// 로그인한 사용자의 사원번호 map 에 담아서 보내주기		
 				
 				// map 에 담은 검색타입과 검색어를 view 단으로 보낸다.
 				mav.addObject("paraMap", paraMap);
@@ -2467,6 +2517,15 @@ public class MailController {
 	public ModelAndView mailSendToMeDetail(HttpServletRequest request, ModelAndView mav) {
 		
 		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
+
+		
+	//	System.out.println("보낸메일함 페이지에서 로그인한 사용자 id (사원번호) 받아오기 " + loginuser.getPk_emp_no());
+		
+		String fk_senduser_num = String.valueOf(loginuser.getPk_emp_no());
+		String empname = String.valueOf(loginuser.getEmp_name());
 		
 		// view 단에서 요청한 검색타입 및 검색어, 글번호 받아오기
 		String pk_mail_num = request.getParameter("pk_mail_num");	// 글번호
@@ -2494,7 +2553,8 @@ public class MailController {
 			// mapper 로 사용자가 입력한 검색타입과 검색어를 map 에 담아서 보낸다.
 			paraMap.put("searchType", searchType);
 			paraMap.put("searchWord", searchWord);
-			
+			paraMap.put("fk_senduser_num", fk_senduser_num);
+						
 			// map 에 담은 검색타입과 검색어를 view 단으로 보낸다.
 			mav.addObject("paraMap", paraMap);
 			
@@ -2571,7 +2631,7 @@ public class MailController {
 	}	
 		
 	
-	// 받은메일함 및 보낸메일함 목록에서 메일 선택 시 휴지통으로 이동하기 (aJax, @ResponseBody)
+	// 각 메일함 목록에서 메일 선택 시 휴지통으로 이동하기 (aJax, @ResponseBody)
 	// 받은메일함에서 삭제할 메일 선택 후 삭제버튼 클릭 시 휴지통목록으로 해당 메일 이동
 	@ResponseBody
 	@RequestMapping(value = "/mail/MailMoveToRecyclebin.bts", produces = "text/plain; charset=UTF-8")	
@@ -2809,6 +2869,16 @@ public class MailController {
 
 		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
 		
+		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
+
+		//	System.out.println("받은메일함 페이지에서 로그인한 사용자 id (사원번호) 받아오기 " + loginuser.getPk_emp_no());
+		
+		String fk_receiveuser_num = String.valueOf(loginuser.getPk_emp_no());
+		String empname = String.valueOf(loginuser.getEmp_name());
+		
+		
 		// view 단에서 요청한 검색타입 및 검색어, 글번호 받아오기
 		String pk_mail_num = request.getParameter("pk_mail_num");	// 글번호
 		String searchType = request.getParameter("searchType");		// 검색타입
@@ -2835,6 +2905,7 @@ public class MailController {
 			// mapper 로 사용자가 입력한 검색타입과 검색어를 map 에 담아서 보낸다.
 			paraMap.put("searchType", searchType);
 			paraMap.put("searchWord", searchWord);
+			paraMap.put("fk_receiveuser_num",fk_receiveuser_num);	// 로그인한 사용자의 사원번호 map 에 담아서 보내주기		
 			
 			// map 에 담은 검색타입과 검색어를 view 단으로 보낸다.
 			mav.addObject("paraMap", paraMap);

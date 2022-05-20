@@ -130,7 +130,7 @@
 		      	}
 		 
 		      	var frm = document.mailWriteFrm;
-		      	frm.importanceVal.value = importanceVal;
+		      	frm.importanceVal.value = importanceVal;		      	
 		      	frm.method = "POST";
 		      	frm.action = "<%= ctxPath%>/mail/mailWriteEnd.bts";
 		        frm.submit();
@@ -476,8 +476,8 @@
 			<tr>
 				<th width="14%">받는 사람</th>
 				<td width="86%" data-toggle="tooltip" data-placement="top" title="">
+					<input type="text" id="cnt" name="cnt" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
 					<input type="text" id="recemail" name="recemail" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
-					<input type="hidden" id="cnt" name="cnt" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
 					
 					<%-- hidden 타입으로 데이터값 보내기 --%>
 			     	<input type="hidden" id="sendemail" name="sendemail" value="${sessionScope.loginuser.uq_email}" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " /> 

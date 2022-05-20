@@ -13,7 +13,8 @@
 	#btnRecChk {
 	border: 1px solid black; background-color: rgba(0,0,0,0); color: black; margin-left: 1px;
 	}
-   
+	
+ 	span.move{cursor: pointer; color: black;}  
 </style>
 
 
