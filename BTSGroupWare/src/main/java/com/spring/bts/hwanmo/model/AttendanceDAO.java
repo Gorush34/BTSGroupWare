@@ -213,6 +213,13 @@ public class AttendanceDAO implements InterAttendanceDAO {
 		List<Map<String, Object>> allAttList = sqlsession.selectList("hwanmo.getAttListAllWithPaging", paraMap);
 		return allAttList;
 	}
+
+	// 연차신청서 삭제하기
+	@Override
+	public int deleteReport(int pk_att_num) {
+		int n = sqlsession.delete("hwanmo.deleteReport", pk_att_num);
+		return n;
+	}
 	
 	
 }

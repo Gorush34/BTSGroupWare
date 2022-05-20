@@ -353,14 +353,14 @@
 						  html += "<td class='comment_name'>"+item.name+" "+item.ko_rankname+"</td>";
 						  html += "<td class='comment_regDate'>"+item.regDate+"</td>";
 						  if( writeuser == loginuser ) {
-							  html += "<td style='text-align: center;' onclick='goDelComment(\""+item.pk_seq+"\")'><span style='cursor: pointer; color: gray; margin-left: 10px;'>X</span></td>";
+							  html += "<td style='text-align: center;' onclick='goDelComment(\""+item.pk_seq+"\")'><span style='cursor: pointer; color: gray; margin-left: 10px;'><i class='bi bi-x-circle'></i></span></td>";
 						    } 
 						  html += "</tr>";
 					  });
 				  }
 				  else {
 					  html += "<tr>";
-					  html += "<td colspan='4' class='comment'>댓글이 없습니다</td>";
+					  html += "<td colspan='4' class='comment' style='margin-bottom: 25px;'>댓글이 없습니다</td>";
 					  html += "</tr>";
 				  }
 				  

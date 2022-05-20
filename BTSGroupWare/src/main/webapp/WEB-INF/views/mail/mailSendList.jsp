@@ -14,7 +14,11 @@
 	{cursor: pointer;}
 	
 	a { text-decoration: none !important}
-
+	
+	#btnRecChk {
+	border: 1px solid black; background-color: rgba(0,0,0,0); color: black; margin-left: 1px;
+	}
+	
 </style>
 
 <script type="text/javascript">
@@ -204,12 +208,6 @@
 								삭제
 							</button>
 						</li>
-						<li class="secondHeaderList">
-							<button type="button" id=readSend onclick="goReadSend()">
-							<i class="fa fa-envelope-o fa-fw"></i>
-								읽음
-							</button>
-						</li>
 					</ul>
 				</div>
 				
@@ -228,7 +226,7 @@
 								</th>
 								<th style="width: 10%;" class="text-center">받는이</th>
 								<th style="width: 70%;">제목</th>
-								<th style="width: 20%;" class="text-left">날짜</th>
+								<th style="width: 20%;" class="text-left">전송일자</th>
 							</tr>
 						</thead>
 						

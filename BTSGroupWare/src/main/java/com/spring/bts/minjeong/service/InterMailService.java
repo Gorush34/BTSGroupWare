@@ -3,6 +3,7 @@ package com.spring.bts.minjeong.service;
 import java.util.List;
 import java.util.Map;
 
+import com.spring.bts.hwanmo.model.EmployeeVO;
 import com.spring.bts.minjeong.model.MailVO;
 
 public interface InterMailService {
@@ -137,15 +138,14 @@ public interface InterMailService {
 	// 메일 글쓰기 pk_mail_num 가져오기 (글쓰기 다음 번호, 읽음처리 테이블 fk_mail_num 에 넣기 위함) -->
 	String getPkMailNum(MailVO mailvo);
 
-	// pk_mail_num 을 통해 구해온 fk_mail_num 으로 rec_status 가 0인지 1인지(1이라면 rec_date도 가져오기) 알아온다.
-	List<MailVO> getRecCheck(String fk_mail_num);
-
 	// 페이징처리 한 보낸메일 수신확인 메일목록 (검색 있든, 없든 모두 다 포함) 
 	List<MailVO> sendMailListSearchWithPaging_recCheck(Map<String, String> paraMap);
 
 	// 총 보낸 메일 수신확인 건수 구해오기 (service 단으로 보내기) 
 	int getTotalCount_recCheck(Map<String, String> paraMap);
 
+	// 상세부서정보 페이지 사원목록 불러오기 
+	List<EmployeeVO> addBook_depInfo_select();
 
 	
 }

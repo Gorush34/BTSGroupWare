@@ -183,6 +183,13 @@ margin: 10px;
 			</tr>
 		</thead>
 		<tbody>
+		
+		<c:if test="${requestScope.fileboardlist.size() == 0 }">	
+			<tr>
+				<td colspan="8" style="height: 200px; font-size: 17pt;">게시물이 없습니다.</td>	
+			</tr>
+		</c:if>
+		
 			<c:forEach var="fileboardvo" items="${requestScope.fileboardlist}" varStatus="status">
 			   <tr>
 			      <td align="center">
@@ -203,7 +210,7 @@ margin: 10px;
 				  </c:if>
 				  </td>
 		
-					<td align="center" style="font-size: 9pt; color: gray; width: 60px; ">[${fileboardvo.ko_depname}]</td>
+					<td align="center" style="font-size: 9pt; color: gray; width: 68px; ">[${fileboardvo.ko_depname}]</td>
 		
 					<td style="text-align: left;">
 						<c:if test="${fileboardvo.depthno == 0}">	

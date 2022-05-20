@@ -21,7 +21,7 @@
 
   <!-- Font Awesome 5 Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css">
   <!-- 직접 만든 CSS 1 -->
   <link rel="stylesheet" type="text/css" href="<%=ctxPath %>/resources/css/style_board.css" />
   
@@ -68,7 +68,9 @@ ul#secondHeaderGroup, .secondHeaderList {
 body {font-family: 'Noto Sans KR', sans-serif !important; }
 
 /* 헤더 스타일  끝 */
-
+td{
+	vertical-align: middle !important;
+}
 </style>
 
 </head>

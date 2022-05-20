@@ -28,6 +28,8 @@
 		var cnt = 0;
 		// 대체휴가일 경우 휴가일수 넣어줌.
 		var instead_vac_days = 0;
+		// 로그인유저 번호
+		var pk_emp_no = $("input#pk_emp_no").val();
 		
 		console.log("isManager : " + isManager);
 		console.log("isDecided : " + isManager);
@@ -40,8 +42,10 @@
 		$("tr.managerOnly").hide();
 		
 		
-		if( isManager == 1 && isDecided == 0
-			&& $("input#manager").val() == $("input#fk_emp_no").val()	) {
+		if( ( isManager == 1 && isDecided == 0
+			&& $("input#manager").val() == $("input#fk_emp_no").val() )
+			|| ( $("input#pk_emp_no").val() == "80000001" && $("input#approval_status").val() !=2 ) ) {
+			
 			$("button#btnSignOff").show();
 			$("button#btnReject").show();
 			$("tr.managerOnly").show();
@@ -127,6 +131,13 @@
 		frm.submit();
 	}
 	
+	function goDelete() {
+		
+		const frm = document.goSignFrm;
+		frm.action = "<%= ctxPath%>/att/deleteReport.bts";
+		frm.method = "POST";
+		frm.submit();
+	}
 	
 </script>
 		
@@ -223,20 +234,27 @@
 		<div id="vac_button" style="text-align: center;">
 			<button type="button" class="btn btn-primary btn-sm mr-3" id="btnSignOff" style="margin-right: 20px; width:80px; height:30px;">승인</button>
 			<button type="button" class="btn btn-danger btn-sm mr-3" id="btnReject" style="margin-right: 20px; width:80px; height:30px;">반려</button>
+			<c:if test="${sessionScope.loginuser.pk_emp_no != 80000001 }">
 			<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnReportVacation" onclick="goList();" style="margin-right: 20px; width:80px; height:30px;">목록</button>
+			</c:if>
 			<c:if test="${requestScope.isManager eq 1}">
 			<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnReportVacation" onclick="goWaitingSign();" style="margin-right: 20px; width:120px; height:30px;">결재대기목록</button>
 			</c:if>
 			<!-- <button type="button" class="btn btn-secondary btn-sm mr-3" id="btn_vac_certification" style="margin-right: 20px; width:80px; height:30px;">목록보기</button>  -->
-				      	
+			<c:if test="${sessionScope.loginuser.pk_emp_no == 80000001 }">
+				<button type="button" class="btn btn-warning btn-sm mr-3" id="btnDelete" onclick="goDelete()" style="margin-right: 20px; width:80px; height:30px;">삭제</button>
+				<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnAll" onclick="javascript:location.href='<%= ctxPath%>/att/viewAllReport.bts'" style="margin-right: 20px; width:120px; height:30px;">전체신청목록</button>
+			</c:if>	      	
 		</div>	
 		<input type="hidden" id="minus_cnt" name="minus_cnt"  value="${vac.minus_cnt}"/>
 		<input type="hidden" id="instead_vac_days" name="instead_vac_days" />
 		<input type="hidden" id="vacation_days" name="vacation_days" value="${vac.vacation_days}" />
 		<input type="hidden" id="report_emp_no" name="report_emp_no" value="${vac.fk_emp_no}" />
 		<input type="hidden" id="manager" name="manager" value="${vac.manager}" />
+		<input type="hidden" id="pk_emp_no" name="pk_emp_no" value="${sessionScope.loginuser.pk_emp_no}" />
 		<input type="hidden" id="fk_emp_no" name="fk_emp_no" value="${requestScope.fk_emp_no}" />
 		<input type="hidden" id="pk_att_num" name="pk_att_num" value="${vac.pk_att_num}" />
+		<input type="hidden" id="approval_status" name="approval_status" value="${vac.approval_status}" />
 		<input type="hidden" id="isManager" name="isManager" value="${requestScope.isManager}" />
 		<input type="hidden" id="isDecided" name="isDecided" value="${requestScope.isDecided}" />
 		<input type="hidden" id="uq_phone" name="uq_phone" value="${requestScope.uq_phone}" />

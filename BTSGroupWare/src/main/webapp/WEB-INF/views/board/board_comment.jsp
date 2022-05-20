@@ -6,6 +6,9 @@
 
 <style>
 
+td{
+vertical-align: middle !important	;
+}
 
 #mycontent > div > form > button {
 background-color: white;
@@ -87,7 +90,6 @@ margin: 10px;
 <script type="text/javascript">
 	$(document).ready(function(){
 		
-		
 		$("span.subject").bind("mouseover", function(event){
 			var $target = $(event.target);
 			$target.addClass("subjectStyle");
@@ -111,9 +113,11 @@ margin: 10px;
 			$("input#searchWord").val("${paraMap.searchWord}");
 		}
 	
-
 		
 	});//end of $(document).ready(function(){}
+	
+	
+	
 	
 	function goView(pk_seq) {
 		
@@ -125,34 +129,12 @@ margin: 10px;
 		  location.href="<%= ctxPath%>/board/view.bts?pk_seq="+pk_seq+"&gobackURL="+gobackURL+"&searchType="+searchType+"&searchWord="+searchWord; 
 		}// end of function goView(seq){}----------------------------------------------
 		
-	function goView_notice(pk_seq) {
-		
-		  const gobackURL = "${requestScope.gobackURL}"; 
-		  
-		  const searchType = $("select#searchType").val();
-		  const searchWord = $("input#searchWord").val();
-		
-		  location.href="<%= ctxPath%>/notice/view.bts?pk_seq="+pk_seq+"&gobackURL="+gobackURL+"&searchType="+searchType+"&searchWord="+searchWord; 
-		}// end of function goView(seq){}----------------------------------------------
-	
-	function goView_fileboard(pk_seq) {
-		
-		  const gobackURL = "${requestScope.gobackURL}"; 
-		  
-		  const searchType = $("select#searchType").val();
-		  const searchWord = $("input#searchWord").val();
-		
-		  location.href="<%= ctxPath%>/fileboard/view.bts?pk_seq="+pk_seq+"&gobackURL="+gobackURL+"&searchType="+searchType+"&searchWord="+searchWord; 
-		}// end of function goView(seq){}----------------------------------------------
-		
-		
-
 		
 		function goSearch() {
 			
 			const frm = document.searchFrm;
 			  frm.method = "GET";
-			  frm.action = "<%= ctxPath%>/board/main.bts";
+			  frm.action = "<%= ctxPath%>/board/my_comment.bts";
 			  frm.submit();
 			
 		}// end of function goSearch() {}-----------------------
@@ -163,34 +145,36 @@ margin: 10px;
 
 	<div class="d-flex align-items-center p-3 my-3 text-white bg-purple rounded shadow-sm" style="background-color: #6F42C1; ">
     <div class="lh-1" style="text-align: center; width: 100%;">
-      <h1 class="h6 mb-0 text-white lh-1" style="font-size:22px; font-weight: bold; ">전체글보기</h1>
+      <h1 class="h6 mb-0 text-white lh-1" style="font-size:22px; font-weight: bold; ">${sessionScope.loginuser.emp_name} 님의 댓글</h1>
     </div>
   </div>
 			
-
 		
 		<table class="table table-hover" style="width: 85%; margin-left: auto; margin-right: auto; margin-top: 30px;">
 		<thead>
 			<tr>
 				<th scope="col" class="text-center" style="width: 90px;">번호</th>	
-				<th scope="col" class="text-center" colspan="4" style="width: 413px;">제목</th>
+				<th scope="col" class="text-center" colspan="3" style="width: 200px;">제목</th>
 				<th scope="col" class="text-center" style="width: 120px;">글쓴이</th>
 				<th scope="col" class="text-center" style="width: 250px;">작성일</th>
 				<th scope="col" class="text-center" style="width: 100px;">조회수</th>
 			</tr>
 		</thead>
 		<tbody>
-		
+
 		<c:if test="${requestScope.boardList.size() == 0 }">	
 			<tr>
-				<td colspan="8" style="height: 200px; font-size: 17pt;">게시물이 없습니다.</td>	
+				<td colspan="7" style="height: 200px; font-size: 17pt;">댓글이 존재하지 않습니다.</td>	
 			</tr>
 		</c:if>
+
+
 		
 			<c:forEach var="boardvo" items="${requestScope.boardList}" varStatus="status">
 			   <tr>
 			      <td align="center">
-			          ${boardvo.pk_seq}
+			          ${boardvo.pk_seq}		
+					 
 			      </td>
 		
 				  <td style="width: 25px;">
@@ -207,20 +191,11 @@ margin: 10px;
 				  </c:if>
 				  </td>
 		
-					<td style="width: 90px;" align="center">
-						<span style="font-size: 9pt; color: gray;">[${boardvo.tblname}]</span>
-					</td>
 		
 		
 					<td style="text-align: left;">
 					
 					
-					<c:if test="${boardvo.tblname eq '공지사항'}">
-						<span class="subject" onclick="goView_notice('${boardvo.pk_seq}')">${boardvo.subject}</span>
-					</c:if>
-					
-					
-					<c:if test="${boardvo.tblname eq '자유게시판'}">
 						 <c:if test="${boardvo.read_count > 10}">
 						      	 <c:if test="${boardvo.comment_count > 0}">
 						      	 	<span style="color:red; font-size: 9pt;">HIT&nbsp;&nbsp;</span><span class="subject" onclick="goView('${boardvo.pk_seq}')">${boardvo.subject} <span style="vertical-align: super;"><span style="color: #a6a6a6; font-size: 9pt; font-weight: bold;">[${boardvo.comment_count}]</span></span></span>    
@@ -241,13 +216,9 @@ margin: 10px;
 						      	 	<span class="subject" onclick="goView('${boardvo.pk_seq}')">${boardvo.subject}</span>
 						      	 </c:if> 	      	 
 				      	 </c:if>
-			      	 </c:if>
+
 			      	 
-			      	 
-			      <c:if test="${boardvo.tblname eq '자료실'}">
-						 <span class="subject" onclick="goView_fileboard('${boardvo.pk_seq}')">${boardvo.subject}</span>
-			      	 </c:if>	 
-			      	 
+			      	 <hr>  &nbsp;&nbsp;&nbsp; <span style="font-size: 10pt; color: gray;">[댓글] ${ requestScope.commentList[status.index].content }</span>
 			      	 
 			      </td> 	 
 
@@ -263,7 +234,9 @@ margin: 10px;
 				  <td align="center">${boardvo.write_day}</td>
 				  <td align="center">${boardvo.read_count}</td>
 			   </tr>
+
 			</c:forEach>
+	
 		</tbody>
 	</table>
 

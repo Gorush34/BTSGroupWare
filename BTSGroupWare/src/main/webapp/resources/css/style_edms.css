@@ -52,13 +52,24 @@ body {font-family: 'Noto Sans KR', sans-serif; }
  * 사이드바
  *****************************************/
 /* 사이드바 제목 클릭 시 */
-span#sideInfo_edmsTitle {
-	cursor: pointer;
-}
+	#sideInfo_edmsTitle {
+		cursor: pointer;
+	}
 	
-div.edmsSideMenu{cursor: pointer;}
-
-
+	#sideInfo_edmsTitle:hover {
+		color: #000777;
+		font-weight: bold;
+	}
+	
+	.edmsSideMenu {
+		cursor: pointer;
+	}
+	
+	.edmsSideMenu:hover {
+		color: #000080;
+		font-size: 12pt;
+		font-weight: bold;
+	}
 
 
 
@@ -70,6 +81,12 @@ div.edmsSideMenu{cursor: pointer;}
 	/* 결재선 지정 병윤 모달창 */
 	.modal {
 		z-index: 1050;
+	}
+	
+	/* 전체 컨테이너 */
+	.edmsDiv {
+		width: 100%;
+		padding: 40px;
 	}
 	
 	/* 전체 제목 */

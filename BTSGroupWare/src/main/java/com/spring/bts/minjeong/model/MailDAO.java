@@ -9,6 +9,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.databind.deser.impl.CreatorCandidate.Param;
+import com.spring.bts.hwanmo.model.EmployeeVO;
 
 @Repository	// @component 가 포함되어 있는 것이다. 자동적으로 bean 으로 올라간다.
 public class MailDAO implements InterMailDAO {
@@ -350,12 +351,6 @@ public class MailDAO implements InterMailDAO {
 		return getPkMailNum;
 	}
 
-	// pk_mail_num 을 통해 구해온 fk_mail_num 으로 rec_status 가 0인지 1인지(1이라면 rec_date도 가져오기) 알아온다.
-	@Override
-	public List<MailVO> getRecCheck(String fk_mail_num) {
-		List<MailVO> getRecCheck = sqlsession.selectList("minjeong.getRecCheck", fk_mail_num);
-		return getRecCheck;		
-	}
 
 	// 페이징처리 한 보낸메일 수신확인 메일목록 (검색 있든, 없든 모두 다 포함) 
 	@Override
@@ -369,6 +364,13 @@ public class MailDAO implements InterMailDAO {
 	public int getTotalCount_recCheck(Map<String, String> paraMap) {
 		int n = sqlsession.selectOne("minjeong.getTotalCount_recCheck", paraMap);
 		return n;
+	}
+
+	// 상세부서정보 페이지 사원목록 불러오기
+	@Override
+	public List<EmployeeVO> addBook_depInfo_select() {
+		List<EmployeeVO> empList = sqlsession.selectList("minjeong.addBook_depInfo_select");
+		return empList;
 	}
 
 

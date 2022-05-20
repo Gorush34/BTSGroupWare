@@ -440,7 +440,8 @@
 	<select id="scheduleCount" parameterType="int" resultType="int">
 		select count(*)
 		from tbl_schedule
-		where fk_emp_no = #{pk_emp_no} and (startdate = to_date(sysdate, 'yy/mm/dd') or enddate = to_date(sysdate, 'yy/mm/dd'))
+		where fk_emp_no = #{pk_emp_no} and (to_date(sysdate, 'yy/mm/dd') BETWEEN startdate AND enddate)
+		OR (fk_lgcatgono = 2 and (to_date(sysdate, 'yy/mm/dd') BETWEEN startdate AND enddate))     
 	</select>
 	
 	<!-- 나의 예약현황 -->

@@ -100,8 +100,8 @@
 	           var len = contentval.length; 
 
 	           document.querySelector(".count span").innerHTML = len; 
-	           if(len > 4000) { 
-	        	   alert("최대 4000글자 까지 입력 가능합니다."); 
+	           if(len > 2000) { 
+	        	   alert("최대 2000글자 까지 입력 가능합니다."); 
 	        	   $("textarea#content").focus();
 	        	   return;
 	        	}
@@ -159,8 +159,8 @@
 	           var len = contentval.length; 
 
 	           document.querySelector(".count span").innerHTML = len; 
-	           if(len > 4000) { 
-	        	   alert("최대 4000글자 까지 입력 가능합니다."); 
+	           if(len > 2000) { 
+	        	   alert("최대 2000글자 까지 입력 가능합니다."); 
 	        	   $("textarea#content").focus();
 	        	   return;
 	        	}
@@ -249,7 +249,7 @@
 			<th style="width: 15%; background-color: #DDDDDD; text-align: right;">내용</th>
 			<td>
 				<textarea style="width: 100%; height: 612px;" name="content" id="content"></textarea>
-				<p class="count"><span>0</span> / 4000</p>
+				<p class="count"><span>0</span> / 2000</p>
 
 			</td>
 		</tr>
@@ -294,9 +294,9 @@
 <div class="modal-content"> 
 <div class="modal-header"> 
 
-<h2 class="modal-title">
+<h3 class="modal-title">
 임시저장
-</h2> 
+</h3> 
 
 <button type="button" class="close" data-dismiss="modal">
 ×
@@ -315,6 +315,12 @@
 			</tr>
 		</thead>
 		<tbody>
+			<c:if test="${requestScope.boardList.size() == 0 }">	
+				<tr>
+					<td colspan="2" style="height: 150px; font-size: 15pt; text-align: center;">임시저장글이 없습니다.</td>	
+				</tr>
+			</c:if>
+		
 			<c:forEach var="boardvo" items="${requestScope.boardList}" varStatus="status">
 			   <tr>
 					<td align="center">  	

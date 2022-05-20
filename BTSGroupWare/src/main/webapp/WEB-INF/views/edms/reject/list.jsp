@@ -116,7 +116,7 @@
 	function goSearch(){
 		const frm = document.searchFrm;
 		frm.method = "GET";
-		frm.action = "<%= ctxPath%>/edms/list.bts";
+		frm.action = "<%= ctxPath%>/edms/reject/list.bts";
 		frm.submit();
 	} // end of function goSearch() --------------------
 	
@@ -126,7 +126,7 @@
 <%-- layout-tiles_edms.jsp의 #mycontainer 과 동일하므로 굳이 만들 필요 X --%>
 
 
-
+<div class="edmsDiv">
 	<div class="edmsHomeTitle">
 		<span class="edms_maintitle">BTSGroupware 반려문서함</span>
 		<p style="margin-bottom: 10px;"></p>
@@ -179,12 +179,13 @@
 			<thead class="thead-light">
 				<tr>
 					<th scope="col" width="4%">#</th>
-					<th scope="col" width="13%">기안일</th>
-					<th scope="col" width="10%">결재양식</th>
-					<th scope="col" width="9%">긴급</th>
-					<th scope="col" width="30%">제목</th>
+					<th scope="col" width="10%">기안일</th>
+					<th scope="col" width="8%">결재양식</th>
+					<th scope="col" width="6%">긴급</th>
+					<th scope="col" width="8%">이름</th>
+					<th scope="col" width="44%">제목</th>
 					<th scope="col" width="6%">첨부</th>
-					<th scope="col" width="20%">문서번호</th>
+					<th scope="col" width="6%">문서번호</th>
 					<th scope="col" width="8%">상태</th>
 				</tr>
 			</thead>
@@ -205,6 +206,8 @@
 						&nbsp;
 					</c:if>
 					</td>
+					
+					<td>${reject.emp_name}</td>
 					
 					<td class="elltitle">
 						<span class="title" onclick="goView('${reject.pk_appr_no}')" style="cursor: pointer;">${reject.title}</span>
@@ -257,12 +260,12 @@
 		
 		<%-- === 글검색 폼 추가하기 : 글제목, 글쓴이로 검색을 하도록 한다. === --%>
 		<form name="searchFrm" style="margin-top: 20px;">
-			<select name="searchType" id="searchType" style="height: 26px;">
-				<option value="title">글제목</option>
+			<select name="searchType" id="searchType" style="height: 26px; display: none;">
+				<option value="title">&nbsp;</option>
 				<!-- <option value="emp_name">글쓴이</option> -->
 			</select>
-			<input type="text" name="searchWord" id="searchWord" class="form-controll" size="40" autocomplete="off" />
-			<input type="text" style="display: none;" />
+			<input type="text" name="searchWord" id="searchWord" class="form-control" placeholder="제목을 입력하세요" style="width: 20%;" size="40" autocomplete="off" />
+			<input type="text" style="display: none;" class="form-control"/>
 			<%-- form 태그내에 input 태그가 오로지 1개일 경우에는 엔터를 했을 경우 검색이 되어지므로 이것을 방지하고자 만든것이다. hidden으로 해도 바로 submit되어버리므로 안된다! --%>
 			<button type="button" class="btn btn-secondary btn-sm" onclick="goSearch()">검색</button>
 		</form>

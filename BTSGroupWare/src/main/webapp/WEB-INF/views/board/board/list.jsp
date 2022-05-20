@@ -169,6 +169,13 @@ margin: 10px;
 			</tr>
 		</thead>
 		<tbody>
+		
+		<c:if test="${requestScope.boardList.size() == 0 }">	
+			<tr>
+				<td colspan="7" style="height: 200px; font-size: 17pt;">게시물이 없습니다.</td>	
+			</tr>
+		</c:if>
+		
 			<c:forEach var="boardvo" items="${requestScope.boardList}" varStatus="status">
 			   <tr>
 			      <td align="center">

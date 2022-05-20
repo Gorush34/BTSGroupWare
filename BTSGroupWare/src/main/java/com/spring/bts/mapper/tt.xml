@@ -506,5 +506,10 @@
 		where rno between #{startRno} and #{endRno}
 	</select>
 	
+	<delete id="deleteReport" parameterType="int">
+		delete from tbl_attendance
+		where pk_att_num = #{pk_att_num}	
+	</delete>
+	
 	
 </mapper>

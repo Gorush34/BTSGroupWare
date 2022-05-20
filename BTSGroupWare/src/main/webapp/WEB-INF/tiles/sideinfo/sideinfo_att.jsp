@@ -314,7 +314,7 @@
 				   					<td><span id="link" style="margin-left: 5px;"><a href="<%= ctxPath %>/emp/registerEmp.bts">사원등록</a></span></td>
 				   				</tr>
 				   				<tr>
-				   					<td><span id="link" style="margin-left: 5px;"><a href="<%= ctxPath %>/att/viewAllReport.bts">모든 사원목록</a></span></td>
+				   					<td><span id="link" style="margin-left: 5px;"><a href="<%= ctxPath %>/att/viewAllReport.bts">모든 신청내역보기</a></span></td>
 				   				</tr>	
 		   				</tbody>	
 	   				</table>	
