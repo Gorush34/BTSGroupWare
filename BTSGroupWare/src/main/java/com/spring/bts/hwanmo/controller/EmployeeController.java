@@ -559,8 +559,7 @@ public class EmployeeController {
 			// WAS 의 절대경로를 알아와야 한다.
 			
 			// String root = session.getServletContext().getRealPath("/");
-			String root = session.getServletContext().getRealPath("/");
-			// String root = "C:/NCS/workspace(spring)/BTSGroupWare/BTSGroupWare/src/main/webapp/";
+			String root = "C:/NCS/workspace(spring)/BTSGroupWare/BTSGroupWare/src/main/webapp/";
 			EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
 			empVO.setPk_emp_no(loginuser.getPk_emp_no()); 
 			
