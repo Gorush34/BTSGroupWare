@@ -368,9 +368,12 @@ public class AddBookController {
 	   HttpSession session = request.getSession();
 	   EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
 	   
-	   List<EmployeeVO> empList = service.addBook_depInfo_select();
+	   List<EmployeeVO> empList = service.addBook_depInfo_select(); // 사원리스트
+	   
+	   List<Map<String,String>> depList = service.addBook_depList_select(); // 부서리스트
 	   
 	   mav.addObject("empList", empList);
+	   mav.addObject("depList", depList);
 	   
 	   mav.setViewName("addBook_depInfo.addBook");
 	   
@@ -436,7 +439,7 @@ public class AddBookController {
 	}
 	
 	
-	// 상세부서정보 페이지에서 관리자로 로그인시 사원상세정보 update 하기
+		// 상세부서정보 페이지에서 관리자로 로그인시 사원상세정보 update 하기
 		@RequestMapping(value="/addBook/addBook_depInfo_update.bts", produces = "application/json; charset=utf-8")
 		public ModelAndView addBook_depInfo_update(HttpServletRequest request, HttpServletResponse response , ModelAndView mav) throws Exception {
 			
@@ -545,6 +548,55 @@ public class AddBookController {
 			return mav;
 		}
 		
+	   // 관리자에서 부서 추가하기 
+	   @RequestMapping(value="/addBook/addBook_dep_insert.bts")
+	   public ModelAndView addBook_dep_insert(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		   
+		   HttpSession session = request.getSession();
+		   EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+		   
+		   int pk_dep_no = Integer.parseInt(request.getParameter("dep_no"));
+		   String ko_depname = request.getParameter("ko_dep_name");
+		   String en_depname = request.getParameter("en_dep_name");
+		   String manager = request.getParameter("dep_manager_no");
+		   
+		   Map<String, String> paraMap = new HashMap<>();
+		   
+		   paraMap.put("pk_dep_no", String.valueOf(pk_dep_no));
+		   paraMap.put("ko_depname", ko_depname);
+		   paraMap.put("en_depname", en_depname);
+		   paraMap.put("manager", manager);
+		 
+		   
+		   
+		   
+		   int n = service.addBook_dep_insert(paraMap);
+			
+			 String message = "";
+			 String loc = "";
+		   
+			
+			 if(n == 1) {
+				   //성공
+				    message = "부서가 추가 되었습니다";
+					loc =  request.getContextPath()+"/addBook/addBook_depInfo.bts"; 
+			   }else {
+				   //실패
+				   message = "추가가 실패했습니다";
+				   loc =  request.getContextPath()+"/addBook/addBook_depInfo.bts"; 
+			   }
+				
+				
+			 
+		   mav.addObject("loginuser", loginuser);
+		   mav.addObject("message", message);
+		   mav.addObject("loc", loc);
+		   mav.setViewName("msg");
+		   
+	      return mav;
+	   }
+		
+		
 		
 		// 사이드인포 계급순 구성원 띄우기
 	    @RequestMapping(value="/sideinfo/sideinfo_addBook.bts")
@@ -563,32 +615,32 @@ public class AddBookController {
 	    }	
 	
 	
-	// 이메일 중복체크
-			@ResponseBody
-			@RequestMapping(value="/addBook/emailDuplicateCheck.bts", method = {RequestMethod.POST}, produces="text/plain;charset=UTF-8")
-			public String emailDuplicateCheck(HttpServletRequest request) { 
+	    // 이메일 중복체크
+		@ResponseBody
+		@RequestMapping(value="/addBook/emailDuplicateCheck.bts", method = {RequestMethod.POST}, produces="text/plain;charset=UTF-8")
+		public String emailDuplicateCheck(HttpServletRequest request) { 
+		
+			String email = request.getParameter("email");
 			
-				String email = request.getParameter("email");
+			
+			// System.out.println(">>> 확인용 uq_email =>"+ uq_email );	// 내가 입력한 아이디 값
+			
+			boolean isExist = service.emailDuplicateCheck(email);
+			
+			JSONObject jsonObj = new JSONObject(); 	// {}
+			jsonObj.put("isExist", isExist);			// {"isExist":true} 또는 {"isExist":false} 으로 만들어준다. 
 				
+				String json = jsonObj.toString();	// 문자열 형태인 "{"isExist":true}" 또는 "{"isExist":false}" 으로 만들어준다.
+				// System.out.println(">>> 확인용 json =>"+ json );	
+			//	>>> 확인용 json =>{"isExist":false}
+			//	또는	
+			//	>>> 확인용 json =>{"isExist":true}
 				
-				// System.out.println(">>> 확인용 uq_email =>"+ uq_email );	// 내가 입력한 아이디 값
+			request.setAttribute("json",json);
 				
-				boolean isExist = service.emailDuplicateCheck(email);
-				
-				JSONObject jsonObj = new JSONObject(); 	// {}
-				jsonObj.put("isExist", isExist);			// {"isExist":true} 또는 {"isExist":false} 으로 만들어준다. 
-					
-					String json = jsonObj.toString();	// 문자열 형태인 "{"isExist":true}" 또는 "{"isExist":false}" 으로 만들어준다.
-					// System.out.println(">>> 확인용 json =>"+ json );	
-				//	>>> 확인용 json =>{"isExist":false}
-				//	또는	
-				//	>>> 확인용 json =>{"isExist":true}
-					
-				request.setAttribute("json",json);
-					
-				return json;
-				
-			} // public String emailDuplicateCheck(HttpServletRequest request) 
+			return json;
+			
+		} // public String emailDuplicateCheck(HttpServletRequest request) 
 	
 	
 	

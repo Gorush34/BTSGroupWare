@@ -46,6 +46,12 @@ public interface InterAddBookService {
 
 	// 사이드인포 계급순 구성원 띄우기
 	List<EmployeeVO> sideinfo_addBook();
+
+	// 부서리스트 가져오기
+	List<Map<String, String>> addBook_depList_select();
+
+	// 관리자에서 부서 추가하기
+	int addBook_dep_insert(Map<String, String> paraMap);
 	
 	
 }
