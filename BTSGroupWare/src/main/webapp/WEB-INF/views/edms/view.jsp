@@ -284,11 +284,7 @@
 			<button type="button" class="btn btn-danger btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/appr/reject.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">최종반려</button>
 		</c:if>
 		
-		<div class="divclear"></div>
-	
-	
-
-		
+		<div class="divclear"></div>		
 	</div>
 	<%-- ************************************************** 수정 버튼 영역 종료 ************************************************** --%>
 	

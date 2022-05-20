@@ -1121,14 +1121,6 @@ public class EdmsController {
 	} // end of public ModelAndView delEnd ----------------------------------------------------------
 
 	
-	
-	
-	
-	
-	
-	
-	
-	
 	// === 승인하기 페이지 요청하기 === //
 	@RequestMapping(value="/edms/appr/accept.bts")
 	public ModelAndView requiredLogin_accept(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, ApprVO apprvo) { 
@@ -1144,6 +1136,23 @@ public class EdmsController {
 		return mav;
 	}
 
+	// === 반려하기 페이지 요청하기 === //
+	@RequestMapping(value="/edms/appr/reject.bts")
+	public ModelAndView requiredLogin_reject(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, ApprVO apprvo) { 
+		
+		// 반려할 문서번호 가져오기
+		String pk_appr_no = request.getParameter("pk_appr_no");
+		
+		// 문서번호 통해 문서정보 가져오기
+		apprvo = service.getApprInfo(pk_appr_no);
+		
+		mav.addObject("apprvo", apprvo);
+		mav.setViewName("appr/reject.edms");
+		
+		return mav;
+	} // end of public ModelAndView requiredLogin_reject(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
+
+	
 	// === 승인하기 페이지 완료하기 === //
 	@RequestMapping(value="/edms/appr/acceptEnd.bts", method= {RequestMethod.POST})
 	public ModelAndView acceptEnd(ModelAndView mav, HttpServletRequest request, ApprVO apprvo) {
@@ -1187,21 +1196,6 @@ public class EdmsController {
 	}
 	
 	
-	// === 반려하기 페이지 요청하기 === //
-	@RequestMapping(value="/edms/appr/reject.bts")
-	public ModelAndView requiredLogin_reject(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, ApprVO apprvo) { 
-		
-		// 반려할 문서번호 가져오기
-		String pk_appr_no = request.getParameter("pk_appr_no");
-		
-		// 문서번호 통해 문서정보 가져오기
-		apprvo = service.getApprInfo(pk_appr_no);
-		
-		mav.addObject("apprvo", apprvo);
-		mav.setViewName("appr/reject.edms");
-		
-		return mav;
-	} // end of public ModelAndView requiredLogin_reject(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
 
 	
 	// === 반려하기 페이지 완료하기 === //

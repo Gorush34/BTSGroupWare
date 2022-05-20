@@ -17,10 +17,6 @@
 	
 	$(document).ready(function(){
 		
-		
-		var abc = $("input#emp_no").val();
-		
-		
 		$("button#btnReject").click(function() {
 			// 폼(form)을 전송(submit)
 			const frm = document.rejectFrm;
@@ -38,17 +34,17 @@
 <div style="display: flex;">
 <div style="margin: auto; padding-left: 3%;">
 
-	<h2 style="margin-bottom: 30px;">문서 반려하기</h2>
+	<div class="edmsHomeTitle">
+		<span class="edms_maintitle">문서 반려하기</span>
+		<p style="margin-bottom: 10px;"></p>
+	</div>
 
 <form name="rejectFrm">
 	<c:set var="appr" value="${requestScope.apprvo}" />
 	<table style="width: 100%;" class="table table-bordered">
 		<tr>
-			<th style="width: 80%; background-color: #DDDDDD">
-				<input type="text" value="반려하시겠습니까?">
-			</th>
 			<td>
-							<span class="edms_maintitle">반려하시겠습니까?</span>
+				<span class="edms_maintitle">반려하시겠습니까?</span>
 				<%-- 				
 				<input type="text" value="로그인 유저의 사번 : ${sessionScope.loginuser.pk_emp_no}" />
 				<input type="text" class="form-control" value="문서번호 = ${requestScope.apprvo.pk_appr_no}" readonly />
@@ -64,48 +60,37 @@
 				<input type="hidden" name="mid_emp_no" id="mid_emp_no" value="${requestScope.apprvo.fk_fin_empno}"/>
 				<input type="hidden" name="fin_emp_no" id="fin_emp_no" value="${requestScope.apprvo.fk_mid_empno}"/>
 				--%>
-				
-<%-- 				로그인유저 사번 : <input type="text" value="${sessionScope.loginuser.pk_emp_no}" />
-				문서번호 <input type="text" class="form-control" value="${requestScope.apprvo.pk_appr_no}" readonly />
-				-글쓴사람 사번 <input type="text" name="fk_emp_no" class="form-control" value="${requestScope.apprvo.fk_emp_no}" />
-				
-				문서번호: <input type="text" name="pk_appr_no" class="form-control" value="${appr.pk_appr_no}" />
-				중간결재값: <input type="text" name="mid_accept" class="form-control" value="${appr.mid_accept}" />
-				최종결재값 : <input type="text" name="fin_accept" class="form-control" value="${appr.fin_accept}" />
-				
-				-로그인유저사번을 중간결재자값에담아줌<input type="text" name="fk_mid_empno" class="form-control" value="${sessionScope.loginuser.pk_emp_no}" readonly>
-				-중간결재자사번<input type="text" name="mid_emp_no" id="mid_emp_no" value="${requestScope.apprvo.fk_mid_empno}"/>
-				-최종결재자사번<input type="text" name="fin_emp_no" id="fin_emp_no" value="${requestScope.apprvo.fk_fin_empno}"/>
-				 --%>
 			</td>
 		</tr>		
 	</table>
 	
+
 	<table id="opinion">
 		<c:if test="${appr.mid_accept eq 0 and appr.fin_accept eq 0}">
 			<tr>
-				<th>중간결재자의견</th>
+				<th>중간 결재자 의견</th>
 				<td>
-					<input type="text" id="mid_opinion" name="mid_opinion" />
+					<input type="text" id="mid_opinion" name="mid_opinion" class="form-control" value=""/>
 				</td>
 			</tr>
 		</c:if>
+		
 		<c:if test="${appr.mid_accept eq 1 and appr.fin_accept eq 0}">
 			<tr>
-				<th>중간결재자의견</th>
+				<th>중간 결재자 의견</th>
 				<td>
 					<input type="text" id="mid_opinion_readonly" name="mid_opinion_readonly" value="${appr.mid_opinion}" readonly/>
 				</td>
 			</tr>
 			<tr>
-				<th>최종결재자의견</th>
+				<th>최종 결재자 의견</th>
 				<td>
-					<input type="text" id="fin_opinion" name="fin_opinion" />
+					<input type="text" id="fin_opinion" name="fin_opinion" class="form-control" value="" />
 				</td>
 			</tr>
 		</c:if>
 	</table>
-	
+		
 	<div style="margin: 20px;">
 		<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnReject">완료</button>
 		<button type="button" class="btn btn-secondary btn-sm" onclick="javascript:history.back()">취소</button>
