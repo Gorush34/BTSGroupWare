@@ -14,16 +14,16 @@
 </style>
 
 		 <h3><br>주소록<br></h3>
-		 
-			<button type="button" class="btn btn-outline-primary btn-lg " style="margin: 15px auto; width:200px; display:block;" onclick="location.href='<%= ctxPath%>/addBook/addBook_telAdd.bts'">주소록 추가</button>
-			<button type="button" class="btn btn-outline-primary btn-lg " style="margin: 15px auto; width:200px; display:block;" onclick="location.href='<%= ctxPath%>/addBook/addBook_main.bts'">주소록 목록</button>
-						
+		 <p style="margin-left:-40%;">
+			<button type="button" class="btn btn-default btn-lg " style="margin: 15px auto; color:darkgray; border-bottom:1px solid lightgray; width:150px; font-size:17pt; display:block;" onclick="location.href='<%= ctxPath%>/addBook/addBook_telAdd.bts'">주소록 추가</button>
+			<button type="button" class="btn btn-default btn-lg " style="margin: 15px auto; color:darkgray; border-bottom:1px solid lightgray; width:150px; font-size:17pt; display:block;" onclick="location.href='<%= ctxPath%>/addBook/addBook_main.bts'">주소록 목록</button>
+		</p>				
 		 <h3><br>직급 구성<br></h3>
 		 
-			<table style="float:left; text-align:left; margin-left:16%;">
+			<table style="float:left; text-align:left;">
 			
 			<tr>
-				<td><input type="button" class="btn btn-default" id="top_team" style="width:150px; border-bottom:1px solid lightgray; float:center; font-size:17pt; color:#4da6ff;" value="임원진"></td>
+				<td><input type="button" class="btn btn-default" id="top_team" style="width:150px; border-bottom:1px solid lightgray; float:center; font-size:17pt; color:darkgray;" value="임원진"><br><br></td>
 			</tr>
 				<tr>
 					<td><input type="button" class="btn btn-default" id="ceo" style="width:200px; float:center;" value="└ [사장]"></td>
@@ -54,7 +54,7 @@
 				</c:if>
 		   		</c:forEach>
 		   	<tr>
-				<td><input type="button" class="btn btn-default" id="mid_team" style=" width:150px; border-bottom:1px solid lightgray; float:center; font-size:17pt; color:#4da6ff;" value="중간관리자"></td>
+				<td><input type="button" class="btn btn-default" id="mid_team" style=" width:150px; border-bottom:1px solid lightgray; float:center; font-size:17pt; color:darkgray;" value="중간관리자"><br><br></td>
 			</tr>	
 				<tr>
 					<td><input type="button" class="btn btn-default" id="dep_manager" style="width:200px; float:center;" value="└ [부장]"></td>
@@ -99,7 +99,7 @@
 				</c:if>
 		   		</c:forEach>
 		   	<tr>
-				<td><input type="button" class="btn btn-default" id="bottom_team" style="width:150px; border-bottom:1px solid lightgray; float:center; font-size:17pt; color:#4da6ff;" value="실무자"></td>
+				<td><input type="button" class="btn btn-default" id="bottom_team" style="width:150px; border-bottom:1px solid lightgray; float:center; font-size:17pt; color:darkgray;" value="실무자"></td>
 			</tr>	
 				<tr>
 					<td><input type="button" class="btn btn-default" id="ast_manager" style="width:200px; float:center;" value="└ [대리]"></td>
