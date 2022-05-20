@@ -22,6 +22,9 @@
 
 <script type="text/javascript">
 
+	var mid_cnt = 0;
+	var mailStr = "";
+
 	$(document).ready(function(){
 		// 문서가 준비되면 매개변수로 넣은 콜백함수 실행하기
 				
@@ -240,35 +243,6 @@
 			
 			});// end of $("button#tempSave").click(function(){})---------------
 
-	   
-	 <%--    
-		// 직원 주소록 자동 검색 (aJax)
-			// 받는 사람 이메일 입력 시 포함된 키워드를 통해 재직중인 사원 목록 검색, 결과 없으면 유효한 이메일의 형식만 들어오도록 한다.
-			$("receiverInput").autocomplete({
-				source : function(request, response) {
-					$.ajax({
-							type:"get",
-							url : "empList.bts",
-							dataType : "json",
-							data : {
-								searchValue:request.term	// input 에 입력되는 value 값
-							},
-							success : function(data) {							
-								response(
-									$.map(data, function(item) {
-										
-									<%--	return {
-											label:item.DEPS_depName + " / " + 
-										} 
-										
-									})	
-								);
-							}
-					})
-				}
-			});
-	   --%>
-	
 	});// end of $(document).ready(function (){})--------------------
 
 	// function declaration

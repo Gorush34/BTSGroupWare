@@ -13,7 +13,6 @@
 	#btnRecChk {
 	border: 1px solid black; background-color: rgba(0,0,0,0); color: black; margin-left: 1px;
 	}
-	
    
 </style>
 
@@ -751,7 +750,7 @@
    
    <div id="tbl_two" style="float:left; width:6%; margin-top:10%; margin-left: 5px;">
       <table>
-         <tr><td><button class="form-control" style="height:40px; margin-bottom: 10px;" id="set_mid">추가<i class="fa fa-chevron-right" aria-hidden="true"></i></button></td></tr>
+         <tr><td><button class="form-control" style="height:40px; margin-bottom: 10px;" id="set_mid"><i class="fa fa-chevron-right" aria-hidden="true"></i></button></td></tr>
       </table>
    </div>
    
@@ -777,7 +776,8 @@
     </table>
     </form>
    </div>
-</div><!-- modal-body -->
+</div>
+<!-- modal-body -->
 
 <div class="modal-footer">
 <input type="button" class="btn btn-secondary" id="insert_customer_btn" data-dismiss="modal" onclick="goApprove()" value="등록">
@@ -786,8 +786,3 @@
 </div>
 </div>
 </div>
-
-
-
-
-

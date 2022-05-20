@@ -7,6 +7,11 @@
 	color: gray;
 	font-size: 12px;
 	}
+	
+	#btnRecChk {
+	border: 1px solid black; background-color: rgba(0,0,0,0); color: black; margin-left: 1px;
+	}
+   
 </style> 
     
 <div class="container" style="text-align: center;">

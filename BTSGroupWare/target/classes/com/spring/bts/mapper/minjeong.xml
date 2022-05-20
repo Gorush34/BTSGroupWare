@@ -481,7 +481,7 @@
 	<select id="getTotalCount_important" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_mail
-		where (fk_receiveuser_num = #{fk_receiveuser_num} or fk_senduser_num = #{fk_receiveuser_num} ) and importance_star_send = 1 or importance_star_rec = 1
+		where (fk_receiveuser_num = #{fk_receiveuser_num} or fk_senduser_num = #{fk_receiveuser_num} ) and (importance_star_send = 1 or importance_star_rec = 1)
 		<if test="searchType != ''">
 		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
 		</if>		
@@ -520,7 +520,7 @@
 		       , importance, importance_star_send, importance_star_rec, imp_status
 		from tbl_mail M join tbl_mailread R
 		on M.pk_mail_num = R.fk_mail_num
-		where (fk_receiveuser_num = #{fk_receiveuser_num} or fk_senduser_num = #{fk_receiveuser_num} ) and importance_star_send = 1 or importance_star_rec = 1
+		where (fk_receiveuser_num = #{fk_receiveuser_num} or fk_senduser_num = #{fk_receiveuser_num} ) and (importance_star_send = 1 or importance_star_rec = 1)
 		<if test="searchType != ''">
 		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
 		</if>
@@ -698,6 +698,7 @@
 	</select>
 	<!-- 보낸메일함 수신확인 읽음체크 목록 끝 -->
 
+	<!-- 다중메일 발송을 위해 사원 정보 가져오기 시작 -->
 	<select id="addBook_depInfo_select" resultType="com.spring.bts.hwanmo.model.EmployeeVO">
 		select E.pk_emp_no, E.emp_name , R.ko_rankname , D.ko_depname , R.pk_rank_no, E.uq_email
 		from tbl_EMPLOYEES E
@@ -707,6 +708,6 @@
 		on E.fk_department_id = D.pk_dep_no
 		order by R.pk_rank_no
 	</select>
-	
+	<!-- 다중메일 발송을 위해 사원 정보 가져오기 끝 -->
 
 </mapper>

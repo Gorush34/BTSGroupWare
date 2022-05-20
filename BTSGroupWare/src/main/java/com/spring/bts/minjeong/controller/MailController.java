@@ -154,6 +154,28 @@ public class MailController {
 		
 		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
 		
+		 // 로그인 세션 요청하기 
+		 HttpSession session = request.getSession(); 
+		 EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
+
+		 List<EmployeeVO> empList = service.addBook_depInfo_select();		 
+
+		 for(int i=0; i<empList.size(); i++) {
+			   
+			   // 이메일을 복호화한다.
+				try {
+				    String email = empList.get(i).getUq_email(); // i번째 암호화된 이메일을 받아온다. 
+				    //				이 리스트의/i번째/어떤 값을 get(가져온다) / set(넣어준다)
+				    empList.get(i).setUq_email( aes.decrypt(email) ); // list의 i번째 이메일 값을 복호화해서 넣어준다.
+				    
+				    // 언제까지? list의 size만큼 반복
+				} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+					e.printStackTrace();
+				}
+			   
+		  	 } // end of for (int i=0; i<empList.size(); i++) {} ---------- 		 
+
+		
 		// view 단에서 요청한 검색타입 및 검색어, 글번호 받아오기
 		String pk_mail_num = request.getParameter("pk_mail_num");	// 글번호
 	//	System.out.println("확인용 pk_mail_num : " + pk_mail_num);
@@ -181,7 +203,9 @@ public class MailController {
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
-						
+		 
+		mav.addObject("loginuser", loginuser);
+		mav.addObject("empList", empList);						
 		mav.setViewName("mailReply.mail");
 		return mav;
 	}			
@@ -204,6 +228,28 @@ public class MailController {
 		// 2. 이전에 입력했던 내용들에서 다시 임시저장 클릭했을 때 임시보관함으로 이동할 수 있다.
 		
 		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+
+		
+		 // 로그인 세션 요청하기 
+		 HttpSession session = request.getSession(); 
+		 EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
+
+		 List<EmployeeVO> empList = service.addBook_depInfo_select();		 
+
+		 for(int i=0; i<empList.size(); i++) {
+		   
+		   // 이메일을 복호화한다.
+			try {
+			    String email = empList.get(i).getUq_email(); // i번째 암호화된 이메일을 받아온다. 
+			    //				이 리스트의/i번째/어떤 값을 get(가져온다) / set(넣어준다)
+			    empList.get(i).setUq_email( aes.decrypt(email) ); // list의 i번째 이메일 값을 복호화해서 넣어준다.
+			    
+			    // 언제까지? list의 size만큼 반복
+			} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+				e.printStackTrace();
+			}
+		   
+	  	 } // end of for (int i=0; i<empList.size(); i++) {} ---------- 		 		
 		
 		// view 단에서 요청한 검색타입 및 검색어, 글번호 받아오기
 		String pk_mail_num = request.getParameter("pk_mail_num");	// 글번호
@@ -232,8 +278,11 @@ public class MailController {
 			e.printStackTrace();
 		}
 						
-		mav.setViewName("mailForward.mail");
-		return mav;
+		 
+		 mav.addObject("loginuser", loginuser);
+		 mav.addObject("empList", empList);
+		 mav.setViewName("mailForward.mail");
+		 return mav;
 	}	
 	
 // 메일 쓰기 완료 페이지 요청 (DB 에 글쓴 내용을 보내기 - 일반 메일쓰기, 답장, 전달 포함)
@@ -309,6 +358,8 @@ public class MailController {
 	//	System.out.println("확인용 importance : " + importance);
 	//	System.out.println("확인용 importanceVal : " + importanceVal);
 
+		
+		
 		// 다중메일보내기 시작
 		int cnt = Integer.parseInt(mrequest.getParameter("cnt"));
 		String recemail = mrequest.getParameter("recemail");
@@ -1373,9 +1424,10 @@ public class MailController {
 	//	paraMap.put("importance_star", importance_star);
 		
 		// importance_star Update 를 통해 값을 0,1로 변경해주기
+	//	System.out.println("확인용 isRec" + isRec);
 		if("1".equals(isRec)) {
 			// isRec : 1 이면 받은메일함 
-		n = service.updateImportance_star_rec(paraMap);
+			n = service.updateImportance_star_rec(paraMap);
 		}
 		else {
 			// isRec : 0 이면 보낸메일함 
@@ -1439,8 +1491,8 @@ public class MailController {
 		확인용 sendemail(보내는 사원 이메일 ) :kimmj@bts.com
 		확인용 fk_senduser_num(보내는 사원 사원번호) :80000010
 		확인용 sendempname(보내는 사원 사원명) :김민정
-		확인용 subject(제목) :20220513 임시저장 메일 테스트입니다. 값보내기 테스트 22 / importance 값 보내기
-//다시 체크	확인용 importance(중요체크박스 체크여부) :on (또는 체크 안했을 때 null)
+		확인용 subject(제목) :20220513 임시저장 메일 테스트입니다. 값보내기 테스트 22 / importance 값 보내기 //다시 체크	
+		확인용 importance(중요체크박스 체크여부) :on (또는 체크 안했을 때 null)
 		확인용 mail_attach(첨부파일) :null (받는 값을 filename)
 		확인용 content(메일 내용) :20220513 임시저장 메일 테스트입니다. 값보내기 테스트 22 / importance 값 보내기&nbsp;		  
 		*/  
@@ -1731,7 +1783,7 @@ public class MailController {
 	}	
 
 	
-	// 임시보관함 내용 읽기 페이지 요청 (이전에 썼던 내용들을 갖고온다.)
+	// 임시보관함 내용 읽기 페이지 요청 (메일쓰기 양식) (이전에 썼던 내용들을 갖고온다.)
 	@RequestMapping(value = "/mail/mailTemporaryDetail.bts")	
 	public ModelAndView mailTemporaryEnd(HttpServletRequest request, ModelAndView mav) {
 		// 임시보관함 같은 경우에는 내용읽기를 요청 했을 때, 
@@ -1739,7 +1791,29 @@ public class MailController {
 		// 2. 이전에 입력했던 내용들에서 다시 임시저장 클릭했을 때 임시보관함으로 이동할 수 있다.
 		
 		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+
 		
+		 // 로그인 세션 요청하기 
+		 HttpSession session = request.getSession(); 
+		 EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
+
+		 List<EmployeeVO> empList = service.addBook_depInfo_select();		 
+
+		 for(int i=0; i<empList.size(); i++) {
+		   
+		   // 이메일을 복호화한다.
+			try {
+			    String email = empList.get(i).getUq_email(); // i번째 암호화된 이메일을 받아온다. 
+			    //				이 리스트의/i번째/어떤 값을 get(가져온다) / set(넣어준다)
+			    empList.get(i).setUq_email( aes.decrypt(email) ); // list의 i번째 이메일 값을 복호화해서 넣어준다.
+			    
+			    // 언제까지? list의 size만큼 반복
+			} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+				e.printStackTrace();
+			}
+		   
+	  	 } // end of for (int i=0; i<empList.size(); i++) {} ---------- 		 
+
 		// view 단에서 요청한 검색타입 및 검색어, 글번호 받아오기
 		String pk_mail_num = request.getParameter("pk_mail_num");	// 글번호
 		String searchType = request.getParameter("searchType");		// 검색타입
@@ -1781,7 +1855,10 @@ public class MailController {
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
-						
+		 
+		
+		mav.addObject("loginuser", loginuser);
+		mav.addObject("empList", empList);							
 		mav.setViewName("mailTemporaryDetail.mail");
 		return mav;
 	}		
@@ -2010,207 +2087,191 @@ public class MailController {
 
 		// VO 에 set 되지 않은 값들을 받아오도록 한다.
 		// form 태그의 name 값들을 불러온다.
-	/*	
-		String recemail = mrequest.getParameter("recemail");
-		String sendemail = mrequest.getParameter("sendemail");
-		String fk_senduser_num = mrequest.getParameter("fk_senduser_num");
-		String sendempname = mrequest.getParameter("sendempname");
-		String importance = mrequest.getParameter("importance");
-		String importanceVal = mrequest.getParameter("importanceVal");
-		String subject = mrequest.getParameter("subject");
-	//	String attach = mrequest.getParameter("attach");
-		String content = mrequest.getParameter("content");
-	*/
 		
-	/*
-		System.out.println("확인용 recemail : " + recemail);
-		System.out.println("확인용 sendemail : " + sendemail);
-		System.out.println("확인용 fk_senduser_num : " + fk_senduser_num);
-		System.out.println("확인용 sendempname : " + sendempname);
-		System.out.println("확인용 importance : " + importance);	// 확인용 importance : null
-		System.out.println("확인용 importanceVal : " + importanceVal);
-		System.out.println("확인용 subject : " + subject);
-	//	System.out.println("확인용 attach : " + attach);
-		System.out.println("확인용 content : " + content);
-	*/
-		
-	/*
-		확인용 recemail : kimmj@bts.com
-		확인용 sendemail : kimmj@bts.com
-		확인용 fk_senduser_num : 80000010
-		확인용 sendempname : 김민정
-		확인용 importance : null
-		확인용 importanceVal : 0
-		확인용 subject : 20220512 예약메일함 reservation_status = 1 업데이트 및 mail 테이블에 reservation_date 날짜 들어가는지 확인
-		확인용 content : 20220512 예약메일함 reservation_status = 1 업데이트 및 mail 테이블에 reservation_date 날짜 들어가는지 확인&nbsp;
-		확인용 reservation_date : 2022-05-19 16:35
-	*/
+		// 메일쓰기 중요표시에 체크 후 importance 값 받아오기
 		String importanceVal = mrequest.getParameter("importanceVal");
 	//	System.out.println("확인용 importanceVal : " + importanceVal);
         
 		// importanceVal 값을 mailvo 에 있는 importance 에 넣어주기
+		// VO 에 없는 컬럼들을 set 해주도록 한다.
         mailvo.setImportance(importanceVal);
         
-		// VO 에 없는 컬럼들을 set 해주도록 한다.
-
-		String uq_email = "";	   /* 이메일 */
-        try {
-			uq_email = aes.encrypt(mrequest.getParameter("recemail"));
-		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
-			e.printStackTrace();
-		}
-        
-        // 값을 1개만 보낼때에는 String 으로 보내고, 
-        // return 타입으로 받아올 때에는 List 또는 Map 으로 받아온다.
-        
-        // 발송예약시 사용자가 선택한 날짜 값 받아오기 (service 로 보내야함)
-		String reservation_date = mrequest.getParameter("reservation_date");
-		mailvo.setReservation_date(reservation_date);	// form 태그에서 받아온 예약 날짜를 mailvo 에 넣어주도록 한다.
-
-	//	System.out.println("확인용 reservation_date : " + reservation_date);
-
-	
-		Map<String, String> recEmpnameAndNum = new HashMap<>();
-        recEmpnameAndNum = service.getEmpnameAndNum(uq_email);
-        
-        String emp_name = recEmpnameAndNum.get("emp_name");
-        String pk_emp_no = recEmpnameAndNum.get("pk_emp_no");
-        
-        mailvo.setRecempname(emp_name);
-        mailvo.setFk_receiveuser_num(pk_emp_no);
-        
-   //   System.out.println("확인용 emp_name :" + emp_name);
-   //   System.out.println("확인용 pk_emp_no :" + pk_emp_no);
-   //   System.out.println("확인용 uq_email : " + uq_email);
-               
-        /*
-        service.getRecEmpname(uq_email);
-   
-        mailvo.setRecempname(recempname);
-         */
-        
-		// 사용자가 쓴 메일에 파일이 첨부되어 있는지 아닌지를 구분지어준다.
+		// 다중메일보내기 시작
+		int cnt = Integer.parseInt(mrequest.getParameter("cnt"));
+		String recemail = mrequest.getParameter("recemail");
+		String [] strArray = recemail.split(",");
 		
-		/////////////////// 첨부파일 있는 경우 시작 (스마트에디터 X) ///////////////////////
-		MultipartFile attach = mailvo.getAttach();		// 실제 첨부된 파일
+	//	System.out.println("cnt 확인용 " + cnt);
+	//	System.out.println("recemail 확인용" + recemail);
+	//	System.out.println("strArray 확인용" + strArray);
 		
-		if( !attach.isEmpty() ) {	// 첨부파일 존재시 true, 존재X시 false
-			// 첨부파일이 존재한다면 (true) 업로드 해야한다.
-			// 1. 사용자가 보낸 첨부파일을 WAS(톰캣)의 특정 폴더에 저장해준다.
-			// WAS 의 절대경로를 알아와야 한다.
-			
-			HttpSession session = mrequest.getSession();
-			String root = session.getServletContext().getRealPath("/");
-			
-			String path = root+"resources"+File.separator+"files";
-			// path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다. --> path 에 파일을 업로드 한다.
-			
-			// 2. 파일첨부를 위한 변수 설정 및 값을 초기화 한 후 파일 업로드 하기
-			String newFileName = "";
-			// WAS(톰캣)의 디스크에 저장될 파일명
-
-			// 내용물을 읽어온다.
-			byte[] bytes = null;	// bytes 가 null 이라면 내용물이 없다는 것이다.
-			// 첨부파일의 내용물을 담는 것, return 타입은 byte 의 배열
-
-			long fileSize = 0;		// 첨부파일의 크기
-		
-			try {
-				bytes = attach.getBytes();	// 파일에서 내용물을 꺼내오자. 파일을 올렸을 때 깨진파일이 있다면 (입출력이 안된다!!) 그때 Exception 을 thorws 한다.
-				// 첨부파일의 내용물을 읽어오는 것. 그 다음, 첨부한 파일의 파일명을 알아와야 DB 에 넣을 수가 있다. 그러므로 파일명을 알아오도록 하자.
-				// 즉 파일을 올리고 성공해야 - 내용물을 읽어올 수 있고 - 파일명을 알아와서 DB 에 넣을 수가 있다.
-				
-				String originalFilename = attach.getOriginalFilename();
-				// attach.getOriginalFilename() 이 첨부파일의 파일명(예: 강아지.png) 이다.
-	
-				// 의존객체인 FileManager 를 불러온다. (String 타입으로 return 함.)
-				// 리턴값 : 서버에 저장된 새로운 파일명(예: 2022042912181535243254235235234.png)
-				newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
-				// 첨부된 파일을 업로드 한다.
-				
-				// 파일을 받아와야만 service 에 보낼 수 있다. (DB 에 보내도록 한다.)
-				mailvo.setFilename(newFileName);			// 톰캣(WAS)에 저장될 파일명
-				mailvo.setOrgfilename(originalFilename); 	// 사용자가 파일 다운로드시 사용되는 파일명
-				
-				fileSize = attach.getSize();					// 첨부파일의 크기
-				mailvo.setFilesize(String.valueOf(fileSize));	// long 타입인 fileSize 를 String 타입으로 바꾼 후 vo 에 set 한다.
-				
-			} catch (Exception e) {
+		for(int i=0; i<cnt; i++) {			
+			String uq_email = (String)strArray[i];	   /* 이메일 */
+	//		System.out.println("확인용 uq_email : " + uq_email);
+	        try {
+	        	// DB에 encrypt(암호화) 해서 보내주도록 한다.
+				uq_email = aes.encrypt(uq_email);
+			} catch (UnsupportedEncodingException | GeneralSecurityException e) {
 				e.printStackTrace();
 			}
+
+	        // 값을 1개만 보낼때에는 String 으로 보내고, 
+	        // return 타입으로 받아올 때에는 List 또는 Map 으로 받아온다.
+	        
+	        // 발송예약시 사용자가 선택한 날짜 값 받아오기 (service 로 보내야함)
+			String reservation_date = mrequest.getParameter("reservation_date");
+			mailvo.setReservation_date(reservation_date);	// form 태그에서 받아온 예약 날짜를 mailvo 에 넣어주도록 한다.
+	
+		//	System.out.println("확인용 reservation_date : " + reservation_date);
+	
+		
+			Map<String, String> recEmpnameAndNum = new HashMap<>();
+	        recEmpnameAndNum = service.getEmpnameAndNum(uq_email);
+	        
+	        String emp_name = recEmpnameAndNum.get("emp_name");
+	        String pk_emp_no = recEmpnameAndNum.get("pk_emp_no");
+	        
+	        mailvo.setRecempname(emp_name);
+	        mailvo.setFk_receiveuser_num(pk_emp_no);
+	        
+	   //   System.out.println("확인용 emp_name :" + emp_name);
+	   //   System.out.println("확인용 pk_emp_no :" + pk_emp_no);
+	   //   System.out.println("확인용 uq_email : " + uq_email);
+	               
+	        /*
+	        service.getRecEmpname(uq_email);
+	   
+	        mailvo.setRecempname(recempname);
+	         */
+	        
+			// 사용자가 쓴 메일에 파일이 첨부되어 있는지 아닌지를 구분지어준다.
+			
+			/////////////////// 첨부파일 있는 경우 시작 (스마트에디터 X) ///////////////////////
+			MultipartFile attach = mailvo.getAttach();		// 실제 첨부된 파일
+			
+			if( !attach.isEmpty() ) {	// 첨부파일 존재시 true, 존재X시 false
+				// 첨부파일이 존재한다면 (true) 업로드 해야한다.
+				// 1. 사용자가 보낸 첨부파일을 WAS(톰캣)의 특정 폴더에 저장해준다.
+				// WAS 의 절대경로를 알아와야 한다.
+				
+				HttpSession session = mrequest.getSession();
+				String root = session.getServletContext().getRealPath("/");
+				
+				String path = root+"resources"+File.separator+"files";
+				// path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다. --> path 에 파일을 업로드 한다.
+				
+				// 2. 파일첨부를 위한 변수 설정 및 값을 초기화 한 후 파일 업로드 하기
+				String newFileName = "";
+				// WAS(톰캣)의 디스크에 저장될 파일명
+	
+				// 내용물을 읽어온다.
+				byte[] bytes = null;	// bytes 가 null 이라면 내용물이 없다는 것이다.
+				// 첨부파일의 내용물을 담는 것, return 타입은 byte 의 배열
+	
+				long fileSize = 0;		// 첨부파일의 크기
+			
+				try {
+					bytes = attach.getBytes();	// 파일에서 내용물을 꺼내오자. 파일을 올렸을 때 깨진파일이 있다면 (입출력이 안된다!!) 그때 Exception 을 thorws 한다.
+					// 첨부파일의 내용물을 읽어오는 것. 그 다음, 첨부한 파일의 파일명을 알아와야 DB 에 넣을 수가 있다. 그러므로 파일명을 알아오도록 하자.
+					// 즉 파일을 올리고 성공해야 - 내용물을 읽어올 수 있고 - 파일명을 알아와서 DB 에 넣을 수가 있다.
+					
+					String originalFilename = attach.getOriginalFilename();
+					// attach.getOriginalFilename() 이 첨부파일의 파일명(예: 강아지.png) 이다.
+		
+					// 의존객체인 FileManager 를 불러온다. (String 타입으로 return 함.)
+					// 리턴값 : 서버에 저장된 새로운 파일명(예: 2022042912181535243254235235234.png)
+					newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
+					// 첨부된 파일을 업로드 한다.
+					
+					// 파일을 받아와야만 service 에 보낼 수 있다. (DB 에 보내도록 한다.)
+					mailvo.setFilename(newFileName);			// 톰캣(WAS)에 저장될 파일명
+					mailvo.setOrgfilename(originalFilename); 	// 사용자가 파일 다운로드시 사용되는 파일명
+					
+					fileSize = attach.getSize();					// 첨부파일의 크기
+					mailvo.setFilesize(String.valueOf(fileSize));	// long 타입인 fileSize 를 String 타입으로 바꾼 후 vo 에 set 한다.
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}	
+			/////////////////// 첨부파일 있는 경우 끝 (스마트에디터 X) ///////////////////////
+			
+			// 메일 data 를 DB 로 보낸다. (첨부파일 있을 때 / 첨부파일 없을 때)
+			int n = 0;
+			
+			if(attach.isEmpty()) {
+				// 첨부파일이 없을 때 & 		
+				// 예약발송버튼 눌렀을 때 예약테이블에서 reservation_status 를 1로 바꿔주기 (메일쓰기-발송예약 jsp 에서 넘어왔음)
+				mailvo.setReservation_status("1");
+				mailvo.setTemp_status("0");			// 임시보관함 - 상세내용 보기 - 발송예약 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
+				mailvo.setReservation_date(reservation_date);				
+				n = service.add(mailvo);
+				String fk_mail_num = service.getPkMailNum(mailvo);
+			//	System.out.println("확인용 fk_mail_num : " + fk_mail_num);
+				n = service.addToMailRead(fk_mail_num);
+			}
+			else {
+				// 첨부파일 있을 때
+				// 예약발송버튼 눌렀을 때 예약테이블에서 reservation_status 를 1로 바꿔주기 (메일쓰기-발송예약 jsp 에서 넘어왔음)
+				mailvo.setReservation_status("1");
+				mailvo.setTemp_status("0");			// 임시보관함 - 상세내용 보기 - 발송예약 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
+				mailvo.setReservation_date(reservation_date);				
+				n = service.add_withFile(mailvo);
+				String fk_mail_num = service.getPkMailNum(mailvo);
+			//	System.out.println("확인용 fk_mail_num : " + fk_mail_num);
+				n = service.addToMailRead(fk_mail_num);
+			}
+			
+			if(n==1) {
+				// 메일테이블에 발송예약글 reservation status 가 1에서 0으로 update 됐을 때 현재시간을 읽어서 mail 을 예정시간에 발송해주도록 하기 / 실패했을 때
+				service.reservationMailSendSchedular();	// 스프링 스케줄러를 이용해서 발송예약 실행하고 다시 reservation_status 를 0으로 바꿔주기.
+				mailvo.setTemp_status("0");				// 임시보관함 - 상세내용 보기 - 발송예약 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
+	
+				// 임시보관함에서 메일 상세보기를 클릭(temp_status=1인 상태)한 후, '보내기'를 누른 경우 (즉 수정한 경우)
+				// 해당 글의 temp_status 를 1에서 다시 0으로 update 해줘야 한다.
+				
+				// 임시보관함에서 제목 클릭했을 때 발송예약 실행한 경우 경우 받아온 글번호인 pk_mail_num 의 temp_status 를 update 한다.
+				String pk_mail_num = mrequest.getParameter("pk_mail_num");
+			//	System.out.println("임시보관함에서 제목 클릭 후 상세내용 봤을 때 pk_mail_num 여기로 오는지 확인용 : "+pk_mail_num);
+			
+				/*
+					임시보관함에서 제목 클릭 후 상세내용 봤을 때 pk_mail_num 
+				 */			
+				
+				Map<String, String> paraMap = new HashMap<>();
+				paraMap.put("pk_mail_num", pk_mail_num);
+	
+				/* 수정함
+				// 해당 글의 temp_status 를 1에서 다시 0으로 update 해줘야 한다.
+				int m = service.updateFromTbltemp(paraMap);			
+				
+				if(m==1) {
+					System.out.println("임시보관함에서 "+pk_mail_num+"의 temp_status 가 1에서 0으로 update 되었습니다. ");
+					// 					임시보관함에서 93의 temp_status 가 1에서 0으로 update 되었습니다. 
+				}
+				else {
+					System.out.println("임시보관함에서 "+pk_mail_num+"의 temp_status 가 1에서 0으로 update 실패했습니다. ");
+	
+				}
+				*/
+				
+			//	int m = service.deleteFromTbltemp(paraMap);			
+		/*		
+				if(m==1) {
+					System.out.println("임시보관함에서 "+pk_mail_num+"번 글이 delete 되었습니다. ");
+				}
+				else {
+					System.out.println("임시보관함에서 "+pk_mail_num+"번 글이 delete 에 실패했습니다. ");
+	
+				}
+		*/		
+				mav.setViewName("redirect:/mail/mailReservationList.bts");
+			}
+			else {// 실패 시 메일쓰기로 이동 (back)		
+				mav.setViewName("mailWrite.mail");
+			}
+	
 		}	
-		/////////////////// 첨부파일 있는 경우 끝 (스마트에디터 X) ///////////////////////
-		
-		// 메일 data 를 DB 로 보낸다. (첨부파일 있을 때 / 첨부파일 없을 때)
-		int n = 0;
-		
-		if(attach.isEmpty()) {
-			// 첨부파일이 없을 때 & 		
-			// 예약발송버튼 눌렀을 때 예약테이블에서 reservation_status 를 1로 바꿔주기 (메일쓰기-발송예약 jsp 에서 넘어왔음)
-			mailvo.setReservation_status("1");
-			mailvo.setTemp_status("0");			// 임시보관함 - 상세내용 보기 - 발송예약 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
-			mailvo.setReservation_date(reservation_date);
-			
-			n = service.add(mailvo);
-		}
-		else {
-			// 첨부파일 있을 때
-			// 예약발송버튼 눌렀을 때 예약테이블에서 reservation_status 를 1로 바꿔주기 (메일쓰기-발송예약 jsp 에서 넘어왔음)
-			mailvo.setReservation_status("1");
-			mailvo.setTemp_status("0");			// 임시보관함 - 상세내용 보기 - 발송예약 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
-			mailvo.setReservation_date(reservation_date);
-			
-			n = service.add_withFile(mailvo);
-		}
-		
-		if(n==1) {
-			// 메일테이블에 발송예약글 reservation status 가 1에서 0으로 update 됐을 때 현재시간을 읽어서 mail 을 예정시간에 발송해주도록 하기 / 실패했을 때
-			service.reservationMailSendSchedular();	// 스프링 스케줄러를 이용해서 발송예약 실행하고 다시 reservation_status 를 0으로 바꿔주기.
-			mailvo.setTemp_status("0");				// 임시보관함 - 상세내용 보기 - 발송예약 메일쓰기 클릭 시 임시보관함 status 를 다시 0으로 만들어줘야 보낸메일함에서 조회 가능
-
-			// 임시보관함에서 메일 상세보기를 클릭(temp_status=1인 상태)한 후, '보내기'를 누른 경우 (즉 수정한 경우)
-			// 해당 글의 temp_status 를 1에서 다시 0으로 update 해줘야 한다.
-			
-			// 임시보관함에서 제목 클릭했을 때 발송예약 실행한 경우 경우 받아온 글번호인 pk_mail_num 의 temp_status 를 update 한다.
-			String pk_mail_num = mrequest.getParameter("pk_mail_num");
-		//	System.out.println("임시보관함에서 제목 클릭 후 상세내용 봤을 때 pk_mail_num 여기로 오는지 확인용 : "+pk_mail_num);
-		
-			/*
-				임시보관함에서 제목 클릭 후 상세내용 봤을 때 pk_mail_num 여기로 오93
-			 */			
-			
-			Map<String, String> paraMap = new HashMap<>();
-			paraMap.put("pk_mail_num", pk_mail_num);
-
-			/* 수정함
-			// 해당 글의 temp_status 를 1에서 다시 0으로 update 해줘야 한다.
-			int m = service.updateFromTbltemp(paraMap);			
-			
-			if(m==1) {
-				System.out.println("임시보관함에서 "+pk_mail_num+"의 temp_status 가 1에서 0으로 update 되었습니다. ");
-				// 					임시보관함에서 93의 temp_status 가 1에서 0으로 update 되었습니다. 
-			}
-			else {
-				System.out.println("임시보관함에서 "+pk_mail_num+"의 temp_status 가 1에서 0으로 update 실패했습니다. ");
-
-			}
-			*/
-			
-		//	int m = service.deleteFromTbltemp(paraMap);			
-	/*		
-			if(m==1) {
-				System.out.println("임시보관함에서 "+pk_mail_num+"번 글이 delete 되었습니다. ");
-			}
-			else {
-				System.out.println("임시보관함에서 "+pk_mail_num+"번 글이 delete 에 실패했습니다. ");
-
-			}
-	*/		
-			mav.setViewName("redirect:/mail/mailReservationList.bts");
-		}
-		else {// 실패 시 메일쓰기로 이동 (back)		
-			mav.setViewName("mailWrite.mail");
-		}
 		return mav;		
 	}	
 

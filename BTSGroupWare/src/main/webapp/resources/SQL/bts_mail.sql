@@ -857,3 +857,51 @@ on M.pk_mail_num = R.fk_mail_num
 where fk_senduser_num = #{fk_senduser_num} and fk_receiveuser_num != #{fk_senduser_num} and
 del_status = 0 and reservation_status = 0 and temp_status = 0
 ) V
+
+
+select *
+from tbl_mail
+order by pk_mail_num desc;
+
+where subject like '%민정씨%' 
+
+delete from tbl_mail
+where pk_mail_num = 290
+
+commit;
+
+select *
+from tbl_employees
+
+
+----- 특정글만 중요메일함에서 공유가 되고 있음
+	
+update tbl_mail set importance_star_rec = 0
+
+commit;    
+    
+select *
+from tbl_mail
+where subject like '%안녕하세요 엄정화입니다.%' 
+
+delete from tbl_mail
+
+select *
+from tbl_mail
+where importance_star_rec = 1
+
+
+select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date, importance, importance_star_send, importance_star_rec, imp_status
+from
+(
+select row_number() over(order by pk_mail_num desc) AS rno,
+       pk_mail_num, fk_senduser_num, sendempname, subject
+       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+       , importance, importance_star_send, importance_star_rec, imp_status
+from tbl_mail M join tbl_mailread R
+on M.pk_mail_num = R.fk_mail_num
+where (fk_receiveuser_num = #{fk_receiveuser_num} or fk_senduser_num = #{fk_receiveuser_num} ) and importance_star_send = 1 or importance_star_rec = 1
+
+) V
+where rno between #{startRno} and #{endRno}
