@@ -491,7 +491,7 @@
       <tr>
          <th class="edmsView_th">내용</th>
          <td colspan="4">
-            <textarea style="width: 100%; height: 612px;" name="contents" id="contents" class="form-control">업무기안서입니다.</textarea>
+            <textarea style="width: 100%; height: 612px;" name="contents" id="contents" class="form-control"></textarea>
          </td>
       </tr>
       
