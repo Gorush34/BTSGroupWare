@@ -518,20 +518,20 @@
       <!-- Modal body -->
       <div class="modal-body">
       	<form name="calendarSearchFrm_1">
-       	<table style="width: 100%;" class="table  ">
+       	<table style="width: 100%;" class="table" id="calendarDetailSearch">
      			<tr>
-     				<td style="text-align: left; ">일정명</td>
-     				<td><input type="text" class="searchSubject" name="searchSubject" style="margin-right: 2px;"/></td>
+     				<td style="text-align: left; padding:8px;">일정명</td>
+     				<td><input type="text" class="searchSubject" name="searchSubject" /></td>
      			</tr>
      			<tr>
-     				<td style="text-align: left;">참석자</td>
-     				<td><input type="text" class="searchJoinuser" name="searchJoinuser" style="margin-right: 2px;"/></td>
+     				<td style="text-align: left;  padding:8px;">참석자</td>
+     				<td><input type="text" class="searchJoinuser" name="searchJoinuser" /></td>
      			</tr>
      			<tr>
-     				<td style="text-align: left;">일자</td>
+     				<td style="text-align: left;  padding:8px;">일자</td>
      				<td>
-     				<input type="date" class="searchDate" id="fromDate" name="startdate" style="width: 110px;" readonly="readonly">&nbsp;&nbsp; 
-	            -&nbsp;&nbsp; <input type="date" class="searchDate" id="toDate" name="enddate" style="width: 110px;" readonly="readonly">&nbsp;&nbsp;
+     				<input type="date" class="searchDate" id="fromDate" name="startdate" style="width: 130px;" readonly="readonly">&nbsp;&nbsp; 
+	            -&nbsp;&nbsp; <input type="date" class="searchDate" id="toDate" name="enddate" style="width: 130px;" readonly="readonly">&nbsp;&nbsp;
 					</td>
      			</tr>
      		</table>

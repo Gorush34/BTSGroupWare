@@ -112,6 +112,11 @@ div#calendarSearch{
   margin-bottom: 3px;
 }
 
+table#calendarDetailSearch > tbody > tr input{
+	border: 1px solid #999;
+	margin-left: 5px;
+}
+
 select#searchType {
   width:80px;
   padding:5px;

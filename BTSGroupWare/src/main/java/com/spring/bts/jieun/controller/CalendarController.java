@@ -609,7 +609,6 @@ public class CalendarController {
 				str_sizePerPage ="10";
 		}
 		
-		
 		Map<String, String> paraMap = new HashMap<String, String>();
 		paraMap.put("startdate", startdate);
 		paraMap.put("enddate", enddate);
