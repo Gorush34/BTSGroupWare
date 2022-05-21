@@ -332,12 +332,13 @@
 <h4 style="margin: 0 80px">일정수정</h4>
 	<div id="srFrm" style="margin:50px 100px;">
 		<form name="scheduleEditFrm">
-			<div>
-				<input type="text" id="subject" name="subject" size="50" value="${requestScope.map.SUBJECT}"/>&nbsp;&nbsp;
-				<input type="checkbox" id="secret" name="secret"/><label for="secret">비공개</label> &nbsp;&nbsp;&nbsp;
-				<span class="tooltip-right" data-tooltip="비공개 일정은 참석자만 확인가능합니다."><i class="bi bi-question-circle-fill"></i></span>
-			</div>
-			<table id="scheduleRegisterContent">
+			<table id="scheduleRegisterContent" style="margin:auto;">
+				<tr>
+					<th>일정</th>
+					<td>
+						<input type="text" id="subject" name="subject" size="50" value="${requestScope.map.SUBJECT}"/>&nbsp;&nbsp;
+					</td>
+				</tr>
 				<tr>
 					<th>날짜</th>
 					<td>

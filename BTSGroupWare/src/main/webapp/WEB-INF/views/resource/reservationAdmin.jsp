@@ -4,7 +4,6 @@
 
 <%
  	String ctxPath = request.getContextPath();
-	//     /board
 %>
 
 <style type="text/css">
@@ -14,6 +13,13 @@
 <script type="text/javascript">
 
 	$(document).ready(function(){
+		
+		// goRegisterResource
+		$("button#goRegisterResource").click(function(){
+			
+			 location.href="<%= ctxPath%>/reservation/resourceRegister.bts";
+			
+		})// end of $("button#goRegisterResource").click(function(){}---------------------------
 		
 	}); // end of $(document).ready(function(){}--------------------------------
 			
@@ -33,9 +39,7 @@
 <div id="reservationAdmin">
 	<h4 style="margin: 0 80px">자산목록</h4>
 		<div id="resourceList">
-		<div style="width:95%; height: 2px;">
-			<div style="float: right;"><button type="button" class="btn btn-secondary btn-sm" onclick="javascript:location.href='<%= ctxPath%>/reservation/resourceRegister.bts'">자산추가</button></div>
-		</div>	
+			
 			<table class="table table-striped" style="width:90%; margin:50px auto; text-align: center;">
 				<thead class="table-primary" style="color:white;">
 					<tr>
@@ -60,7 +64,9 @@
 			</table>
 		</div>
 </div>
-
+<div style="width:95%; height: 2px;">
+			<div style="float: right;"><button type="button" class="btn btn-secondary btn-sm" id="goRegisterResource">자산추가</button></div>
+</div>
 <form name="editResourceFrm">
 <input type="hidden" name="pk_rno"/>
 </form>
