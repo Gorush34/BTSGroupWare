@@ -475,5 +475,12 @@ public class MailService implements InterMailService {
 		return n;
 	}
 
+	// === #108. 검색어 입력 시 자동글 완성하기 4 ===
+	@Override
+	public List<String> wordSearchShow(Map<String, String> paraMap) {
+		List<String> wordSearchShow = dao.wordSearchShow(paraMap);
+		return wordSearchShow;
+	}
+
 	
 }

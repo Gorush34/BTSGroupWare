@@ -153,5 +153,8 @@ public interface InterMailService {
 	// 임시보관함 내용 읽기 페이지 요청 (메일쓰기 양식) (이전에 썼던 내용들을 갖고온다.)
 	MailVO getTemporaryMailView(Map<String, String> paraMap);
 
+	// === #108. 검색어 입력 시 자동글 완성하기 3 ===
+	List<String> wordSearchShow(Map<String, String> paraMap);
+
 	
 }

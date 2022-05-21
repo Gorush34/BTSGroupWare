@@ -3101,6 +3101,41 @@ public class MailController {
 		}
 				
 	}	
+
+	
+
+	// === #108. 검색어 입력 시 자동글 완성하기 3 ===
+	@ResponseBody
+	@RequestMapping(value = "/mail/wordSearchShow.bts", method = {
+			RequestMethod.GET }, produces = "text/plain;charset=UTF-8") // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다.
+																		// (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는
+																		// 것이다.)
+	public String wordSearchShow(HttpServletRequest request) {
+
+		String searchType = request.getParameter("searchType");
+		String searchWord = request.getParameter("searchWord");
+
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("searchType", searchType);
+		paraMap.put("searchWord", searchWord);
+
+		List<String> wordList = service.wordSearchShow(paraMap); // paraMap 을 담아서 보낸다.
+
+		JSONArray jsonArr = new JSONArray(); // 복수개로 받기 때문에 JSONArray , [] 타입
+
+		if (wordList != null) {
+			for (String word : wordList) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("word", word);
+
+				jsonArr.put(jsonObj);
+			} // end of for------------------------------------------------------------
+		}
+
+		return jsonArr.toString();
+	}
+	
+	
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////
 		

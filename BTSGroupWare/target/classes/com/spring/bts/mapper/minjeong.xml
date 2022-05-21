@@ -883,4 +883,31 @@
 		) V
 	</select>
 
+	<!-- == #111. 검색어 입력 시 자동글 완성하기 6 --> 
+	<!-- searchType 을 이름으로 설정했을 때 / 아닐 때 -->
+	<select id="wordSearchShow" parameterType="HashMap" resultType="String">
+		<choose>
+			<when test="searchType eq 'subject'">
+				select distinct ${searchType}
+			</when> 
+			<otherwise>
+				select ${searchType}
+			</otherwise>
+		</choose>
+		from tbl_mail
+		where lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+		<choose>
+			<when test="searchType neq 'sendempname'">
+				order by ${searchType} asc
+			</when>
+			<when test="searchType eq 'sendempname'">
+				order by ${searchType} asc
+			</when>			 
+			<otherwise>
+				order by seq desc
+			</otherwise>
+		</choose>
+	</select>
+	
+
 </mapper>
