@@ -83,7 +83,13 @@
 								
 								$.each(json, function(index, item){
 									html+="<option value='"+item.pk_calno+"'>"+item.calname+"</option>"
+									
+									if(item.calname == null){
+										html+="<option value = 1'>내 캘린더</option>"
+									}
 								});
+								
+								
 								$("select.calNo").html(html);
 								$("select.calNo").show();
 							}
@@ -226,6 +232,11 @@
 	     		alert("캘린더를 선택하시오.")
 	     		return;
 	     	}
+	     	var calNo = $("select.calNo").val().trim();
+	     	if(calNo == ""){
+	     		alert("캘린더를 선택하시오.")
+	     		return;
+	     	}
 	     	
 	     	// 내용 유효성 검사
 	     	var content = $("textarea#content").val();
@@ -337,10 +348,10 @@
 
 <div id="scheduleRegister">
 <h4 style="margin: 0 80px">일정등록</h4>
-	<div id="srFrm" style="margin:50px 100px;">
+	<div id="srFrm" style="margin:50px;">
 		<form name="scheduleRegisterFrm">
 			
-			<table id="scheduleRegisterContent">
+			<table id="scheduleRegisterContent" style="margin:auto;">
 				<tr>
 					<th>일정</th>
 					<td>
@@ -409,7 +420,7 @@
 			<input type="hidden" value="${sessionScope.loginuser.pk_emp_no}" name="fk_emp_no"/>
 			</form>
 			
-		<div style="text-align: center;">
+		<div style="text-align: center; margin-top: 15px;">
 		<button type="button" class="btn btn-primary btn-sm" id="register" >확인</button>
 		<button type="button" class="btn btn-outline-primary btn-sm" onclick="javascript:location.href='<%= ctxPath%>/calendar/calenderMain.bts'">취소</button>
 		</div>

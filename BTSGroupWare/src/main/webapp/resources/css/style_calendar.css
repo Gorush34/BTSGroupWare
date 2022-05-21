@@ -4,13 +4,14 @@ body {font-family: 'Noto Sans KR', sans-serif; font-size: 18px;}
 
 #mycontainer   { padding:20px; }
 #myheader      { display: flex; min-height:100px; position: relative; top: 60px; }
-#mycontent      { min-height:1200px; top:60px; padding-top: 40px; margin-right:25px;  background-color:#FFF;
+#mycontent      { min-height:1200px; top:60px;  margin-right:25px;  background-color:#FFF;
                   float:right; width:86%;}
 #mysideinfo {
 		min-height: 1200px;
 		position: fixed;
 		top: 60px;
-		padding-top: 40px;
+		padding-top: 20px;
+		padding-left: 5px;
 		/*padding-left:30px; */
 		background-color: #FFF;
 		float: left;
@@ -104,9 +105,16 @@ div#calendarSearch{
   border: 1px solid #999;
   position: relative;
   width: 320px;
-  height: 32px;
+  height: 34px;
   float:right;
   margin-right: 25px;
+  padding-bottom: 3px;
+  margin-bottom: 3px;
+}
+
+table#calendarDetailSearch > tbody > tr input{
+	border: 1px solid #999;
+	margin-left: 5px;
 }
 
 select#searchType {

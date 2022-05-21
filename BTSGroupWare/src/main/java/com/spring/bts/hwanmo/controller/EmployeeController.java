@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,6 +42,7 @@ import com.spring.bts.common.AES256;
 import com.spring.bts.common.FileManager;
 import com.spring.bts.common.MyUtil;
 import com.spring.bts.common.Sha256;
+import com.spring.bts.hwanmo.model.CommuteVO;
 import com.spring.bts.hwanmo.model.EmployeeVO;
 import com.spring.bts.hwanmo.service.InterAttendanceService;
 import com.spring.bts.hwanmo.service.InterEmployeeService;
@@ -669,6 +671,10 @@ public class EmployeeController {
 		String img_name = request.getParameter("img_name");								
 		// String img_path = request.getParameter("img_path");												
 		
+		String emp_pwd = Sha256.encrypt(request.getParameter("emp_pwd"));
+		empvo.setEmp_pwd(emp_pwd);
+		
+		
 		String com_tel = "";
 		if( num2 == "" && num3 == "") {
 			com_tel = "";
@@ -711,6 +717,274 @@ public class EmployeeController {
 	} // end of public ModelAndView updateEmpEnd(ModelAndView mav, HttpServletRequest request) {})----------------
 	
 	
+	// === 관리자페이지 - 모든사원보기 페이지
+	@RequestMapping(value="/emp/showAllEmp.bts")
+	public ModelAndView requiredLogin_myCommute(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, EmployeeVO empvo) { 
+		
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+		String fk_emp_no = String.valueOf(loginuser.getPk_emp_no());
+		// System.out.println(" 들어갔니? pk_emp_no : " + pk_emp_no);
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("fk_emp_no", fk_emp_no);
+		
+		String message = "";
+		String loc = "";
+		
+		if( !"80000001".equals(fk_emp_no) ) {
+			// 관리자가 아니라면
+			message = "접근권한이 없습니다.";
+			loc =  request.getContextPath()+"/index.bts"; 
+			
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+			
+			mav.setViewName("msg");
+		}
+		else {
+			// ================== 페이징처리 시작 =====================
+			
+			// 먼저 총 받은 메일 수(totalCount)를 구해와야 한다.
+			// 총 게시물 건수는 검색조건이 있을 때와 없을 때로 나뉜다.
+			
+			// 검색 목록
+			String searchType = request.getParameter("searchType");		// 사용자가 선택한 검색 타입
+			String searchWord = request.getParameter("searchWord");		// 사용자가 입력한 검색어
+			String str_currentShowPageNo = request.getParameter("currentShowPageNo");	// 현재 페이지 번호 
+			
+			// searchType 에는 제목 및 사원명이 있는데, 이 외의 것들이 들어오게 되면 기본값으로 보여준다
+			if(searchType == null || (!"ko_depname".equals(searchType)) && (!"pk_emp_no".equals(searchType))  && (!"emp_name".equals(searchType)) ) {
+				searchType = "";
+			}
+			
+			// 검색 입력창에 아무것도 입력하지 않았을 때 or 공백일 때 기본값을 보여주도록 한다.
+			if(searchWord == null || "".equals(searchWord) && searchWord.trim().isEmpty()) {
+				searchWord = "";
+			}
+			
+			// DB 로 보내기 위해 요청된 정보를 Map에 담는다.
+			paraMap.put("searchType", searchType);
+			paraMap.put("searchWord", searchWord);
+			
+			
+			int totalCount = 0;
+			int sizePerPage = 15;
+			int currentShowPageNo = 0;
+			int totalPage = 0;
+			
+			int startRno = 0;
+			int endRno = 0;
+			
+			// 관리자페이지 - 총 사원 수 가져오기
+			totalCount = empService.getTotalCountEmp(paraMap); 
+			
+			totalPage = (int) Math.ceil((double)totalCount/sizePerPage);	// 총 페이지 수 (전체게시물 / 페이지당 보여줄 갯수)
+	
+			if(str_currentShowPageNo == null) {
+				// 페이지바를 거치지 않은 맨 처음 화면
+				currentShowPageNo = 1;
+			}
+			else {	
+				try {	// 사용자가 페이지 넘버에 정수만 입력할 수 있도록 설정		
+					currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+					if(currentShowPageNo < 1 || currentShowPageNo > totalPage) {
+						// 1 미만의 페이지 또는 총 페이지 수를 넘어서는 페이지수 입력 시 기본페이지로
+						currentShowPageNo = 1;
+					}				
+				} catch (NumberFormatException e) {
+					currentShowPageNo = 1;
+				}
+			}
+			
+			startRno = ( (currentShowPageNo - 1) * sizePerPage ) + 1;
+			endRno = startRno + sizePerPage - 1;
+			
+			// 페이지에 보여줄 인덱스 맵 생성
+			Map<String, Object> idx = new HashMap<>();
+			idx.put("startIdx", (startRno-1));
+			idx.put("endIdx", (endRno-1));
+			
+			paraMap.put("startRno", String.valueOf(startRno));
+			paraMap.put("endRno", String.valueOf(endRno));
+			
+			// 관리자페이지 - 페이징처리 한 결재대기중인 공가/경조신청목록 
+			List<Map<String, Object>> empList = empService.getEmpAllWithPaging(paraMap);
+			
+			// 검색대상 컬럼(searchType) 및 검색어(searchWord) 유지시키기 위함
+			if(!"".equals(searchType) && !"".equals(searchWord)) {
+				mav.addObject("paraMap", paraMap);
+			}
+			// ================= 페이징처리 끝 ====================
+			
+			// === 페이지바 만들기 === //
+			int blockSize = 10;
+			
+			int loop = 1;
+			
+			int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+			
+			String pageBar = "<ul style='list-style: none;'>";
+			String url = "showAllEmp.bts";
+			
+			// === [맨처음][이전] 만들기 === //
+			if(pageNo != 1) {
+				pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1'>[맨처음]</a></li>";
+				pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+			}
+			
+			while( !(loop > blockSize || pageNo > totalPage) ) {
+				
+				if(pageNo == currentShowPageNo) {
+					pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";  
+				}
+				else {
+					pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>"; 
+				}
+				
+				loop++;
+				pageNo++;
+				
+			}// end of while-----------------------
+			
+			
+			// === [다음][마지막] 만들기 === //
+			if( pageNo <= totalPage ) {
+				pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+				pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>"; 
+			}
+			
+			pageBar += "</ul>";
+			
+			// System.out.println("확인용 searchType : " + searchType);
+			// System.out.println("확인용 searchWord : " + searchWord);
+			// System.out.println("확인용 totalCount : " + totalCount);
+			
+			mav.addObject("pageBar", pageBar);
+			
+			String gobackURL = MyUtil.getCurrentURL(request);
+	
+			mav.addObject("gobackURL", gobackURL.replaceAll("&", " "));
+			
+			mav.addObject("idx", idx);
+			mav.addObject("empList", empList);
+			mav.setViewName("showAllEmp.emp");
+		}
+		
+		return mav;
+	} // end of public ModelAndView requiredLogin_myCommute(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, EmployeeVO empVO)--------
+	
+	
+	// 관리자페이지- 모든사원보기 목록 중 사원 클릭시
+	@RequestMapping(value="/emp/viewEmpDetail.bts", produces="text/plain;charset=UTF-8")
+	public ModelAndView showAllEmp(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	
+		// 세션 불러오기
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+		
+		String message = "";
+		String loc = "";
+		
+		int pk_emp_no = Integer.parseInt( request.getParameter("pk_emp_no") );
+		
+		if( !"관리자".equals(loginuser.getEmp_name()) ) {
+			// 관리자가 아니라면
+			message = "접근권한이 없습니다.";
+			loc =  request.getContextPath()+"/index.bts"; 
+			
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+			
+			mav.setViewName("msg");
+		}
+		else {
+			
+			// 사원번호를 통해 정보를 받아옴
+			Map<String, Object> empMap = empService.getMemberOne(pk_emp_no);
+			
+			mav.addObject("img", empMap.get("img_name"));
+			mav.addObject("empList", empMap);
+			
+			mav.setViewName("viewEmpDetail.emp");
+		}
+		
+		return mav;
+	}
+	
+	
+	// 관리자페이지- 모든사원보기 목록 중 사원 클릭시
+	@ResponseBody
+	@RequestMapping(value="/emp/updateHire.bts", produces="text/plain;charset=UTF-8")
+	public String updateHire(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	
+		String pk_emp_no_str = request.getParameter("pk_emp_no_str");
+		
+		// 변경할 사원 수
+		String cnt = request.getParameter("cnt");
+		
+		String[] arr_pk_emp_no = new String[0];
+		
+		pk_emp_no_str = pk_emp_no_str.replaceAll("\\[", "");
+		pk_emp_no_str = pk_emp_no_str.replaceAll("\\]", "");
+		pk_emp_no_str = pk_emp_no_str.replaceAll("\"", "");
+		pk_emp_no_str = pk_emp_no_str.trim();	// 공백 제거
+			
+		arr_pk_emp_no = pk_emp_no_str.split(",");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		int n = 0;
+		int result = 0;
+		
+		for(int i=0; i<arr_pk_emp_no.length; i++) {
+			
+			paraMap.put("pk_emp_no",arr_pk_emp_no[i]);
+			
+			// 배열에 담긴 사번에 따른 탈퇴처리
+			n = empService.updateHire(paraMap);
+		}
+		
+		JSONObject jsonObj = new JSONObject();
+		
+		// 메일 테이블에서 해당 메일번호 삭제여부 1로 변경
+		if(n==1) {
+			result = 1;
+			jsonObj.put("result",result);
+		}
+		
+		return jsonObj.toString();
+		
+	}
+	
+	
+	@RequestMapping(value="/emp/updateHireOne.bts", produces="text/plain;charset=UTF-8")
+	public ModelAndView updateHireOne(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		
+		String emp_no = request.getParameter("emp_no");
+		// System.out.println("emp_no : " + emp_no);
+		
+		int n = empService.updateHireOne(emp_no);
+		
+		String message = "";
+		String loc = "";
+		
+		if(n==1) {
+			message = "재직상태 변경에 성공하였습니다!!";
+			loc = request.getContextPath()+"/emp/showAllEmp.bts"; 
+		} else {
+			message = "재직상태 변경에 실패하였습니다!!";
+			loc = request.getContextPath()+"/emp/showAllEmp.bts"; 
+		}
+		
+		mav.addObject("message", message);
+		mav.addObject("loc", loc);
+		
+		mav.setViewName("msg");
+		return mav;
+		
+	}	
+		
+		
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	
 	// === 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 생성 === //

@@ -23,6 +23,24 @@
 		   }
 	    });
 		
+	    $.datepicker.setDefaults({
+	         dateFormat: 'yy-mm-dd'  // Input Display Format 변경
+	        ,showOtherMonths: true   // 빈 공간에 현재월의 앞뒤월의 날짜를 표시
+	        ,showMonthAfterYear:true // 년도 먼저 나오고, 뒤에 월 표시
+	        ,changeYear: true        // 콤보박스에서 년 선택 가능
+	        ,changeMonth: true       // 콤보박스에서 월 선택 가능                
+	        ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
+	        ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
+	        ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
+	        ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트             
+	    });
+		
+	    // input 을 datepicker로 선언
+	    $("input#fromDate").datepicker();                    
+	    $("input#toDate").datepicker();
+	    	    
+	    
+		
 	});// end of $(document).ready(function()----------------------
 
 	
@@ -177,20 +195,20 @@
       <!-- Modal body -->
       <div class="modal-body">
       	<form name="calendarSearchFrm_1">
-       	<table style="width: 100%;" class="table  ">
+       	<table style="width: 100%;" class="table" id="calendarDetailSearch">
      			<tr>
-     				<td style="text-align: left; ">일정명</td>
-     				<td><input type="text" class="searchSubject" name="searchSubject" style="margin-right: 2px;"/></td>
+     				<td style="text-align: left; padding:8px;">일정명</td>
+     				<td><input type="text" class="searchSubject" name="searchSubject" /></td>
      			</tr>
      			<tr>
-     				<td style="text-align: left;">참석자</td>
-     				<td><input type="text" class="searchJoinuser" name="searchJoinuser" style="margin-right: 2px;"/></td>
+     				<td style="text-align: left;  padding:8px;">참석자</td>
+     				<td><input type="text" class="searchJoinuser" name="searchJoinuser" /></td>
      			</tr>
      			<tr>
-     				<td style="text-align: left;">일자</td>
+     				<td style="text-align: left;  padding:8px;">일자</td>
      				<td>
-     				<input type="date" class="searchDate" id="fromDate" name="startdate" style="width: 110px;" readonly="readonly">&nbsp;&nbsp; 
-	            -&nbsp;&nbsp; <input type="date" class="searchDate" id="toDate" name="enddate" style="width: 110px;" readonly="readonly">&nbsp;&nbsp;
+     				<input type="date" class="searchDate" id="fromDate" name="startdate" style="width: 130px;" readonly="readonly">&nbsp;&nbsp; 
+	            -&nbsp;&nbsp; <input type="date" class="searchDate" id="toDate" name="enddate" style="width: 130px;" readonly="readonly">&nbsp;&nbsp;
 					</td>
      			</tr>
      		</table>

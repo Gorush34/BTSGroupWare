@@ -107,6 +107,7 @@ public class EmployeeService implements InterEmployeeService {
 		return empList;
 	}
 
+	// 로그인 유저의 정보 받아오기
 	@Override
 	public EmployeeVO getLoginMember(Map<String, String> paraMap) {
 		
@@ -141,6 +142,103 @@ public class EmployeeService implements InterEmployeeService {
 		}
 		
 		return loginuser;
+	}
+	
+	// 관리자페이지 - 총 사원 수 가져오기
+	@Override
+	public int getTotalCountEmp(Map<String, String> paraMap) {
+		int n = empDAO.getTotalCountEmp(paraMap);
+		return n;
+	}
+
+	// 관리자페이지 - 총 사원 목록 가져오기
+	@Override
+	public List<Map<String, Object>> getEmpAllWithPaging(Map<String, String> paraMap) {
+		
+		List<Map<String, Object>> empList = empDAO.getEmpAllWithPaging(paraMap);
+		
+		String email = "";
+		String phone = "";
+		
+		if(empList.size() > 0) {
+			
+			for(int i=0; i<empList.size(); i++) {
+			
+				email = (String) empList.get(i).get("uq_email");
+				phone = (String) empList.get(i).get("uq_phone");
+				
+				try {
+					email = aes.decrypt(email); // 이메일을 복호화
+				} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+					e.printStackTrace();
+				}
+				
+				try {
+					phone = aes.decrypt(phone); // 이메일을 복호화
+				} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+					e.printStackTrace();
+				}
+				
+				// System.out.println("복호화 되니? : " + email);
+				
+				empList.get(i).put("uq_email", email); // 복호화된 값을 다시 넣어줌	
+				empList.get(i).put("uq_phone", phone);
+				
+			} // end of for --------------------
+		
+		} // end of if------------------
+		
+		return empList;
+	}
+
+	// 사원번호를 통해 정보를 받아옴
+	@Override
+	public Map<String, Object> getMemberOne(int pk_emp_no) {
+		Map<String, Object> empMap = empDAO.getMemberOne(pk_emp_no);
+		
+		// 복호화 및 분리
+		String uq_email = ((String) empMap.get("uq_email")).replaceAll(" ", "+");
+		String uq_phone = ((String) empMap.get("uq_phone")).replaceAll(" ", "+");
+		
+		try {
+			uq_email = aes.decrypt(uq_email);	 
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			uq_phone = aes.decrypt(uq_phone);	 
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		// 복호화된 이메일 삽입
+		empMap.put("uq_email", uq_email);
+		// 복호화된 폰번호 삽입
+		empMap.put("hp2", uq_phone.substring( (uq_phone.indexOf("-")+1), uq_phone.lastIndexOf("-") ) );
+		empMap.put("hp3", uq_phone.substring( (uq_phone.lastIndexOf("-")+1) ) );
+		
+		String com_tel = (String) empMap.get("com_tel");
+		
+		if( com_tel != null ) { // 회사번호 있으면 회사번호 넣어라.
+			empMap.put("num1", com_tel.substring( 0, uq_phone.indexOf("-") ) );
+			empMap.put("num2", com_tel.substring( (com_tel.indexOf("-")+1), com_tel.lastIndexOf("-") )  );
+			empMap.put("num3", com_tel.substring( (com_tel.lastIndexOf("-")+1) ) );
+		}
+
+		return empMap;
+	}
+
+	// 배열에 담긴 사번에 따른 탈퇴처리
+	@Override
+	public int updateHire(Map<String, String> paraMap) {
+		int result = empDAO.updateHire(paraMap);
+		return result;
+	}
+
+	@Override
+	public int updateHireOne(String emp_no) {
+		int result = empDAO.updateHireOne(emp_no);
+		return result;
 	}
 
 }

@@ -75,7 +75,7 @@ public interface InterCalendarDAO {
 	List<Map<String, String>> scheduleListSearchWithPaging(Map<String, String> paraMap);
 	
 	// 오늘의 일정 수
-	int scheduleCount(int pk_emp_no);
+	int scheduleCount(Map<String, String> paraMap);
 	
 	// == 메인페이지 : 임직원 생일 가져오기 == //
 	List<Map<String, String>> employeeBirthIndex();

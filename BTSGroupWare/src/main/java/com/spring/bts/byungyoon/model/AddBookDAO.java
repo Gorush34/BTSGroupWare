@@ -130,6 +130,40 @@ public class AddBookDAO implements InterAddBookDAO {
 	}
 
 
+	// 부서리스트 가져오기
+	@Override
+	public List<Map<String, String>> addBook_depList_select() {
+		List<Map<String, String>> depList = sqlsession.selectList("byungyoon.addBook_depList_select");
+		return depList;
+	}
+
+
+	// 관리자에서 부서 추가하기
+	@Override
+	public int addBook_dep_insert(Map<String, String> paraMap) {
+		int n = sqlsession.insert("byungyoon.addBook_dep_insert" , paraMap);
+		return n;
+	}
+
+
+	// 직급리스트 가져오기
+	@Override
+	public List<Map<String, String>> addBook_rankList_select() {
+		List<Map<String, String>> rankList = sqlsession.selectList("byungyoon.addBook_rankList_select");
+		return rankList;
+	}
+
+
+	// 관리자에서 부서 삭제하기
+	@Override
+	public int addBook_dep_delete(int dep_delete) {
+	
+		int n = sqlsession.delete("byungyoon.addBook_dep_delete" , dep_delete);
+		
+		return n;
+	}
+
+
 
 	
 	

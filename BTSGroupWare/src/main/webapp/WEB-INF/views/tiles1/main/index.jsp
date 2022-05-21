@@ -930,6 +930,23 @@ td.mail_subject:hover {
      
 	///////////////// 정환모 메인화면 작업 함수 끝 /////////////////////////
 	
+	
+	// 메인에서 전자결재 대기 문서 개수 띄워주기 시작 //
+	$(function() {
+		$.ajax({
+			url:"${contextPath}/edms/getWaitingSignListCount.bts",
+			type:"post",
+			dataType:"json",
+			success:function(data){
+				$("#waitingSignListCount").text(data.totalCount); // totalCount 는 컨트롤러에서 받아온 값
+			},
+			error:function(request, status, error) {
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		});
+		});
+	// 메인에서 전자결재 대기 문서 개수 띄워주기 끝 //
+
 </script>
 
 
@@ -961,15 +978,16 @@ td.mail_subject:hover {
 	        			</c:if>
 	        		</span>
 	        	</div>
-	        
+	        	
+				<c:set var="contextPath" value="${pageContext.request.contextPath}" />
 		        <ul class="type_simple_list today_list">
 		        	<li class="summary-approval2">
-		        		<a href="">
+		        		<a href="${contextPath}/edms/waitingSignList.bts">
 		        			<span class="type">
 		        				<span class="ic_dashboard2 ic_type_approval2" title="approval2"></span>
 		        			</span>
 		        			<span class="text">전자결재 수신 문서</span>
-		        			<span class="badge">0</span>
+		        			<span class="badge" id="waitingSignListCount">0</span>
 		        		</a>
 		        	</li>
 		        	<li class="summary-approval">

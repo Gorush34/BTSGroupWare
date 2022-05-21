@@ -76,7 +76,7 @@ public interface InterCalendarService {
 
 	// ********** 메인 페이지 캘린더 관련 기능  *********** //
 	// 오늘의 일정 수
-	int scheduleCount(int pk_emp_no);
+	int scheduleCount(Map<String, String> paraMap);
 
 	// == 메인페이지 : 임직원 생일 가져오기 == //
 	List<Map<String, String>> employeeBirthIndex();

@@ -337,6 +337,11 @@ public class EdmsService implements InterEdmsService {
 		return companyWaitList;
 	}
 
+	@Override
+	public int getWaitingSignListCount(Map<String, String> paramMap) {
+		return dao.getWaitingSignListCount(paramMap);
+	}
+
 
 	
 	

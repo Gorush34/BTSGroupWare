@@ -113,100 +113,81 @@
   <!-- 부서원 목록  -->
   <div class="tab-pane fade" id="depInfo" style="">
 	  <table style="float:left; text-align:center; margin-top:6%;">
-			<tr style="">
-				<td><button class="btn btn-default" id="y_team" style="width:200px; border: solid darkgray 2px;">영업팀</button></td>
-			</tr>
-			<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
-			<c:if test="${emp.ko_depname  eq '영업'}">
-			<tr>
-			<td>
-				<div id="y_teamwon">
-					<input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly />
-					<button class="btn btn-default" onclick="teamwonInfo(${i.count})" >${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
-				</div>
-			</td>
-			</tr>
-			</c:if>
-	   		</c:forEach>
-			<tr>
-				<td><button class="btn btn-default" id="m_team" style="width:200px; border: solid darkgray 2px;">마케팅팀</button></td>
-			</tr>
-			<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
-			<c:if test="${emp.ko_depname  eq '마케팅'}">
-			<tr>
-			<td>
-				<div id="m_teamwon">
-					<input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly />
-					<button class="btn btn-default" onclick="teamwonInfo(${i.count})" >${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
-				</div>
-			</td>
-			</tr>
-			</c:if>
-	   		</c:forEach>
-			<tr>
-				<td><button class="btn btn-default" id="g_team" style="width:200px; border: solid darkgray 2px;">기획팀</button></td>
-			</tr>
-			<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
-			<c:if test="${emp.ko_depname  eq '기획'}">
-			<tr>
-			<td>
-				<div id="g_teamwon">
-					<input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly />
-					<button class="btn btn-default" onclick="teamwonInfo(${i.count})" >${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
-				</div>
-			</td>
-			</tr>
-			</c:if>
-	   		</c:forEach>
-			<tr>
-				<td><button class="btn btn-default" id="c_team" style="width:200px; border: solid darkgray 2px;">총무팀</button></td>
-			</tr>
-			<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
-			<c:if test="${emp.ko_depname  eq '총무'}">
-			<tr>
-			<td>
-				<div id="c_teamwon">
-					<input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly />
-					<button class="btn btn-default" onclick="teamwonInfo(${i.count})" >${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
-				</div>
-			</td>
-			</tr>
-			</c:if>
-	   		</c:forEach>
-			<tr>
-				<td><button class="btn btn-default" id="i_team" style="width:200px; border: solid darkgray 2px;">인사팀</button></td>
-			</tr>
-			<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
-			<c:if test="${emp.ko_depname  eq '인사'}">
-			<tr>
-			<td>
-				<div id="i_teamwon">
-					<input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly />
-					<button class="btn btn-default" onclick="teamwonInfo(${i.count})" >${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
-				</div>
-			</td>
-			</tr>
-			</c:if>
-	   		</c:forEach>
-			<tr>
-				<td><button class="btn btn-default" id="h_team" style="width:200px; border: solid darkgray 2px;">회계팀</button></td>
-			</tr>
-			<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
-			<c:if test="${emp.ko_depname  eq '회계'}">
-			<tr>
-			<td>
-				<div id="h_teamwon">
-					<input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly />
-					<button class="btn btn-default" onclick="teamwonInfo(${i.count})" >${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
-				</div>
-			</td>
-			</tr>
-			</c:if>
-	   		</c:forEach>
+	  			<tr>
+	  				<td>
+					<!-- 부서 추가 모달창 띄우기 -->
+					<c:choose>
+					<c:when test="${sessionScope.loginuser.pk_emp_no eq 80000001}">
+							<button class="btn btn-default" data-toggle="modal" data-target="#viewModal" style="">+부서추가</button> <form name="dep_deleteFrm"><input type="hidden" id="dep_delete" name="dep_delete" value="" /></form>
+							<button class="btn btn-default" onclick="dep_delete()" style="">-부서삭제</button>
+					</c:when>
+					</c:choose>
+					<!-- 부서 추가 모달창 띄우기 -->
+					</td>
+				<tr>
+		   		<c:if test="${not empty requestScope.depList}">
+		   		<c:forEach var="dep" items="${requestScope.depList}" varStatus="i">
+		   		<tr style="">
+					<td><button class="btn btn-default team" id="team_${i.count}" value="${dep.pk_dep_no}" style="width:200px; border: solid darkgray 2px;">${dep.ko_depname}</button></td>
+				</tr>
+					<c:if test="${not empty requestScope.empList}">
+			   		<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
+			   		<c:if test="${dep.pk_dep_no eq emp.fk_department_id}">
+						<tr>
+							<td>
+								<input type="hidden" id="" value="${emp.pk_emp_no}"/><button class="btn btn-default teamwon_${dep.pk_dep_no}" id="teamwon_${i.count}" value="${emp.pk_emp_no}" onclick="teamwonInfo(${i.count})" >${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
+							</td>
+						</tr>
+					</c:if>
+					</c:forEach>
+					</c:if>
+				 </c:forEach>
+				 </c:if>
+			
+		<!-- 부서 추가 모달창 시작 -->	
+		<div class="modal fade" data-backdrop="static" id="viewModal">
+		<div class="modal-dialog">
+		<div class="modal-content">
+		<div class="modal-header">
+		<h4 class="modal-title" id="exampleModalLabel">부서 추가</h4>
+		</div>
+		
+		<div class="modal-body">
+		<form name="depInsertFrm" >
+			<input type="hidden" class="form-control" id="pk_addbook_no" name="pk_addbook_no">
+			
+			<div class="form-group">
+				<label for="recipient-name" class="control-label"><strong>부서번호</strong></label>
+				<input type="text" class="form-control requiredInfo" id="dep_no" name="dep_no" maxlength="8" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+			</div>
+			
+			<div class="form-group">
+			<label for="recipient-name" class="control-label"><strong>부서명(한글)</strong></label>
+			<input type="text" class="form-control" id="ko_dep_name" name="ko_dep_name">
+			</div>
+			
+			<div class="form-group">
+			<label for="recipient-name" class="control-label"><strong>부서명(영어)</strong></label>
+			<input type="text" class="form-control" id="en_dep_name" name="en_dep_name">
+			</div>
+			
+			<div class="form-group">
+			<label for="recipient-name" class="control-label"><strong>부서장번호</strong></label>
+			<input type="text" class="form-control" id="dep_manager_no" name="dep_manager_no" maxlength="8" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+			</div>
+		</form>
+		</div>
+		
+		<div class="modal-footer">
+		<button type="button" class="btn btn-primary" id="insert_customer_btn_1" onclick="create()">추가</button>
+		<button type="button" class="btn btn-success" data-dismiss="modal">닫기</button>
+		</div>
+		</div>
+		</div>
+		</div>
+		<!-- 부서 추가 모달창 끝 -->
+							
   	</table>
-  	
-  	
-  	
   	
 	 <div id="telAdd_main_tbl" style="text-align:center; padding-left: 24%;">
 		<form name="updateImgFrm" id="updateImgFrm" action="<%= ctxPath%>/emp/updateImg.bts" method="post" enctype="multipart/form-data" role="form">
@@ -263,12 +244,11 @@
 				<td style="padding-bottom:25px;"><strong>부서*</strong></td>
 				<td>
 					<select id="department" name="department" class="form-control requiredInfo">
-					  <option value="100">영업</option>
-					  <option value="200">마케팅</option>
-					  <option value="300">기획</option>
-					  <option value="400">총무</option>
-					  <option value="500">인사</option>
-					  <option value="600">회계</option>
+					  <c:if test="${not empty requestScope.depList}">
+				   	  <c:forEach var="dep" items="${requestScope.depList}" varStatus="i">
+							<option value="${dep.pk_dep_no}">${dep.ko_depname}</option>
+					  </c:forEach>
+					  </c:if>	
 					</select>
 				<br>
 				</td>
@@ -277,14 +257,11 @@
 				<td style="padding-bottom:25px;"><strong>직급*</strong></td>
 				<td>
 					<select id="rank" name="rank" class="form-control requiredInfo">
-					  <option value="10">사원</option>
-					  <option value="20">주임</option>
-					  <option value="30">대리</option>
-					  <option value="40">과장</option>
-					  <option value="50">차장</option>
-					  <option value="60">부장</option>
-					  <option value="70">전무</option>
-					  <option value="80">사장</option>
+					  <c:if test="${not empty requestScope.rankList}">
+				   	  <c:forEach var="rank" items="${requestScope.rankList}" varStatus="i">
+							<option value="${rank.pk_rank_no}">${rank.ko_rankname}</option>
+					  </c:forEach>
+					  </c:if>
 					</select>
 				</td>
 			</tr>
@@ -367,37 +344,19 @@
 
 	var imgname = "";
 
-	$( document ).ready( function() {
 	
-	  $( "div#y_teamwon" ).slideToggle().hide();
-	  $( "button#y_team" ).click( function() {
-	      $( "div#y_teamwon" ).slideToggle();
-	    });
-		  
-	  $( "div#m_teamwon" ).slideToggle().hide();
-	  $( "button#m_team" ).click( function() {
-	    $( "div#m_teamwon" ).slideToggle();
-	  });
-	  
-	  $( "div#g_teamwon" ).slideToggle().hide();
-	  $( "button#g_team" ).click( function() {
-	    $( "div#g_teamwon" ).slideToggle();
-	  });
-	  
-	  $( "div#c_teamwon" ).slideToggle().hide();
-	  $( "button#c_team" ).click( function() {
-	    $( "div#c_teamwon" ).slideToggle();
-	  });
-	  
-	  $( "div#i_teamwon" ).slideToggle().hide();
-	  $( "button#i_team" ).click( function() {
-	    $( "div#i_teamwon" ).slideToggle();
-	  });
-	  
-	  $( "div#h_teamwon" ).slideToggle().hide();
-	  $( "button#h_team" ).click( function() {
-	    $( "div#h_teamwon" ).slideToggle();
-	  });
+
+	$('button[value*=8000]').slideUp();
+	
+	$( document ).ready(function() {
+		
+		$(document).on("click",".team",function(){
+			$("#dep_delete").val($(this).val());
+			$('.teamwon_'+$(this).val()).slideToggle();
+		});
+		
+		
+	 
 /////////////////////////////////////////////////////	  
 	  
 	  if ( $("input#user").val() != 80000001 ) {
@@ -413,7 +372,12 @@
 	 var pk_emp_no = $("input#emp_no").val();
       
       getEmpImgName();
-      $("#empProfile").attr("src", "<%= ctxPath%>/resources/files/" + imgname); 
+      if( imgname != "" ){
+          $("#empProfile").attr("src", "<%= ctxPath%>/resources/files/" + imgname); 
+       }
+       else {
+          $("#empProfile").attr("src", "<%= ctxPath%>/resources/images/mu.png"); 
+       }
 	
 	// 사진변경버튼 클릭시
 	 	       // 사진변경버튼 클릭시
@@ -457,42 +421,17 @@
 		
 		$.ajax({
 			url:"<%= ctxPath%>/addBook/addBook_depInfo_select_ajax.bts",
-			data:{"pk_emp_no" : $("input#pk_emp_no_"+i).val()},
+			data:{"pk_emp_no" : $("#teamwon_"+i).val()},
 			type: "post",
 			dataType: 'json',
 			success : function(json) {
-				
-				var a; // 부서 select
-				var b; // 직급 select
-				
-				switch (json.department) {
-					case "영업": a=100; break;
-					case "마케팅": a=200; break;
-					case "기획": a=300; break;
-					case "총무": a=400; break;
-					case "인사": a=500; break;
-					case "회계": a=600; break;
-					case "--": a=700; break;
-				}
-				
-				switch (json.rank) {
-					case "사원": b=10; break;
-					case "주임": b=20; break;
-					case "대리": b=30; break;
-					case "과장": b=40; break;
-					case "차장": b=50; break;
-					case "부장": b=60; break;
-					case "전무": b=70; break;
-					case "사장": b=80; break;
-					case "--": b=90; break;
-				}
 				
 				$("input#select_user_no").val(json.pk_emp_no)
 				$("input#name").val(json.name)
 				$("input#rank").val(json.rank)
 				$("input#department").val(json.department)
-				$("select#department").val(a).prop("selected",true);
-				$("select#rank").val(b).prop("selected",true);
+				$("select#department").val(json.department_id).prop("selected",true);
+				$("select#rank").val(json.rank_id).prop("selected",true);
 				$("input#email").val(json.email)
 				$("input#phone").val(json.phone)
 				$("input#hp2").val(json.hp2)
@@ -508,23 +447,23 @@
 		});
 	}	
 	
-<%-- 
-	/* 이메일 선택or직접입력 */
-	function selectEmail(ele){ 
-		var $ele = $(ele); 
-		var $email2 = $('input[name=email2]');
+	
+	function create() { // 부서추가
 		
-		// '1'인 경우 직접입력 
-		if($ele.val() == "1"){ 
-			$email2.attr('readonly', false); 
-			$email2.val(''); 
-		} else { 
-			$email2.attr('readonly', true); 
-			$email2.val($ele.val()); 
-		} 
+		const frm = document.depInsertFrm;
+		frm.action = "<%= ctxPath%>/addBook/addBook_dep_insert.bts"
+		frm.method = "POST";
+		frm.submit();
 	}
-	/* 이메일 선택or직접입력 */
---%>	
+	
+	function dep_delete() { // 부서 삭제
+		const frm = document.dep_deleteFrm;
+		frm.action = "<%= ctxPath%>/addBook/addBook_dep_delete.bts"
+		frm.method = "POST";
+		frm.submit();
+	}
+	
+	
 ///////////////////////////////////////////////////////////////
 	/* -------------- 유효성 검사 시작 --------------  */
 
@@ -749,10 +688,12 @@
 			
 		}
 		
+		
 	
 		/* -------------- 유효성 검사 끝 --------------  */			
 			
 /* 조직도  */
+
 
 Highcharts.chart('container', {
     chart: {
@@ -775,8 +716,9 @@ Highcharts.chart('container', {
             }
         }
     },
-
+    
     series: [{
+    	
         type: 'organization',
         name: 'Highsoft',
         keys: ['from', 'to'],
@@ -788,7 +730,6 @@ Highcharts.chart('container', {
             ['exe_director', 'manager_team'],
             ['exe_director', 'personnel_team'],
             ['exe_director', 'accounting_team'],
-           
         ],
         levels: [{
             level: 0,
