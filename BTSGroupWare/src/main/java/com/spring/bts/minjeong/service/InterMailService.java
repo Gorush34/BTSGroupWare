@@ -147,5 +147,8 @@ public interface InterMailService {
 	// 상세부서정보 페이지 사원목록 불러오기 
 	List<EmployeeVO> addBook_depInfo_select();
 
+	// 로그인한 사용자의 안읽은 메일갯수 가져오기 (rec_status=0)	
+	int recMailCount_main(String fk_receiveuser_num);
+
 	
 }

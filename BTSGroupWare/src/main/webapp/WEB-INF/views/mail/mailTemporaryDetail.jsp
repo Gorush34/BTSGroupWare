@@ -426,7 +426,7 @@
 </script>
 
 <div class="col-xs-10" id="mailListWriteCss">
-	<div style="border-bottom: solid 1.5px #e6e6e6;" style="width: 90%;">	
+	<div style="border-bottom: solid 1.5px #e6e6e6;">	
 		<div>
 			<h4 class="page-title" style="color: black;">메일 쓰기</h4>
 		</div>

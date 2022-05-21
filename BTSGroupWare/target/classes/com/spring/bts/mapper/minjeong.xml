@@ -848,5 +848,23 @@
 		order by R.pk_rank_no
 	</select>
 	<!-- 다중메일 발송을 위해 사원 정보 가져오기 끝 -->
+	
+	<!--  로그인한 사용자의 안읽은 메일갯수 가져오기 (rec_status=0) / 메인페이지 -->
+		<select id="recMailCount_main" parameterType="String" resultType="int">
+		select count(*)
+		from 
+		(
+		select row_number() over(order by pk_mail_num desc) AS rno,
+		       pk_mail_num, fk_senduser_num, sendempname, subject
+		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+		       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+		       , importance, importance_star_rec, rec_status
+		from tbl_mail M join tbl_mailread R
+		on m.pk_mail_num = r.fk_mail_num
+		where fk_receiveuser_num = #{fk_receiveuser_num} and fk_senduser_num != #{fk_receiveuser_num} and
+		del_status = 0 and reservation_status = 0 and temp_status = 0 and rec_status = 0	
+		order by pk_mail_num desc
+		) V
+	</select>
 
 </mapper>

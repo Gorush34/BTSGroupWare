@@ -72,7 +72,12 @@
 		      		 alert("받는 사람을 입력해주세요.");
 		      		 return false;
 		      	 }
-		      	 
+				
+		      	 else {
+					if(recemail)
+				 }
+		      	
+		      	
 		      	 // 메일제목 유효성 검사
 		      	 var subject = $("input#subject").val().trim();
 		      	 if(subject == "") {
@@ -437,7 +442,7 @@
 </script>
 
 <div class="col-xs-10" id="mailListWriteCss">
-	<div style="border-bottom: solid 1.5px #e6e6e6;" style="width: 90%;">	
+	<div style="border-bottom: solid 1.5px #e6e6e6;">	
 		<div>
 			<h4 class="page-title" style="color: black;">메일 쓰기</h4>
 		</div>
@@ -476,7 +481,7 @@
 			<tr>
 				<th width="14%">받는 사람</th>
 				<td width="86%" data-toggle="tooltip" data-placement="top" title="">
-					<input type="text" id="cnt" name="cnt" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
+					<input type="hidden" id="cnt" name="cnt" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
 					<input type="text" id="recemail" name="recemail" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
 					
 					<%-- hidden 타입으로 데이터값 보내기 --%>
@@ -748,9 +753,15 @@
       </table>
    </div>
    
-   <div id="tbl_two" style="float:left; width:6%; margin-top:10%; margin-left: 5px;">
+   <div id="tbl_two" style="float:left; width:6%; margin-top:10%;">
       <table>
-         <tr><td><button class="form-control" style="height:40px; margin-bottom: 10px;" id="set_mid"><i class="fa fa-chevron-right" aria-hidden="true"></i></button></td></tr>
+         <tr>
+         	<td>
+	         	<button class="form-control" style="height:60px; margin-bottom: 10px;" id="set_mid">
+		         	<i class="fa fa-chevron-right" aria-hidden="true"></i>
+	         	</button>
+         	</td>
+         </tr>
       </table>
    </div>
    

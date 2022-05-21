@@ -30,12 +30,12 @@ public class MailVO {
 
 	// 메일 읽음상태 update 하기
 	private String fk_mail_num;
-	private String rec_status;		// NUMBER(2) 			받는사람 전용 중요보관함(★) 저장여부 	(0:저장 X , 1:저장O) 
-	private String rec_date;		// NUMBER(2) 			받는사람 전용 중요보관함(★) 저장여부 	(0:저장 X , 1:저장O) 
-	private String send_status;		// NUMBER(2) 			받는사람 전용 중요보관함(★) 저장여부 	(0:저장 X , 1:저장O) 
-	private String send_date;		// NUMBER(2) 			받는사람 전용 중요보관함(★) 저장여부 	(0:저장 X , 1:저장O) 
-	private String imp_status;		// NUMBER(2) 			받는사람 전용 중요보관함(★) 저장여부 	(0:저장 X , 1:저장O) 
-	private String imp_date;		// NUMBER(2) 			받는사람 전용 중요보관함(★) 저장여부 	(0:저장 X , 1:저장O) 
+	private String rec_status;		// NUMBER(2) 		0:안읽음 / 1:읽음	
+	private String rec_date;		// NUMBER(2) 			
+	private String send_status;		// NUMBER(2) 			
+	private String send_date;		// NUMBER(2) 			
+	private String imp_status;		// NUMBER(2) 			
+	private String imp_date;		// NUMBER(2) 			 
 	
 
 	// 메일 상세내용 보기

@@ -460,6 +460,13 @@ public class MailService implements InterMailService {
 		return empList;
 	}
 
+	// 로그인한 사용자의 안읽은 메일갯수 가져오기 (rec_status=0)	
+	@Override
+	public int recMailCount_main(String fk_receiveuser_num) {
+		int n = dao.recMailCount_main(fk_receiveuser_num);
+		return n;
+	}
+
 
 
 	
