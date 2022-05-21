@@ -974,21 +974,19 @@ public class EdmsController {
 		HttpSession session = request.getSession();
 		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
 		
-		if( loginuser.getPk_emp_no() != apprvo.getFk_emp_no() ) {
-	//	if( !String.valueOf(loginuser.getPk_emp_no()).equals(String.valueOf(apprvo.getFk_emp_no())) ) {
-		/* if( loginuser.getPk_emp_no() != apprvo.getFk_emp_no() ) { */
+		// 자신의 글을 수정하는 경우 가져온 1개글을 글수정할 폼이 있는 view 단으로 보내준다.
+		if( loginuser.getPk_emp_no() == apprvo.getFk_emp_no() ) {
+			mav.addObject("apprvo", apprvo);
+			mav.setViewName("edit.edms");
+		}
+		else {
+
 			String message = "다른 사용자의 글은 수정이 불가합니다.";
 			String loc = "javascript:history.back()";
 			
 			mav.addObject("message", message);
 			mav.addObject("loc", loc);
 			mav.setViewName("msg");
-		}
-		else {
-			// 자신의 글을 수정할 경우
-			// 가져온 1개글을 글수정할 폼이 있는 view 단으로 보내준다.
-			mav.addObject("apprvo", apprvo);
-			mav.setViewName("edit.edms");
 		}
 		
 		return mav;
@@ -1064,7 +1062,7 @@ public class EdmsController {
 	//	System.out.println("loginuser_empno > " + loginuser_empno);
 		
 		// 로그인유저의 사번과 글쓴 사람의 사번이 같은 경우
-		if( loginuser_empno == int_fk_emp_no1 ) {
+		if( loginuser_empno == int_fk_emp_no1 || loginuser.getPk_emp_no() == 80000001 ) {
 			
 			apprvo = service.getViewWithNoAddCount(paraMap);
 			// 위에서 글을 가져온 다음에 한 번 더 가져오는 이유?
@@ -1099,8 +1097,15 @@ public class EdmsController {
 			
 			if(n==1) {
 				mav.addObject("message", "글 삭제 성공!!");
-				mav.addObject("loc", request.getContextPath()+"/edms/mydoc/waitlist.bts");
-				// 글 삭제할 수 있는 건 본인일 때+결재 전이니까 대기문서 목록으로 보내주자. 어디로든 상관은 없음.
+				
+				// 작성자 본인인 경우 결재 전이므로 대기문서 목록으로 보낸다.
+				if( loginuser.getPk_emp_no() == apprvo.getFk_emp_no() ) {
+					mav.addObject("loc", request.getContextPath()+"/edms/mydoc/waitlist.bts");
+				}
+				// 관리자인 경우 전체목록으로 보낸다.
+				if( loginuser.getPk_emp_no() == apprvo.getFk_emp_no() ) {
+					mav.addObject("loc", request.getContextPath()+"/edms/list.bts");
+				}
 			}
 			else {
 				mav.addObject("message", "글 삭제 실패!!");
@@ -1292,7 +1297,7 @@ public class EdmsController {
 	}
 */	
 	
-	// ==== #163. 첨부파일 다운로드 받기 ==== //
+	// ==== 첨부파일 다운로드 받기 ==== //
 	@RequestMapping(value="/edms/download.bts")
 	public void requiredLogin_download(HttpServletRequest request, HttpServletResponse response) {
 		
