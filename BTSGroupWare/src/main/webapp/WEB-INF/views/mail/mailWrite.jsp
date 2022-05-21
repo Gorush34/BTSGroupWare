@@ -73,6 +73,12 @@
 		      		 return false;
 		      	 }
 		      	 
+				 // 받는사람 직접 입력 시 발송되도록 하기 (주소록을 거치지 않음)
+		      	 else {
+						mid_cnt = recemail.split(',').length;
+						cnt = $("input#cnt").val(mid_cnt);
+		      	 }		      	
+		      	
 		      	 // 메일제목 유효성 검사
 		      	 var subject = $("input#subject").val().trim();
 		      	 if(subject == "") {
@@ -130,7 +136,8 @@
 		      	}
 		 
 		      	var frm = document.mailWriteFrm;
-		      	frm.importanceVal.value = importanceVal;		      	
+		      	frm.importanceVal.value = importanceVal;	
+		      	frm.cnt = cnt;
 		      	frm.method = "POST";
 		      	frm.action = "<%= ctxPath%>/mail/mailWriteEnd.bts";
 		        frm.submit();
@@ -145,6 +152,7 @@
 					var sendResSetTime = $("span#reservationTime").text();
 					var frm = document.mailWriteFrm;
 					frm.importanceVal.value = importanceVal;
+			      	frm.cnt = cnt;
 					frm.reservation_date.value = sendResSetTime;
 					frm.method = "POST";
 					frm.action = "<%= ctxPath%>/mail/mailWriteReservationEnd.bts";
@@ -157,6 +165,7 @@
 				//	console.log(frm.action);	// http://localhost:9090/bts/mail/mailWriteReservationEnd.bts
 					
 				}
+		   	
 				else {
 					return false;
 				}
@@ -180,7 +189,12 @@
 		      		 alert("받는 사람을 입력해주세요.");
 		      		 return false;
 		      	 }
-		      	 
+				// 받는사람 직접 입력 시 발송되도록 하기 (주소록을 거치지 않음)
+		      	 else {
+						mid_cnt = recemail.split(',').length;
+						cnt = $("input#cnt").val(mid_cnt);
+		      	 }	
+		 
 		      	 // 메일제목 유효성 검사
 		      	 var subject = $("input#subject").val().trim();
 		      	 if(subject == "") {
@@ -233,6 +247,7 @@
 
 				const frm = document.mailWriteFrm;
 				frm.importanceVal.value = importanceVal;
+		      	frm.cnt = cnt;
 				frm.method = "POST";
 				frm.action = "<%= ctxPath%>/mail/mailTemporaryEnd.bts"
 				frm.submit();
@@ -437,7 +452,7 @@
 </script>
 
 <div class="col-xs-10" id="mailListWriteCss">
-	<div style="border-bottom: solid 1.5px #e6e6e6;" style="width: 90%;">	
+	<div style="border-bottom: solid 1.5px #e6e6e6;">	
 		<div>
 			<h4 class="page-title" style="color: black;">메일 쓰기</h4>
 		</div>
@@ -476,8 +491,8 @@
 			<tr>
 				<th width="14%">받는 사람</th>
 				<td width="86%" data-toggle="tooltip" data-placement="top" title="">
-					<input type="hidden" id="cnt" name="cnt" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
 					<input type="text" id="recemail" name="recemail" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
+					<input type="hidden" id="cnt" name="cnt" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
 					
 					<%-- hidden 타입으로 데이터값 보내기 --%>
 			     	<input type="hidden" id="sendemail" name="sendemail" value="${sessionScope.loginuser.uq_email}" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " /> 
@@ -538,8 +553,8 @@
 			발송예약
 			</button>
 			<span id="reservationTime" style="margin-left: 20px;"></span>
-		</li>	
-	</ul>	
+		</li>
+	</ul>
 </div>
 
 <%-- 발송예약 모달 --%>
@@ -748,9 +763,15 @@
       </table>
    </div>
    
-   <div id="tbl_two" style="float:left; width:6%; margin-top:10%; margin-left: 5px;">
+   <div id="tbl_two" style="float:left; width:7%; margin-top:13%;">
       <table>
-         <tr><td><button class="form-control" style="height:40px; margin-bottom: 10px;" id="set_mid"><i class="fa fa-chevron-right" aria-hidden="true"></i></button></td></tr>
+         <tr>
+         	<td>
+	         	<button class="form-control" style="height:45px; margin-left:14px; width: 40px;" id="set_mid">
+		         	<i class="fa fa-chevron-right" aria-hidden="true"></i>
+	         	</button>
+         	</td>
+         </tr>
       </table>
    </div>
    

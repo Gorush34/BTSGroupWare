@@ -58,6 +58,14 @@ public interface InterAddBookDAO {
 	public List<EmployeeVO> sideinfo_addBook();
 
 
+	// 부서리스트 가져오기
+	public List<Map<String, String>> addBook_depList_select();
+
+
+	// 관리자에서 부서 추가하기
+	public int addBook_dep_insert(Map<String, String> paraMap);
+
+
 
 	
 }

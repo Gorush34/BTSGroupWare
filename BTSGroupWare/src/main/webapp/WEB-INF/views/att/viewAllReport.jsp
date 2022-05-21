@@ -23,6 +23,18 @@
 	
 	$(document).ready(function() {
 		
+		// 검색타입 및 검색어 유지시키기
+		if(${searchWord != null}) {
+			// 넘어온 paraMap 이 null 이 아닐 때 (값이 존재할 때)
+			$("select#searchType").val("${searchType}");
+			$("input#searchWord").val("${searchWord}");
+		}
+		
+		if(${searchWord != null}) {
+			$("select#searchType").val("subject");
+			$("input#searchWord").val("");
+		}
+		
 		$("span.view").click(function(){
 			
 			var pk_att_num = $(this).parent().parent().find("span#num").text();
@@ -47,6 +59,14 @@
 		location.href="<%= ctxPath%>/att/viewReport.bts?pk_att_num="+pk_att_num; 
 		
 	} // end of function viewReport(pk_att_num)-----------------------
+	
+	// 검색 버튼 클릭시 동작하는 함수
+	function goSearch() {
+		const frm = document.allAttListSelectFrm;
+		frm.method = "GET";
+		frm.action = "<%= ctxPath%>/att/viewAllReport.bts";
+		frm.submit();	
+	}// end of function goMailSearch(){}-------------------------
 	
 </script>
 
@@ -143,13 +163,26 @@
 				  </tbody>
 				  
 			</table>
-			
+			<div style="width: 90%;" >
+			    <form name="allAttListSelectFrm" style="display: inline;">
+					<select class="form-control" id="searchType" name="searchType" style="width:100px;">
+						<option value="ko_depname" selected="selected">부서</option>
+						<option value="fk_emp_no">상신자 사번</option>
+						<option value="emp_name">상신자</option>
+					</select>
+					<input id="searchWord" name="searchWord" type="text" class="form-control" style="width:250px;" placeholder="내용을 입력하세요.">
+					<button type="button" style="margin-bottom: 5px" id="btnSearch" class="btn btn-secondary" onclick="goSearch();">
+						<i class="fa fa-search" aria-hidden="true" style="font-size:15px;"></i>
+					</button>
+				</form>		
+		    </div>
 			<%-- === #122. 페이지바 보여주기 === --%>
 			<c:if test="${not empty requestScope.myAttList }">
 		    <div align="center" style="border: solid 0px gray; width: 70%; margin: 20px auto;">
 			  ${requestScope.pageBar}
 		    </div>
 		    </c:if>
+		    
         </div>
     </div>
     <%-- 공가/경조신청내역 끝 --%>

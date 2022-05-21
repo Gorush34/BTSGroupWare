@@ -175,7 +175,7 @@
 
 <%-- 임시 보관함 목록 보여주기 --%>	
 <div class="col-xs-10" style="width: 90%; margin: 10px; padding-top: 20px;">
-	<div style="border-bottom: solid 1.5px #e6e6e6;" style="width: 90%;" >		
+	<div>		
 		<div>
 			<h4 style="color: black;">임시보관함</h4>
 		</div>
@@ -212,7 +212,7 @@
 				</div>
 				
 				<div class="table-responsive" style="color: black;">
-					<table>
+					<table class="table">
 						<thead>
 							<tr>
 								<th style="width: 3%;">

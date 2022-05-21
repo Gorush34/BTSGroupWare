@@ -5,7 +5,7 @@ body {font-family: font-family: 'Noto Sans KR', sans-serif; }
 #mycontainer   { padding:20px; }
 #myheader      { display: flex; min-height:100px; position: relative; top: 60px; }
 #mycontent      { min-height:1200px; top:60px; background-color:#FFF;
-                  float:right; width:80%; padding-left:20%;}
+                  float:right; width:80%; padding-right:10%;}
 
 #mysideinfo      { min-height:1200px; position: fixed; top:60px; padding-top: 40px; background-color:#FFF;
                   float:left; width:250px; }
@@ -74,4 +74,11 @@ span#isExistIdCheck {
 	border-radius: 5%;
 }
 
+div#tbl_regEmp {
+	padding-left: 20%;
+}
+#att_searchType, #searchType, 
+ #searchWord, #btnSearch {
+ 	 display: inline;
+ }	
 /* 사원 스타일 끝 */

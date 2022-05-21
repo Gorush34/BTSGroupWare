@@ -136,3 +136,12 @@ table#vac_dms > thead > tr > th, table#vac_dms > tbody > tr > td {
 }
 
 /*	reportVacation.jsp 서식 끝  */
+
+/* viewAllReport.jsp 서식 시작 */
+
+ #att_searchType, #searchType, 
+ #searchWord, #btnSearch {
+ 	 display: inline;
+ }	
+ 
+ /* viewAllReport.jsp 서식 끝 */

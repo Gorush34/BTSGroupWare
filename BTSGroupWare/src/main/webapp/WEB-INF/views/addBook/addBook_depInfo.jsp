@@ -113,6 +113,7 @@
   <!-- 부서원 목록  -->
   <div class="tab-pane fade" id="depInfo" style="">
 	  <table style="float:left; text-align:center; margin-top:6%;">
+	  <!--  
 			<tr style="">
 				<td><button class="btn btn-default" id="y_team" style="width:200px; border: solid darkgray 2px;">영업팀</button></td>
 			</tr>
@@ -203,10 +204,129 @@
 			</tr>
 			</c:if>
 	   		</c:forEach>
+	   -->	
+	   		<!-- 실험 -->
+	   		<!-- 실험 -->
+	   		
+	   			<tr>
+					<td>
+					<!-- 부서 추가 모달창 띄우기 -->
+					<c:choose>
+					<c:when test="${sessionScope.loginuser.pk_emp_no eq 80000001}">
+							<button class="btn btn-default" data-toggle="modal" data-target="#viewModal" style="">+부서추가</button>
+					</c:when>
+					</c:choose>
+					<!-- 부서 추가 모달창 띄우기 -->
+					</td>
+				<tr>
+		   		<c:if test="${not empty requestScope.depList}">
+		   		<c:forEach var="dep" items="${requestScope.depList}" begin="1" varStatus="i">
+		   		<tr style="">
+					<td><input type="hidden" id="" value="${emp.pk_emp_no}"/><button class="btn btn-default team" id="team_${i.count}" value="${dep.pk_dep_no}" style="width:200px; border: solid darkgray 2px;">${dep.ko_depname}</button></td>
+				</tr>
+				
+					<c:if test="${not empty requestScope.empList}">
+			   		<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
+			   		<c:if test="${dep.pk_dep_no eq emp.fk_department_id}">
+						<tr>
+							<td>
+								<input type="hidden" id="" value="${emp.pk_emp_no}"/><button class="btn btn-default teamwon" id="teamwon_${i.count}" value="${emp.pk_emp_no}" onclick="teamwonInfo(${i.count})" >${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
+							</td>
+						</tr>
+					</c:if>
+					</c:forEach>
+					</c:if>
+			</c:forEach>
+			</c:if>
+			
+		
+		
+		
+		<!-- 부서 추가 모달창 시작 -->	
+		<div class="modal fade" data-backdrop="static" id="viewModal">
+		<div class="modal-dialog">
+		<div class="modal-content">
+		<div class="modal-header">
+		<h4 class="modal-title" id="exampleModalLabel">부서 추가</h4>
+		</div>
+		
+		<div class="modal-body">
+		<form name="depInsertFrm" >
+			<input type="hidden" class="form-control" id="pk_addbook_no" name="pk_addbook_no">
+			
+			<div class="form-group">
+				<label for="recipient-name" class="control-label"><strong>부서번호</strong></label>
+				<input type="text" class="form-control requiredInfo" id="dep_no" name="dep_no" maxlength="8" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+			</div>
+			
+			<div class="form-group">
+			<label for="recipient-name" class="control-label"><strong>부서명(한글)</strong></label>
+			<input type="text" class="form-control" id="ko_dep_name" name="ko_dep_name">
+			</div>
+			
+			<div class="form-group">
+			<label for="recipient-name" class="control-label"><strong>부서명(영어)</strong></label>
+			<input type="text" class="form-control" id="en_dep_name" name="en_dep_name">
+			</div>
+			
+			<div class="form-group">
+			<label for="recipient-name" class="control-label"><strong>부서장번호</strong></label>
+			<input type="text" class="form-control" id="dep_manager_no" name="dep_manager_no" maxlength="8" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+			</div>
+		</form>
+		</div>
+		
+		<div class="modal-footer">
+		<button type="button" class="btn btn-primary" id="insert_customer_btn_1" onclick="create()">추가</button>
+		<button type="button" class="btn btn-success" data-dismiss="modal">닫기</button>
+		</div>
+		</div>
+		</div>
+		</div>
+		<!-- 부서 추가 모달창 끝 -->
+			
+	
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		<!-- ---------------------------실험----------------------------- -->	
+		<!--
+		<c:if test="${not empty requestScope.depList}">
+	   	<c:forEach var="dep" items="${requestScope.depList}" begin="1" varStatus="i">	
+			<ul class="scroll" style="list-style: none; padding: 0  0  3px 0 ; width:227px;  margin-bottom: 40px; ">
+		     	<li class="borderline">
+			        <div class="accord" data-toggle="collapse" data-target="#${dep.ko_depname}"><a style="cursor: pointer; ">${dep.ko_depname}</a></div>
+				    <div id="${dep.ko_depname}" class="collapse">
+				       		<c:if test="${not empty requestScope.empList}">
+					   		<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
+					   		<c:if test="${dep.pk_dep_no eq emp.fk_department_id}">
+				            <ul class="list" style="list-style: none; ">
+				               <li>
+				                  <a href="#">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</a>
+				               </li>
+				            </ul>
+				            </c:if>
+				            </c:forEach>
+				            </c:if>
+			         </div>
+		       </li>
+	       </ul>	
+	   </c:forEach>
+	   </c:if>
+	   -->
+							
   	</table>
-  	
-  	
-  	
   	
 	 <div id="telAdd_main_tbl" style="text-align:center; padding-left: 24%;">
 		<form name="updateImgFrm" id="updateImgFrm" action="<%= ctxPath%>/emp/updateImg.bts" method="post" enctype="multipart/form-data" role="form">
@@ -367,37 +487,14 @@
 
 	var imgname = "";
 
-	$( document ).ready( function() {
+	$('.teamwon').slideUp();
 	
-	  $( "div#y_teamwon" ).slideToggle().hide();
-	  $( "button#y_team" ).click( function() {
-	      $( "div#y_teamwon" ).slideToggle();
-	    });
-		  
-	  $( "div#m_teamwon" ).slideToggle().hide();
-	  $( "button#m_team" ).click( function() {
-	    $( "div#m_teamwon" ).slideToggle();
-	  });
-	  
-	  $( "div#g_teamwon" ).slideToggle().hide();
-	  $( "button#g_team" ).click( function() {
-	    $( "div#g_teamwon" ).slideToggle();
-	  });
-	  
-	  $( "div#c_teamwon" ).slideToggle().hide();
-	  $( "button#c_team" ).click( function() {
-	    $( "div#c_teamwon" ).slideToggle();
-	  });
-	  
-	  $( "div#i_teamwon" ).slideToggle().hide();
-	  $( "button#i_team" ).click( function() {
-	    $( "div#i_teamwon" ).slideToggle();
-	  });
-	  
-	  $( "div#h_teamwon" ).slideToggle().hide();
-	  $( "button#h_team" ).click( function() {
-	    $( "div#h_teamwon" ).slideToggle();
-	  });
+	$( document ).ready(function() {
+		
+		$(document).on("click",".team",function(){
+			
+		});
+	 
 /////////////////////////////////////////////////////	  
 	  
 	  if ( $("input#user").val() != 80000001 ) {
@@ -413,7 +510,12 @@
 	 var pk_emp_no = $("input#emp_no").val();
       
       getEmpImgName();
-      $("#empProfile").attr("src", "<%= ctxPath%>/resources/files/" + imgname); 
+      if( imgname != "" ){
+          $("#empProfile").attr("src", "<%= ctxPath%>/resources/files/" + imgname); 
+       }
+       else {
+          $("#empProfile").attr("src", "<%= ctxPath%>/resources/images/mu.png"); 
+       }
 	
 	// 사진변경버튼 클릭시
 	 	       // 사진변경버튼 클릭시
@@ -457,11 +559,12 @@
 		
 		$.ajax({
 			url:"<%= ctxPath%>/addBook/addBook_depInfo_select_ajax.bts",
-			data:{"pk_emp_no" : $("input#pk_emp_no_"+i).val()},
+			data:{"pk_emp_no" : $("#teamwon_"+i).val()},
 			type: "post",
 			dataType: 'json',
 			success : function(json) {
 				
+		  
 				var a; // 부서 select
 				var b; // 직급 select
 				
@@ -508,23 +611,17 @@
 		});
 	}	
 	
-<%-- 
-	/* 이메일 선택or직접입력 */
-	function selectEmail(ele){ 
-		var $ele = $(ele); 
-		var $email2 = $('input[name=email2]');
+	
+	function create() {
 		
-		// '1'인 경우 직접입력 
-		if($ele.val() == "1"){ 
-			$email2.attr('readonly', false); 
-			$email2.val(''); 
-		} else { 
-			$email2.attr('readonly', true); 
-			$email2.val($ele.val()); 
-		} 
+		const frm = document.depInsertFrm;
+		frm.action = "<%= ctxPath%>/addBook/addBook_dep_insert.bts"
+		frm.method = "POST";
+		frm.submit();
+		
 	}
-	/* 이메일 선택or직접입력 */
---%>	
+	
+	
 ///////////////////////////////////////////////////////////////
 	/* -------------- 유효성 검사 시작 --------------  */
 
@@ -748,6 +845,7 @@
 			}
 			
 		}
+		
 		
 	
 		/* -------------- 유효성 검사 끝 --------------  */			

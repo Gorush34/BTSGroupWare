@@ -202,8 +202,8 @@ public class AttendanceDAO implements InterAttendanceDAO {
 
 	// 관리자페이지 - 총 연차신청서 개수 가져오기
 	@Override
-	public int getTotalCountVacReport_all(String fk_emp_no) {
-		int totalCount = sqlsession.selectOne("hwanmo.getTotalCountVacReport_all", fk_emp_no);
+	public int getTotalCountVacReport_all(Map<String, String> paraMap) {
+		int totalCount = sqlsession.selectOne("hwanmo.getTotalCountVacReport_all", paraMap);
 		return totalCount;
 	}
 
