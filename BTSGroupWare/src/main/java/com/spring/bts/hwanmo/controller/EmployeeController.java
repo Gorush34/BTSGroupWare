@@ -671,6 +671,10 @@ public class EmployeeController {
 		String img_name = request.getParameter("img_name");								
 		// String img_path = request.getParameter("img_path");												
 		
+		String emp_pwd = Sha256.encrypt(request.getParameter("emp_pwd"));
+		empvo.setEmp_pwd(emp_pwd);
+		
+		
 		String com_tel = "";
 		if( num2 == "" && num3 == "") {
 			com_tel = "";

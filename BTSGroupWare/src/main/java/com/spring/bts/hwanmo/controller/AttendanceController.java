@@ -879,7 +879,6 @@ public class AttendanceController {
 		HttpSession session = request.getSession();
 		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
 		String fk_emp_no = String.valueOf(loginuser.getPk_emp_no());
-		
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("fk_emp_no", fk_emp_no);
 		
@@ -891,7 +890,7 @@ public class AttendanceController {
 		
 		// System.out.println(" 부서장이니? : " + checkManager );
 		
-		if(checkManager == 0) {
+		if(checkManager == 0 && !"80000001".equals(fk_emp_no) ) {
 			// 부서장이 아니라면
 			message = "접근권한이 없습니다.";
 			loc =  request.getContextPath()+"/att/myAtt.bts"; 
