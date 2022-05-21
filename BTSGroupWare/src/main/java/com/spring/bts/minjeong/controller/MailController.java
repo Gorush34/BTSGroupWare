@@ -3104,7 +3104,7 @@ public class MailController {
 
 	
 
-	// === #108. 검색어 입력 시 자동글 완성하기 3 ===
+	// === 검색어 입력 시 자동글 완성하기 3 ===
 	@ResponseBody
 	@RequestMapping(value = "/mail/wordSearchShow.bts", method = {
 			RequestMethod.GET }, produces = "text/plain;charset=UTF-8") // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다.

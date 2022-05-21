@@ -968,11 +968,6 @@ from
 where V.seq = '2'
 
 
-delete from tbl_employees
-where pk_emp_no = '80000110'
-
-commit;
-
 select *
 from tbl_employees
 

@@ -62,7 +62,7 @@
 		});
 
 		
-		<%-- === #107. 검색어 입력 시 자동글 완성하기 2 === --%>
+		<%-- === 검색어 입력 시 자동글 완성하기 2 === --%>
 		$("div#displayList").hide();
 		
 		$("input#searchWord").keyup(function(){
@@ -84,7 +84,7 @@
 					success:function(json){
 						// json => [{"word":"Korea VS Japan 라이벌 축구대결"},{"word":"JSP 가 뭔가요?"},{"word":"프로그램은 JAVA 가 쉬운가요?"},{"word":"java가 재미 있나요?"},{"word":"MJ 글쓰기 첫번째 연습"}]
 						
-						<%-- #112. 검색어 입력시 자동글 완성하기 7 --%>
+						<%-- 검색어 입력시 자동글 완성하기 7 --%>
 						if(json.length > 0) {
 							// 검색된 데이터가 있는 경우임
 							let html = "";
@@ -131,12 +131,12 @@
 		});// end of $("input#searchWord").keyup(function(){}---------------------------
 		
 				
-		<%-- #113. 검색어 입력시 자동글 완성하기 8 --%>
+		<%-- 검색어 입력시 자동글 완성하기 8 --%>
 		$(document).on("click", "span.result", function(){
 			const word = $(this).text();
 			$("input#searchWord").val(word);	// 텍스트 박스에 검색된 결과의 문자열을 입력해준다.
 			$("div#displayList").hide();
-			gomailSearch();							// 자동글완성 기능 후 검색 함수를 호출한다.
+			gomailSearch();						// 자동글완성 기능 후 검색 함수를 호출한다.
 		});
 		
 	}); // end of $(document).ready(function(){})----------------------------------

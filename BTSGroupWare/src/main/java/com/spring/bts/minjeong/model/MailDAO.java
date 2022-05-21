@@ -386,7 +386,7 @@ public class MailDAO implements InterMailDAO {
 		return n;
 	}
 
-	// === #108. 검색어 입력 시 자동글 완성하기 5 ===
+	// === 검색어 입력 시 자동글 완성하기 5 ===
 	@Override
 	public List<String> wordSearchShow(Map<String, String> paraMap) {
 		List<String> wordList = sqlsession.selectList("minjeong.wordSearchShow", paraMap);

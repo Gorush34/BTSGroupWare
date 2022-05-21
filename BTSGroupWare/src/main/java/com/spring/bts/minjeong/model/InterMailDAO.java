@@ -160,7 +160,7 @@ public interface InterMailDAO {
 	// 로그인한 사용자의 안읽은 메일갯수 가져오기 (rec_status=0)	
 	int recMailCount_main(String fk_receiveuser_num);
 
-	// === #108. 검색어 입력 시 자동글 완성하기 4 ===
+	// === 검색어 입력 시 자동글 완성하기 4 ===
 	List<String> wordSearchShow(Map<String, String> paraMap);
 
 
