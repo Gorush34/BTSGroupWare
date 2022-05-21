@@ -574,8 +574,6 @@ public class AddBookController {
 		   paraMap.put("manager", manager);
 		 
 		   
-		   
-		   
 		   int n = service.addBook_dep_insert(paraMap);
 			
 			 String message = "";
@@ -649,6 +647,28 @@ public class AddBookController {
 		} // public String emailDuplicateCheck(HttpServletRequest request) 
 	
 	
+		// 관리자에서 부서 삭제하기
+		@RequestMapping(value = "/addBook/addBook_dep_delete.bts", method = {RequestMethod.POST})
+		public ModelAndView addBook_dep_delete(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+			
+			int dep_delete = Integer.parseInt(request.getParameter("dep_delete"));
+			
+			
+			int n = service.addBook_dep_delete(dep_delete);
+			
+			
+			if(n == 0) {
+				mav.addObject("message", "삭제할 수 없습니다.");
+			} else {
+				mav.addObject("message", "삭제되었습니다.");
+			}
+	 	  
+			mav.addObject("loc", request.getContextPath()+"/addBook/addBook_depInfo.bts");
+			mav.setViewName("msg");
+		     
+			return mav;
+		}
+		
 	
 	
 /*	
