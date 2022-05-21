@@ -934,7 +934,7 @@ td.mail_subject:hover {
 	// 메인에서 전자결재 대기 문서 개수 띄워주기 시작 //
 	$(function() {
 		$.ajax({
-			url:"${contextPath}/edms/getWaitingSignListCount.bts",
+			url:"<%= ctxPath%>/edms/getWaitingSignListCount.bts",
 			type:"post",
 			dataType:"json",
 			success:function(data){
@@ -944,7 +944,7 @@ td.mail_subject:hover {
 				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 			}
 		});
-		});
+	});
 	// 메인에서 전자결재 대기 문서 개수 띄워주기 끝 //
 
 </script>
