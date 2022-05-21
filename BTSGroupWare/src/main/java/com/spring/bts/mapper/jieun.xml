@@ -209,20 +209,18 @@
 			and lower(subject) like '%'|| lower(#{searchSubject}) || '%' 
 			<choose> 
 				<when test="searchJoinuser !=''"> <!-- 상세일정에서 일정명+ 공유자명 검색했을 때 -->
-					and fk_emp_no = #{fk_emp_no}
-					and lower(joinuser) like '%'|| lower(#{searchJoinuser}) || '%'
+					and (lower(joinuser) like '%'|| lower(#{searchJoinuser}) || '%' and fk_emp_no = #{fk_emp_no})
 				</when> 
-				<when test="searchJoinuser !=''"> <!-- 상세일정에서 일정명+ 일자 검색했을 때 -->
+				<when test="startdate !='' and enddate !=''"> <!-- 상세일정에서 일정명+ 일자 검색했을 때 -->
 					and ( to_char(startdate,'YYYY-MM-DD') between #{startdate} and #{enddate} )
 					and ( to_char(enddate,'YYYY-MM-DD') between #{startdate} and #{enddate} )
 				</when> 
 			</choose>
 		</if>
 		<if test="searchJoinuser !=''"> <!-- 상세일정에서 공유자만 검색했을 때 -->
-			and fk_emp_no = #{fk_emp_no}
-			and lower(joinuser) like '%'|| lower(#{searchJoinuser}) || '%' 
+			and (lower(joinuser) like '%'|| lower(#{searchJoinuser}) || '%' and fk_emp_no = #{fk_emp_no})
 			<choose> 
-				<when test="searchJoinuser !=''"> <!-- 상세일정에서 공유자+ 일자 검색했을 때 -->
+				<when test="startdate !='' and enddate !=''"> <!-- 상세일정에서 공유자+ 일자 검색했을 때 -->
 					and ( to_char(startdate,'YYYY-MM-DD') between #{startdate} and #{enddate} )
 					and ( to_char(enddate,'YYYY-MM-DD') between #{startdate} and #{enddate} )
 				</when> 
@@ -264,7 +262,7 @@
 			
 			where 1=1
 			
-				<if test="searchType !='' and searchWord !='' "> <!-- 일반 검색 -->
+			<if test="searchType !='' and searchWord !='' "> <!-- 일반 검색 -->
 				and lower(S.subject) like '%'|| lower(#{searchWord}) || '%' 
 				OR (lower(S.joinuser) like '%'|| lower(#{searchWord}) || '%' and S.fk_emp_no = #{fk_emp_no})
 				OR lower(S.content) like '%'|| lower(#{searchWord}) || '%' 
@@ -274,20 +272,18 @@
 				and lower(S.subject) like '%'|| lower(#{searchSubject}) || '%' 
 				<choose> 
 					<when test="searchJoinuser !=''"> <!-- 상세일정에서 일정명+ 공유자명 검색했을 때 -->
-						and S.fk_emp_no = #{fk_emp_no}
-						and lower(S.joinuser) like '%'|| lower(#{searchJoinuser}) || '%'
+						and (lower(S.joinuser) like '%'|| lower(#{searchJoinuser}) || '%' and S.fk_emp_no = #{fk_emp_no})
 					</when> 
-					<when test="searchJoinuser !=''"> <!-- 상세일정에서 일정명+ 일자 검색했을 때 -->
+					<when test="startdate !='' and enddate !=''"> <!-- 상세일정에서 일정명+ 일자 검색했을 때 -->
 						and ( to_char(S.startdate,'YYYY-MM-DD') between #{startdate} and #{enddate} )
 						and ( to_char(S.enddate,'YYYY-MM-DD') between #{startdate} and #{enddate} )
 					</when> 
 				</choose>
 			</if>
 			<if test="searchJoinuser !=''"> <!-- 상세일정에서 공유자만 검색했을 때 -->
-				and S.fk_emp_no = #{fk_emp_no}
-				and lower(S.joinuser) like '%'|| lower(#{searchJoinuser}) || '%' 
+				and (lower(S.joinuser) like '%'|| lower(#{searchJoinuser}) || '%' and S.fk_emp_no = #{fk_emp_no})
 				<choose> 
-					<when test="searchJoinuser !=''"> <!-- 상세일정에서 공유자+ 일자 검색했을 때 -->
+					<when test="startdate !='' and enddate !=''"> <!-- 상세일정에서 공유자+ 일자 검색했을 때 -->
 						and ( to_char(S.startdate,'YYYY-MM-DD') between #{startdate} and #{enddate} )
 						and ( to_char(S.enddate,'YYYY-MM-DD') between #{startdate} and #{enddate} )
 					</when> 
