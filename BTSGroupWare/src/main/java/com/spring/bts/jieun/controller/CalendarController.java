@@ -721,8 +721,11 @@ public class CalendarController {
 		String pk_emp_no = String.valueOf(loginuser.getPk_emp_no());
 		String emp_name = loginuser.getEmp_name();
 		// System.out.println("pk_emp_no" +pk_emp_no);
+		//System.out.println("emp_name" +emp_name);
 		
 		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("pk_emp_no", pk_emp_no);
+		paraMap.put("emp_name", emp_name);
 		int n = service.scheduleCount(paraMap);
 		// System.out.println(n);
 		
