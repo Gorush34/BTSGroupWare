@@ -58,6 +58,12 @@ public interface InterAddBookService {
 
 	// 관리자에서 부서 삭제하기
 	int addBook_dep_delete(int dep_delete);
+
+	// 부서리스트 가져오기(주소록 --)
+	List<Map<String, String>> addBook_depList_select_ab();
+
+	// 직급리스트 가져오기(주소록 --)
+	List<Map<String, String>> addBook_rankList_select_ab();
 	
 	
 }

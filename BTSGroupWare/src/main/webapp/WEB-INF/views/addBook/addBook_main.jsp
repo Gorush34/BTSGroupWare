@@ -85,28 +85,22 @@
 		<div class="form-group">
 		<label for="recipient-name" class="control-label"><strong>부서*</strong></label>
 			<select id="department" name="department" class="form-control requiredInfo">
-			  <option value="700">--</option>
-			  <option value="100">영업</option>
-			  <option value="200">마케팅</option>
-			  <option value="300">기획</option>
-			  <option value="400">총무</option>
-			  <option value="500">인사</option>
-			  <option value="600">회계</option>
+			  	<c:if test="${not empty requestScope.ab_depList}">
+				   	  <c:forEach var="dep" items="${requestScope.ab_depList}" varStatus="i">
+							<option value="${dep.pk_dep_no}">${dep.ko_depname}</option>
+					  </c:forEach>
+				</c:if>	
 			</select>
 		</div>
 		
 		<div class="form-group">
 		<label for="recipient-name" class="control-label"><strong>직급*</strong></label>
 			<select id="rank" name="rank" class="form-control requiredInfo">
-			  <option value="90">--</option>
-			  <option value="10">사원</option>
-			  <option value="20">주임</option>
-			  <option value="30">대리</option>
-			  <option value="40">과장</option>
-			  <option value="50">차장</option>
-			  <option value="60">부장</option>
-			  <option value="70">전무</option>
-			  <option value="80">사장</option>
+			  <c:if test="${not empty requestScope.ab_rankList}">
+				   	  <c:forEach var="rank" items="${requestScope.ab_rankList}" varStatus="i">
+							<option value="${rank.pk_rank_no}">${rank.ko_rankname}</option>
+					  </c:forEach>
+				  </c:if>
 			</select>
 		</div>
 		
@@ -436,38 +430,15 @@ $( document ).ready( function() {
 			dataType: 'json',
 			success : function(json) {
 				
-				var a; // 부서 select
-				var b; // 직급 select
-				
-				switch (json.department) {
-					case "영업": a=100; break;
-					case "마케팅": a=200; break;
-					case "기획": a=300; break;
-					case "총무": a=400; break;
-					case "인사": a=500; break;
-					case "회계": a=600; break;
-					case "--": a=700; break;
-				}
-				
-				switch (json.rank) {
-					case "사원": b=10; break;
-					case "주임": b=20; break;
-					case "대리": b=30; break;
-					case "과장": b=40; break;
-					case "차장": b=50; break;
-					case "부장": b=60; break;
-					case "전무": b=70; break;
-					case "사장": b=80; break;
-					case "--": b=70; break;
-				}
+				console.log(json.department_id)
 				
 				$("input#pk_addbook_no").val(json.pk_addbook_no)
 				$("input#name").val(json.name)
-				$("select#department").val(a).prop("selected",true);
-				$("select#rank").val(b).prop("selected",true);
+				$("input#rank").val(json.rank)
+				$("input#department").val(json.department)
+				$("select#department").val(json.department_id).prop("selected",true);
+				$("select#rank").val(json.rank_id).prop("selected",true);
 				$("input#email").val(json.email)
-			//	$("input#email1").val(json.email1)
-			//	$("input#email2").val(json.email2)
 				$("input#phone").val(json.phone)
 				$("input#hp2").val(json.hp2)
 				$("input#hp3").val(json.hp3)
