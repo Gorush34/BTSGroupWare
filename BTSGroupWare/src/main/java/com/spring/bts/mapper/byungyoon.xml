@@ -35,7 +35,7 @@
 	
 	<!-- 상세부서정보 페이지 사원목록 불러오기 -->
 	<select id="addBook_depInfo_select" resultType="com.spring.bts.hwanmo.model.EmployeeVO">
-		select E.pk_emp_no, E.emp_name , R.ko_rankname , D.ko_depname , R.pk_rank_no, E.uq_email
+		select E.pk_emp_no, E.emp_name , R.ko_rankname , D.ko_depname , E.fk_department_id AS fk_department_id, R.pk_rank_no, E.uq_email
 		from tbl_EMPLOYEES E
 		join tbl_rank_sort R
 		on E.fk_rank_id = R.pk_rank_no
@@ -119,6 +119,24 @@
 		on E.fk_rank_id = R.pk_rank_no
 		order by R.pk_rank_no
 	</select>
+	
+	<!-- 부서리스트 가져오기 -->
+	<resultMap type="HashMap" id="depList">
+		<result property="pk_dep_no"     column="pk_dep_no"      	javaType="String"/>
+		<result property="ko_depname" 	 column="ko_depname"  		javaType="String"/>
+		<result property="en_depname"  	 column="en_depname"   		javaType="String"/>
+		<result property="manager"       column="manager"       	javaType="String"/>
+	</resultMap>
+	<select id="addBook_depList_select" resultMap="depList">
+		select * 
+		from tbl_dep_sort
+	</select>
+	
+	<!-- 관리자에서 부서 추가하기 -->
+	<insert id="addBook_dep_insert" parameterType="HashMap">
+		insert into tbl_dep_sort (pk_dep_no , ko_depname , en_depname , manager)
+		values (#{pk_dep_no} , #{ko_depname} , #{en_depname} , #{manager})
+	</insert>
 	
 	
 

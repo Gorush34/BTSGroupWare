@@ -17,7 +17,12 @@
 		 <p style="margin-left:-40%;">
 			<button type="button" class="btn btn-default btn-lg " style="margin: 15px auto; color:darkgray; border-bottom:1px solid lightgray; width:150px; font-size:17pt; display:block;" onclick="location.href='<%= ctxPath%>/addBook/addBook_telAdd.bts'">주소록 추가</button>
 			<button type="button" class="btn btn-default btn-lg " style="margin: 15px auto; color:darkgray; border-bottom:1px solid lightgray; width:150px; font-size:17pt; display:block;" onclick="location.href='<%= ctxPath%>/addBook/addBook_main.bts'">주소록 목록</button>
-		</p>				
+		</p>
+		
+		
+		
+				 
+								
 		 <h3><br>직급 구성<br></h3>
 		 
 			<table style="float:left; text-align:left;">
@@ -147,7 +152,11 @@
 		      
 <script type="text/javascript">
 
+
+
 	$(document).ready(function(){
+		
+		 
 		
 		// ------------- 데이터 ------------- //
 		
@@ -249,14 +258,18 @@
 		      $( "div#emp_employee" ).slideToggle();
 			});
 			  
-		
+		  	
+		  	
 	});// end of $(document).ready(function(){}-------------------
+			
 			
 	$( "#top_team" ).click( function() {
 	      $( "div#ceo" ).slideToggle();
 	      $( "div#exe_director" ).slideToggle();
 	    });		
-			
+	
+	
+	
 </script>			
 			
 	

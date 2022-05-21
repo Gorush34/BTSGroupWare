@@ -145,6 +145,28 @@ public class AddBookService implements InterAddBookService  {
 		List<EmployeeVO> empList = dao.sideinfo_addBook();
 		return empList;
 	}
+
+
+	// 부서리스트 가져오기
+	@Override
+	public List<Map<String, String>> addBook_depList_select() {
+		List<Map<String, String>> depList = dao.addBook_depList_select();
+		return depList;
+	}
+
+
+	// 관리자에서 부서 추가하기
+	@Override
+	public int addBook_dep_insert(Map<String, String> paraMap) {
+		
+		int n = dao.addBook_dep_insert(paraMap);
+		
+		return n;
+	}
+
+
+	
+	
 	
 
 
