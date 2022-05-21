@@ -444,6 +444,12 @@ public class BoardDAO implements InterBoardDAO {
 		return m;
 	}
 
+	@Override
+	public int selectDel(Map<String, String> paraMap) {
+		int n = sqlsession.update("moongil.selectDel", paraMap);
+		return n;
+	}
+
 
 
 	

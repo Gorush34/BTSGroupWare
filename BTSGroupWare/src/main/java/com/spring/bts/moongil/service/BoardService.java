@@ -592,6 +592,12 @@ public class BoardService implements InterBoardService {
 		return commentList;
 	}
 
+	@Override
+	public int selectDel(Map<String, String> paraMap) {
+		int n = dao.selectDel(paraMap);
+		return n;
+	}
+
 
 
 

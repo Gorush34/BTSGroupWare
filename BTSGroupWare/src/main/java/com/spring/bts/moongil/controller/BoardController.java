@@ -8,6 +8,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,6 +35,7 @@ import com.spring.bts.moongil.model.FileboardVO;
 import com.spring.bts.moongil.model.LikeVO;
 import com.spring.bts.moongil.model.NoticeVO;
 import com.spring.bts.hwanmo.model.EmployeeVO;
+import com.spring.bts.minjeong.model.MailVO;
 import com.spring.bts.moongil.service.InterBoardService;
 
 
@@ -50,23 +52,8 @@ public class BoardController {
 
 	@Autowired
 	private InterBoardService service;
-		@Autowired     // Type에 따라 알아서 Bean 을 주입해준다.
-		private FileManager fileManager;
-	
-	
-/*	
-		@RequestMapping(value = "/board/main.bts")      // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다. (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는 것이다.)
-		public ModelAndView main_list(ModelAndView mav, HttpServletRequest request, BoardVO boardvo, NoticeVO noticevo) {
-			
-
-			mav.setViewName("board_main.board");
-			//  /WEB-INF/views/tiles1/board/list.jsp 파일을 생성한다.
-			
-			return mav;
-		
-		}
-*/
-
+	@Autowired     // Type에 따라 알아서 Bean 을 주입해준다.
+	private FileManager fileManager;
 		
 		// === 메인페이지 === //
 		// 내가 작성한 글 수 알아오기
@@ -229,7 +216,7 @@ public class BoardController {
 		
 		// 게시판 메인메에지
 		@ResponseBody
-		@RequestMapping(value = "/board/main.bts", produces = "text/plain;charset=UTF-8")
+		@RequestMapping(value = "/board/main.bts")
 		public ModelAndView Boardmain(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, BoardVO boardvo) {
 			
 			HttpSession session = request.getSession();
@@ -2407,7 +2394,7 @@ public class BoardController {
 			
 	// -- 내가 쓴 게시물 --- //
 		@ResponseBody
-		@RequestMapping(value = "/board/my.bts", produces = "text/plain;charset=UTF-8")
+		@RequestMapping(value = "/board/my.bts")
 		public ModelAndView Board_my(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, BoardVO boardvo) {
 			
 			HttpSession session = request.getSession();
@@ -2498,7 +2485,7 @@ public class BoardController {
 			int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
 			
 			String pageBar = "<ul style='list-style: none;'>";
-			String url = "main.bts";
+			String url = "list.bts";
 			
 			// === [맨처음][이전] 만들기 === //
 			if(pageNo != 1) {
@@ -2548,10 +2535,86 @@ public class BoardController {
 			return mav;
 		}// 		
 		
+		// 휴지통 목록 삭제하기 ( 휴지통에서 삭제 클릭시 아예 메일 테이블에서 해당 글 삭제하기 )		
+		@ResponseBody
+		@RequestMapping(value = "/board/selectDel.bts", produces = "text/plain; charset=UTF-8")	
+		public String selectDel(HttpServletRequest request, MailVO mailvo) {
+				
+			// 삭제할 메일번호(문자열) , Ajax로 보낸 데이터를 잘 받아오나 확인하자
+			String pk_seq = request.getParameter("pk_seq");
+			System.out.println("휴지통 확인용 pk_seq : "+ pk_seq);
 			
+			// 삭제할 메일 개수
+			String cnt = request.getParameter("cnt");
+			System.out.println("휴지통 확인용 cnt : "+ cnt);
+			
+			// 삭제 버튼을 누른 사원 번호
+			String tblname = request.getParameter("tblname");
+			System.out.println("휴지통 확인용 tblname : "+ tblname);
+
+			/*
+				휴지통 확인용 pk_mail_num : ["40","39","38"]
+				휴지통 확인용 cnt : 3
+				휴지통 확인용 fk_receiveuser_num : 80000010
+			*/
+			
+			// 배열의 [,] 를 제거한다.
+			pk_seq = pk_seq.replaceAll("\\[", "");
+			pk_seq = pk_seq.replaceAll("\\]", "");
+			pk_seq = pk_seq.replaceAll("\"", "");
+			pk_seq = pk_seq.trim();	// 공백 제거
+			
+			
+			System.out.println(pk_seq);
+			
+
+			String numStr = pk_seq.replaceAll("[^0-9]", "");
+			String opStr = pk_seq.replaceAll("[0-9]", "");
+
+			StringTokenizer st = new StringTokenizer(numStr);
+			char[] nums = new char[st.countTokens()];
+			for (int i = 0; i < nums.length; i++) {
+				nums[i] = st.nextToken().charAt(0);
+			}
+
+			st = new StringTokenizer(opStr);
+			char[] ops = new char[st.countTokens()];
+			for (int i = 0; i < ops.length; i++) {
+				ops[i] = st.nextToken().charAt(0);
+			}
+			System.out.println(numStr);
+			System.out.println(opStr);
+			
+			String[] arr_pk_seq = pk_seq.split(",");
+
+			int n = 0;
+			int result = 0;
+
+			// mail 테이블에서 선택한 글번호에 해당하는 글을 delete 하기	
+			for(int i=0; i<arr_pk_seq.length; i++) {
+				Map<String, String> paraMap = new HashMap<>();
+				
+				paraMap.put("pk_mail_num",arr_pk_seq[i]);
+				
+		//		n = service.selectDel(paraMap);
+			}
+			
+			JSONObject jsonObj = new JSONObject();
+			
+			// 휴지통 글목록에서 선택한 글들이 삭제됐을 때 result 값이 1을 반환하면 성공!
+			if(n==1) {
+				result = 1;
+				jsonObj.put("result",result);
+			}
+			
+			return jsonObj.toString();
+		}
+		
+		
+		
 		// -- 내가 쓴 댓글목록 가져오기 --- //
 		@ResponseBody
-		@RequestMapping(value = "/board/my_comment.bts", produces = "text/plain;charset=UTF-8")
+		@RequestMapping(value = "/board/my_comment.bts")
 		public ModelAndView Comment_my(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, BoardVO boardvo) {
 			
 			HttpSession session = request.getSession();
@@ -2646,7 +2709,7 @@ public class BoardController {
 			int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
 			
 			String pageBar = "<ul style='list-style: none;'>";
-			String url = "main.bts";
+			String url = "list.bts";
 			
 			// === [맨처음][이전] 만들기 === //
 			if(pageNo != 1) {
@@ -2691,13 +2754,14 @@ public class BoardController {
 			
 			
 			mav.setViewName("board_comment.board");
-			//  /WEB-INF/views/tiles1/board/list.jsp 파일을 생성한다.
-			
+
 			return mav;
 		}	
 			
 			
-			
+	
+		
+		
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 /*
