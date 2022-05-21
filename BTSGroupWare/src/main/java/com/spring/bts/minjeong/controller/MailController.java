@@ -56,7 +56,7 @@ public class MailController {
     private AES256 aes;
 
 	
-	// =========================== 메인페이지 받은메일함   =========================== //
+	// =========================== 메인페이지 받은메일함 및 안읽은메일 갯수   =========================== //
 	// 메인페이지에서 로그인한 사용자의 받은메일함 목록 보여주기
 	@ResponseBody
 	@RequestMapping(value = "/mail/mailReceive_main.bts", produces = "text/plain; charset=UTF-8")	
@@ -97,6 +97,27 @@ public class MailController {
 		return jsonArr.toString();
 	}
 	
+	// 메인페이지에서 로그인한 사용자의 안읽은 메일 목록 갯수 보여주기
+	@ResponseBody
+	@RequestMapping(value = "/mail/recMailCount.bts", produces = "text/plain; charset=UTF-8")	
+	public String recMailCount(HttpServletRequest request, HttpServletResponse response) {
+
+		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
+		
+	//	System.out.println("메인에서 받은메일함 페이지에서 로그인한 사용자 id (사원번호) 받아오기 " + loginuser.getPk_emp_no());
+	//  메인에서 받은메일함 페이지에서 로그인한 사용자 id (사원번호) 받아오기 : 80000010
+		String fk_receiveuser_num = String.valueOf(loginuser.getPk_emp_no());	// loginuser.getPk_emp_no() 로그인한 사용자의 사원번호 받아오기
+	
+	// 로그인한 사용자의 안읽은 메일갯수 가져오기 (rec_status=0)	
+		int n = service.recMailCount_main(fk_receiveuser_num);
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n);
+		
+		return jsonObj.toString();
+	}
 	
 	
 	// =========================== 메일쓰기  =========================== //
@@ -152,7 +173,7 @@ public class MailController {
 		// 1. 메일쓰기 form 이 떠야하고 & 이전에 입력했던 내용들이 모두 들어와 있어야 한다. (select 해오기)
 		// 2. 이전에 입력했던 내용들에서 다시 임시저장 클릭했을 때 임시보관함으로 이동할 수 있다.
 		
-		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+			getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
 		
 		 // 로그인 세션 요청하기 
 		 HttpSession session = request.getSession(); 
@@ -227,7 +248,7 @@ public class MailController {
 		// 1. 메일쓰기 form 이 떠야하고 & 이전에 입력했던 내용들이 모두 들어와 있어야 한다. (select 해오기)
 		// 2. 이전에 입력했던 내용들에서 다시 임시저장 클릭했을 때 임시보관함으로 이동할 수 있다.
 		
-		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+			getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
 
 		
 		 // 로그인 세션 요청하기 
@@ -358,21 +379,28 @@ public class MailController {
 	//	System.out.println("확인용 importance : " + importance);
 	//	System.out.println("확인용 importanceVal : " + importanceVal);
 
+
+
+	/*	
+		// 다중메일 보내기 시작 (JS 수정 전 (cnt))
+			String str_cnt = mrequest.getParameter("cnt");
+		//	System.out.println("확인용 str_cnt : " + str_cnt);
+			if("".equals(str_cnt)) {
+				str_cnt = "1";
+			}
+			int cnt = Integer.parseInt(str_cnt);
+	*/
 		
-		
-		// 다중메일보내기 시작
+		// 다중메일보내기 시작 (JS 수정 후 (cnt))
 		int cnt = Integer.parseInt(mrequest.getParameter("cnt"));
-
 		String recemail = mrequest.getParameter("recemail");
-
 		String [] strArray = recemail.split(",");
-		
 	//	System.out.println("cnt 확인용 " + cnt);
 	//	System.out.println("recemail 확인용" + recemail);
 	//	System.out.println("strArray 확인용" + strArray);
 		
 		for(int i=0; i<cnt; i++) {			
-			String uq_email = (String)strArray[i];	   /* 이메일 */
+			String uq_email = (String)strArray[i];	   /*이메일 */
 	//		System.out.println("확인용 uq_email : " + uq_email);
 	        try {
 	        	// DB에 encrypt(암호화) 해서 보내주도록 한다.
@@ -721,7 +749,7 @@ public class MailController {
 	// http://localhost:9090/bts/tiles1/mailList.bts
 	public ModelAndView requiredLogin_mailReceiveDetail(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 
-		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+			getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
 		
 		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
 		HttpSession session = request.getSession();
@@ -1116,7 +1144,7 @@ public class MailController {
 	@RequestMapping(value = "/mail/mailSendDetail.bts")	
 	public ModelAndView mailSendDetail(HttpServletRequest request, ModelAndView mav) {
 		
-		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+			getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
 		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
 		HttpSession session = request.getSession();
 		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
@@ -1352,7 +1380,7 @@ public class MailController {
 	public ModelAndView mailImportantDetail(HttpServletRequest request, ModelAndView mav) {
 		
 
-		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+			getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
 		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
 		HttpSession session = request.getSession();
 		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
@@ -1817,11 +1845,11 @@ public class MailController {
 	// 임시보관함 내용 읽기 페이지 요청 (메일쓰기 양식) (이전에 썼던 내용들을 갖고온다.)
 	@RequestMapping(value = "/mail/mailTemporaryDetail.bts")	
 	public ModelAndView mailTemporaryEnd(HttpServletRequest request, ModelAndView mav) {
-		// 임시보관함 같은 경우에는 내용읽기를 요청 했을 때, 
+		// 임시보관함 같은 경우에는 내용읽기를 요청 했을 때,
 		// 1. 메일쓰기 form 이 떠야하고 & 이전에 입력했던 내용들이 모두 들어와 있어야 한다. (select 해오기)
 		// 2. 이전에 입력했던 내용들에서 다시 임시저장 클릭했을 때 임시보관함으로 이동할 수 있다.
 		
-		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+		 getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
 
 		
 		 // 로그인 세션 요청하기 
@@ -1883,7 +1911,7 @@ public class MailController {
 			
 			// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
 			MailVO mailvo = null;
-			mailvo = service.getSendMailView(paraMap);
+			mailvo = service.getTemporaryMailView(paraMap);
 			mav.addObject("mailvo", mailvo);
 			
 			// 이전글 및 다음글 보여주기
@@ -2069,7 +2097,7 @@ public class MailController {
 	@RequestMapping(value = "/mail/mailReservationDetail.bts")	
 	public ModelAndView mailReservationDetail(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
-			//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+				getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
 
 
 			// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
@@ -2109,7 +2137,7 @@ public class MailController {
 				// mapper 로 사용자가 입력한 검색타입과 검색어를 map 에 담아서 보낸다.
 				paraMap.put("searchType", searchType);
 				paraMap.put("searchWord", searchWord);
-				paraMap.put("fk_senduser_num ",fk_senduser_num );	// 로그인한 사용자의 사원번호 map 에 담아서 보내주기		
+				paraMap.put("fk_senduser_num ",fk_senduser_num);	// 로그인한 사용자의 사원번호 map 에 담아서 보내주기		
 				
 				// map 에 담은 검색타입과 검색어를 view 단으로 보낸다.
 				mav.addObject("paraMap", paraMap);
@@ -2516,7 +2544,7 @@ public class MailController {
 	@RequestMapping(value = "/mail/mailSendToMeDetail.bts")	
 	public ModelAndView mailSendToMeDetail(HttpServletRequest request, ModelAndView mav) {
 		
-		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+			getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
 		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
 		HttpSession session = request.getSession();
 		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
@@ -2590,7 +2618,7 @@ public class MailController {
 		// 1. 메일쓰기 form 이 떠야하고 & 이전에 입력했던 내용들이 모두 들어와 있어야 한다. (select 해오기)
 		// 2. 이전에 입력했던 내용들에서 다시 임시저장 클릭했을 때 임시보관함으로 이동할 수 있다.
 		
-		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+			getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
 		
 		// view 단에서 요청한 검색타입 및 검색어, 글번호 받아오기
 		String pk_mail_num = request.getParameter("pk_mail_num");	// 글번호
@@ -2867,7 +2895,7 @@ public class MailController {
 	@RequestMapping(value = "/mail/mailRecyclebinDetail.bts")	
 	public ModelAndView mailRecyclebinDetail(HttpServletRequest request, ModelAndView mav) {
 
-		//	getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+			getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
 		
 		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
 		HttpSession session = request.getSession();

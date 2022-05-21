@@ -115,7 +115,11 @@
 	
 	<!-- 한 사원에 대한 출퇴근기록 목록 가져오기 -->
 	<select id="getMyCommute" parameterType="HashMap" resultType="com.spring.bts.hwanmo.model.CommuteVO">
-		select regdate, nvl(in_time, -9999) AS in_time, nvl(out_time, -9999) AS out_time, nvl(total_workTime, -9999) AS total_workTime, fk_emp_no
+		select pk_worktime_no, regdate, in_time, out_time, total_workTime, fk_emp_no
+		from
+		(
+		select row_number() over(order by pk_worktime_no desc) AS rno, pk_worktime_no 
+			   , regdate, nvl(in_time, -9999) AS in_time, nvl(out_time, -9999) AS out_time, nvl(total_workTime, -9999) AS total_workTime, fk_emp_no
 		from tbl_commute
 		where fk_emp_no = #{fk_emp_no}
 		<if test='year != "" and month =="" '>
@@ -125,6 +129,8 @@
 		and regdate like #{year} || #{month} ||'%'
 		</if>
 		order by regdate desc
+		) V
+		where rno between #{startRno} and #{endRno} 
 	</select>
 	
 	<!-- 직급번호로 직급명 알아오기 -->
@@ -460,9 +466,20 @@
 	<!-- 관리자페이지 -->
 	
 	<!-- // 관리자페이지 - 총 연차신청서 개수 가져오기 -->
-	<select id="getTotalCountVacReport_all" parameterType="String" resultType="int">
+	<select id="getTotalCountVacReport_all" parameterType="HashMap" resultType="int">
 		select count(*)
-		from tbl_attendance
+		from tbl_attendance A JOIN tbl_leave L
+		ON A.fk_emp_no = L.fk_emp_no
+		JOIN tbl_employees E
+		ON L.fk_emp_no = E.pk_emp_no
+		JOIN tbl_dep_sort D
+		ON E.fk_department_id = D.pk_dep_no
+		JOIN tbl_att_sort S
+		On A.fk_att_sort_no = S.pk_att_sort_no
+		<if test="searchType != ''">
+		where lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>	
+		order by pk_att_num desc
 	</select>
 	
 	
@@ -501,6 +518,9 @@
 		ON E.fk_department_id = D.pk_dep_no
 		JOIN tbl_att_sort S
 		On A.fk_att_sort_no = S.pk_att_sort_no
+		<if test="searchType != ''">
+		where lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>	
 		order by A.pk_att_num desc
 		) V
 		where rno between #{startRno} and #{endRno}
@@ -511,5 +531,102 @@
 		where pk_att_num = #{pk_att_num}	
 	</delete>
 	
+	<select id="getTotalCountEmp" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_employees E JOIN tbl_dep_sort D
+		ON E.fk_department_id = D.pk_dep_no
+		JOIN tbl_rank_sort R
+		ON E.fk_rank_id = R.pk_rank_no
+		<if test="searchType != ''">
+		where lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>	
+		order by fk_department_id asc, E.fk_rank_id desc
+	</select>
+	
+	<!-- === #139. 로그인 처리하기 === 
+	                     먼저, 위의 #47  을 주석처리 하고서 아래처럼 한다. -->
+	<resultMap type="Map" id="getEmpAll_map">
+		<result property="pk_emp_no" 				column="pk_emp_no" 				javaType="int" />
+		<result property="fk_department_id" 		column="fk_department_id" 		javaType="String" />
+		<result property="ko_depname" 				column="ko_depname" 			javaType="String" />
+		<result property="fk_rank_id" 				column="fk_rank_id" 			javaType="int" />
+		<result property="ko_rankname" 				column="ko_rankname" 			javaType="String" />
+		<result property="uq_phone" 				column="uq_phone" 				javaType="String" />
+		<result property="uq_email" 				column="uq_email" 				javaType="String" />
+		<result property="emp_name" 				column="emp_name" 				javaType="String" />
+		<result property="hire_date" 				column="hire_date" 				javaType="String" />
+		<result property="ishired" 					column="ishired" 				javaType="int" />
+		<result property="birthyyyy" 				column="birthyyyy" 				javaType="String" />
+		<result property="birthmm" 					column="birthmm" 				javaType="String" />
+		<result property="birthdd" 					column="birthdd" 				javaType="String" />
+	</resultMap>
+	   
+    <select id="getEmpAllWithPaging" parameterType="HashMap" resultMap="getEmpAll_map">     
+        select pk_emp_no, fk_department_id, ko_depname, fk_rank_id, ko_rankname, uq_phone
+	         , uq_email, emp_name, hire_date, ishired, birthyyyy, birthmm, birthdd
+		from
+		(
+		    select row_number() over(order by fk_department_id asc, pk_rank_no desc) AS rno, pk_emp_no, fk_department_id, ko_depname, fk_rank_id, ko_rankname, uq_phone, uq_email, emp_name
+		         , com_tel, to_char(hire_date,'yyyy-mm-dd') as hire_date, ishired
+		         , substr(birthday,1,4) as birthyyyy, substr(birthday,6,2) as birthmm, substr(birthday,9) as birthdd
+		    from tbl_employees E JOIN tbl_dep_sort D
+		    ON E.fk_department_id = D.pk_dep_no
+		    JOIN tbl_rank_sort R
+		    ON E.fk_rank_id = R.pk_rank_no
+			<if test="searchType != ''">
+			where lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		    </if>	
+		    order by fk_department_id asc, pk_rank_no desc
+		) V
+	    where rno between #{startRno} and #{endRno}
+    </select>
+	
+	<resultMap type="Map" id="getMemberOne_map">
+		<result property="pk_emp_no" 				column="pk_emp_no" 				javaType="int" />
+		<result property="fk_department_id" 		column="fk_department_id" 		javaType="String" />
+		<result property="ko_depname" 				column="ko_depname" 			javaType="String" />
+		<result property="fk_rank_id" 				column="fk_rank_id" 			javaType="int" />
+		<result property="ko_rankname" 				column="ko_rankname" 			javaType="String" />
+		<result property="uq_phone" 				column="uq_phone" 				javaType="String" />
+		<result property="uq_email" 				column="uq_email" 				javaType="String" />
+		<result property="emp_name" 				column="emp_name" 				javaType="String" />
+		<result property="com_tel" 					column="com_tel" 				javaType="String" />
+		<result property="hire_date" 				column="hire_date" 				javaType="String" />
+		<result property="ishired" 					column="ishired" 				javaType="int" />
+		<result property="birthyyyy" 				column="birthyyyy" 				javaType="String" />
+		<result property="birthmm" 					column="birthmm" 				javaType="String" />
+		<result property="birthdd" 					column="birthdd" 				javaType="String" />
+		<result property="birthday" 				column="birthday" 				javaType="String" />
+		<result property="gender" 					column="gender" 				javaType="String" />
+		<result property="img_name" 				column="img_name" 				javaType="String" />
+		<result property="postal" 					column="postal" 				javaType="String" />
+		<result property="address" 					column="address" 				javaType="String" />
+		<result property="detailaddress" 			column="detailaddress" 			javaType="String" />
+		<result property="extraaddress" 			column="extraaddress" 			javaType="String" />
+	</resultMap>
+	
+	<select id="getMemberOne" parameterType="int" resultMap="getMemberOne_map">
+		select pk_emp_no, fk_department_id, ko_depname, fk_rank_id, ko_rankname, uq_phone, uq_email, emp_name
+	         , com_tel, to_char(hire_date,'yyyy-mm-dd') as hire_date, ishired, postal, address, detailaddress, extraaddress
+	         , substr(birthday,1,4) as birthyyyy, substr(birthday,6,2) as birthmm, substr(birthday,9) as birthdd
+	         , birthday, gender, img_name
+	    from tbl_employees E JOIN tbl_dep_sort D
+	    ON E.fk_department_id = D.pk_dep_no
+	    JOIN tbl_rank_sort R
+	    ON E.fk_rank_id = R.pk_rank_no
+	    where E.pk_emp_no = #{pk_emp_no}
+	</select>
+	
+	<update id="updateHire" parameterType="HashMap" >
+		update tbl_employees set
+		ishired = decode(ishired, 1, 0, 0, 1)
+		where pk_emp_no = #{pk_emp_no}
+	</update>
+	
+	<update id="updateHireOne" parameterType="String" >
+		update tbl_employees set
+		ishired = decode(ishired, 1, 0, 0, 1)
+		where pk_emp_no = #{emp_no}
+	</update>
 	
 </mapper>

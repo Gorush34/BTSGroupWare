@@ -8,7 +8,9 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,13 +28,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.spring.bts.hwanmo.model.EmployeeVO;
-import com.spring.bts.yuri.model.ApprVO;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.spring.bts.common.FileManager;
 import com.spring.bts.common.MyUtil;
+import com.spring.bts.hwanmo.model.EmployeeVO;
+import com.spring.bts.yuri.model.ApprVO;
 import com.spring.bts.yuri.service.InterEdmsService;
 
 //=== 컨트롤러 선언 === //
@@ -1608,7 +1607,9 @@ public class EdmsController {
 	// 유리
 	// 메인 페이지 인덱스 index.bts에 불러올 전자결재 수신대기 문서의 개수
 	// 로그인유저의 결재대기문서 총 갯수  가져오기
-	@RequestMapping(value = "/edms/waitListCntForMain.bts")
+	/*
+	 @RequestMapping(value = "/edms/waitListCntForMain.bts")
+	 
 	public String waitListCntForMain(HttpServletRequest request) {
 		
 		HttpSession session = request.getSession();
@@ -1624,6 +1625,7 @@ public class EdmsController {
 		
 		return jsonObj.toString();
 	}
+	*/
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -2048,6 +2050,49 @@ public class EdmsController {
 		return mav;		
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// totalCount = service.getTotalCountWaitingSign(paraMap);
 
+	
+	
+	@RequestMapping(value="/edms/getWaitingSignListCount.bts")
+	public @ResponseBody Map<String, Integer> waitingSignListCount(HttpServletRequest request) {
+		
+		Map<String, String> paramMap = new HashMap<>();
+		
+		HttpSession session = request.getSession();
+        EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+        
+        paramMap.put("pk_emp_no", String.valueOf(loginuser.getPk_emp_no()));
+        paramMap.put("mid_accept", "0"); // 대기중(중간결재 대기) 문서 가져오기
+	
+		int middleCount = service.getWaitingSignListCount(paramMap);
+		paramMap.put("mid_accept", "1"); // 진행중(최종결재 대기) 문서 가져오기
+		
+		int finalCount = service.getWaitingSignListCount(paramMap);
+		Map<String, Integer> map = new HashMap<>();
+		map.put("totalCount", middleCount + finalCount);
+		
+		return map;
+	}
+	
 	
 }

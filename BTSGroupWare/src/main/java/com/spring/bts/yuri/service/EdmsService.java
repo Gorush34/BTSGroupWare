@@ -338,9 +338,8 @@ public class EdmsService implements InterEdmsService {
 	}
 
 	@Override
-	public int waitListCntForMain(int fk_emp_no) {
-		int totalCount = dao.waitListCntForMain(fk_emp_no);
-		return totalCount;
+	public int getWaitingSignListCount(Map<String, String> paramMap) {
+		return dao.getWaitingSignListCount(paramMap);
 	}
 
 

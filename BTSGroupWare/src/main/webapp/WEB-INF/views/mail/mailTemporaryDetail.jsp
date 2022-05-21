@@ -74,6 +74,12 @@
 		      		 return false;
 		      	 }
 		      	 
+				 // 받는사람 직접 입력 시 발송되도록 하기 (주소록을 거치지 않음)
+		      	 else {
+						mid_cnt = recemail.split(',').length;
+						cnt = $("input#cnt").val(mid_cnt);
+		      	 }		  
+		      	 
 		      	 // 메일제목 유효성 검사
 		      	 var subject = $("input#subject").val().trim();
 		      	 if(subject == "") {
@@ -132,6 +138,7 @@
 		 
 		      	var frm = document.mailWriteFrm;
 		      	frm.importanceVal.value = importanceVal;
+		      	frm.cnt = cnt;
 		      	frm.method = "POST";
 		      	frm.action = "<%= ctxPath%>/mail/mailWriteEnd.bts";
 		        frm.submit();
@@ -146,6 +153,7 @@
 					var sendResSetTime = $("span#reservationTime").text();
 					var frm = document.mailWriteFrm;
 					frm.importanceVal.value = importanceVal;
+			      	frm.cnt = cnt;
 					frm.reservation_date.value = sendResSetTime;
 					frm.method = "POST";
 					frm.action = "<%= ctxPath%>/mail/mailWriteReservationEnd.bts";
@@ -158,6 +166,7 @@
 				//	console.log(frm.action);	// http://localhost:9090/bts/mail/mailWriteReservationEnd.bts
 					
 				}
+		   	
 				else {
 					return false;
 				}
@@ -182,6 +191,12 @@
 		      		 return false;
 		      	 }
 		      	 
+				 // 받는사람 직접 입력 시 발송되도록 하기 (주소록을 거치지 않음)
+		      	 else {
+						mid_cnt = recemail.split(',').length;
+						cnt = $("input#cnt").val(mid_cnt);
+		      	 }		      	
+		      			      	 
 		      	 // 메일제목 유효성 검사
 		      	 var subject = $("input#subject").val().trim();
 		      	 if(subject == "") {
@@ -234,13 +249,13 @@
 
 				const frm = document.mailWriteFrm;
 			//	frm.importanceVal.value = importanceVal;
+		      	frm.cnt = cnt;
 				frm.method = "POST";
 				frm.action = "<%= ctxPath%>/mail/mailTemporaryEnd.bts"
 				frm.submit();
 			//	console.log("확인용 frm : " + frm);
 			//	console.log("확인용 method : " + frm.method);
 			//	console.log("확인용 action : " + frm.action);
-
 			
 			});// end of $("button#tempSave").click(function(){})---------------
 
@@ -426,7 +441,7 @@
 </script>
 
 <div class="col-xs-10" id="mailListWriteCss">
-	<div style="border-bottom: solid 1.5px #e6e6e6;" style="width: 90%;">	
+	<div style="border-bottom: solid 1.5px #e6e6e6;">	
 		<div>
 			<h4 class="page-title" style="color: black;">메일 쓰기</h4>
 		</div>
@@ -461,7 +476,7 @@
 			<tr>
 				<th width="14%">받는 사람</th>
 				<td width="86%" data-toggle="tooltip" data-placement="top" title="">
-					<input type="text" id="recemail" name="recemail" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
+					<input type="text" id="recemail" name="recemail" value="${requestScope.mailvo.recemail}" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
 					<input type="hidden" id="cnt" name="cnt" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
 				
 					<%-- hidden 타입으로 데이터값 보내기 --%>

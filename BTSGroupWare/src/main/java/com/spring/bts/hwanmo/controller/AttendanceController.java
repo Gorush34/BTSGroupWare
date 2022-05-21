@@ -1058,7 +1058,27 @@ public class AttendanceController {
 			
 			// 먼저 총 받은 메일 수(totalCount)를 구해와야 한다.
 			// 총 게시물 건수는 검색조건이 있을 때와 없을 때로 나뉜다.
-			String str_currentShowPageNo = request.getParameter("currentShowPageNo");	// 현재 페이지 번호
+			
+			// 검색 목록
+			String searchType = request.getParameter("searchType");		// 사용자가 선택한 검색 타입
+			String searchWord = request.getParameter("searchWord");		// 사용자가 입력한 검색어
+			String str_currentShowPageNo = request.getParameter("currentShowPageNo");	// 현재 페이지 번호 
+			
+			// searchType 에는 제목 및 사원명이 있는데, 이 외의 것들이 들어오게 되면 기본값으로 보여준다
+			if(searchType == null || (!"ko_depname".equals(searchType)) && (!"fk_emp_no".equals(searchType))  && (!"emp_name".equals(searchType)) ) {
+				searchType = "";
+			}
+			
+			// 검색 입력창에 아무것도 입력하지 않았을 때 or 공백일 때 기본값을 보여주도록 한다.
+			if(searchWord == null || "".equals(searchWord) && searchWord.trim().isEmpty()) {
+				searchWord = "";
+			}
+			
+			// DB 로 보내기 위해 요청된 정보를 Map에 담는다.
+			paraMap.put("searchType", searchType);
+			paraMap.put("searchWord", searchWord);
+			
+			
 			int totalCount = 0;
 			int sizePerPage = 3;
 			int currentShowPageNo = 0;
@@ -1068,7 +1088,7 @@ public class AttendanceController {
 			int endRno = 0;
 			
 			// 관리자페이지 - 총 연차신청서 개수 가져오기
-			totalCount = attService.getTotalCountVacReport_all(fk_emp_no); 
+			totalCount = attService.getTotalCountVacReport_all(paraMap); 
 			
 			totalPage = (int) Math.ceil((double)totalCount/sizePerPage);	// 총 페이지 수 (전체게시물 / 페이지당 보여줄 갯수)
 	
@@ -1102,7 +1122,10 @@ public class AttendanceController {
 			// 관리자페이지 - 페이징처리 한 결재대기중인 공가/경조신청목록 
 			List<Map<String, Object>> myAttList = attService.getAttListAllWithPaging(paraMap);
 			
-			
+			// 검색대상 컬럼(searchType) 및 검색어(searchWord) 유지시키기 위함
+			if(!"".equals(searchType) && !"".equals(searchWord)) {
+				mav.addObject("paraMap", paraMap);
+			}
 			// ================= 페이징처리 끝 ====================
 			
 			// === 페이지바 만들기 === //
@@ -1117,8 +1140,8 @@ public class AttendanceController {
 			
 			// === [맨처음][이전] 만들기 === //
 			if(pageNo != 1) {
-				pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?currentShowPageNo=1'>[맨처음]</a></li>";
-				pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+				pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1'>[맨처음]</a></li>";
+				pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
 			}
 			
 			while( !(loop > blockSize || pageNo > totalPage) ) {
@@ -1127,7 +1150,7 @@ public class AttendanceController {
 					pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";  
 				}
 				else {
-					pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>"; 
+					pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>"; 
 				}
 				
 				loop++;
@@ -1138,11 +1161,15 @@ public class AttendanceController {
 			
 			// === [다음][마지막] 만들기 === //
 			if( pageNo <= totalPage ) {
-				pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?currentShowPageNo="+pageNo+"'>[다음]</a></li>";
-				pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?currentShowPageNo="+totalPage+"'>[마지막]</a></li>"; 
+				pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+				pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>"; 
 			}
 			
 			pageBar += "</ul>";
+			
+			// System.out.println("확인용 searchType : " + searchType);
+			// System.out.println("확인용 searchWord : " + searchWord);
+			// System.out.println("확인용 totalCount : " + totalCount);
 			
 			mav.addObject("pageBar", pageBar);
 			

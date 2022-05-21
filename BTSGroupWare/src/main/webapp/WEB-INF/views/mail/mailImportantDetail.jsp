@@ -42,7 +42,7 @@ function btnGodeleteOne(pk_mail_num) {
 </script>
 
 <div class="col-xs-10" id="mailListDetailCss">
-		<div style="border-bottom: solid 1.5px #e6e6e6;" style="width: 90%;">	
+		<div style="border-bottom: solid 1.5px #e6e6e6;">	
 			<div>
 				<h4 class="page-title" style="color: black;">중요 메일함</h4>
 			</div>	
@@ -88,7 +88,7 @@ function btnGodeleteOne(pk_mail_num) {
 		</div>
 		<div>
 			<div style="margin-left: -10px; margin-top: 5px; border-top: solid 1.5px #e6e6e6;">
-				<p style="word-break: break-all;">${requestScope.mailvo.content}</p>
+				<p style="word-break: break-all;">&nbsp;${requestScope.mailvo.content}</p>
 			</div>
 		</div>	
 

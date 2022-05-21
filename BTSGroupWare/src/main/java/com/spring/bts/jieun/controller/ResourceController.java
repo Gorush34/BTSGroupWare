@@ -143,6 +143,7 @@ public class ResourceController {
 		String fk_rno = request.getParameter("pk_rno");
 		String fk_classno = request.getParameter("pk_classno");
 		String rserusecase = request.getParameter("rserusecase");
+		String calpk_classno = request.getParameter("calpk_classno");
 		String color = request.getParameter("color");
 		
 		Map<String, String> paraMap = new HashMap<>();
@@ -153,6 +154,7 @@ public class ResourceController {
 		paraMap.put("fk_rno", fk_rno);
 		paraMap.put("fk_classno", fk_classno);
 		paraMap.put("rserusecase", rserusecase);
+		paraMap.put("calpk_classno", calpk_classno);
 		paraMap.put("color", color);
 		
 		int n = service.addReservation(paraMap);

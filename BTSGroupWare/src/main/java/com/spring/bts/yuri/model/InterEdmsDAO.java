@@ -108,7 +108,9 @@ public interface InterEdmsDAO {
 	int getcompanyWaitList_Cnt(Map<String, String> paraMap);
 	List<Map<String, Object>> getcompanyWaitList(Map<String, String> paraMap);
 
-	int waitListCntForMain(int fk_emp_no);
+
+	// 메인에서 띄워주기 
+	int getWaitingSignListCount(Map<String, String> paramMap);
 	
 	
 }

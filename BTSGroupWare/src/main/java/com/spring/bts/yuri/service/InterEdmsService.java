@@ -119,8 +119,10 @@ public interface InterEdmsService {
 
 	
 	
-	int waitListCntForMain(int fk_emp_no);
+	// 메인에서 로그인유저의 중간결재 대기문서 개수 가져오기
+	int getWaitingSignListCount(Map<String, String> paramMap);
 
+		
 	
 	
 	

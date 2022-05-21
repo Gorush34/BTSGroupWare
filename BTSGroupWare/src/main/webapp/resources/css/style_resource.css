@@ -4,7 +4,7 @@ body {font-family: 'Noto Sans KR', sans-serif; font-size: 18px;}
 
 #mycontainer   { padding:20px; }
 #myheader      { display: flex; min-height:100px; position: relative; top: 60px; }
-#mycontent      { min-height:1200px; top:60px; padding-top: 40px; margin-right:25px;  background-color:#FFF;
+#mycontent      { min-height:1200px; top:60px;  margin-right:25px;  background-color:#FFF;
                   float:left; width:98%;}
 #myfooter      { display: flex; min-height:120px; position: relative; top:60px; background-color:#555555; margin-bottom: 70px; 
                  clear:both; }

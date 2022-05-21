@@ -184,8 +184,8 @@ public class CalendarDAO implements InterCalendarDAO {
 	
 	// 오늘의 일정 수
 	@Override
-	public int scheduleCount(int pk_emp_no) {
-		int n = sqlsession.selectOne("jieun.scheduleCount", pk_emp_no);
+	public int scheduleCount(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("jieun.scheduleCount", paraMap);
 		return n;
 	}
 	

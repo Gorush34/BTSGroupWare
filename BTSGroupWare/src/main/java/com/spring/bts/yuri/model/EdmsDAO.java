@@ -303,10 +303,13 @@ public class EdmsDAO implements InterEdmsDAO {
 		return companyWaitList;
 	}
 
+
+	
+	
+	// 메인에서 띄워주기
 	@Override
-	public int waitListCntForMain(int fk_emp_no) {
-		int totalCount = sqlsession.selectOne("yuri.waitListCntForMain", fk_emp_no);
-		return totalCount;
+	public int getWaitingSignListCount(Map<String, String> paramMap) {
+		return sqlsession.selectOne("yuri.getWaitingSignListCount", paramMap);
 	}
 
 

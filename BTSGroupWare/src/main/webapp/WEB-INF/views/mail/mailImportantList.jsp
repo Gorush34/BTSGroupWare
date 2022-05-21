@@ -147,11 +147,11 @@
 					var result = json.result;
 					
 					if(result == 1) {
-						alert("중요메일함 해제에 성공했습니다!!");
+					//	alert("중요메일함 해제에 성공했습니다!!");
 						window.location.reload();
 					}
 					else {
-						alert("중요메일함 해제에 실패했습니다.");
+					//	alert("중요메일함 해제에 실패했습니다.");
 						window.location.reload();
 					}
 					
@@ -176,7 +176,7 @@
 
 <%-- 중요 메일함 목록 보여주기 --%>	
 <div class="col-xs-10" style="width: 90%; margin: 10px; padding-top: 20px;">
-	<div style="border-bottom: solid 1.5px #e6e6e6;" style="width: 90%;" >		
+	<div>		
 		<div>
 			<h4 style="color: black;">중요 메일함</h4>
 		</div>
@@ -213,7 +213,7 @@
 				</div>
 				
 				<div class="table-responsive" style="color: black;">
-					<table>
+					<table class="table">
 						<thead>
 							<tr>
 								<th style="width: 2%;">

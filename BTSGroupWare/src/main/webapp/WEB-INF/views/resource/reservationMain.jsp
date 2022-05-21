@@ -333,6 +333,12 @@
      	$("input[name=enddate]").val(edate);
     
      	// 자원 select 유효성 검사
+     	var calpk_classno = $("select[name=calpk_classno]").val();
+        if (calpk_classno == "") {
+           alert("자원을 선택해주세요.");
+           return false;
+        }
+     	
      	var calpk_rno = $("select[name=pk_rno]").val();
         if (calpk_rno == "") {
            alert("자원을 선택해주세요.");
