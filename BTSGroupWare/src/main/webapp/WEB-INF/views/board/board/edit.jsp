@@ -99,10 +99,16 @@
 </script>
 
 <div style="display: flex;">
-<div style="margin: auto; padding-left: 3%;">
-
-<h2 style="margin-bottom: 30px;">글수정</h2>
-
+<div style="margin: auto; padding-left: 3%; min-height: 1200px;
+    position: relative;
+    padding-top: 40px;
+    background-color: #F2F2F2;
+    float: right;
+    padding: 20px;">
+<div style="border-bottom: solid 3px #000060;
+    margin-bottom: 20px;">
+<h2 id="add">글수정</h2>
+</div>
 <form name="editFrm">
 	<table style="width: 1024px" class="table table-bordered">
 		<tr>

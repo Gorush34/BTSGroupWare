@@ -114,6 +114,70 @@ margin: 10px;
 
 		
 	});//end of $(document).ready(function(){}
+
+	// 체크박스 전체선택 및 해제
+	$("input#checkAll").click(function() {
+		if($(this).prop("checked")) {
+			$("input[name='chkBox']").prop("checked",true);
+		}
+		else {
+			$("input[name='chkBox']").prop("checked",false);
+		}
+		
+	});	
+	// 삭제버튼 클릭 시 휴지통으로 이동하기 (ajax)
+	function goselctDel() {
+		
+		// 체크된 갯수 세기
+		var chkCnt = $("input[name='chkBox']:checked").length;
+		
+		// 배열에 체크된 행의 pk_mail_num 넣기
+		var arrChk = new Array();
+		
+		$("input[name='chkBox']:checked").each(function(){
+			
+			var pk_seq = $(this).attr('id');
+			arrChk.push(pk_seq);
+		//	console.log("arrChk 확인용 : " + arrChk);
+			
+		});
+		
+		if(chkCnt == 0) {
+			alert("선택된 메일이 없습니다.");
+		}
+		else {
+			
+			$.ajax({				
+		 	    url:"<%= ctxPath%>/board/selectDel.bts", 
+				type:"GET",
+				data: {"pk_seq":JSON.stringify(arrChk),
+							   "cnt":chkCnt},
+				dataType:"JSON",
+				success:function(json){
+					
+					var result = json.result;
+					
+					if(result != 1) {
+						alert("메일 삭제에 실패했습니다.");
+						window.location.reload();
+					}
+					else {
+						alert("메일 삭제에 성공했습니다.");
+						window.location.reload();
+					}
+					
+				},
+				
+				error: function(request, status, error) {
+					alert("code:"+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+					
+				}
+				
+			});
+			
+		}
+		
+	}// end of function goMailDelRecyclebin() {}-----------------------------	
 	
 	function goView(pk_seq) {
 		
@@ -166,12 +230,17 @@ margin: 10px;
       <h1 class="h6 mb-0 text-white lh-1" style="font-size:22px; font-weight: bold; ">${sessionScope.loginuser.emp_name} 님의 작성글</h1>
     </div>
   </div>
-			
-
-		
+<!-- 			
+		<button type="button" id="delTrash" onclick="goselctDel()">
+								영구삭제
+		</button>
+		 -->
 		<table class="table table-hover" style="width: 85%; margin-left: auto; margin-right: auto; margin-top: 30px;">
 		<thead>
 			<tr>
+<!-- 			<th style="width: 2%;">
+									<input type="checkbox" id="checkAll" />
+								</th> -->
 				<th scope="col" class="text-center" style="width: 90px;">번호</th>	
 				<th scope="col" class="text-center" colspan="4" style="width: 200px;">제목</th>
 				<th scope="col" class="text-center" style="width: 120px;">글쓴이</th>
@@ -181,6 +250,7 @@ margin: 10px;
 		</thead>
 		<tbody>
 		
+	
 		<c:if test="${requestScope.boardList.size() == 0 }">	
 			<tr>
 				<td colspan="8" style="height: 200px; font-size: 17pt;">작성한 글이 존재하지 않습니다.</td>	
@@ -189,6 +259,12 @@ margin: 10px;
 		
 			<c:forEach var="boardvo" items="${requestScope.boardList}" varStatus="status">
 			   <tr>
+		<%-- 	   <td style="width: 20px;">
+					<input type="checkbox" id="${boardvo.pk_seq}" name="chkBox" class="text-center"/>
+					<input type="checkbox" id="${boardvo.tblname}" name="chkBox" class="text-center"/>
+					
+				</td> --%>
+			   
 			      <td align="center">
 			          ${boardvo.pk_seq}
 			          
