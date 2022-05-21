@@ -28,6 +28,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.bts.hwanmo.model.EmployeeVO;
 import com.spring.bts.yuri.model.ApprVO;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.spring.bts.common.FileManager;
 import com.spring.bts.common.MyUtil;
 import com.spring.bts.yuri.service.InterEdmsService;
@@ -1594,6 +1597,33 @@ public class EdmsController {
 	////////////////////////////////////////////////////////////////////////////////////////
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	// /edms/waitListCntForMain.bts
+	// 유리
+	// 메인 페이지 인덱스 index.bts에 불러올 전자결재 수신대기 문서의 개수
+	// 로그인유저의 결재대기문서 총 갯수  가져오기
+	@RequestMapping(value = "/edms/waitListCntForMain.bts")
+	public String waitListCntForMain(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
+		
+		int fk_emp_no = loginuser.getPk_emp_no();
+		System.out.println("fk_emp_no => " + fk_emp_no);
+		int n = service.waitListCntForMain(fk_emp_no);
+		System.out.println("main용 n => " + n);
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n);
+		
+		return jsonObj.toString();
+	}
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	

@@ -337,6 +337,12 @@ public class EdmsService implements InterEdmsService {
 		return companyWaitList;
 	}
 
+	@Override
+	public int waitListCntForMain(int fk_emp_no) {
+		int totalCount = dao.waitListCntForMain(fk_emp_no);
+		return totalCount;
+	}
+
 
 	
 	

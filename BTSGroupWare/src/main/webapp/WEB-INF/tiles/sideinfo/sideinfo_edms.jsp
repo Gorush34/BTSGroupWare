@@ -6,12 +6,6 @@
 
 <% String ctxPath = request.getContextPath(); %>
 
-<style type="text/css">
-	
-	
-</style>
-
-
 <script type="text/javascript">
 
 	$(document).ready(function(){
@@ -47,23 +41,13 @@
 	
 </script>
 
-<div style="padding-left: 20px; margin-top: 20px; ">
+<div style="padding-left: 18px;">
 	<div id="sidebar" style="font-size: 11pt;">
 		
 		<span style="font-size: 18pt; margin-left: 5px;" id="sideInfo_edmsTitle" onclick="javascript:location.href='<%= ctxPath%>/edms/edmsHome.bts'">전자결재</span>
 
-		<%--	 <input type="hidden" value="${sessionScope }" id="fk_emp_no"> --%>
-
-		<button type="button" class="btn btn-outline-primary btn-lg "
-				style="margin: 15px auto; width: 200px; display: block;"
-				onclick="javascript:location.href='<%= ctxPath%>/edms/edmsAdd.bts'">문서작성</button>
-
 		<ul style="list-style-type: none; padding: 10px;">
 			<li style="margin-bottom: 15px;">
-				
-				<div class="edmsSideMenu">
-					<label for="mySche"><span onclick="javascript:location.href='<%= ctxPath%>/edms/edmsHome.bts'">전자결재 홈으로</span></label>
-				</div>
 				
 				<!-- 문서작성 시작 -->
 				<div class="edmsSideMenu">

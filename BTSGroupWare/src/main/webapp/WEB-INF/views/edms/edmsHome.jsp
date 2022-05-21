@@ -229,7 +229,7 @@
 		
 		
 		<%-- 결재승인 목록이 없을 때 시작 --%>
-		<c:if test="${ empty requestScope.accept}">
+		<c:if test="${empty requestScope.accept}">
 		<div class="divClear"></div>
 		<table class="table table-sm table-light">
 			<tr>
@@ -257,7 +257,7 @@
 		
 		<%-- 결재반려 목록이 있을 때 시작 --%>
 		<div class="divClear"></div>
-		<c:if test="${ not empty requestScope.reject}">
+		<c:if test="${not empty requestScope.reject}">
 		<table class="table table-sm table-hover table-light edmsTable ellipsisTable">
 			<thead class="thead-light">
 				<tr>

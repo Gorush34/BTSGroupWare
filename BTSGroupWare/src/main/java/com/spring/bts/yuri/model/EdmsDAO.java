@@ -303,5 +303,11 @@ public class EdmsDAO implements InterEdmsDAO {
 		return companyWaitList;
 	}
 
+	@Override
+	public int waitListCntForMain(int fk_emp_no) {
+		int totalCount = sqlsession.selectOne("yuri.waitListCntForMain", fk_emp_no);
+		return totalCount;
+	}
+
 
 }

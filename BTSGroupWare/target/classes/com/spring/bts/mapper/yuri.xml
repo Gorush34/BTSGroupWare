@@ -937,10 +937,15 @@
 
 
 
-
-
-
-
+	<!-- waitListCntForMain -->
+	<select id="waitListCntForMain" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_appr
+		where ( ( fk_mid_empno = #{pk_emp_no} and mid_accept = 0 and fin_accept = 0) or ( mid_accept = 1 and fk_fin_empno = #{pk_emp_no} and fin_accept = 0 ) )
+		<if test='searchType != ""'>
+		and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+		</if>
+    </select>
 
 
 </mapper>

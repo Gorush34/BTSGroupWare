@@ -147,6 +147,8 @@ td.mail_subject:hover {
 		employeeBirth();
 		readRecMail();
 		vacCount();
+		waitListCntForMain();
+		
 		
 	});// end of $(document).ready(function(){})----------------------
 
@@ -902,6 +904,35 @@ td.mail_subject:hover {
      
 	///////////////// 정환모 메인화면 작업 함수 끝 /////////////////////////
 	
+	function waitListCntForMain() {
+		$.ajax({
+			url:"<%= ctxPath%>/edms/waitListCntForMain.bts",
+			dataType:"JSON",
+			success:function(json){
+				
+				console.log(json.n);	// n은 컨트롤러에서 받아온 값이다!
+				let html = "";
+				
+				if(json.n == 0){
+					html += 0;
+				}
+				else if(json.n > 0){
+					html += json.n;
+				}
+				
+				$("span#watingSignCnt").html(html);
+			},
+			error: function(request, status, error){
+					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		});
+     } // end of waitListCntForMain() --------------------
+	
+
+	
+	
+	
+	
 </script>
 
 
@@ -936,12 +967,12 @@ td.mail_subject:hover {
 	        
 		        <ul class="type_simple_list today_list">
 		        	<li class="summary-approval2">
-		        		<a href="">
+		        		<a href="javascript:location.href='<%= request.getContextPath()%>/edms/waitingSignList.bts'">
 		        			<span class="type">
 		        				<span class="ic_dashboard2 ic_type_approval2" title="approval2"></span>
 		        			</span>
 		        			<span class="text">전자결재 수신 문서</span>
-		        			<span class="badge">0</span>
+		        			<span class="badge" id="watingSignCnt"></span>
 		        		</a>
 		        	</li>
 		        	<li class="summary-approval">
@@ -980,7 +1011,7 @@ td.mail_subject:hover {
 		        			<span class="badge" id="rserCount"></span>
 		        		</a>
 		        	</li>
-		        	<li class="summary-report">
+<!-- 		        	<li class="summary-report">
 		        		<a href="">
 		        			<span class="type">
 		        				<span class="ic_dashboard2 ic_type_report" title="report"></span>
@@ -997,7 +1028,7 @@ td.mail_subject:hover {
 		        			<span class="text">참여할 문서</span>
 		        			<span class="badge">0</span>
 		        		</a>
-		        	</li>	
+		        	</li>	 -->
 		        </ul>
 		    </div>
 		    <!-- 사원정보 끝 -->
