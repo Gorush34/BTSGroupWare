@@ -220,8 +220,14 @@ public class MailDAO implements InterMailDAO {
 	}
 	*/
 
+	// 임시보관함 내용 읽기 페이지 요청 (메일쓰기 양식)
+	@Override
+	public MailVO getTemporaryMailView(Map<String, String> paraMap) {
+		MailVO getTemporaryMailView = sqlsession.selectOne("minjeong.getTemporaryMailView", paraMap);
+		return getTemporaryMailView;
+	}
+	
 	// 임시보관함에서 제목 클릭했을 때 넘어왔을 경우 받아온 글번호인 pk_mail_num 를 delete
-
 	@Override
 	public int deleteFromTbltemp(Map<String, String> paraMap) {
 		int n = sqlsession.delete("minjeong.deleteFromTbltemp", paraMap);
@@ -379,8 +385,6 @@ public class MailDAO implements InterMailDAO {
 		int n = sqlsession.selectOne("minjeong.recMailCount_main", fk_receiveuser_num);
 		return n;
 	}
-
-
 
 
 

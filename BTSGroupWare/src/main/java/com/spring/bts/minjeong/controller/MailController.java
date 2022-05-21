@@ -379,20 +379,22 @@ public class MailController {
 	//	System.out.println("확인용 importance : " + importance);
 	//	System.out.println("확인용 importanceVal : " + importanceVal);
 
-		
-		
-		// 다중메일보내기 시작
-		String str_cnt = mrequest.getParameter("cnt");
-	//	System.out.println("확인용 str_cnt : " + str_cnt);
-		if("".equals(str_cnt)) {
-			str_cnt = "1";
-		}
-		int cnt = Integer.parseInt(str_cnt);
-		
-		String recemail = mrequest.getParameter("recemail");
 
-		String [] strArray = recemail.split(",");
+
+	/*	
+		// 다중메일 보내기 시작 (JS 수정 전 (cnt))
+			String str_cnt = mrequest.getParameter("cnt");
+		//	System.out.println("확인용 str_cnt : " + str_cnt);
+			if("".equals(str_cnt)) {
+				str_cnt = "1";
+			}
+			int cnt = Integer.parseInt(str_cnt);
+	*/
 		
+		// 다중메일보내기 시작 (JS 수정 후 (cnt))
+		int cnt = Integer.parseInt(mrequest.getParameter("cnt"));
+		String recemail = mrequest.getParameter("recemail");
+		String [] strArray = recemail.split(",");
 	//	System.out.println("cnt 확인용 " + cnt);
 	//	System.out.println("recemail 확인용" + recemail);
 	//	System.out.println("strArray 확인용" + strArray);
@@ -1843,11 +1845,11 @@ public class MailController {
 	// 임시보관함 내용 읽기 페이지 요청 (메일쓰기 양식) (이전에 썼던 내용들을 갖고온다.)
 	@RequestMapping(value = "/mail/mailTemporaryDetail.bts")	
 	public ModelAndView mailTemporaryEnd(HttpServletRequest request, ModelAndView mav) {
-		// 임시보관함 같은 경우에는 내용읽기를 요청 했을 때, 
+		// 임시보관함 같은 경우에는 내용읽기를 요청 했을 때,
 		// 1. 메일쓰기 form 이 떠야하고 & 이전에 입력했던 내용들이 모두 들어와 있어야 한다. (select 해오기)
 		// 2. 이전에 입력했던 내용들에서 다시 임시저장 클릭했을 때 임시보관함으로 이동할 수 있다.
 		
-			getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
+		 getCurrentURL(request);	// 로그인 또는 로그아웃을 했을 때 현재 보이던 그 페이지로 그대로 돌아가기 위한 메소드 호출
 
 		
 		 // 로그인 세션 요청하기 
@@ -1909,7 +1911,7 @@ public class MailController {
 			
 			// 메일 1개 상세내용을 읽어오기 (service 로 보낸다.)
 			MailVO mailvo = null;
-			mailvo = service.getSendMailView(paraMap);
+			mailvo = service.getTemporaryMailView(paraMap);
 			mav.addObject("mailvo", mailvo);
 			
 			// 이전글 및 다음글 보여주기
@@ -2135,7 +2137,7 @@ public class MailController {
 				// mapper 로 사용자가 입력한 검색타입과 검색어를 map 에 담아서 보낸다.
 				paraMap.put("searchType", searchType);
 				paraMap.put("searchWord", searchWord);
-				paraMap.put("fk_senduser_num ",fk_senduser_num );	// 로그인한 사용자의 사원번호 map 에 담아서 보내주기		
+				paraMap.put("fk_senduser_num ",fk_senduser_num);	// 로그인한 사용자의 사원번호 map 에 담아서 보내주기		
 				
 				// map 에 담은 검색타입과 검색어를 view 단으로 보낸다.
 				mav.addObject("paraMap", paraMap);

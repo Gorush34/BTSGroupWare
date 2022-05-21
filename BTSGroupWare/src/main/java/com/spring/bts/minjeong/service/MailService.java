@@ -87,7 +87,7 @@ public class MailService implements InterMailService {
 		return mailvo;
 	}
 
-	// 받은메일 1개 상세내용을 읽어오기
+	// 보낸메일 1개 상세내용을 읽어오기
 	@Override
 	public MailVO getSendMailView(Map<String, String> paraMap) {
 		MailVO mailvo = dao.getSendMailView(paraMap);		
@@ -307,6 +307,14 @@ public class MailService implements InterMailService {
 	}
 
 
+	// 임시보관함 내용 읽기 페이지 요청 (메일쓰기 양식)
+	@Override
+	public MailVO getTemporaryMailView(Map<String, String> paraMap) {
+		MailVO getTemporaryMailView = dao.getTemporaryMailView(paraMap);
+		return getTemporaryMailView;
+	}
+
+
 	// 임시보관함에서 제목 클릭했을 때 넘어왔을 경우 받아온 글번호인 pk_mail_num 를 delete
 	@Override
 	public int deleteFromTbltemp(Map<String, String> paraMap) {
@@ -466,8 +474,6 @@ public class MailService implements InterMailService {
 		int n = dao.recMailCount_main(fk_receiveuser_num);
 		return n;
 	}
-
-
 
 	
 }

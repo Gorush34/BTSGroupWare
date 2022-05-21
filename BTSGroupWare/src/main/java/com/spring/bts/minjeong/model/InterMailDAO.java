@@ -88,6 +88,9 @@ public interface InterMailDAO {
 	// 임시보관함에서 제목 클릭했을 때 넘어왔을 경우 받아온 글번호인 pk_mail_num 의 temp_status 를 update (수정함)
 //	int updateFromTbltemp(Map<String, String> paraMap);
 
+	// 임시보관함 내용 읽기 페이지 요청 (메일쓰기 양식) (이전에 썼던 내용들을 갖고온다.)
+	MailVO getTemporaryMailView(Map<String, String> paraMap);
+
 	// 임시보관함에서 제목 클릭했을 때 넘어왔을 경우 받아온 글번호인 pk_mail_num 를 delete
 	int deleteFromTbltemp(Map<String, String> paraMap);
 
