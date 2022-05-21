@@ -989,3 +989,5 @@ where fk_receiveuser_num = '80000011' and fk_senduser_num != '80000011' and
 del_status = 0 and reservation_status = 0 and temp_status = 0 and rec_status = 0	
 order by pk_mail_num desc
 )V
+
+
