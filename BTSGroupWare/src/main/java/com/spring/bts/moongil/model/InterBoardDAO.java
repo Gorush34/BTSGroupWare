@@ -178,6 +178,8 @@ public interface InterBoardDAO {
 	// 글삭제를 하면 댓글들도 삭제
 	int update_comment_status(Map<String, String> paraMap);
 
+	int selectDel(Map<String, String> paraMap);
+
 
 	
 	

@@ -173,6 +173,8 @@ public interface InterBoardService {
 	// 댓글 보기
 	List<CommentVO> view_comment(Map<String, String> paraMap);
 
+	int selectDel(Map<String, String> paraMap);
+
 
 
 
