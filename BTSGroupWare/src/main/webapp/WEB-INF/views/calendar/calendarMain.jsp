@@ -120,7 +120,12 @@
                                 }
                                 
                                 let str_checkbox_my_calno_a = sessionStorage.getItem('arr_checkbox_my_calno_a'); // 체크박스 값 가져오기 
-                                let arr_checkbox_my_calno_a = str_checkbox_my_calno_a.split(",");
+                                let arr_checkbox_my_calno_a = "";
+                                if(str_checkbox_my_calno_a != null && str_checkbox_my_calno_a != "" && str_checkbox_my_calno_a.length != 0){
+                                	arr_checkbox_my_calno_a = str_checkbox_my_calno_a.split(",");
+                                }
+                     
+                                
                                 //  console.log("캘린더 소분류 번호 1:"+arr_checkbox_com_calno);
                                 //console.log("~~~~~~캘린더 소분류 번호 : " + $("input:checkbox[name=com_calno]:checked").length);
                                 // 달력에 사내 캘린더 일정 보여주기
@@ -330,7 +335,7 @@
   </div>
 
 	<%-- 검색바를 보여주는 곳 --%>
-	<div id="calendarSearch">
+	<div id="calendarSearch" >
 		<form name="calendarSearchFrm">
 			<select id="searchType" name="searchType">
 				<option value="calendar">캘린더</option>

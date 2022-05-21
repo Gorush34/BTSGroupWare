@@ -187,8 +187,8 @@ public class CalendarService implements InterCalendarService {
 
 	// 오늘의 일정 수
 	@Override
-	public int scheduleCount(int pk_emp_no) {
-		int n = dao.scheduleCount(pk_emp_no);
+	public int scheduleCount(Map<String, String> paraMap) {
+		int n = dao.scheduleCount(paraMap);
 		return n;
 	}
 

@@ -200,6 +200,7 @@ public class CalendarController {
 				JSONObject jsonObj = new JSONObject();
 				jsonObj.put("pk_calno", cavo.getPk_calno());
 				jsonObj.put("calname", cavo.getCalname());
+				//System.out.println(jsonObj);
 				jsonArr.put(jsonObj);
 			}
 		}
@@ -237,10 +238,10 @@ public class CalendarController {
 	public String deleteCalendar(HttpServletRequest request) throws Throwable  {
 		
 		String pk_calno = request.getParameter("pk_calno");
-	//	System.out.println("확인용"+ pk_calno);
+		//System.out.println("확인용"+ pk_calno);
 		
 		int n = service.deleteCalendar(pk_calno);
-	//	System.out.println("확인용" + n);
+		//System.out.println("확인용" + n);
 		
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("n", n);
@@ -717,9 +718,12 @@ public class CalendarController {
 		EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
 		
 		
-		int pk_emp_no = loginuser.getPk_emp_no();
+		String pk_emp_no = String.valueOf(loginuser.getPk_emp_no());
+		String emp_name = loginuser.getEmp_name();
 		// System.out.println("pk_emp_no" +pk_emp_no);
-		int n = service.scheduleCount(pk_emp_no);
+		
+		Map<String, String> paraMap = new HashMap<>();
+		int n = service.scheduleCount(paraMap);
 		// System.out.println(n);
 		
 		JSONObject jsonObj = new JSONObject();
