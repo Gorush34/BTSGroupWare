@@ -40,10 +40,6 @@ public interface InterEdmsService {
 	// 총 게시물 건수(totalCount) 구하기 - 검색이 있을 때와 검색이 없을 때로 나뉜다.
 	int getTotalCount(Map<String, String> paraMap);
 
-	
-	
-	
-	
 	// 상세부서정보 페이지 사원목록 불러오기
 	List<EmployeeVO> addBook_depInfo_select();
 
@@ -71,7 +67,7 @@ public interface InterEdmsService {
 	// 상태가 반려됨인 리스트 불러오기
 	List<Map<String, Object>> getRejectList(Map<String, String> paraMap);
 
-	// 로그인유저의 결재대기문서 가져오기
+	// 로그인유저의 결재대기문서 개수 가져오기
 	int getTotalCountWaitingSign(Map<String, String> paraMap);
 
 	// 페이징 처리한 로그인유저의 결재대기목록 가져오기
@@ -121,6 +117,12 @@ public interface InterEdmsService {
 	int getcompanyWaitList_Cnt(Map<String, String> paraMap);
 	List<Map<String, Object>> getcompanyWaitList(Map<String, String> paraMap);
 
+	
+	
+	// 메인에서 로그인유저의 중간결재 대기문서 개수 가져오기
+	int getWaitingSignListCount(Map<String, String> paramMap);
+
+		
 	
 	
 	

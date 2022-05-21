@@ -41,8 +41,7 @@
 		
 		
 	}); // end of $(document).ready(function(){}) --------------------
-	
-	
+
 	
 </script>
 
@@ -145,7 +144,6 @@
 <!-- </form> 오류 폼으로 감싸면 view.bts? 뒤에 URL ? 이 안 온 다-->
 	</div>
 
-	
 	<span class="edms_title">상세정보</span>
 		<table style="width: 100%" class="table table-bordered">
 			<colgroup>

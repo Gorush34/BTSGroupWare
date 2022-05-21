@@ -611,9 +611,8 @@
 		<if test='searchType != ""'>
 		and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
 		</if>
-    </select> 
-	
-	
+    </select>
+    	
 	<!-- // 페이징 처리한 로그인유저의 결재대기목록 가져오기 -->
 	<resultMap type="Map" id="waitingSignListWithPaging_map">
 		<result property="appr_name" 				column="appr_name" 				javaType="String" />
@@ -936,11 +935,27 @@
 
 
 
+	<!-- 내가 생각했던 쿼리문
+	
+	SELECT COUNT(*)
+	FROM TBL_APPR
+	WHERE ( ( FK_MID_EMPNO = #{PK_EMP_NO} AND MID_ACCEPT = 0 AND FIN_ACCEPT = 0) OR ( MID_ACCEPT = 1 AND FK_FIN_EMPNO = #{PK_EMP_NO} AND FIN_ACCEPT = 0 ) )
+	<IF TEST='SEARCHTYPE != ""'>
+	AND LOWER(${SEARCHTYPE}) LIKE '%'|| LOWER(#{SEARCHWORD}) ||'%'
+	</IF>
+	
+	-->
 
-
-
-
-
+	<!-- 결재대기문서 메인에 띄워주기 -->
+	<select id="getWaitingSignListCount" parameterType="HashMap" resultType="int">
+	SELECT COUNT(*)
+	  FROM TBL_APPR
+	 WHERE MID_ACCEPT = #{mid_accept}
+	   AND FIN_ACCEPT = 0
+	   AND FK_MID_EMPNO = #{pk_emp_no}
+    </select>
+	
+    
 
 
 </mapper>

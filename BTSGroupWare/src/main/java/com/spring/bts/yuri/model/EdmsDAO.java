@@ -304,4 +304,13 @@ public class EdmsDAO implements InterEdmsDAO {
 	}
 
 
+	
+	
+	// 메인에서 띄워주기
+	@Override
+	public int getWaitingSignListCount(Map<String, String> paramMap) {
+		return sqlsession.selectOne("yuri.getWaitingSignListCount", paramMap);
+	}
+
+
 }
