@@ -372,8 +372,11 @@ public class AddBookController {
 	   
 	   List<Map<String,String>> depList = service.addBook_depList_select(); // 부서리스트
 	   
+	   List<Map<String,String>> rankList = service.addBook_rankList_select(); // 직급리스트
+	   
 	   mav.addObject("empList", empList);
 	   mav.addObject("depList", depList);
+	   mav.addObject("rankList", rankList);
 	   
 	   mav.setViewName("addBook_depInfo.addBook");
 	   
@@ -394,10 +397,13 @@ public class AddBookController {
 	   
 		EmployeeVO evo = service.addBook_depInfo_select_ajax(pk_emp_no);
 		
+		
 		depInfoMap.put("pk_emp_no",evo.getPk_emp_no());
 		depInfoMap.put("name",evo.getEmp_name());
 		depInfoMap.put("department", evo.getKo_depname());
+		depInfoMap.put("department_id", evo.getFk_department_id());
 		depInfoMap.put("rank", evo.getKo_rankname());
+		depInfoMap.put("rank_id", evo.getFk_rank_id());
 		depInfoMap.put("email", evo.getUq_email());
 		depInfoMap.put("phone", evo.getUq_phone());
 		

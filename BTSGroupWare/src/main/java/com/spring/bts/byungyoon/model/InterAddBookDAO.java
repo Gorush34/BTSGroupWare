@@ -66,6 +66,10 @@ public interface InterAddBookDAO {
 	public int addBook_dep_insert(Map<String, String> paraMap);
 
 
+	// 직급리스트 가져오기
+	public List<Map<String, String>> addBook_rankList_select();
+
+
 
 	
 }

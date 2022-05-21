@@ -113,103 +113,8 @@
   <!-- 부서원 목록  -->
   <div class="tab-pane fade" id="depInfo" style="">
 	  <table style="float:left; text-align:center; margin-top:6%;">
-	  <!--  
-			<tr style="">
-				<td><button class="btn btn-default" id="y_team" style="width:200px; border: solid darkgray 2px;">영업팀</button></td>
-			</tr>
-			<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
-			<c:if test="${emp.ko_depname  eq '영업'}">
-			<tr>
-			<td>
-				<div id="y_teamwon">
-					<input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly />
-					<button class="btn btn-default" onclick="teamwonInfo(${i.count})" >${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
-				</div>
-			</td>
-			</tr>
-			</c:if>
-	   		</c:forEach>
-			<tr>
-				<td><button class="btn btn-default" id="m_team" style="width:200px; border: solid darkgray 2px;">마케팅팀</button></td>
-			</tr>
-			<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
-			<c:if test="${emp.ko_depname  eq '마케팅'}">
-			<tr>
-			<td>
-				<div id="m_teamwon">
-					<input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly />
-					<button class="btn btn-default" onclick="teamwonInfo(${i.count})" >${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
-				</div>
-			</td>
-			</tr>
-			</c:if>
-	   		</c:forEach>
-			<tr>
-				<td><button class="btn btn-default" id="g_team" style="width:200px; border: solid darkgray 2px;">기획팀</button></td>
-			</tr>
-			<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
-			<c:if test="${emp.ko_depname  eq '기획'}">
-			<tr>
-			<td>
-				<div id="g_teamwon">
-					<input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly />
-					<button class="btn btn-default" onclick="teamwonInfo(${i.count})" >${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
-				</div>
-			</td>
-			</tr>
-			</c:if>
-	   		</c:forEach>
-			<tr>
-				<td><button class="btn btn-default" id="c_team" style="width:200px; border: solid darkgray 2px;">총무팀</button></td>
-			</tr>
-			<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
-			<c:if test="${emp.ko_depname  eq '총무'}">
-			<tr>
-			<td>
-				<div id="c_teamwon">
-					<input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly />
-					<button class="btn btn-default" onclick="teamwonInfo(${i.count})" >${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
-				</div>
-			</td>
-			</tr>
-			</c:if>
-	   		</c:forEach>
-			<tr>
-				<td><button class="btn btn-default" id="i_team" style="width:200px; border: solid darkgray 2px;">인사팀</button></td>
-			</tr>
-			<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
-			<c:if test="${emp.ko_depname  eq '인사'}">
-			<tr>
-			<td>
-				<div id="i_teamwon">
-					<input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly />
-					<button class="btn btn-default" onclick="teamwonInfo(${i.count})" >${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
-				</div>
-			</td>
-			</tr>
-			</c:if>
-	   		</c:forEach>
-			<tr>
-				<td><button class="btn btn-default" id="h_team" style="width:200px; border: solid darkgray 2px;">회계팀</button></td>
-			</tr>
-			<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
-			<c:if test="${emp.ko_depname  eq '회계'}">
-			<tr>
-			<td>
-				<div id="h_teamwon">
-					<input type="hidden" id="pk_emp_no_${i.count}" name="pk_emp_no_${i.count}" value="${emp.pk_emp_no}" readonly />
-					<button class="btn btn-default" onclick="teamwonInfo(${i.count})" >${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
-				</div>
-			</td>
-			</tr>
-			</c:if>
-	   		</c:forEach>
-	   -->	
-	   		<!-- 실험 -->
-	   		<!-- 실험 -->
-	   		
-	   			<tr>
-					<td>
+	  			<tr>
+	  				<td>
 					<!-- 부서 추가 모달창 띄우기 -->
 					<c:choose>
 					<c:when test="${sessionScope.loginuser.pk_emp_no eq 80000001}">
@@ -220,28 +125,25 @@
 					</td>
 				<tr>
 		   		<c:if test="${not empty requestScope.depList}">
-		   		<c:forEach var="dep" items="${requestScope.depList}" begin="1" varStatus="i">
+		   		<c:forEach var="dep" items="${requestScope.depList}" varStatus="i">
 		   		<tr style="">
 					<td><input type="hidden" id="" value="${emp.pk_emp_no}"/><button class="btn btn-default team" id="team_${i.count}" value="${dep.pk_dep_no}" style="width:200px; border: solid darkgray 2px;">${dep.ko_depname}</button></td>
 				</tr>
-				
+					
 					<c:if test="${not empty requestScope.empList}">
 			   		<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
 			   		<c:if test="${dep.pk_dep_no eq emp.fk_department_id}">
 						<tr>
 							<td>
-								<input type="hidden" id="" value="${emp.pk_emp_no}"/><button class="btn btn-default teamwon" id="teamwon_${i.count}" value="${emp.pk_emp_no}" onclick="teamwonInfo(${i.count})" >${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
+								<input type="hidden" id="" value="${emp.pk_emp_no}"/><button class="btn btn-default teamwon_${dep.pk_dep_no}" id="teamwon_${i.count}" value="${emp.pk_emp_no}" onclick="teamwonInfo(${i.count})" >${emp.emp_name}&nbsp;[${emp.ko_rankname}]</button>
 							</td>
 						</tr>
 					</c:if>
 					</c:forEach>
 					</c:if>
-			</c:forEach>
-			</c:if>
+				 </c:forEach>
+				 </c:if>
 			
-		
-		
-		
 		<!-- 부서 추가 모달창 시작 -->	
 		<div class="modal fade" data-backdrop="static" id="viewModal">
 		<div class="modal-dialog">
@@ -284,47 +186,6 @@
 		</div>
 		</div>
 		<!-- 부서 추가 모달창 끝 -->
-			
-	
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-		<!-- ---------------------------실험----------------------------- -->	
-		<!--
-		<c:if test="${not empty requestScope.depList}">
-	   	<c:forEach var="dep" items="${requestScope.depList}" begin="1" varStatus="i">	
-			<ul class="scroll" style="list-style: none; padding: 0  0  3px 0 ; width:227px;  margin-bottom: 40px; ">
-		     	<li class="borderline">
-			        <div class="accord" data-toggle="collapse" data-target="#${dep.ko_depname}"><a style="cursor: pointer; ">${dep.ko_depname}</a></div>
-				    <div id="${dep.ko_depname}" class="collapse">
-				       		<c:if test="${not empty requestScope.empList}">
-					   		<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
-					   		<c:if test="${dep.pk_dep_no eq emp.fk_department_id}">
-				            <ul class="list" style="list-style: none; ">
-				               <li>
-				                  <a href="#">${emp.emp_name}&nbsp;[${emp.ko_rankname}]</a>
-				               </li>
-				            </ul>
-				            </c:if>
-				            </c:forEach>
-				            </c:if>
-			         </div>
-		       </li>
-	       </ul>	
-	   </c:forEach>
-	   </c:if>
-	   -->
 							
   	</table>
   	
@@ -383,12 +244,11 @@
 				<td style="padding-bottom:25px;"><strong>부서*</strong></td>
 				<td>
 					<select id="department" name="department" class="form-control requiredInfo">
-					  <option value="100">영업</option>
-					  <option value="200">마케팅</option>
-					  <option value="300">기획</option>
-					  <option value="400">총무</option>
-					  <option value="500">인사</option>
-					  <option value="600">회계</option>
+					  <c:if test="${not empty requestScope.depList}">
+				   	  <c:forEach var="dep" items="${requestScope.depList}" varStatus="i">
+							<option value="${dep.pk_dep_no}">${dep.ko_depname}</option>
+					  </c:forEach>
+					  </c:if>	
 					</select>
 				<br>
 				</td>
@@ -397,14 +257,11 @@
 				<td style="padding-bottom:25px;"><strong>직급*</strong></td>
 				<td>
 					<select id="rank" name="rank" class="form-control requiredInfo">
-					  <option value="10">사원</option>
-					  <option value="20">주임</option>
-					  <option value="30">대리</option>
-					  <option value="40">과장</option>
-					  <option value="50">차장</option>
-					  <option value="60">부장</option>
-					  <option value="70">전무</option>
-					  <option value="80">사장</option>
+					  <c:if test="${not empty requestScope.rankList}">
+				   	  <c:forEach var="rank" items="${requestScope.rankList}" varStatus="i">
+							<option value="${rank.pk_rank_no}">${rank.ko_rankname}</option>
+					  </c:forEach>
+					  </c:if>
 					</select>
 				</td>
 			</tr>
@@ -487,13 +344,17 @@
 
 	var imgname = "";
 
-	$('.teamwon').slideUp();
+	
+
+	$('button[value*=8000]').slideUp();
 	
 	$( document ).ready(function() {
 		
 		$(document).on("click",".team",function(){
-			
+			$('.teamwon_'+$(this).val()).slideToggle();
 		});
+		
+		
 	 
 /////////////////////////////////////////////////////	  
 	  
@@ -564,38 +425,12 @@
 			dataType: 'json',
 			success : function(json) {
 				
-		  
-				var a; // 부서 select
-				var b; // 직급 select
-				
-				switch (json.department) {
-					case "영업": a=100; break;
-					case "마케팅": a=200; break;
-					case "기획": a=300; break;
-					case "총무": a=400; break;
-					case "인사": a=500; break;
-					case "회계": a=600; break;
-					case "--": a=700; break;
-				}
-				
-				switch (json.rank) {
-					case "사원": b=10; break;
-					case "주임": b=20; break;
-					case "대리": b=30; break;
-					case "과장": b=40; break;
-					case "차장": b=50; break;
-					case "부장": b=60; break;
-					case "전무": b=70; break;
-					case "사장": b=80; break;
-					case "--": b=90; break;
-				}
-				
 				$("input#select_user_no").val(json.pk_emp_no)
 				$("input#name").val(json.name)
 				$("input#rank").val(json.rank)
 				$("input#department").val(json.department)
-				$("select#department").val(a).prop("selected",true);
-				$("select#rank").val(b).prop("selected",true);
+				$("select#department").val(json.department_id).prop("selected",true);
+				$("select#rank").val(json.rank_id).prop("selected",true);
 				$("input#email").val(json.email)
 				$("input#phone").val(json.phone)
 				$("input#hp2").val(json.hp2)
@@ -851,6 +686,13 @@
 		/* -------------- 유효성 검사 끝 --------------  */			
 			
 /* 조직도  */
+var a = [];
+<c:if test="${not empty requestScope.rankList}">
+	<c:forEach var="rank" items="${requestScope.rankList}" varStatus="i">
+		a.push(['CEO', '${rank.ko_rankname}'])
+	</c:forEach>
+</c:if>
+
 
 Highcharts.chart('container', {
     chart: {
@@ -873,20 +715,25 @@ Highcharts.chart('container', {
             }
         }
     },
-
+    
     series: [{
+    	
         type: 'organization',
         name: 'Highsoft',
         keys: ['from', 'to'],
         data: [
             ['CEO', 'exe_director'],
+            a[0], // ['CEO', '사장']
+            a[1], // ['CEO', '전무']
+            ['exe_director', '부장'],
+            ['exe_director', '차장'],
+            ['exe_director', '과장'],
             ['exe_director', 'sales_team'],
             ['exe_director', 'marketing_team'],
             ['exe_director', 'planning_team'],
             ['exe_director', 'manager_team'],
             ['exe_director', 'personnel_team'],
             ['exe_director', 'accounting_team'],
-           
         ],
         levels: [{
             level: 0,

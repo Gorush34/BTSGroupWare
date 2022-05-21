@@ -47,7 +47,7 @@
 	
 	<!-- 상세부서정보 페이지에서 사원상세정보 ajax로 select 해오기 -->
 	<select id="addBook_depInfo_select_ajax" parameterType="int" resultType="com.spring.bts.hwanmo.model.EmployeeVO">
-		select E.pk_emp_no , E.emp_name , (D.ko_depname) AS ko_depname , (R.ko_rankname) AS ko_rankname , E.uq_email , E.uq_phone , E.address , E.detailaddress , e.extraaddress
+		select E.pk_emp_no , E.emp_name , (D.ko_depname) AS ko_depname , (R.ko_rankname) AS ko_rankname , E.fk_department_id , E.fk_rank_id ,  E.uq_email , E.uq_phone , E.address , E.detailaddress , e.extraaddress
 		from tbl_employees E
 		join tbl_rank_sort R
 		on E.fk_rank_id = r.pk_rank_no
@@ -128,8 +128,9 @@
 		<result property="manager"       column="manager"       	javaType="String"/>
 	</resultMap>
 	<select id="addBook_depList_select" resultMap="depList">
-		select * 
+		select *
 		from tbl_dep_sort
+		where not ko_depname = '--'
 	</select>
 	
 	<!-- 관리자에서 부서 추가하기 -->
@@ -137,6 +138,19 @@
 		insert into tbl_dep_sort (pk_dep_no , ko_depname , en_depname , manager)
 		values (#{pk_dep_no} , #{ko_depname} , #{en_depname} , #{manager})
 	</insert>
+	
+	
+	<!-- 직급리스트 가져오기 -->
+	<resultMap type="HashMap" id="rankList">
+		<result property="pk_rank_no"     	 column="pk_rank_no"    javaType="String"/>
+		<result property="ko_rankname" 	 	 column="ko_rankname"  	javaType="String"/>
+		<result property="en_rankname"  	 column="en_rankname"   javaType="String"/>
+	</resultMap>
+	<select id="addBook_rankList_select" resultMap="rankList">
+		select *
+		from tbl_rank_sort
+		where not ko_rankname = '--'
+	</select>
 	
 	
 

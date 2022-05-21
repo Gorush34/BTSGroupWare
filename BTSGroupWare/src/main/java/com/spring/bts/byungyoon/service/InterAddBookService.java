@@ -52,6 +52,9 @@ public interface InterAddBookService {
 
 	// 관리자에서 부서 추가하기
 	int addBook_dep_insert(Map<String, String> paraMap);
+
+	// 직급리스트 가져오기
+	List<Map<String, String>> addBook_rankList_select();
 	
 	
 }

@@ -146,6 +146,14 @@ public class AddBookDAO implements InterAddBookDAO {
 	}
 
 
+	// 직급리스트 가져오기
+	@Override
+	public List<Map<String, String>> addBook_rankList_select() {
+		List<Map<String, String>> rankList = sqlsession.selectList("byungyoon.addBook_rankList_select");
+		return rankList;
+	}
+
+
 
 	
 	
