@@ -443,9 +443,9 @@
 	<select id="scheduleCount" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_schedule
-		where fk_emp_no = #{pk_emp_no} and (to_date(sysdate, 'yy/mm/dd') BETWEEN startdate AND enddate)
-		OR (fk_lgcatgono = 2 and (to_date(sysdate, 'yy/mm/dd') BETWEEN startdate AND enddate))
-		OR ((fk_lgcatgono != 2 AND lower(joinuser) like '%'|| lower('#{emp_name}') ||'%') and (to_date(sysdate, 'yy/mm/dd') BETWEEN startdate AND enddate))     
+		where fk_emp_no = #{pk_emp_no} and (to_char(sysdate, 'yymmdd') BETWEEN to_char(startdate, 'yymmdd') AND to_char(enddate, 'yymmdd'))
+		OR (fk_lgcatgono = 2 and (to_char(sysdate, 'yymmdd') BETWEEN to_char(startdate, 'yymmdd') AND to_char(enddate, 'yymmdd')))
+		OR ((fk_lgcatgono != 2 and lower(joinuser) like '%'|| lower(#{emp_name}) ||'%') and (to_char(sysdate, 'yymmdd') BETWEEN to_char(startdate, 'yymmdd') AND to_char(enddate, 'yymmdd')))     
 	</select>
 	
 	<!-- 나의 예약현황 -->
