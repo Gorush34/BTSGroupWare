@@ -58,7 +58,7 @@
 	
 	<!-- 주소록 메인에서 select 해와서 연락처 update 하기 (select) -->
 	<select id="addBook_main_telUpdate_select" parameterType="int" resultType="com.spring.bts.byungyoon.model.AddBookVO">
-		select A.pk_addbook_no , A.ADDB_NAME , (D.ko_depname) AS ko_depname , (R.ko_rankname) AS ko_rankname , A.EMAIL , A.PHONE , A.COMPANYNAME , A.COM_TEL , A.COMPANY_ADDRESS , A.MEMO
+		select A.pk_addbook_no , A.ADDB_NAME , (D.ko_depname) AS ko_depname , (R.ko_rankname) AS ko_rankname , (R.pk_rank_no) AS fk_rank_no ,(D.pk_dep_no) AS fk_dept_no ,  A.EMAIL , A.PHONE , A.COMPANYNAME , A.COM_TEL , A.COMPANY_ADDRESS , A.MEMO
 		from tbl_addbook A
 		join tbl_rank_sort R
 		on A.fk_rank_no = R.pk_rank_no
@@ -149,6 +149,7 @@
 	<select id="addBook_rankList_select" resultMap="rankList">
 		select *
 		from tbl_rank_sort
+		where not ko_rankname = '--'
 	</select>
 	
 	<!-- 관리자에서 부서 삭제하기 -->
@@ -156,6 +157,29 @@
 		delete from tbl_dep_sort
 		where pk_dep_no = #{dep_delete} 
 	</delete>
+	
+	<!-- 직급리스트 가져오기(주소록) -->
+	<resultMap type="HashMap" id="ab_rankList">
+		<result property="pk_rank_no"     	 column="pk_rank_no"    javaType="String"/>
+		<result property="ko_rankname" 	 	 column="ko_rankname"  	javaType="String"/>
+		<result property="en_rankname"  	 column="en_rankname"   javaType="String"/>
+	</resultMap>
+	<select id="addBook_rankList_select_ab" resultMap="ab_rankList">
+		select *
+		from tbl_rank_sort
+	</select>
+	
+	<!-- 부서리스트 가져오기(주소록) -->
+	<resultMap type="HashMap" id="ab_depList">
+		<result property="pk_dep_no"     column="pk_dep_no"      	javaType="String"/>
+		<result property="ko_depname" 	 column="ko_depname"  		javaType="String"/>
+		<result property="en_depname"  	 column="en_depname"   		javaType="String"/>
+		<result property="manager"       column="manager"       	javaType="String"/>
+	</resultMap>
+	<select id="addBook_depList_select_ab" resultMap="ab_depList">
+		select *
+		from tbl_dep_sort
+	</select>
 	
 	
 

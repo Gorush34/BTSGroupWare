@@ -74,6 +74,14 @@ public interface InterAddBookDAO {
 	public int addBook_dep_delete(int dep_delete);
 
 
+	// 부서리스트 가져오기(주소록 --)
+	public List<Map<String, String>> addBook_depList_select_ab();
+
+
+	// 직급리스트 가져오기(주소록 --)
+	public List<Map<String, String>> addBook_rankList_select_ab();
+
+
 
 	
 }
