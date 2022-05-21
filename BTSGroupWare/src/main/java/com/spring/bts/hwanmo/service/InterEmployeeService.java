@@ -41,4 +41,23 @@ public interface InterEmployeeService {
 	// 로그인 처리하기
 	EmployeeVO getLoginMember(Map<String, String> paraMap);
 
+	// 관리자페이지 - 총 사원 수 가져오기
+	int getTotalCountEmp(Map<String, String> paraMap);
+
+	// 관리자페이지 - 총 사원 목록 가져오기
+	List<Map<String, Object>> getEmpAllWithPaging(Map<String, String> paraMap);
+
+	// 사원번호를 통해 정보를 받아옴
+	Map<String, Object> getMemberOne(int pk_emp_no);
+
+	// 배열에 담긴 사번에 따른 탈퇴처리
+	int updateHire(Map<String, String> paraMap);
+
+	// 배열에 담긴 사번에 따른 탈퇴처리(상세페이지)
+	int updateHireOne(String emp_no);
+
+	
+	
+	
+	
 }

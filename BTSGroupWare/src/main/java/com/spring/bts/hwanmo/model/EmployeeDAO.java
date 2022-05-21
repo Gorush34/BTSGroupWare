@@ -122,4 +122,38 @@ public class EmployeeDAO implements InterEmployeeDAO {
 		return loginuser;
 	} 
 	
+	// 관리자페이지 - 총 사원 수 가져오기
+	@Override
+	public int getTotalCountEmp(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("hwanmo.getTotalCountEmp", paraMap);
+		return n;
+	}
+
+	// 관리자페이지 - 총 사원 목록 가져오기
+	@Override
+	public List<Map<String, Object>> getEmpAllWithPaging(Map<String, String> paraMap) {
+		List<Map<String, Object>> empList = sqlsession.selectList("hwanmo.getEmpAllWithPaging", paraMap);
+		return empList;
+	}
+
+	// 사원번호를 통해 정보를 받아옴
+	@Override
+	public Map<String, Object> getMemberOne(int pk_emp_no) {
+		Map<String, Object> empMap = sqlsession.selectOne("hwanmo.getMemberOne", pk_emp_no);
+		return empMap;
+	}
+
+	// 배열에 담긴 사번에 따른 탈퇴처리
+	@Override
+	public int updateHire(Map<String, String> paraMap) {
+		int result = sqlsession.update("hwanmo.updateHire", paraMap);
+		return result;
+	}
+
+	@Override
+	public int updateHireOne(String emp_no) {
+		int result = sqlsession.update("hwanmo.updateHireOne", emp_no);
+		return result;
+	}
+	
 }
