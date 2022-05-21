@@ -83,7 +83,7 @@ public interface InterAttendanceService {
 	int vacCount(int pk_emp_no);
 
 	// 관리자페이지 - 총 연차신청서 개수 가져오기
-	int getTotalCountVacReport_all(String fk_emp_no);
+	int getTotalCountVacReport_all(Map<String, String> paraMap);
 
 	// 관리자페이지 - 페이징처리 한 결재대기중인 공가/경조신청목록 
 	List<Map<String, Object>> getAttListAllWithPaging(Map<String, String> paraMap);

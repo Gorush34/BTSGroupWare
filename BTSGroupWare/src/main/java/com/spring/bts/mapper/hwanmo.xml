@@ -115,7 +115,11 @@
 	
 	<!-- 한 사원에 대한 출퇴근기록 목록 가져오기 -->
 	<select id="getMyCommute" parameterType="HashMap" resultType="com.spring.bts.hwanmo.model.CommuteVO">
-		select regdate, nvl(in_time, -9999) AS in_time, nvl(out_time, -9999) AS out_time, nvl(total_workTime, -9999) AS total_workTime, fk_emp_no
+		select pk_worktime_no, regdate, in_time, out_time, total_workTime, fk_emp_no
+		from
+		(
+		select row_number() over(order by pk_worktime_no desc) AS rno, pk_worktime_no 
+			   , regdate, nvl(in_time, -9999) AS in_time, nvl(out_time, -9999) AS out_time, nvl(total_workTime, -9999) AS total_workTime, fk_emp_no
 		from tbl_commute
 		where fk_emp_no = #{fk_emp_no}
 		<if test='year != "" and month =="" '>
@@ -125,6 +129,8 @@
 		and regdate like #{year} || #{month} ||'%'
 		</if>
 		order by regdate desc
+		) V
+		where rno between #{startRno} and #{endRno} 
 	</select>
 	
 	<!-- 직급번호로 직급명 알아오기 -->
@@ -460,9 +466,20 @@
 	<!-- 관리자페이지 -->
 	
 	<!-- // 관리자페이지 - 총 연차신청서 개수 가져오기 -->
-	<select id="getTotalCountVacReport_all" parameterType="String" resultType="int">
+	<select id="getTotalCountVacReport_all" parameterType="HashMap" resultType="int">
 		select count(*)
-		from tbl_attendance
+		from tbl_attendance A JOIN tbl_leave L
+		ON A.fk_emp_no = L.fk_emp_no
+		JOIN tbl_employees E
+		ON L.fk_emp_no = E.pk_emp_no
+		JOIN tbl_dep_sort D
+		ON E.fk_department_id = D.pk_dep_no
+		JOIN tbl_att_sort S
+		On A.fk_att_sort_no = S.pk_att_sort_no
+		<if test="searchType != ''">
+		where lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>	
+		order by pk_att_num desc
 	</select>
 	
 	
@@ -501,6 +518,9 @@
 		ON E.fk_department_id = D.pk_dep_no
 		JOIN tbl_att_sort S
 		On A.fk_att_sort_no = S.pk_att_sort_no
+		<if test="searchType != ''">
+		where lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>	
 		order by A.pk_att_num desc
 		) V
 		where rno between #{startRno} and #{endRno}
