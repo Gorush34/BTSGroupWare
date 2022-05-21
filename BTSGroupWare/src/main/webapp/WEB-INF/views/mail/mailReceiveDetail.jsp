@@ -51,7 +51,7 @@ $(document).ready(function (){
 </script>
 
 <div class="col-xs-10" id="mailListDetailCss">
-		<div style="border-bottom: solid 1.5px #e6e6e6;" style="width: 90%;">	
+		<div style="border-bottom: solid 1.5px #e6e6e6;">	
 			<div>
 				<h4 style="color: black;">받은 메일함</h4>
 			</div>	
@@ -106,7 +106,7 @@ $(document).ready(function (){
 		</div>
 		<div>
 			<div style="margin-left: -10px; margin-top: 5px; border-top: solid 1.5px #e6e6e6;">
-				<p style="word-break: break-all;">${requestScope.mailvo.content}</p>
+				<p style="word-break: break-all;">&nbsp;${requestScope.mailvo.content}</p>
 			</div>
 		</div>	
 

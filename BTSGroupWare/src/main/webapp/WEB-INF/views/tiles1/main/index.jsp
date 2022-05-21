@@ -146,6 +146,7 @@ td.mail_subject:hover {
 		reservationCount();
 		employeeBirth();
 		readRecMail();
+		recMailCount();
 		vacCount();
 		
 	});// end of $(document).ready(function(){})----------------------
@@ -456,7 +457,34 @@ td.mail_subject:hover {
 				});
 				
 		}// end of function vacCount(){}-------------------------------------------------
+
 		
+	// 로그인한 사용자의 안읽은 메일 보여주는 함수
+	function recMailCount(){
+			
+			$.ajax({
+				url:"<%= ctxPath%>/mail/recMailCount.bts",
+				dataType:"JSON",
+				success:function(json){
+					//console.log("json.n"+json.n);
+					let html = "";
+					
+					if(json.n == 0){
+						html += 0;
+					}
+					else if(json.n > 0){
+						html += json.n;
+					}
+					
+					$("span#recMailCount").html(html);
+				},
+				error: function(request, status, error){
+						alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+				}
+			});
+			
+		}// end of function recMailCount(){}-------------------------------------------------
+				
 		
 		// 기상 관련함수 시작
 		
@@ -747,7 +775,7 @@ td.mail_subject:hover {
 			  }
 		});
 		
-	}// end of function recMailList()-----------------------
+	}// end of function readRecMail()-----------------------
 	  
   // 로그인한 사용자의 메일 상세내용 보여주기		
   function goView_recMail(pk_mail_num) {
@@ -953,6 +981,15 @@ td.mail_subject:hover {
 		        			<span class="badge" id="vacCount"></span>
 		        		</a>
 		        	</li>
+		        	<li class="summary-mail">
+		        		<a href="<%= ctxPath%>/mail/mailReceiveList.bts">
+		        			<span class="type">
+		        				<span class="ic_dashboard2 ic_type_report" title="mail"></span>
+		        			</span>
+		        			<span class="text">안읽은 메일</span>
+		        			<span class="badge" id="recMailCount"></span>
+		        		</a>
+		        	</li>	
 		        	<li class="summary-calendar">
 	     		        <a href="javascript:location.href='<%= ctxPath%>/calendar/calenderMain.bts'">
 		        			<span class="type">
@@ -980,24 +1017,6 @@ td.mail_subject:hover {
 		        			<span class="badge" id="rserCount"></span>
 		        		</a>
 		        	</li>
-		        	<li class="summary-report">
-		        		<a href="">
-		        			<span class="type">
-		        				<span class="ic_dashboard2 ic_type_report" title="report"></span>
-		        			</span>
-		        			<span class="text">작성할 보고</span>
-		        			<span class="badge">0</span>
-		        		</a>
-		        	</li>	
-		        	<li class="summary-survey">
-		        		<a href="">
-		        			<span class="type">
-		        				<span class="ic_dashboard2 ic_type_survey" title="survey"></span>
-		        			</span>
-		        			<span class="text">참여할 문서</span>
-		        			<span class="badge">0</span>
-		        		</a>
-		        	</li>	
 		        </ul>
 		    </div>
 		    <!-- 사원정보 끝 -->

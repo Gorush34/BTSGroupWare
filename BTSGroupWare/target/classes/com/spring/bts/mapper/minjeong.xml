@@ -368,7 +368,6 @@
  	-->	
 
 	<!-- 페이징처리 / 검색기능 포함 된 휴지통 목록에서 상세내용 조회하기 (이전글, 다음글 포함) -->
-
 	<select id="getRecyclebinMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">	
 		select prev_seq ,pk_mail_num
      		 , prev_subject, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content, reg_date, reservation_date
@@ -495,7 +494,6 @@
 		where V.pk_mail_num = #{pk_mail_num}
 	</select>
 	
-
 	
 	<!-- 발송예약된 예약메일의 상태값을 1에서 0으로 변경한다. -->
 	<update id="add_updateResStatus" parameterType="com.spring.bts.minjeong.model.MailVO">
@@ -536,6 +534,24 @@
 		) V
 		where rno between #{startRno} and #{endRno}
 	</select> 	
+
+	<!-- 페이징처리 / 검색기능 포함 된 임시보관함 목록에서 작성하던 글 보기 (이전글, 다음글 포함) -->
+	<select id="getTemporaryMailView" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">	
+		select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content, reg_date
+			 , filename, orgfilename, filesize, reservation_date
+				from
+				(
+				    select pk_mail_num, fk_senduser_num, fk_receiveuser_num, recemail, sendemail, recempname, sendempname, subject, content
+				         , to_char(reg_date, 'yyyy-mm-dd hh24:mi:ss') as reg_date         
+				         , fileName, orgFilename, fileSize, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+				    from tbl_mail
+					<if test='searchType != "" and searchWord != "" '>
+					where lower(${searchType}) like '%'|| lower(#{searchWord}) || '%'
+					</if>	    
+				) V
+		where V.pk_mail_num = #{pk_mail_num}
+	</select>
+
 
 	<!-- 임시보관함에서 제목 클릭했을 때 넘어왔을 경우 받아온 글번호인 pk_mail_num 의 temp_status 를 update (수정함) -->
 <!-- 
@@ -848,5 +864,23 @@
 		order by R.pk_rank_no
 	</select>
 	<!-- 다중메일 발송을 위해 사원 정보 가져오기 끝 -->
+	
+	<!--  로그인한 사용자의 안읽은 메일갯수 가져오기 (rec_status=0) / 메인페이지 -->
+		<select id="recMailCount_main" parameterType="String" resultType="int">
+		select count(*)
+		from 
+		(
+		select row_number() over(order by pk_mail_num desc) AS rno,
+		       pk_mail_num, fk_senduser_num, sendempname, subject
+		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+		       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+		       , importance, importance_star_rec, rec_status
+		from tbl_mail M join tbl_mailread R
+		on m.pk_mail_num = r.fk_mail_num
+		where fk_receiveuser_num = #{fk_receiveuser_num} and fk_senduser_num != #{fk_receiveuser_num} and
+		del_status = 0 and reservation_status = 0 and temp_status = 0 and rec_status = 0	
+		order by pk_mail_num desc
+		) V
+	</select>
 
 </mapper>

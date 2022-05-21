@@ -175,7 +175,7 @@ border: 1px solid black; background-color: rgba(0,0,0,0); color: black; margin-l
 
 <%-- 보낸 메일함 목록 보여주기 --%>	
 <div class="col-xs-10" style="width: 90%; margin: 10px; padding-top: 20px;">
-	<div style="border-bottom: solid 1.5px #e6e6e6;" style="width: 90%;" >		
+	<div>		
 		<div>
 			<h4 style="color: black;">보낸 메일함</h4>
 		</div>
@@ -212,7 +212,7 @@ border: 1px solid black; background-color: rgba(0,0,0,0); color: black; margin-l
 				</div>
 				
 				<div class="table-responsive" style="color: black;">
-					<table>
+					<table class="table">
 						<thead>
 							<tr>
 								<th style="width: 2%;">
@@ -225,9 +225,9 @@ border: 1px solid black; background-color: rgba(0,0,0,0); color: black; margin-l
 									<span class="fa fa-paperclip"></span>
 								</th>
 								<th style="width: 10%;" class="text-center">받는이</th>
-								<th style="width: 57%;">제목</th>
-								<th style="width: 13%;" class="text-left">전송일자</th>
-								<th style="width: 38%;">수신확인일자</th>								
+								<th style="width: 53%;">제목</th>
+								<th style="width: 15%;" class="text-left">전송일자</th>
+								<th style="width: 40%;">수신확인일자</th>								
 							</tr>
 						</thead>
 						

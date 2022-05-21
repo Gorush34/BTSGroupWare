@@ -968,5 +968,29 @@ from
 where V.seq = '2'
 
 
+delete from tbl_employees
+where pk_emp_no = '80000110'
 
+commit;
 
+select *
+from tbl_employees
+
+select *
+from tbl_mail
+order by pk_mail_num desc;
+
+select count(*)
+from 
+(
+select row_number() over(order by pk_mail_num desc) AS rno,
+       pk_mail_num, fk_senduser_num, sendempname, subject
+       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
+       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
+       , importance, importance_star_rec, rec_status
+from tbl_mail M join tbl_mailread R
+on m.pk_mail_num = r.fk_mail_num
+where fk_receiveuser_num = '80000011' and fk_senduser_num != '80000011' and
+del_status = 0 and reservation_status = 0 and temp_status = 0 and rec_status = 0	
+order by pk_mail_num desc
+)V
