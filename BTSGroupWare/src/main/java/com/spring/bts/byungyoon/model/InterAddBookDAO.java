@@ -70,6 +70,10 @@ public interface InterAddBookDAO {
 	public List<Map<String, String>> addBook_rankList_select();
 
 
+	// 관리자에서 부서 삭제하기
+	public int addBook_dep_delete(int dep_delete);
+
+
 
 	
 }

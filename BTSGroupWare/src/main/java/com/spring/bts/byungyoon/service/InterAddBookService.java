@@ -55,6 +55,9 @@ public interface InterAddBookService {
 
 	// 직급리스트 가져오기
 	List<Map<String, String>> addBook_rankList_select();
+
+	// 관리자에서 부서 삭제하기
+	int addBook_dep_delete(int dep_delete);
 	
 	
 }

@@ -118,7 +118,8 @@
 					<!-- 부서 추가 모달창 띄우기 -->
 					<c:choose>
 					<c:when test="${sessionScope.loginuser.pk_emp_no eq 80000001}">
-							<button class="btn btn-default" data-toggle="modal" data-target="#viewModal" style="">+부서추가</button>
+							<button class="btn btn-default" data-toggle="modal" data-target="#viewModal" style="">+부서추가</button> <form name="dep_deleteFrm"><input type="hidden" id="dep_delete" name="dep_delete" value="" /></form>
+							<button class="btn btn-default" onclick="dep_delete()" style="">-부서삭제</button>
 					</c:when>
 					</c:choose>
 					<!-- 부서 추가 모달창 띄우기 -->
@@ -127,9 +128,8 @@
 		   		<c:if test="${not empty requestScope.depList}">
 		   		<c:forEach var="dep" items="${requestScope.depList}" varStatus="i">
 		   		<tr style="">
-					<td><input type="hidden" id="" value="${emp.pk_emp_no}"/><button class="btn btn-default team" id="team_${i.count}" value="${dep.pk_dep_no}" style="width:200px; border: solid darkgray 2px;">${dep.ko_depname}</button></td>
+					<td><button class="btn btn-default team" id="team_${i.count}" value="${dep.pk_dep_no}" style="width:200px; border: solid darkgray 2px;">${dep.ko_depname}</button></td>
 				</tr>
-					
 					<c:if test="${not empty requestScope.empList}">
 			   		<c:forEach var="emp" items="${requestScope.empList}" varStatus="i">
 			   		<c:if test="${dep.pk_dep_no eq emp.fk_department_id}">
@@ -351,6 +351,7 @@
 	$( document ).ready(function() {
 		
 		$(document).on("click",".team",function(){
+			$("#dep_delete").val($(this).val());
 			$('.teamwon_'+$(this).val()).slideToggle();
 		});
 		
@@ -447,13 +448,19 @@
 	}	
 	
 	
-	function create() {
+	function create() { // 부서추가
 		
 		const frm = document.depInsertFrm;
 		frm.action = "<%= ctxPath%>/addBook/addBook_dep_insert.bts"
 		frm.method = "POST";
 		frm.submit();
-		
+	}
+	
+	function dep_delete() { // 부서 삭제
+		const frm = document.dep_deleteFrm;
+		frm.action = "<%= ctxPath%>/addBook/addBook_dep_delete.bts"
+		frm.method = "POST";
+		frm.submit();
 	}
 	
 	
@@ -686,12 +693,6 @@
 		/* -------------- 유효성 검사 끝 --------------  */			
 			
 /* 조직도  */
-var a = [];
-<c:if test="${not empty requestScope.rankList}">
-	<c:forEach var="rank" items="${requestScope.rankList}" varStatus="i">
-		a.push(['CEO', '${rank.ko_rankname}'])
-	</c:forEach>
-</c:if>
 
 
 Highcharts.chart('container', {
@@ -723,11 +724,6 @@ Highcharts.chart('container', {
         keys: ['from', 'to'],
         data: [
             ['CEO', 'exe_director'],
-            a[0], // ['CEO', '사장']
-            a[1], // ['CEO', '전무']
-            ['exe_director', '부장'],
-            ['exe_director', '차장'],
-            ['exe_director', '과장'],
             ['exe_director', 'sales_team'],
             ['exe_director', 'marketing_team'],
             ['exe_director', 'planning_team'],

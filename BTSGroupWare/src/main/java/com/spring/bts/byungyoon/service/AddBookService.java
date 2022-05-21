@@ -173,6 +173,16 @@ public class AddBookService implements InterAddBookService  {
 	}
 
 
+	// 관리자에서 부서 삭제하기
+	@Override
+	public int addBook_dep_delete(int dep_delete) {
+		
+		int n = dao.addBook_dep_delete(dep_delete);
+		
+		return n;
+	}	
+
+
 	
 	
 	

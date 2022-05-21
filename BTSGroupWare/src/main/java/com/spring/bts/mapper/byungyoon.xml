@@ -149,8 +149,13 @@
 	<select id="addBook_rankList_select" resultMap="rankList">
 		select *
 		from tbl_rank_sort
-		where not ko_rankname = '--'
 	</select>
+	
+	<!-- 관리자에서 부서 삭제하기 -->
+	<delete id="addBook_dep_delete" parameterType="int">
+		delete from tbl_dep_sort
+		where pk_dep_no = #{dep_delete} 
+	</delete>
 	
 	
 

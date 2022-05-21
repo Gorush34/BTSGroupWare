@@ -154,6 +154,16 @@ public class AddBookDAO implements InterAddBookDAO {
 	}
 
 
+	// 관리자에서 부서 삭제하기
+	@Override
+	public int addBook_dep_delete(int dep_delete) {
+	
+		int n = sqlsession.delete("byungyoon.addBook_dep_delete" , dep_delete);
+		
+		return n;
+	}
+
+
 
 	
 	
