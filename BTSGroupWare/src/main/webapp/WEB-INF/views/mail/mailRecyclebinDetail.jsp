@@ -85,16 +85,16 @@ $(document).ready(function (){
 		</div>
 		<div>
 			<div style="margin-left: -10px; margin-top: 5px; border-top: solid 1.5px #e6e6e6;">
-				<p style="word-break: break-all;">&nbsp;${requestScope.mailvo.content}</p>
+				<p style="word-break: break-all;">${requestScope.mailvo.content}</p>
 			</div>
 		</div>	
 
 
 	<%-- 이전글, 다음글 영역 --%>
 		<div style="margin-top: 400px;">
-			<span class="move" onclick="javascript:location.href='mailRecyclebinDetail.bts?pk_mail_num=${requestScope.mailvo.prev_seq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}'"><i class="fa fa-sort-desc" aria-hidden="true"></i>&nbsp;&nbsp;이전글제목 : ${requestScope.mailvo.prev_subject}</span>
+			<span class="move" onclick="javascript:location.href='mailRecyclebinDetail.bts?pk_mail_num=${requestScope.mailvo.prev_seq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}'"><i class="fa fa-sort-desc" aria-hidden="true"></i>&nbsp;&nbsp;이전 메일 : ${requestScope.mailvo.prev_subject}</span>
 			<hr>
-			<span class="move" onclick="javascript:location.href='mailRecyclebinDetail.bts?pk_mail_num=${requestScope.mailvo.next_seq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}'"><i class="fa fa-sort-desc" aria-hidden="true"></i>&nbsp;&nbsp;다음글제목 : ${requestScope.mailvo.next_subject}</span>
+			<span class="move" onclick="javascript:location.href='mailRecyclebinDetail.bts?pk_mail_num=${requestScope.mailvo.next_seq}&searchType=${requestScope.paraMap.searchType}&searchWord=${requestScope.paraMap.searchWord}'"><i class="fa fa-sort-desc" aria-hidden="true"></i>&nbsp;&nbsp;다음 메일 : ${requestScope.mailvo.next_subject}</span>
 			<br/>
 		</div>
 	</div>

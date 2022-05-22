@@ -321,7 +321,7 @@
 								</th>
 								<th style="width: 10%;" class="text-center">보낸이</th>
 								<th style="width: 70%;">제목</th>
-								<th style="width: 20%;" class="text-left">날짜</th>
+								<th style="width: 20%;" class="text-left">전송일자</th>
 							</tr>
 						</thead>
 						

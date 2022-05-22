@@ -122,7 +122,7 @@ public class MailController {
 	
 	// =========================== 메일쓰기  =========================== //
 	
-	// 메일 쓰기 폼페이지 요청 (추후 로그인 AOP 추가 requiredLogin_) 
+	// 메일 쓰기 폼페이지 요청
 	@RequestMapping(value = "/mail/mailWrite.bts", produces = "text/plain; charset=UTF-8")	
 	public ModelAndView requiredLogin_mailWrite(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
@@ -587,9 +587,6 @@ public class MailController {
 		HttpSession session = request.getSession();
 		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
 
-		
-	//	System.out.println("받은메일함 페이지에서 로그인한 사용자 id (사원번호) 받아오기 " + loginuser.getPk_emp_no());
-		
 		String fk_receiveuser_num = String.valueOf(loginuser.getPk_emp_no());
 		String empname = String.valueOf(loginuser.getEmp_name());
 				
@@ -987,9 +984,6 @@ public class MailController {
 		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
 		HttpSession session = request.getSession();
 		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
-
-		
-	//	System.out.println("보낸메일함 수신확인 목록 페이지에서 로그인한 사용자 id (사원번호) 받아오기 " + loginuser.getPk_emp_no());
 		
 		String fk_senduser_num = String.valueOf(loginuser.getPk_emp_no());
 		String empname = String.valueOf(loginuser.getEmp_name());
@@ -1006,8 +1000,7 @@ public class MailController {
 		if(searchType == null || (!"subject".equals(searchType)) && (!"recempname".equals(searchType)) ) {
 			searchType = "";
 		}
-		
-		// 검색 입력창에 아무것도 입력하지 않았을 때 or 공백일 때 기본값을 보여주도록 한다.
+
 		if(searchWord == null || "".equals(searchWord) && searchWord.trim().isEmpty()) {
 			searchWord = "";
 		}
