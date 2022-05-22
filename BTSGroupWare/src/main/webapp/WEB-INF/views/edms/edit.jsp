@@ -152,7 +152,7 @@
 		const frm = document.editFrm;
 		frm.method = "POST";
 		frm.action = "<%= ctxPath%>/edms/editEnd.bts";
-			frm.submit();
+		frm.submit();
 		}); // end of $("button#btnWrite").click(function(){}) --------------------
 
 		

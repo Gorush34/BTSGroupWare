@@ -1011,7 +1011,7 @@ public class EdmsController {
 		}
 		else {
 			mav.addObject("message", "글 수정 성공!!");
-			mav.addObject("loc", request.getContextPath()+"/view.bts?pk_appr_no="+apprvo.getPk_appr_no());
+			mav.addObject("loc", request.getContextPath()+"/edms/view.bts?pk_appr_no="+apprvo.getPk_appr_no());
 		}
 		
 		mav.setViewName("msg");
