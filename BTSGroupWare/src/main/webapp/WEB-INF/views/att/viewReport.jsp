@@ -35,7 +35,6 @@
 		console.log("isDecided : " + isManager);
 		console.log("매니저값 : " + $("input#manager").val());
 		console.log("사원번호 : " + $("input#fk_emp_no").val());
-		// 기능 테스트 다하고 열어라
 		
 		$("button#btnSignOff").hide();
 		$("button#btnReject").hide();
@@ -215,13 +214,13 @@
 			      	${vac.manager_rankname}
 			      </td>
 			    </tr>
-			    
+			    <c:if test="${vac.approval_status eq 0}">
 			    <tr style="text-align: center; " class="managerOnly" id="bold_hr">
 			      <th class="th_title" style="text-align: center;">의견작성란</th>
 			      <td colspan="3" style="text-align: left;"><input type="text" id="fin_app_opinion" name="fin_app_opinion" style="width: 80%; height: 100px;"/>			    
 			      </td>
 			    </tr>
-			    
+			    </c:if>
 			    <c:if test="${vac.approval_status ne 0}">
 			    <tr style="text-align: center; " id="bold_hr">
 			      <th class="th_title" style="text-align: center;">결재자의견</th>

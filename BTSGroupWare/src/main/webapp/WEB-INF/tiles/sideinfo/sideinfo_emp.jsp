@@ -47,10 +47,12 @@
 						alert("출근하셨습니다. 오늘도 좋은 하루 되세요!");
 						$("button#in_time").prop("disabled",true);
 						$("span#workin").html( $("span#clock").text() );
+						window.location.reload();
 					}
 					else if(json.n == 0) {
 						alert("출근했잖아 이양반아... 그래도 좋은 하루 되세요!");
 						$("button#in_time").prop("disabled",true);
+						window.location.reload();
 					}
 				} // end of success----------------------------------
 			}); // end of $.ajax({})------------------------
@@ -83,11 +85,13 @@
 							$("button#in_time").prop("disabled",true);
 							$("button#out_time").prop("disabled",true);
 							$("span#workout").html( out_time );
+							window.location.reload();
 						}
 						else if(json.n == 0) {
 							alert("퇴근했잖아 이양반아... 수고했어 오늘도~");
 							$("button#in_time").prop("disabled",true);
 							$("button#out_time").prop("disabled",true);
+							window.location.reload();
 						}
 					} // end of success----------------------------------
 				}); // end of $.ajax({})------------------------

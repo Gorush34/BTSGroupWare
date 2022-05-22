@@ -344,7 +344,6 @@ public class EmployeeController {
 			Random rnd = new Random();
 			
 			String certificationCode = "";
-			// 인증키는 영문소문자 5글자 + 숫자 7글자 로 만들겠습니다.
 			// 예: certificationCode ==> dmgrm4745003
 			
 			char randchar = ' ';
@@ -358,7 +357,6 @@ public class EmployeeController {
 						
 			} // end of for------------------
 			
-			int randnum = 0;
 			for(int i=0; i<7; i++) {
 				int rndnum = rnd.nextInt(9 - 0 + 1) + 0;
 				certificationCode += rndnum;
@@ -506,9 +504,6 @@ public class EmployeeController {
 		// 복호화된 이메일 삽입
 		loginuser.setUq_email(uq_email);
 		// 복호화된 폰번호 삽입
-		// System.out.println("확인용 폰번호 : " + uq_phone);
-		// System.out.println("쪼개놓은거2 : " + uq_phone.substring( (uq_phone.indexOf("-")+1), uq_phone.lastIndexOf("-") ) );
-		// System.out.println("쪼개놓은거3 : " +  uq_phone.substring( (uq_phone.lastIndexOf("-")+1) ));
 		loginuser.setHp2( uq_phone.substring( (uq_phone.indexOf("-")+1), uq_phone.lastIndexOf("-") ) );
 		loginuser.setHp3( uq_phone.substring( (uq_phone.lastIndexOf("-")+1) ) );
 		
@@ -912,18 +907,16 @@ public class EmployeeController {
 	@RequestMapping(value="/emp/updateHire.bts", produces="text/plain;charset=UTF-8")
 	public String updateHire(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 	
-		String pk_emp_no_str = request.getParameter("pk_emp_no_str");
 		
 		// 변경할 사원 수
 		String cnt = request.getParameter("cnt");
 		
+		String pk_emp_no_str = request.getParameter("pk_emp_no_str");
 		String[] arr_pk_emp_no = new String[0];
-		
 		pk_emp_no_str = pk_emp_no_str.replaceAll("\\[", "");
 		pk_emp_no_str = pk_emp_no_str.replaceAll("\\]", "");
 		pk_emp_no_str = pk_emp_no_str.replaceAll("\"", "");
 		pk_emp_no_str = pk_emp_no_str.trim();	// 공백 제거
-			
 		arr_pk_emp_no = pk_emp_no_str.split(",");
 		
 		Map<String, String> paraMap = new HashMap<>();

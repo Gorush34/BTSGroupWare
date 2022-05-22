@@ -362,7 +362,6 @@
 		
 	 	// 사진변경버튼 클릭시
 	 	$("button#updateImage").on("click", function (event) {
-	 		/// event.preventDefault(); 
 	 		var url = $("#updateImgFrm").attr("action"); 
 	 		var form = $('#updateImgFrm')[0]; 
 	 		var formData = new FormData(form); 
@@ -374,9 +373,6 @@
 	 		  , async: false
 	 		  , success: function (json) { 
 	 			 alert("사진이 변경되었습니다. 변경된 사진은 재접속시 적용됩니다.");
-	 			 <%-- $("#empProfile").attr("src", "<%= ctxPath%>/resources/files/${json.img_name}"); --%>
-	 			 /* $("#empProfile").attr("src", json.path +"/"+json.img_name);  */
-	 			 // history.go(0);
 	 		  }, error: function (json) { 
 	 			  alert("실패!");
 	 		  }, 
@@ -384,8 +380,9 @@
 	 		  , contentType: false
 	 		  , processData: false 
 	 		  });
-	 	
 	 	}); // end of $("button#updateImage").on("click", function (event) {}---------------------------
+	
+	 			
 	}); // end of $(document).ready(function() {})---------------
 	
 	// 함수 정의

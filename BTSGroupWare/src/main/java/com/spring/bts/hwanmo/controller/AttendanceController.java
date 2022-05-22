@@ -270,9 +270,6 @@ public class AttendanceController {
 			// 출퇴근시간을 알아오자.
 			workInOut = attService.getTodayworkInOutTime(paraMap);
 			
-			// System.out.println("확인용 출근시간 : " + workInOut.get("in_time"));
-			// System.out.println("확인용 퇴근시간 : " + workInOut.get("out_time"));
-			
 			in_time = workInOut.get("in_time");
 			out_time = workInOut.get("out_time");
 		}
@@ -328,16 +325,8 @@ public class AttendanceController {
 		String clock = request.getParameter("clock");
 		String fk_emp_no = request.getParameter("fk_emp_no");
 		
-		// System.out.println(" 확인용 yymmdd : " + yymmdd);
-		// System.out.println(" 확인용 clock : " + clock);
-		// System.out.println(" 확인용 fk_emp_no : " + fk_emp_no);
-		
 		yymmdd = yymmdd.replaceAll("-", "");
 		yymmdd = yymmdd.substring(0, 8);
-		// System.out.println("바꾼 yymmdd : " + yymmdd );
-		
-		// clock = clock.replaceAll(":", "");
-		
 		
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("fk_emp_no", fk_emp_no);
@@ -345,7 +334,6 @@ public class AttendanceController {
 		paraMap.put("in_time", clock);
 		
 		int isExist = attService.getTodayCommute(paraMap);
-		// System.out.println("나와라 isExist : " + isExist);
 		int n = 0;
 		
 		JSONObject jsonObj = new JSONObject();
@@ -354,13 +342,11 @@ public class AttendanceController {
 		if(isExist == 0) { // 없다면
 			// 날짜, 출근시간 입력한 테이블 insert
 			n = attService.insertTodayCommute(paraMap);
-			// System.out.println("잘 들어갔니? n : " + n);
 			if(n==1) {
-				// System.out.println("컨트롤러에서 insert 성공!");
 				jsonObj.put("n", n);
 			}
 			else {
-				System.out.println("뭔가 이상한 실패..");
+				System.out.println("실패..");
 			}
 		}
 		else if(isExist == 1) {
@@ -715,12 +701,6 @@ public class AttendanceController {
 		if( "".equals(fin_app_opinion.trim()) ) {
 			fin_app_opinion = "내용없음";
 		}
-
-		
-		
-		// System.out.println(" isRejected : " + isRejected);
-		// System.out.println(" att_content : " + att_content);
-		// System.out.println(" pk_att_num : " + pk_att_num);
 		
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("isRejected", isRejected);
@@ -734,8 +714,6 @@ public class AttendanceController {
 		String loc = "";
 		
 		if( n == 1 ) {
-			
-			// System.out.println("결재상황 업데이트 성공");
 			// 연차테이블 최신화 위해 사원번호와 연차차감개수 가져옴
 			String report_emp_no = request.getParameter("report_emp_no"); // 상신자 사원번호
 			String minus_cnt = request.getParameter("minus_cnt");
@@ -744,7 +722,6 @@ public class AttendanceController {
 
 			// 반려시 차감 없음
 			if( "1".equals(isRejected) ) {
-				// System.out.println("반려됐음.");
 				report_emp_no = "";
 				minus_cnt = "";
 				instead_vac_days = "";
@@ -753,10 +730,6 @@ public class AttendanceController {
 				loc =  request.getContextPath()+"/att/myAtt.bts"; 
 			}
 			else {
-				// System.out.println(" report_emp_no : " + report_emp_no);
-				// System.out.println(" minus_cnt : " + minus_cnt);
-				// System.out.println(" instead_vac_days : " + instead_vac_days);
-				
 				Map<String, String> attMap = new HashMap<>();
 				attMap.put("report_emp_no", report_emp_no);
 				attMap.put("minus_cnt", minus_cnt);
@@ -766,7 +739,6 @@ public class AttendanceController {
 				int up = attService.updateLeave(attMap);
 				
 				if(up == 1) {
-					// System.out.println(" 결재완료와에 동시에 연차테이블 수정 : " + up);
 					message = "업데이트가 성공하였습니다.";
 					loc =  request.getContextPath()+"/att/myAtt.bts"; 
 				}
@@ -891,7 +863,7 @@ public class AttendanceController {
 		// System.out.println(" 부서장이니? : " + checkManager );
 		
 		if(checkManager == 0 && !"80000001".equals(fk_emp_no) ) {
-			// 부서장이 아니라면
+			// 부서장이나 관리자가 아니라면
 			message = "접근권한이 없습니다.";
 			loc =  request.getContextPath()+"/att/myAtt.bts"; 
 			
