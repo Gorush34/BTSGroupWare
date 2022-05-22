@@ -108,10 +108,10 @@
           	</td>
           	
           	<td rowspan="4" class="edmsviewtbl">중<br/>간<br/>결<br/>재<br/>자</td>
-          	<td class="edmsviewtbl">${requestScope.apprvo.ko_depname}</td>
+          	<td class="edmsviewtbl">${requestScope.midDepName.MID_DEP}</td>
              
 			<td rowspan="4" class="edmsviewtbl">최<br/>종<br/>결<br/>재<br/>자</td>
-          	<td class="edmsviewtbl">${requestScope.apprvo.ko_depname}</td>
+          	<td class="edmsviewtbl">${requestScope.finDepName.FIN_DEP}</td>
 		</tr>
 		
 		<tr>

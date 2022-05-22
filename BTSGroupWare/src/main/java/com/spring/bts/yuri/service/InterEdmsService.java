@@ -122,7 +122,11 @@ public interface InterEdmsService {
 	// 메인에서 로그인유저의 중간결재 대기문서 개수 가져오기
 	int getWaitingSignListCount(Map<String, String> paramMap);
 
-		
+	
+
+	// 문서 상세보기에서 중간결재자와 최종결재자의 부서명 가져오기
+	Map<String, String> getMidDepName(String pk_appr_no);
+	Map<String, String> getFinDepName(String pk_appr_no);
 	
 	
 	

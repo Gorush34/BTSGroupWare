@@ -312,5 +312,15 @@ public class EdmsDAO implements InterEdmsDAO {
 		return sqlsession.selectOne("yuri.getWaitingSignListCount", paramMap);
 	}
 
+	@Override
+	public Map<String, String> getMidDepName(String pk_appr_no) {
+		return sqlsession.selectOne("yuri.getMidDepName", pk_appr_no);
+	}
+
+	@Override
+	public Map<String, String> getFinDepName(String pk_appr_no) {
+		return sqlsession.selectOne("yuri.getFinDepName", pk_appr_no);
+	}
+
 
 }

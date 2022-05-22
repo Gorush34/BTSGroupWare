@@ -342,6 +342,20 @@ public class EdmsService implements InterEdmsService {
 		return dao.getWaitingSignListCount(paramMap);
 	}
 
+	
+	// 문서 상세보기에서 중간결재자,최종결재자 부서명 가져오기
+	@Override
+	public Map<String, String> getMidDepName(String pk_appr_no) {
+		Map<String, String> midDepName = dao.getMidDepName(pk_appr_no);
+		return midDepName;
+	}
+
+	@Override
+	public Map<String, String> getFinDepName(String pk_appr_no) {
+		Map<String, String> finDepName = dao.getFinDepName(pk_appr_no);
+		return finDepName;
+	}
+
 
 	
 	

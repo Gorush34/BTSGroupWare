@@ -27,12 +27,12 @@
 		$("div#searchAutoComplete").hide();
 		
 		$("input#searchWord").keyup(function() {
-			// 검색어의 길이를 알아온다.
 			const wordLength = $(this).val().trim().length;
-			// 검색어가 공백이거나 검색어 입력 후 검색어를 지우면
-			// 검색된 내용이 안 나오도록 해야 한다.
+			// 검색어의 길이를 알아온다.
+			
 			if(wordLength == 0) {
 				$("div#searchAutoComplete").hide();
+				// 검색어가 공백이거나 검색어 입력후 백스페이스키를 눌러서 검색어를 모두 지우면 검색된 내용이 안 나오도록 해야 한다.
 			}
 			else {
 				$.ajax({
@@ -44,27 +44,48 @@
 					success:function(json) {
 						
 						<%-- === 검색어 입력시 자동글 완성하기 === --%>
-						// 검색된 데이터가 있는 경우
-						if(json.length > 0) {
+						if(json.length > 0) { // 검색된 데이터가 있는 경우
 							let html = "";
-							$.each(json, function(index, item) {
-								
+							$.each(json, function(index, item) { // item ==> {"word":"프로그램은 JAVA 가 쉬운가요?"}, key값은 word
 								const word = item.word;
+								// word ==> 프로그램은 JAVA 가 쉬운가요?
+								
 								const idx = word.toLowerCase().indexOf($("input#searchWord").val().toLowerCase());
+								// 			word ==> 프로그램은 java 가 쉬운가요?
+								// 검색어(JaVa)가 나오는  idx는  6이 된다(0부터 세고 공백도 세니까)
+								
 								const len = $("input#searchWord").val().length;
-																	
-								// 검색어만 파란색으로 변경한 후 다시 합치기
-								const result = word.substring(0, idx) + "<span style='color: blue;'>" 
-											+ word.substring(idx, idx+len) + "</span>" + word.substring(idx+len);
+								// 검색어(JaVa)의 길이 len 은 4가 된다.
+								
+								// substr은 오라클과 같고, substring은 java와 같다!
+							
+								// JAVA 방식	
+								/*
+								console.log("~~~~~~~~~~~ 시작 ~~~~~~~~~~~");
+								console.log(word.substring(0, idx));		// 검색어(JaVa) 앞까지의 글자 => "프로그램은"
+								console.log(word.substring(idx, idx+len));	// 검색어(JaVa) 글자 => "JAVA"
+								console.log(word.substring(idx+len));	// 검색어(JaVa) 뒤부터 끝까지 글자 => " 가 쉬운가요?"
+								console.log("~~~~~~~~~~~ 끝 ~~~~~~~~~~~");
+								*/
+								
+								// 오라클 방식
+								/*
+								console.log("~~~~~~~~~~~ 시작 ~~~~~~~~~~~");
+								console.log(word.substr(0, idx));		// 검색어(JaVa) 앞까지의 글자 => "프로그램은"
+								console.log(word.substr(idx, len));	// 검색어(JaVa) 글자 => "JAVA"
+								console.log(word.substring(len?);	// 검색어(JaVa) 뒤부터 끝까지 글자 => " 가 쉬운가요?"
+								console.log("~~~~~~~~~~~ 끝 ~~~~~~~~~~~");
+								*/
+								
+								// 하고자 하는 것 => JAVA만 css를 파란색으로 주고 다시 합치기
+								const result = word.substring(0, idx) + "<span style='color: blue;'>" + word.substring(idx, idx+len) + "</span>" + word.substring(idx+len);
 								
 								html += "<span style='cursor: pointer;' class='result'>" +result + "</span><br>";
 							});
 							
 							// 검색창 크기 바꾸기
-							const input_width = $("input#searchWord").css("width");
-							
-							// 검색결과 div의 width 크기를 검색어 입력 input 태그의 width와 일치시키기
-							$("div#searchAutoComplete").css({"width":input_width});
+							const input_width = $("input#searchWord").css("width"); // 검색창의 크기
+							$("div#searchAutoComplete").css({"width":input_width}); // 검색결과 div의 width 크기를 검색어 입력 input 태그의 width와 일치시키기
 							
 							// 결과 보이기
 							$("div#searchAutoComplete").html(html);
@@ -249,23 +270,20 @@
 			${requestScope.pageBar}
 		</div>
 		
-		<%-- === 글검색 폼 === --%>
+		<%-- === 글검색 폼 추가하기 : 글제목, 글쓴이로 검색을 하도록 한다. === --%>
 		<form name="searchFrm" style="margin-top: 20px;">
 			<select name="searchType" id="searchType" style="height: 26px; display: none;">
 				<option value="title">&nbsp;</option>
+				<!-- <option value="emp_name">글쓴이</option> -->
 			</select>
-			<input	type="text" name="searchWord" id="searchWord" class="form-control"
-					placeholder="제목을 입력하세요" style="width: 20%;" size="40" autocomplete="off" />
-			<input	type="text" style="display: none;" class="form-control"/>
-			<%-- form 태그내에 input 태그가 1개일 때 엔터를 했을 경우 검색이 되어지므로 이것을 방지하고자 만든것이다.
-				 hidden으로 해도 바로 submit되어버리므로 안된다 --%>
+			<input type="text" name="searchWord" id="searchWord" class="form-control" placeholder="제목을 입력하세요" style="width: 20%;" size="40" autocomplete="off" />
+			<input type="text" style="display: none;" class="form-control"/>
+			<%-- form 태그내에 input 태그가 오로지 1개일 경우에는 엔터를 했을 경우 검색이 되어지므로 이것을 방지하고자 만든것이다. hidden으로 해도 바로 submit되어버리므로 안된다! --%>
 			<button type="button" class="btn btn-secondary btn-sm" onclick="goSearch()">검색</button>
 		</form>
 		
 		<%-- === 검색어 입력 시  자동글 완성하기 === --%>
-		<div	id="searchAutoComplete"
-				style="border:solid 1px gray; border-top:0px; height:100px;
-				margin-left:75px; margin-top:-1px; overflow:auto;">
+		<div id="searchAutoComplete" style="border:solid 1px gray; border-top:0px; height:100px; margin-left:75px; margin-top:-1px; overflow:auto;">
 		</div>
 		
 	</div>

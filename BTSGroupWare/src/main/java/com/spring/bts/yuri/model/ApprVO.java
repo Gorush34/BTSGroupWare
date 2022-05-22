@@ -40,6 +40,10 @@ public class ApprVO {
 	private String manager;				/* 부서장번호 */
 	
 	
+	//////////////////////////////////////////////////////////
+	
+	
+	
 	private MultipartFile attach;
 	/*
 	 * form 태그에서 type="file" 인 파일을 받아서 저장되는 필드이다.
