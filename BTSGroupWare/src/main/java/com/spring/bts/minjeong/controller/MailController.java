@@ -1549,13 +1549,23 @@ public class MailController {
 		확인용 content(메일 내용) :20220513 임시저장 메일 테스트입니다. 값보내기 테스트 22 / importance 값 보내기&nbsp;		  
 		*/  
 		
-		String uq_email = "";	   /* 이메일 */
-        try {
-        	// DB에 encrypt(암호화) 해서 보내주도록 한다.
-			uq_email = aes.encrypt(mrequest.getParameter("recemail"));
-		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
-			e.printStackTrace();
-		}
+		// 다중메일보내기 시작 (JS 수정 후 (cnt))
+		int cnt = Integer.parseInt(mrequest.getParameter("cnt"));
+		String recemail = mrequest.getParameter("recemail");
+		String [] strArray = recemail.split(",");
+	//	System.out.println("cnt 확인용 " + cnt);
+	//	System.out.println("recemail 확인용" + recemail);
+	//	System.out.println("strArray 확인용" + strArray);
+		
+		for(int i=0; i<cnt; i++) {			
+			String uq_email = (String)strArray[i];	   /*이메일 */
+	//		System.out.println("확인용 uq_email : " + uq_email);
+	        try {
+	        	// DB에 encrypt(암호화) 해서 보내주도록 한다.
+				uq_email = aes.encrypt(uq_email);
+			} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+				e.printStackTrace();
+			}
         
         // 값을 1개만 보낼때에는 String 으로 보내고, 
         // return 타입으로 받아올 때에는 List 또는 Map 으로 받아온다.
@@ -1670,7 +1680,7 @@ public class MailController {
 			mav.addObject("loc", loc);
 			mav.setViewName("msg");	
 		}
-		
+		}
 		return mav;
 	}		
 	

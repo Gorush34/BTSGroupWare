@@ -248,7 +248,7 @@
 		      	}
 
 				const frm = document.mailWriteFrm;
-			//	frm.importanceVal.value = importanceVal;
+				frm.importanceVal.value = importanceVal;
 		      	frm.cnt = cnt;
 				frm.method = "POST";
 				frm.action = "<%= ctxPath%>/mail/mailTemporaryEnd.bts"
