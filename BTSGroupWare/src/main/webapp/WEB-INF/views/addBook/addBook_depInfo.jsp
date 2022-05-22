@@ -118,8 +118,7 @@
 					<!-- 부서 추가 모달창 띄우기 -->
 					<c:choose>
 					<c:when test="${sessionScope.loginuser.pk_emp_no eq 80000001}">
-							<button class="btn btn-default" data-toggle="modal" data-target="#viewModal" style="">+부서추가</button> <form name="dep_deleteFrm"><input type="hidden" id="dep_delete" name="dep_delete" value="" /></form>
-							<button class="btn btn-default" onclick="dep_delete()" style="">-부서삭제</button>
+							<button class="btn btn-success" data-toggle="modal" data-target="#viewModal" style="display:inline;">+부서추가</button> <form name="dep_deleteFrm"><input type="hidden" id="dep_delete" name="dep_delete" value="" /></form>
 					</c:when>
 					</c:choose>
 					<!-- 부서 추가 모달창 띄우기 -->
@@ -143,7 +142,11 @@
 					</c:if>
 				 </c:forEach>
 				 </c:if>
-			
+				 <c:choose>
+				<c:when test="${sessionScope.loginuser.pk_emp_no eq 80000001}">
+				<tr><td><button class="btn btn-danger" onclick="dep_delete()">-부서삭제</button></td></tr>
+				</c:when>
+				</c:choose>
 		<!-- 부서 추가 모달창 시작 -->	
 		<div class="modal fade" data-backdrop="static" id="viewModal">
 		<div class="modal-dialog">
@@ -195,7 +198,10 @@
 		<c:when test="${sessionScope.loginuser.pk_emp_no eq 80000001}">
 		<table id="tblEmpUpdate" style="margin-left:10%;">
 		<tr>
-			<td><h2>사원정보<br><br></h2><input type="hidden" id="user" name="user" value="80000001"></td>
+			<td><h2>사원정보<br><br></h2>
+			<input type="hidden" id="user" name="user" value="80000001">
+			<input type="hidden" id="select_user_no" name="select_user_no" value="" readonly />
+			</td>
 		</tr>
 		<tr>
 			<td><strong>사진&nbsp;</strong></td>
@@ -343,8 +349,6 @@
 <script type="text/javascript">
 
 	var imgname = "";
-
-	
 
 	$('button[value*=8000]').slideUp();
 	
@@ -693,8 +697,10 @@
 		/* -------------- 유효성 검사 끝 --------------  */			
 			
 /* 조직도  */
+	
 
-
+	
+	
 Highcharts.chart('container', {
     chart: {
         height: 800,
@@ -723,13 +729,13 @@ Highcharts.chart('container', {
         name: 'Highsoft',
         keys: ['from', 'to'],
         data: [
+        	<c:if test="${not empty requestScope.depList}">
+		   	<c:forEach var="dep" items="${requestScope.depList}" varStatus="i">
             ['CEO', 'exe_director'],
-            ['exe_director', 'sales_team'],
-            ['exe_director', 'marketing_team'],
-            ['exe_director', 'planning_team'],
-            ['exe_director', 'manager_team'],
-            ['exe_director', 'personnel_team'],
-            ['exe_director', 'accounting_team'],
+            ['exe_director', 'worker'],
+            ['worker', '${dep.ko_depname}<br>${dep.en_depname}'],
+            </c:forEach>
+            </c:if>
         ],
         levels: [{
             level: 0,
@@ -750,7 +756,7 @@ Highcharts.chart('container', {
             color: '#980104'
         }, {
             level: 4,
-            color: '#359154'
+            color: 'green'
         }],
         nodes: [{
             id: 'CEO',
@@ -760,6 +766,10 @@ Highcharts.chart('container', {
             id: 'exe_director',
             title: 'middle manager',
             name: '중간관리자',
+        },{
+            id: 'worker',
+            title: 'worker',
+            name: '실무자',
         }, {
             id: 'sales_team',
             title: 'sales_team',

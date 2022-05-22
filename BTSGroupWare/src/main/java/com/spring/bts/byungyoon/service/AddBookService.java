@@ -180,7 +180,22 @@ public class AddBookService implements InterAddBookService  {
 		int n = dao.addBook_dep_delete(dep_delete);
 		
 		return n;
-	}	
+	}
+	
+	
+	// 부서리스트 가져오기(주소록 --)
+	@Override
+	public List<Map<String, String>> addBook_depList_select_ab() {
+		List<Map<String, String>> ab_depList = dao.addBook_depList_select_ab();
+		return ab_depList;
+	}
+	
+	// 직급리스트 가져오기(주소록 --)
+	@Override
+	public List<Map<String, String>> addBook_rankList_select_ab() {
+		List<Map<String, String>> ab_rankList = dao.addBook_rankList_select_ab();
+		return ab_rankList;
+	}
 
 
 	

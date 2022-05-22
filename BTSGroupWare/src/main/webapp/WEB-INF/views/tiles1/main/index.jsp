@@ -597,7 +597,7 @@ td.mail_subject:hover {
 	               }
 	               
 	               html += "<tr>";
-	               html += "<td>"+$(local).text()+"</td><td><img src='/board/resources/images/weather/"+icon+".png' />"+$(local).attr("desc")+"</td><td>"+$(local).attr("ta")+"</td>";
+	               html += "<td>"+$(local).text()+"</td><td><img src='/bts/resources/images/weather/"+icon+".png' />"+$(local).attr("desc")+"</td><td>"+$(local).attr("ta")+"</td>";
 	               html += "</tr>";
 	               
 	               // ====== XML 을 JSON 으로 변경하기  ====== //
