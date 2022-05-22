@@ -213,8 +213,6 @@
 				<img id="empProfile" src="<%= ctxPath%>/resources/images/nol.png" style="width:60%;">
 			</td>
 			<td>	
-				<input type="file" name="attach" id="attach" style="display:inline;"/><br><br>
-				<button type="button" style=" display:inline;" id="updateImage" class="btn btn-primary">사진변경</button> 
 			</td>
 		</tr>
 		</table>
