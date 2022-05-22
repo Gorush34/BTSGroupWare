@@ -164,7 +164,7 @@
 			
 			<div class="form-group">
 				<label for="recipient-name" class="control-label"><strong>부서번호</strong></label>
-				<input type="text" class="form-control requiredInfo" id="dep_no" name="dep_no" maxlength="8" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+				<input type="text" class="form-control" id="dep_no" name="dep_no" maxlength="8" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
 			</div>
 			
 			<div class="form-group">
@@ -228,7 +228,6 @@
 			<tr>
 				<td><h2>사원정보</h2>
 					<input type="hidden" id="user" name="user" value="">
-					<input type="hidden" id="select_user_no" name="select_user_no" value="" readonly />
 				</td>
 			</tr>
 			<tr>
@@ -252,6 +251,7 @@
 			<tr>
 				<td style="padding-bottom:25px;"><strong>부서*</strong></td>
 				<td>
+				<input type="hidden" id="select_user_no" name="select_user_no" value="" readonly />
 					<select id="department" name="department" class="form-control requiredInfo">
 					  <c:if test="${not empty requestScope.depList}">
 				   	  <c:forEach var="dep" items="${requestScope.depList}" varStatus="i">

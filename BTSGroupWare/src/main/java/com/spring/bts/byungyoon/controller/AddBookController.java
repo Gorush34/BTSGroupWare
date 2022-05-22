@@ -475,8 +475,6 @@ public class AddBookController {
 			String emp_name = request.getParameter("name");
 			int fk_department_id = Integer.parseInt(request.getParameter("department"));
 			int fk_rank_id = Integer.parseInt(request.getParameter("rank"));
-//			String email1 = request.getParameter("email1");
-//			String email2 = request.getParameter("email2");
 			String uq_email = request.getParameter("email");
 			String hp1 = request.getParameter("hp1");
 			String hp2 = request.getParameter("hp2");
@@ -484,7 +482,6 @@ public class AddBookController {
 			String address = request.getParameter("address");
 			String detailaddress = request.getParameter("detailaddress");
 			
-//			String uq_email = email1+"@"+email2;
 		    String uq_phone = hp1+"-"+hp2+"-"+hp3;
 			
 		    try {
@@ -557,7 +554,7 @@ public class AddBookController {
 		@RequestMapping(value = "/addBook/addBook_depInfo_delete.bts", method = {RequestMethod.POST})
 		public ModelAndView addBook_depInfo_delete(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 			
-			int pk_emp_no = Integer.parseInt(request.getParameter("user"));
+			int pk_emp_no = Integer.parseInt(request.getParameter("select_user_no"));
 			
 			int n = service.addBook_depInfo_delete(pk_emp_no);
 		        
