@@ -134,7 +134,7 @@ public class BtsController {
 	} // public ModelAndView login(ModelAndView mav, HttpServletRequest request) ----
 	
 	
-	// === #41. 로그인 처리하기 === // 
+	// 로그인 처리하기  // 
 	@RequestMapping(value="/loginEnd.bts", method= {RequestMethod.POST})
 	public ModelAndView loginEnd(ModelAndView mav, HttpServletRequest request) {
 		

@@ -423,6 +423,13 @@
 			return; // 종료
 		}
 		
+		var pwd1 = $("input#emp_pwd").val();
+		var pwd2 = $("input#pwdCheck").val();
+		
+		if( pwd1 != pwd2 ) {
+			alert("비밀번호와 확인용 비밀번호가 일치하지 않습니다!");
+			return; // 종료
+		}
 		
 		const frm = document.updateFrm;
 		frm.action = "<%= ctxPath%>/emp/updateEmpEnd.bts";
