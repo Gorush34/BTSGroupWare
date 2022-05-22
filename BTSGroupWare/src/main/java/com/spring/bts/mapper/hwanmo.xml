@@ -24,11 +24,11 @@
 	<!-- 사원 등록 -->
 	<insert id="registerMember" parameterType="com.spring.bts.hwanmo.model.EmployeeVO" >
 		insert into tbl_employees 
-		(pk_emp_no, fk_department_id, fk_rank_id, fk_board_authority_no, fk_site_authority_no, emp_name, emp_pwd, com_tel, postal, address, detailaddress, extraaddress
-		, gender, uq_phone, uq_email, img_path, img_name, birthday, gradelevel)
+		(pk_emp_no, fk_department_id, fk_rank_id, fk_board_authority_no, fk_site_authority_no, emp_name, emp_pwd, com_tel, postal, address
+		, detailaddress, extraaddress, gender, uq_phone, uq_email, img_path, img_name, birthday, gradelevel)
 		values                                  
-		(#{pk_emp_no}, #{fk_department_id}, #{fk_rank_id}, default, default, #{emp_name}, #{emp_pwd}, #{com_tel}, #{postal}, #{address}, #{detailaddress}, #{extraaddress}
-		, #{gender}, #{uq_phone}, #{uq_email}, default, default, #{birthday}, default)
+		(#{pk_emp_no}, #{fk_department_id}, #{fk_rank_id}, default, default, #{emp_name}, #{emp_pwd}, #{com_tel}, #{postal}, #{address}
+		, #{detailaddress}, #{extraaddress}, #{gender}, #{uq_phone}, #{uq_email}, default, default, #{birthday}, default)
 	</insert>
 	
 	<!-- 사원번호 찾기 -->
@@ -119,7 +119,8 @@
 		from
 		(
 		select row_number() over(order by pk_worktime_no desc) AS rno, pk_worktime_no 
-			   , regdate, nvl(in_time, -9999) AS in_time, nvl(out_time, -9999) AS out_time, nvl(total_workTime, -9999) AS total_workTime, fk_emp_no
+			   , regdate, nvl(in_time, -9999) AS in_time, nvl(out_time, -9999) AS out_time
+			   , nvl(total_workTime, -9999) AS total_workTime, fk_emp_no
 		from tbl_commute
 		where fk_emp_no = #{fk_emp_no}
 		<if test='year != "" and month =="" '>
@@ -217,7 +218,8 @@
 	
 	<!-- 연차테이블 변경 -->
 	<update id="updateLeave" parameterType="HashMap">
-	update tbl_leave set use_vac_days = use_vac_days + #{minus_cnt}, rest_vac_days = rest_vac_days - #{minus_cnt}, instead_vac_days = instead_vac_days + #{instead_vac_days}
+	update tbl_leave set use_vac_days = use_vac_days + #{minus_cnt}, rest_vac_days = rest_vac_days - #{minus_cnt}
+		 , instead_vac_days = instead_vac_days + #{instead_vac_days}
 	where fk_emp_no = #{report_emp_no}
 	</update>
 	
@@ -259,7 +261,7 @@
 		(
 		select row_number() over(order by pk_att_num desc) AS rno, A.fin_app_opinion AS fin_app_opinion
 		     , A.pk_att_num AS pk_att_num, D.ko_depname AS ko_depname, A.fk_emp_no AS fk_emp_no, E.emp_name AS emp_name
-		     , S.att_sort_korname AS att_sort_korname, A.vacation_days AS vacation_days, A.leave_start AS leave_start, A.leave_end AS leave_end
+		     , S.att_sort_korname AS att_sort_korname, A.vacation_days AS vacation_days, A.leave_start AS leave_start, A.leave_end AS leave_end  
 		     , (select emp_name from tbl_employees where pk_emp_no = D.manager) AS managername
 		     , D.manager AS manager, A.approval_status AS approval_status
 		from tbl_attendance A JOIN tbl_leave L
@@ -301,7 +303,7 @@
 	</resultMap>
 	
 	<!-- // 공가/경조신청서 가져오기  -->
-	<select id="getVacReportList" resultType="int" resultMap="getVacReportList_map">
+	<select id="getVacReportList" parameterType="int" resultMap="getVacReportList_map">
 		select A.pk_att_num AS pk_att_num, A.fk_emp_no AS fk_emp_no, A.fin_app_opinion AS fin_app_opinion, A.fk_fin_app_no AS fk_fin_app_no
 		     , (select emp_name from tbl_employees where pk_emp_no = A.fk_emp_no) AS emp_name
 		     , D.ko_depname AS ko_depname
@@ -324,6 +326,7 @@
 		where A.pk_att_num = #{pk_att_num}
 	</select>
 	
+	<!-- 부서장인지 확인 -->
 	<select id="checkManager" parameterType="String" resultType="int">
 		select count(*)
 		from tbl_dep_sort
@@ -410,10 +413,10 @@
 	
 	<!-- 회원 업데이트 -->
 	<update id="updateMember" parameterType="com.spring.bts.hwanmo.model.EmployeeVO" >
-		update tbl_employees set fk_department_id = #{fk_department_id}, fk_rank_id = #{fk_rank_id}
+		update tbl_employees set fk_department_id = #{fk_department_id}, fk_rank_id = #{fk_rank_id}, emp_pwd = #{emp_pwd}
 			 , fk_board_authority_no = #{fk_board_authority_no}, fk_site_authority_no = #{fk_site_authority_no}, emp_name = #{emp_name}
-			 , emp_pwd = #{emp_pwd}, com_tel = #{com_tel}, postal = #{postal}, address = #{address}, detailaddress = #{detailaddress}, extraaddress = #{extraaddress}
-			 , uq_phone = #{uq_phone}, uq_email = #{uq_email}, img_name = #{img_name}
+			 , postal = #{postal}, address = #{address}, detailaddress = #{detailaddress}, extraaddress = #{extraaddress}
+			 , com_tel = #{com_tel}, uq_phone = #{uq_phone}, uq_email = #{uq_email}, img_name = #{img_name}
 		where pk_emp_no = #{pk_emp_no}
 	</update>
 	
@@ -440,9 +443,7 @@
 		) V
 	</select>
 	
-	<!-- === #139. 로그인 처리하기 === 
-	                     먼저, 위의 #47  을 주석처리 하고서 아래처럼 한다. -->
-	   
+   <!--  로그인 처리하기 -->
    <select id="getLoginMember" parameterType="HashMap" resultType="com.spring.bts.hwanmo.model.EmployeeVO">     
       select pk_emp_no, fk_department_id, fk_rank_id, fk_board_authority_no, fk_site_authority_no
       	   , emp_name, emp_pwd, com_tel, postal, address, detailaddress, extraaddress
@@ -543,8 +544,7 @@
 		order by fk_department_id asc, E.fk_rank_id desc
 	</select>
 	
-	<!-- === #139. 로그인 처리하기 === 
-	                     먼저, 위의 #47  을 주석처리 하고서 아래처럼 한다. -->
+	<!-- 관리자페이지 - 전사원 목록 -->
 	<resultMap type="Map" id="getEmpAll_map">
 		<result property="pk_emp_no" 				column="pk_emp_no" 				javaType="int" />
 		<result property="fk_department_id" 		column="fk_department_id" 		javaType="String" />
@@ -566,8 +566,8 @@
 	         , uq_email, emp_name, hire_date, ishired, birthyyyy, birthmm, birthdd
 		from
 		(
-		    select row_number() over(order by fk_department_id asc, pk_rank_no desc) AS rno, pk_emp_no, fk_department_id, ko_depname, fk_rank_id, ko_rankname, uq_phone, uq_email, emp_name
-		         , com_tel, to_char(hire_date,'yyyy-mm-dd') as hire_date, ishired
+		    select row_number() over(order by fk_department_id asc, pk_rank_no desc) AS rno, pk_emp_no, fk_department_id
+		         , com_tel, to_char(hire_date,'yyyy-mm-dd') as hire_date, ishired, ko_depname, fk_rank_id, ko_rankname, uq_phone, uq_email, emp_name
 		         , substr(birthday,1,4) as birthyyyy, substr(birthday,6,2) as birthmm, substr(birthday,9) as birthdd
 		    from tbl_employees E JOIN tbl_dep_sort D
 		    ON E.fk_department_id = D.pk_dep_no

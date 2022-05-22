@@ -128,11 +128,7 @@ public class EmployeeController {
 		JSONObject jsonObj = new JSONObject(); 	// {}
 		jsonObj.put("isExist", isExist);			// {"isExist":true} 또는 {"isExist":false} 으로 만들어준다. 
 			
-			String json = jsonObj.toString();	// 문자열 형태인 "{"isExist":true}" 또는 "{"isExist":false}" 으로 만들어준다.
-			// System.out.println(">>> 확인용 json =>"+ json );	
-		//	>>> 확인용 json =>{"isExist":false}
-		//	또는	
-		//	>>> 확인용 json =>{"isExist":true}
+		String json = jsonObj.toString();	// 문자열 형태인 "{"isExist":true}" 또는 "{"isExist":false}" 으로 만들어준다.
 			
 		request.setAttribute("json",json);
 			
@@ -155,7 +151,7 @@ public class EmployeeController {
 		int fk_department_id = Integer.parseInt(request.getParameter("fk_department_id")); 		/* 부서명구분번호 */
 		int fk_rank_id = Integer.parseInt(request.getParameter("fk_rank_id")); 					/* 직급구분번호 */
 		String emp_name = request.getParameter("emp_name");										/* 이름 */
-		String emp_pwd = Sha256.encrypt(request.getParameter("emp_pwd"));						/* 비밀번호 */						
+							
 		String num1 = request.getParameter("num1");												/* 사내번호1 */
 		String num2 = request.getParameter("num2");												/* 사내번호2 */
 		String num3 = request.getParameter("num3");												/* 사내번호3 */
@@ -189,6 +185,8 @@ public class EmployeeController {
 			com_tel = num1+"-"+num2+"-"+num3;
 		}
 		String uq_phone = hp1+"-"+hp2+"-"+hp3;
+		
+		String emp_pwd = Sha256.encrypt(request.getParameter("emp_pwd"));						/* 비밀번호 */	
 		
 		String uq_email = "";
 		try {
@@ -337,10 +335,8 @@ public class EmployeeController {
 		
 		if(isUserExist) {
 			// 회원으로 존재하는 경우
-			
-			// 이메일을 복호화한다.
 			try {
-			    email = aes.decrypt(uq_email);
+			    email = aes.decrypt(uq_email); // 이메일을 복호화한다.
 			} catch (UnsupportedEncodingException | GeneralSecurityException e) {
 				e.printStackTrace();
 			}	
@@ -348,23 +344,19 @@ public class EmployeeController {
 			Random rnd = new Random();
 			
 			String certificationCode = "";
-			// 인증키는 영문소문자 5글자 + 숫자 7글자 로 만들겠습니다.
 			// 예: certificationCode ==> dmgrm4745003
 			
 			char randchar = ' ';
 			for(int i=0; i<5; i++) {
-				/*
-                min 부터 max 사이의 값으로 랜덤한 정수를 얻으려면 
+				/* min 부터 max 사이의 값으로 랜덤한 정수를 얻으려면 
                 int rndnum = rnd.nextInt(max - min + 1) + min;
-                   영문 소문자 'a' 부터 'z' 까지 랜덤하게 1개를 만든다.     
-				*/
+              	영문 소문자 'a' 부터 'z' 까지 랜덤하게 1개를 만든다.    */
 				
 				randchar = (char) (rnd.nextInt('z' - 'a' + 1) + 'a');
 				certificationCode += randchar;
 						
 			} // end of for------------------
 			
-			int randnum = 0;
 			for(int i=0; i<7; i++) {
 				int rndnum = rnd.nextInt(9 - 0 + 1) + 0;
 				certificationCode += rndnum;
@@ -422,7 +414,7 @@ public class EmployeeController {
 		
 		if( certificationCode.equals(userCertificationCode) ) {
 			message = "인증이 성공하였습니다.";
-			loc = request.getContextPath()+"/pwd`.bts?pk_emp_no="+pk_emp_no;
+			loc = request.getContextPath()+"/pwdUpdate.bts?pk_emp_no="+pk_emp_no;
 		}
 		else {	
 			message = "발급된 인증코드가 아닙니다. 인증코드를 다시 발급받으세요!!";
@@ -512,9 +504,6 @@ public class EmployeeController {
 		// 복호화된 이메일 삽입
 		loginuser.setUq_email(uq_email);
 		// 복호화된 폰번호 삽입
-		// System.out.println("확인용 폰번호 : " + uq_phone);
-		// System.out.println("쪼개놓은거2 : " + uq_phone.substring( (uq_phone.indexOf("-")+1), uq_phone.lastIndexOf("-") ) );
-		// System.out.println("쪼개놓은거3 : " +  uq_phone.substring( (uq_phone.lastIndexOf("-")+1) ));
 		loginuser.setHp2( uq_phone.substring( (uq_phone.indexOf("-")+1), uq_phone.lastIndexOf("-") ) );
 		loginuser.setHp3( uq_phone.substring( (uq_phone.lastIndexOf("-")+1) ) );
 		
@@ -769,7 +758,7 @@ public class EmployeeController {
 			
 			
 			int totalCount = 0;
-			int sizePerPage = 15;
+			int sizePerPage = 10;
 			int currentShowPageNo = 0;
 			int totalPage = 0;
 			
@@ -918,18 +907,16 @@ public class EmployeeController {
 	@RequestMapping(value="/emp/updateHire.bts", produces="text/plain;charset=UTF-8")
 	public String updateHire(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 	
-		String pk_emp_no_str = request.getParameter("pk_emp_no_str");
 		
 		// 변경할 사원 수
 		String cnt = request.getParameter("cnt");
 		
+		String pk_emp_no_str = request.getParameter("pk_emp_no_str");
 		String[] arr_pk_emp_no = new String[0];
-		
 		pk_emp_no_str = pk_emp_no_str.replaceAll("\\[", "");
 		pk_emp_no_str = pk_emp_no_str.replaceAll("\\]", "");
 		pk_emp_no_str = pk_emp_no_str.replaceAll("\"", "");
 		pk_emp_no_str = pk_emp_no_str.trim();	// 공백 제거
-			
 		arr_pk_emp_no = pk_emp_no_str.split(",");
 		
 		Map<String, String> paraMap = new HashMap<>();

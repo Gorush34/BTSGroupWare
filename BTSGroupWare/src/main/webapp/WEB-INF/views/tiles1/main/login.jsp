@@ -53,8 +53,7 @@
 
 	$(document).ready(function(){
 		
-		/* var 변수명 = '1234';
-		    선택자.attr()*/
+		
 		if(localStorage.getItem("keep") != null){
 			var gab = localStorage.getItem("keep");
 			$('#pk_emp_no').attr('value', gab);
@@ -94,7 +93,6 @@
           $("input#emp_pwd").focus();
           return; // 종료 
         }
-        
         
         if( $("input:checkbox[id='keep']").prop("checked") ) {
         	localStorage.setItem('keep',$("input#pk_emp_no").val());

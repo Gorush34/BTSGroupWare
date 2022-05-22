@@ -57,13 +57,11 @@
 			<td><strong>부서*</strong></td>
 			<td>
 				<select id="department" name="department" class="form-control requiredInfo">
-				  <option value="700" placeholder="없음">--</option>
-				  <option value="100">영업</option>
-				  <option value="200">마케팅</option>
-				  <option value="300">기획</option>
-				  <option value="400">총무</option>
-				  <option value="500">인사</option>
-				  <option value="600">회계</option>
+				  <c:if test="${not empty requestScope.ab_depList}">
+				   	  <c:forEach var="dep" items="${requestScope.ab_depList}" varStatus="i">
+							<option value="${dep.pk_dep_no}">${dep.ko_depname}</option>
+					  </c:forEach>
+				  </c:if>	
 				</select>
 			</td>
 		</tr>
@@ -71,15 +69,11 @@
 			<td><strong>직급*</strong></td>
 			<td>
 				<select id="rank" name="rank" class="form-control requiredInfo">
-				  <option value="90" placeholder="없음">--</option>
-				  <option value="10">사원</option>
-				  <option value="20">주임</option>
-				  <option value="30">대리</option>
-				  <option value="40">과장</option>
-				  <option value="50">차장</option>
-				  <option value="60">부장</option>
-				  <option value="70">전무</option>
-				  <option value="80">사장</option>
+				  <c:if test="${not empty requestScope.ab_rankList}">
+				   	  <c:forEach var="rank" items="${requestScope.ab_rankList}" varStatus="i">
+							<option value="${rank.pk_rank_no}">${rank.ko_rankname}</option>
+					  </c:forEach>
+				  </c:if>
 				</select>
 				
 			</td>

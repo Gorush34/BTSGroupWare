@@ -61,23 +61,19 @@
 			const emp_pwd = $("input#emp_pwd").val();
 			const emp_pwd2 = $("input#emp_pwd2").val();
 			
-			// const regExp = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g;
-		   // 또는
-			  const regExp = new RegExp(/^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g);
-		   // 숫자/문자/특수문자/ 포함 형태의 8~15자리 이내의 암호 정규표현식 객체 생성
+			const regExp = new RegExp(/^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g);
+		    // 숫자/문자/특수문자/ 포함 형태의 8~15자리 이내의 암호 정규표현식 객체 생성
 			
-			  const bool = regExp.test(emp_pwd);   
-			  
-			  if(!bool) {
-				  // 암호가 정규표현식에 위배된 경우 
+			const bool = regExp.test(emp_pwd);   
+				  
+			  if(!bool) { // 암호가 정규표현식에 위배된 경우 
 				  alert("암호는 8글자 이상 15글자 이하의 영문자, 숫자, 특수문자를 포함해야 합니다!");
 				  $("input#emp_pwd").val("");
 				  $("input#emp_pwd2").val("");
 				  return; // 종료
 				  
 			  }
-			  else if(bool && emp_pwd != emp_pwd2){
-				  // 암호가 정규표현식에 맞지만 변경암호와 확인암호가 불일치시
+			  else if(bool && emp_pwd != emp_pwd2){ // 암호가 정규표현식에 맞지만 변경암호와 확인암호가 불일치시
 				  alert("변경하려는 암호와 확인암호가 일치하지 않습니다!");
 				  $("input#emp_pwd").val("");
 				  $("input#emp_pwd2").val("");

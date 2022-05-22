@@ -142,11 +142,16 @@ public class AddBookController {
 	   List<EmployeeVO> empList = service.sideinfo_addBook(); // sideInfo
 	   mav.addObject("empList", empList); // sideInfo
 	   
+	   List<Map<String,String>> ab_depList = service.addBook_depList_select_ab(); // 부서리스트(주소록)
+	   
+	   List<Map<String,String>> ab_rankList = service.addBook_rankList_select_ab(); // 직급리스트(주소록)
 	   mav.addObject("message", message);
 	   mav.addObject("loc", loc);
 	   mav.addObject("pageBar", pageBar);	
 	   mav.addObject("adbList", adbList);
 	   mav.addObject("loginuser", loginuser);
+	   mav.addObject("ab_depList", ab_depList);
+	   mav.addObject("ab_rankList", ab_rankList);
 	   
 	   mav.setViewName("addBook_main.addBook");
 	   
@@ -161,8 +166,12 @@ public class AddBookController {
 	   HttpSession session = request.getSession();
 	   EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
 	 
-	   List<EmployeeVO> empList = service.addBook_depInfo_select();
-		
+	   List<EmployeeVO> empList = service.addBook_depInfo_select(); // 사원리스트
+	   
+	   List<Map<String,String>> ab_depList = service.addBook_depList_select_ab(); // 부서리스트(주소록)
+	   
+	   List<Map<String,String>> ab_rankList = service.addBook_rankList_select_ab(); // 직급리스트(주소록)
+	   
 		 String message = "";
 		 String loc = "";
 	   
@@ -170,6 +179,8 @@ public class AddBookController {
 	   mav.addObject("message", message);
 	   mav.addObject("loc", loc);
 	   mav.addObject("empList", empList);
+	   mav.addObject("ab_depList", ab_depList);
+	   mav.addObject("ab_rankList", ab_rankList);
 	   
 	   mav.setViewName("addBook_telAdd.addBook");
 	   
@@ -257,6 +268,8 @@ public class AddBookController {
 	   updateMap.put("pk_addbook_no", avo.getPk_addbook_no());
 	   updateMap.put("name", avo.getAddb_name());
 	   updateMap.put("department", avo.getKo_depname());
+	   updateMap.put("department_id", avo.getFk_dept_no());
+	   updateMap.put("rank_id", avo.getFk_rank_no());
 	   updateMap.put("rank", avo.getKo_rankname());
 	   updateMap.put("email", avo.getEmail());
 	   updateMap.put("phone", avo.getPhone());
@@ -287,6 +300,12 @@ public class AddBookController {
 	   updateMap.put("company_name", avo.getCompanyname());
 	   updateMap.put("company_address", avo.getCompany_address());
 	   updateMap.put("memo", avo.getMemo());
+	   
+	   List<Map<String,String>> ab_depList = service.addBook_depList_select_ab(); // 부서리스트(주소록)
+	   
+	   List<Map<String,String>> ab_rankList = service.addBook_rankList_select_ab(); // 직급리스트(주소록)
+	   updateMap.put("ab_depList", ab_depList);
+	   updateMap.put("ab_rankList", ab_rankList);
 	   
       return updateMap;
    }

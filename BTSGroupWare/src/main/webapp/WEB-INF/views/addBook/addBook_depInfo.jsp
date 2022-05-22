@@ -102,11 +102,14 @@
 </ul>
 <div class="tab-content">
   <div class="tab-pane fade show active" id="depName">
-    
+  
+  
+  
+<!-- 하이차트 부분  -->    
 <figure class="highcharts-figure">
     <div id="container" style="margin-top:5%; /* 글꼴  */-webkit-text-stroke-width: thin;"></div>
-    
 </figure>
+<!-- 하이차트 부분  -->
 
   </div>
   
@@ -118,8 +121,7 @@
 					<!-- 부서 추가 모달창 띄우기 -->
 					<c:choose>
 					<c:when test="${sessionScope.loginuser.pk_emp_no eq 80000001}">
-							<button class="btn btn-default" data-toggle="modal" data-target="#viewModal" style="">+부서추가</button> <form name="dep_deleteFrm"><input type="hidden" id="dep_delete" name="dep_delete" value="" /></form>
-							<button class="btn btn-default" onclick="dep_delete()" style="">-부서삭제</button>
+							<button class="btn btn-success" data-toggle="modal" data-target="#viewModal" style="display:inline;">+부서추가</button> <form name="dep_deleteFrm"><input type="hidden" id="dep_delete" name="dep_delete" value="" /></form>
 					</c:when>
 					</c:choose>
 					<!-- 부서 추가 모달창 띄우기 -->
@@ -143,7 +145,11 @@
 					</c:if>
 				 </c:forEach>
 				 </c:if>
-			
+				 <c:choose>
+				<c:when test="${sessionScope.loginuser.pk_emp_no eq 80000001}">
+				<tr><td><button class="btn btn-danger" onclick="dep_delete()">-부서삭제</button></td></tr>
+				</c:when>
+				</c:choose>
 		<!-- 부서 추가 모달창 시작 -->	
 		<div class="modal fade" data-backdrop="static" id="viewModal">
 		<div class="modal-dialog">
@@ -195,7 +201,10 @@
 		<c:when test="${sessionScope.loginuser.pk_emp_no eq 80000001}">
 		<table id="tblEmpUpdate" style="margin-left:10%;">
 		<tr>
-			<td><h2>사원정보<br><br></h2><input type="hidden" id="user" name="user" value="80000001"></td>
+			<td><h2>사원정보<br><br></h2>
+			<input type="hidden" id="user" name="user" value="80000001">
+			<input type="hidden" id="select_user_no" name="select_user_no" value="" readonly />
+			</td>
 		</tr>
 		<tr>
 			<td><strong>사진&nbsp;</strong></td>
@@ -224,7 +233,7 @@
 			</tr>
 			<tr>
 				<td><strong>사진</strong></td>
-				<td><img id="empProfile" src="<%= ctxPath%>/resources/images/nol.png" style="width:60%; margin-left:10%;"><!-- <button class="btn btn-default" id="telAdd_mini_btn">삭제</button> --></td>
+				<td><img id="empProfile" src="<%= ctxPath%>/resources/images/nol.png" style="width:60%; margin-left:10%;"></td>
 			</tr>
 			</c:when>
 			</c:choose>
@@ -344,8 +353,6 @@
 
 	var imgname = "";
 
-	
-
 	$('button[value*=8000]').slideUp();
 	
 	$( document ).ready(function() {
@@ -373,39 +380,38 @@
       
       getEmpImgName();
       if( imgname != "" ){
-          $("#empProfile").attr("src", "<%= ctxPath%>/resources/files/" + imgname); 
+          $("#empProfile").attr("src", "<%= ctxPath%>/resources/images/nol.png"); 
        }
        else {
           $("#empProfile").attr("src", "<%= ctxPath%>/resources/images/mu.png"); 
        }
 	
-	// 사진변경버튼 클릭시
-	 	       // 사진변경버튼 클릭시
-       $("button#updateImage").on("click", function (event) {
-          /// event.preventDefault(); 
-          var url = $("#updateImgFrm").attr("action"); 
-          var form = $('#updateImgFrm')[0]; 
-          var formData = new FormData(form); 
-          $.ajax({ 
-             url: url
-            , type: 'POST'
-            , data: formData
-            , dataType: "json"
-            , async: false
-            , success: function (json) { 
-              alert("사진이 변경되었습니다. 변경된 사진은 재접속시 적용됩니다.");
-              <%-- $("#empProfile").attr("src", "<%= ctxPath%>/resources/files/${json.img_name}"); --%>
-              /* $("#empProfile").attr("src", json.path +"/"+json.img_name);  */
-              // history.go(0);
-            }, error: function (json) { 
-               alert("실패!");
-            }, 
-              cache: false
-            , contentType: false
-            , processData: false 
-            });
-       
-       }); // end of $("button#updateImage").on("click", function (event) {}---------------------------
+   // 사진변경버튼 클릭시
+	 	$("button#updateImage").on("click", function (event) {
+	 		/// event.preventDefault(); 
+	 		var url = $("#updateImgFrm").attr("action"); 
+	 		var form = $('#updateImgFrm')[0]; 
+	 		var formData = new FormData(form); 
+	 		$.ajax({ 
+	 			url: url
+	 		  , type: 'POST'
+	 		  , data: formData
+	 		  , dataType: "json"
+	 		  , async: false
+	 		  , success: function (json) { 
+	 			 alert("사진이 변경되었습니다. 변경된 사진은 재접속시 적용됩니다.");
+	 			 <%-- $("#empProfile").attr("src", "<%= ctxPath%>/resources/files/${json.img_name}"); --%>
+	 			 /* $("#empProfile").attr("src", json.path +"/"+json.img_name);  */
+	 			 // history.go(0);
+	 		  }, error: function (json) { 
+	 			  alert("실패!");
+	 		  }, 
+	 		    cache: false
+	 		  , contentType: false
+	 		  , processData: false 
+	 		  });
+	 	
+	 	}); // end of $("button#updateImage").on("click", function (event) {}---------------------------
 	
 	  
 	}); // end of $( document ).ready( function()
@@ -693,8 +699,7 @@
 		/* -------------- 유효성 검사 끝 --------------  */			
 			
 /* 조직도  */
-
-
+	
 Highcharts.chart('container', {
     chart: {
         height: 800,
@@ -718,18 +723,17 @@ Highcharts.chart('container', {
     },
     
     series: [{
-    	
         type: 'organization',
         name: 'Highsoft',
         keys: ['from', 'to'],
         data: [
+        	<c:if test="${not empty requestScope.depList}"> 
+		   	<c:forEach var="dep" items="${requestScope.depList}" varStatus="i">
             ['CEO', 'exe_director'],
-            ['exe_director', 'sales_team'],
-            ['exe_director', 'marketing_team'],
-            ['exe_director', 'planning_team'],
-            ['exe_director', 'manager_team'],
-            ['exe_director', 'personnel_team'],
-            ['exe_director', 'accounting_team'],
+            ['exe_director', 'worker'],
+            ['worker', '${dep.ko_depname}<br>${dep.en_depname}'],
+            </c:forEach>
+            </c:if>
         ],
         levels: [{
             level: 0,
@@ -750,7 +754,7 @@ Highcharts.chart('container', {
             color: '#980104'
         }, {
             level: 4,
-            color: '#359154'
+            color: 'green'
         }],
         nodes: [{
             id: 'CEO',
@@ -760,6 +764,10 @@ Highcharts.chart('container', {
             id: 'exe_director',
             title: 'middle manager',
             name: '중간관리자',
+        },{
+            id: 'worker',
+            title: 'worker',
+            name: '실무자',
         }, {
             id: 'sales_team',
             title: 'sales_team',

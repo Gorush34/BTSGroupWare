@@ -537,7 +537,7 @@
 						<%-- </c:if>	--%>
 				</li>
 				<li style="margin-bottom: 15px;">
-					<div id="calenderbtn2" class="calenderbtn">관심 캘린더</div>
+					<div id="calenderbtn2" class="calenderbtn">내 캘린더</div>
 						<div id="slideTogglebox2"  class="slideTogglebox">
 						<div>
  							<%-- 내 캘린더를 보여주는 곳 --%>
@@ -547,7 +547,7 @@
 						<span id="addMyCalendar" onclick="addMyCalendar()">&nbsp;&nbsp;+ 내 캘린더 추가</span>		
 				</li>
 			</ul>
-		<input type="checkbox" id="sharedCal" class="calendar_checkbox" value="0" checked/>&nbsp;&nbsp;<label for="sharedCal">공유받은 캘린더</label> 
+		<input type="checkbox" id="sharedCal" class="calendar_checkbox" style="margin-left: 5px;" value="0" checked/>&nbsp;&nbsp;<label for="sharedCal">공유받은 캘린더</label> 
 	</div>
 		
 	</div>

@@ -71,10 +71,9 @@ public class EmployeeDAO implements InterEmployeeDAO {
 	public boolean isUserExist(Map<String, String> paraMap) {
 		String emp_no = sqlsession.selectOne("hwanmo.isUserExist", paraMap);
 		boolean isUserExist = false;
-		if(emp_no.equals(paraMap.get("pk_emp_no"))) {
+		if(emp_no != null) {
 			isUserExist = true;
 		}
-		// System.out.println("isUserExist : " + isUserExist);
 		
 		return isUserExist;
 	}
