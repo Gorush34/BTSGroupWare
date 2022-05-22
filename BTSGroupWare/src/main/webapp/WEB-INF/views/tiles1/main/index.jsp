@@ -137,17 +137,20 @@ td.mail_subject:hover {
 	      
 		  // 기상 가져오기 끝
 		
-		mybd_cnt();
-		goReadAll();	
+		
+		goReadAll();		
 		goReadNotice();	
 		goReadBoard();	
 		goReadFileboard();	
-		scheduleCount();
-		reservationCount();
-		employeeBirth();
-		readRecMail();
-		recMailCount();
-		vacCount();
+		employeeBirth();   
+		readRecMail();	
+		scheduleCount();	// 오늘의 일정 가져오기
+		reservationCount(); // 내 예약/대여 현황
+		recMailCount();		// 안읽은메일 수 가져오기
+		vacCount();			// 공가결재대기문서 가져오기
+		mybd_cnt();			// 내가 작성한 글 수 가져오기
+			
+		
 		
 	});// end of $(document).ready(function(){})----------------------
 
