@@ -83,7 +83,8 @@
  
 	<!--  페이징처리 한 받은 메일목록 2 (검색 있든, 없든 모두 다 포함 && 읽음상태 표시)  -->
  	<select id="recMailListSearchWithPaging" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
-	select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date, importance, importance_star_rec, rec_status
+	select pk_mail_num, fk_senduser_num, sendempname, subject, reg_date, filename, reservation_date
+		 , importance, importance_star_rec, rec_status
 		from 
 		(
 		select row_number() over(order by pk_mail_num desc) AS rno,
@@ -832,7 +833,8 @@
 	
 	<!-- 페이징처리 한 보낸 수신확인 메일목록 (검색 있든, 없든 모두 다 포함 && 읽음상태 표시) -->
  	<select id="sendMailList_recCheck" parameterType="HashMap" resultType="com.spring.bts.minjeong.model.MailVO">
-		select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date, importance, importance_star_send, send_status
+		select pk_mail_num, fk_receiveuser_num, recempname, subject, reg_date, filename, reservation_date, importance
+			 , importance_star_send, send_status
 			 , rec_status, rec_date 
 		from
 		(
@@ -840,7 +842,8 @@
 		       pk_mail_num, fk_receiveuser_num, recempname, subject
 		       , to_char(reg_date,'yyyy-mm-dd hh24:mi:ss') as reg_date
 		       , filename, to_char(reservation_date, 'yyyy-mm-dd hh24:mi:ss') as reservation_date
-		       , importance, importance_star_send, send_status, rec_status, to_char(rec_date, 'yyyy-mm-dd hh24:mi:ss') as rec_date
+		       , importance, importance_star_send, send_status, rec_status
+		       , to_char(rec_date, 'yyyy-mm-dd hh24:mi:ss') as rec_date
 		from tbl_mail M join tbl_mailread R
 		on M.pk_mail_num = R.fk_mail_num
 		where fk_senduser_num = #{fk_senduser_num} and fk_receiveuser_num != #{fk_senduser_num} and
@@ -882,5 +885,32 @@
 		order by pk_mail_num desc
 		) V
 	</select>
+
+	<!-- == 검색어 입력 시 자동글 완성하기 6 --> 
+	<!-- searchType 을 이름으로 설정했을 때 / 아닐 때 -->
+	<select id="wordSearchShow" parameterType="HashMap" resultType="String">
+		<choose>
+			<when test="searchType eq 'subject'">
+				select distinct ${searchType}
+			</when> 
+			<otherwise>
+				select ${searchType}
+			</otherwise>
+		</choose>
+		from tbl_mail
+		where lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+		<choose>
+			<when test="searchType neq 'sendempname'">
+				order by ${searchType} asc
+			</when>
+			<when test="searchType eq 'sendempname'">
+				order by ${searchType} asc
+			</when>			 
+			<otherwise>
+				order by pk_mail_num desc
+			</otherwise>
+		</choose>
+	</select>
+	
 
 </mapper>

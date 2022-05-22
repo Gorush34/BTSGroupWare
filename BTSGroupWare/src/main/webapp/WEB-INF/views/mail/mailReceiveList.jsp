@@ -19,6 +19,19 @@
 	border: 1px solid black; background-color: rgba(0,0,0,0); color: black; margin-left: 1px;
 	}
 	
+	#absolute {
+    position: absolute;
+    top: 80px;
+    right: 200px;
+    height: 100px;
+	}
+	
+	#btnSearch {
+    position: absolute;
+    top: 80px;	
+    right: 150px;	
+	}
+	
 </style>
 
 <script type="text/javascript">
@@ -47,7 +60,84 @@
 			}
 			
 		});
+
 		
+		<%-- === 검색어 입력 시 자동글 완성하기 2 === --%>
+		$("div#displayList").hide();
+		
+		$("input#searchWord").keyup(function(){
+			
+			const wordLength = $(this).val().trim().length;
+			// 검색어의 길이를 알아온다.
+			
+			if(wordLength == 0) {
+				$("div#displayList").hide();
+				// 검색어가 공백이거나 검색어 입력후 백스페이스키를 눌러서 검색어를 모두 지우면 검색된 내용이 안 나오도록 해야 한다.
+			}
+			else {
+				$.ajax({
+					url:"<%= ctxPath%>/mail/wordSearchShow.bts",
+					type:"GET",
+					data:{"searchType":$("select#searchType").val()
+						 ,"searchWord":$("input#searchWord").val()},
+					dataType:"JSON",
+					success:function(json){
+						// json => [{"word":"Korea VS Japan 라이벌 축구대결"},{"word":"JSP 가 뭔가요?"},{"word":"프로그램은 JAVA 가 쉬운가요?"},{"word":"java가 재미 있나요?"},{"word":"MJ 글쓰기 첫번째 연습"}]
+						
+						<%-- 검색어 입력시 자동글 완성하기 7 --%>
+						if(json.length > 0) {
+							// 검색된 데이터가 있는 경우임
+							let html = "";
+							
+							$.each(json, function(index, item){
+								const word = item.word;
+								// word ==> 프로그램은 JAVA 가 쉬운가요?
+								
+								const idx = word.toLowerCase().indexOf($("input#searchWord").val().toLowerCase());
+								// 			word ==> 프로그램은 java 가 쉬운가요?
+								// 검색어(JaVa)가 나오는 idx 는 6이 된다. (대문자로 입력했을 때 소문자로 변환됨.)
+								
+								const len = $("input#searchWord").val().length;
+								// 검색어(JaVa)의 길이 len 은 4가 된다.
+								
+								/*
+								console.log("~~~~~~~~~~~~ 시작 ~~~~~~~~~~~~")
+								console.log(word.substring(0, idx));	// 검색어(JaVa) 앞까지의 글자 => "프로그램은 "
+								console.log(word.substring(idx, idx+len));	// 검색어(JaVa) 글자 => "JAVA"
+								console.log(word.substring(idx+len));	// 검색어(JaVa) 뒤부터 끝까지의 글자 => "" 가 쉬운가요?
+								console.log("~~~~~~~~~~~~ 끝 ~~~~~~~~~~~~")
+								*/
+								
+								const result = word.substring(0, idx) + "<span style='color:black; font-weight:bold; display:inline-block;'>"+word.substring(idx, idx+len)+"</span>" + word.substring(idx+len)
+								
+								html += "<span style='cursor:pointer; font-size:14px;' class='result'>"+result+"</span><br>";
+							});
+							
+							const input_width = $("input#searchWord").css("width") // 검색어 input 태그 width 알아오기
+							
+							$("div#displayList").css({"width":input_width});	// 검색결과 div 의 width 크기를 검색어 입력 input 태그 width 와 일치시키기
+							
+							$("div#displayList").html(html);	<%-- 자동검색어 기능을 displayList 에 보이도록 한다. --%>
+							$("div#displayList").show();
+
+						}
+					},
+					error: function(request, status, error){
+		                  alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		            }
+				});
+			}
+			
+		});// end of $("input#searchWord").keyup(function(){}---------------------------
+		
+				
+		<%-- 검색어 입력시 자동글 완성하기 8 --%>
+		$(document).on("click", "span.result", function(){
+			const word = $(this).text();
+			$("input#searchWord").val(word);	// 텍스트 박스에 검색된 결과의 문자열을 입력해준다.
+			$("div#displayList").hide();
+			gomailSearch();						// 자동글완성 기능 후 검색 함수를 호출한다.
+		});
 		
 	}); // end of $(document).ready(function(){})----------------------------------
 	
@@ -181,20 +271,25 @@
 			<h4 style="color: black;">받은 메일함</h4>
 		</div>
 		<form name="goReceiveListSelectFrm" style="display: inline-block; padding-left: 1070px;">			
-			<div id="mail_searchType">
-				<select class="form-control" id="searchType" name="searchType">
-					<option value="subject" selected="selected">제목</option>
-					<option value="sendempname">보낸이</option>
-				</select>
+			<div id="absolute">
+				<div id="mail_searchType">
+					<select class="form-control" id="searchType" name="searchType">
+						<option value="subject" selected="selected">제목</option>
+						<option value="sendempname">보낸이</option>
+					</select>
+				</div>
+				
+				<div id="mail_serachWord">
+					<input id="searchWord" name="searchWord" type="text" class="form-control" placeholder="내용을 입력하세요.">
+				</div>		
+				<%-- === 검색어 입력 시 자동글 완성하기 1 === --%>
+				<div id="displayList" style="border: solid 1px gray; border-top: 0px; width:50px; height: 50px; margin-left: 97px; margin-right: 5px; margin-top: -1px; overflow: auto;" >
+				</div>						
 			</div>
-			<div id="mail_serachWord">
-				<input id="searchWord" name="searchWord" type="text" class="form-control" placeholder="내용을 입력하세요.">
-			</div>
-			
-			<button type="button" style="margin-bottom: 5px" id="btnSearch" class="btn btn-secondary" onclick="gomailSearch()">
+			<button type="button" style="margin-bottom: 5px;" id="btnSearch" class="btn btn-secondary" onclick="gomailSearch()">
 				<i class="fa fa-search" aria-hidden="true" style="font-size:15px;"></i>
 			</button>
-		</form>				
+		</form>
 	</div>
 	
 	<div class="row">
@@ -226,7 +321,7 @@
 								</th>
 								<th style="width: 10%;" class="text-center">보낸이</th>
 								<th style="width: 70%;">제목</th>
-								<th style="width: 20%;" class="text-left">날짜</th>
+								<th style="width: 20%;" class="text-left">전송일자</th>
 							</tr>
 						</thead>
 						

@@ -968,11 +968,6 @@ from
 where V.seq = '2'
 
 
-delete from tbl_employees
-where pk_emp_no = '80000110'
-
-commit;
-
 select *
 from tbl_employees
 
@@ -994,3 +989,6 @@ where fk_receiveuser_num = '80000011' and fk_senduser_num != '80000011' and
 del_status = 0 and reservation_status = 0 and temp_status = 0 and rec_status = 0	
 order by pk_mail_num desc
 )V
+
+select *
+from tbl_employees;

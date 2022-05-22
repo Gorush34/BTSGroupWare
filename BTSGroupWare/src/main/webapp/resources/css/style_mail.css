@@ -116,4 +116,13 @@ ul#secondHeaderGroup, .secondHeaderList {
 
 /* =================== mail 전체 공통 서식 끝 =================== */
 
+
+/* 사이드 클릭 시 시작 */
  	
+ .mailBtn:hover {
+		color: #000080;
+		font-size: 12pt;
+		font-weight: bold;
+	}
+ 	
+/* 사이드 클릭 시 끝 */ 	
