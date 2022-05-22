@@ -102,11 +102,14 @@
 </ul>
 <div class="tab-content">
   <div class="tab-pane fade show active" id="depName">
-    
+  
+  
+  
+<!-- 하이차트 부분  -->    
 <figure class="highcharts-figure">
     <div id="container" style="margin-top:5%; /* 글꼴  */-webkit-text-stroke-width: thin;"></div>
-    
 </figure>
+<!-- 하이차트 부분  -->
 
   </div>
   
@@ -230,7 +233,7 @@
 			</tr>
 			<tr>
 				<td><strong>사진</strong></td>
-				<td><img id="empProfile" src="<%= ctxPath%>/resources/images/nol.png" style="width:60%; margin-left:10%;"><!-- <button class="btn btn-default" id="telAdd_mini_btn">삭제</button> --></td>
+				<td><img id="empProfile" src="<%= ctxPath%>/resources/images/nol.png" style="width:60%; margin-left:10%;"></td>
 			</tr>
 			</c:when>
 			</c:choose>
@@ -377,39 +380,38 @@
       
       getEmpImgName();
       if( imgname != "" ){
-          $("#empProfile").attr("src", "<%= ctxPath%>/resources/files/" + imgname); 
+          $("#empProfile").attr("src", "<%= ctxPath%>/resources/images/nol.png"); 
        }
        else {
           $("#empProfile").attr("src", "<%= ctxPath%>/resources/images/mu.png"); 
        }
 	
-	// 사진변경버튼 클릭시
-	 	       // 사진변경버튼 클릭시
-       $("button#updateImage").on("click", function (event) {
-          /// event.preventDefault(); 
-          var url = $("#updateImgFrm").attr("action"); 
-          var form = $('#updateImgFrm')[0]; 
-          var formData = new FormData(form); 
-          $.ajax({ 
-             url: url
-            , type: 'POST'
-            , data: formData
-            , dataType: "json"
-            , async: false
-            , success: function (json) { 
-              alert("사진이 변경되었습니다. 변경된 사진은 재접속시 적용됩니다.");
-              <%-- $("#empProfile").attr("src", "<%= ctxPath%>/resources/files/${json.img_name}"); --%>
-              /* $("#empProfile").attr("src", json.path +"/"+json.img_name);  */
-              // history.go(0);
-            }, error: function (json) { 
-               alert("실패!");
-            }, 
-              cache: false
-            , contentType: false
-            , processData: false 
-            });
-       
-       }); // end of $("button#updateImage").on("click", function (event) {}---------------------------
+   // 사진변경버튼 클릭시
+	 	$("button#updateImage").on("click", function (event) {
+	 		/// event.preventDefault(); 
+	 		var url = $("#updateImgFrm").attr("action"); 
+	 		var form = $('#updateImgFrm')[0]; 
+	 		var formData = new FormData(form); 
+	 		$.ajax({ 
+	 			url: url
+	 		  , type: 'POST'
+	 		  , data: formData
+	 		  , dataType: "json"
+	 		  , async: false
+	 		  , success: function (json) { 
+	 			 alert("사진이 변경되었습니다. 변경된 사진은 재접속시 적용됩니다.");
+	 			 <%-- $("#empProfile").attr("src", "<%= ctxPath%>/resources/files/${json.img_name}"); --%>
+	 			 /* $("#empProfile").attr("src", json.path +"/"+json.img_name);  */
+	 			 // history.go(0);
+	 		  }, error: function (json) { 
+	 			  alert("실패!");
+	 		  }, 
+	 		    cache: false
+	 		  , contentType: false
+	 		  , processData: false 
+	 		  });
+	 	
+	 	}); // end of $("button#updateImage").on("click", function (event) {}---------------------------
 	
 	  
 	}); // end of $( document ).ready( function()
@@ -698,9 +700,6 @@
 			
 /* 조직도  */
 	
-
-	
-	
 Highcharts.chart('container', {
     chart: {
         height: 800,
@@ -724,12 +723,11 @@ Highcharts.chart('container', {
     },
     
     series: [{
-    	
         type: 'organization',
         name: 'Highsoft',
         keys: ['from', 'to'],
         data: [
-        	<c:if test="${not empty requestScope.depList}">
+        	<c:if test="${not empty requestScope.depList}"> 
 		   	<c:forEach var="dep" items="${requestScope.depList}" varStatus="i">
             ['CEO', 'exe_director'],
             ['exe_director', 'worker'],
