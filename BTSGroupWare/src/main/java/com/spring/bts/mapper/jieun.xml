@@ -17,9 +17,9 @@
 
 			<!-- // 사내 캘린더에 캘린더 소분류 명 존재 여부 알아오기  -->
 			<select id="existComCalendar" parameterType="HashMap" resultType="int">
-				select  count(*)
+				select count(*)
 				from tbl_calendar
-				where fk_lgcatgono = 2 and and fk_emp_no = #{fk_emp_no} and calname = #{addCom_calname}
+				where fk_lgcatgono = 2 and fk_emp_no = #{fk_emp_no} and calname = #{addCom_calname}
 			</select>
 	
 	<!-- 사내 캘린더에 사내 캘린더 소분류 보여주기 -->

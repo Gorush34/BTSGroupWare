@@ -363,7 +363,7 @@
     
       <!-- Modal header -->
       <div class="modal-header">
-        <h4 class="modal-title">관심 캘린더 추가</h4>
+        <h4 class="modal-title">사내 캘린더 추가</h4>
         <button type="button" class="close modal_close" data-dismiss="modal">&times;</button>
       </div>
       
