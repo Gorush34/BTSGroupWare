@@ -166,7 +166,7 @@ public class AddBookController {
 	   HttpSession session = request.getSession();
 	   EmployeeVO loginuser = (EmployeeVO) session.getAttribute("loginuser");
 	 
-	   List<EmployeeVO> empList = service.addBook_depInfo_select(); 
+	   List<EmployeeVO> empList = service.addBook_depInfo_select(); // 사원리스트
 	   
 	   List<Map<String,String>> ab_depList = service.addBook_depList_select_ab(); // 부서리스트(주소록)
 	   
