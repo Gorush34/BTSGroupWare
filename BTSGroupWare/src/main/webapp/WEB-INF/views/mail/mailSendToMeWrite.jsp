@@ -73,6 +73,12 @@
 		      		 return false;
 		      	 }
 		      	 
+				 // 받는사람 직접 입력 시 발송되도록 하기 (주소록을 거치지 않음)
+		      	 else {
+						mid_cnt = recemail.split(',').length;
+						cnt = $("input#cnt").val(mid_cnt);
+		      	 }	
+		      	 
 		      	 // 메일제목 유효성 검사
 		      	 var subject = $("input#subject").val().trim();
 		      	 if(subject == "") {
@@ -131,6 +137,7 @@
 		 
 		      	var frm = document.mailWriteFrm;
 		      	frm.importanceVal.value = importanceVal;
+		      	frm.cnt = cnt;
 		      	frm.method = "POST";
 		      	frm.action = "<%= ctxPath%>/mail/mailWriteEnd.bts";
 		        frm.submit();
@@ -145,6 +152,7 @@
 					var sendResSetTime = $("span#reservationTime").text();
 					var frm = document.mailWriteFrm;
 					frm.importanceVal.value = importanceVal;
+			      	frm.cnt = cnt;
 					frm.reservation_date.value = sendResSetTime;
 					frm.method = "POST";
 					frm.action = "<%= ctxPath%>/mail/mailWriteReservationEnd.bts";
@@ -180,6 +188,11 @@
 		      		 alert("받는 사람을 입력해주세요.");
 		      		 return false;
 		      	 }
+				// 받는사람 직접 입력 시 발송되도록 하기 (주소록을 거치지 않음)
+		      	 else {
+						mid_cnt = recemail.split(',').length;
+						cnt = $("input#cnt").val(mid_cnt);
+		      	 }	
 		      	 
 		      	 // 메일제목 유효성 검사
 		      	 var subject = $("input#subject").val().trim();
@@ -233,6 +246,7 @@
 
 				const frm = document.mailWriteFrm;
 				frm.importanceVal.value = importanceVal;
+		      	frm.cnt = cnt;
 				frm.method = "POST";
 				frm.action = "<%= ctxPath%>/mail/mailTemporaryEnd.bts"
 				frm.submit();
@@ -366,7 +380,6 @@
 				<td width="10%" data-toggle="tooltip" data-placement="top" title="">
 					<input type="hidden" id="recemail" name="recemail" value="${sessionScope.loginuser.uq_email}" style="width: 800px; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
 					<input type="hidden" id="cnt" name="cnt" style="width: 800px; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " />
-							
 										
 					<%-- hidden 타입으로 데이터값 보내기 --%>
 			     	<input type="hidden" id="sendemail" name="sendemail" value="${sessionScope.loginuser.uq_email}" style="width: 90%; margin-left:10px; margin-right: 1%; border-radius: 3px; border: 1px solid gray; " /> 

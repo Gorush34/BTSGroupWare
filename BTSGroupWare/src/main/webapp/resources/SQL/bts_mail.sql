@@ -990,4 +990,5 @@ del_status = 0 and reservation_status = 0 and temp_status = 0 and rec_status = 0
 order by pk_mail_num desc
 )V
 
-
+select *
+from tbl_employees;
