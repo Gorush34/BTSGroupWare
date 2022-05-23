@@ -416,7 +416,7 @@
 		update tbl_employees set fk_department_id = #{fk_department_id}, fk_rank_id = #{fk_rank_id}, emp_pwd = #{emp_pwd}
 			 , fk_board_authority_no = #{fk_board_authority_no}, fk_site_authority_no = #{fk_site_authority_no}, emp_name = #{emp_name}
 			 , postal = #{postal}, address = #{address}, detailaddress = #{detailaddress}, extraaddress = #{extraaddress}
-			 , com_tel = #{com_tel}, uq_phone = #{uq_phone}, uq_email = #{uq_email}, img_name = #{img_name}
+			 , com_tel = #{com_tel}, uq_phone = #{uq_phone}, uq_email = #{uq_email}
 		where pk_emp_no = #{pk_emp_no}
 	</update>
 	

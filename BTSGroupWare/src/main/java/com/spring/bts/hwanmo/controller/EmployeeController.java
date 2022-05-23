@@ -690,7 +690,14 @@ public class EmployeeController {
 			
 		if(n == 1) {
 			message = "업데이트 성공!";
-			loc = "javascript:history.back()";// 자바스크립트를 이용한 이전페이지로 이동한다.
+			loc = request.getContextPath()+"/logout.bts";
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("pk_emp_no", String.valueOf(pk_emp_no));
+			paraMap.put("emp_pwd", emp_pwd);
+			
+			empvo = empService.getLoginMember(paraMap);
+			mav.addObject("loginuser", empvo);
+			
 		}
 		else {
 			message = "SQL 구문 에러발생";
