@@ -435,7 +435,7 @@
    <form name="editFrm" enctype="multipart/form-data">
    <div>
    
-   <input type="text" name="pk_appr_no" value="${requestScope.apprvo.pk_appr_no}" />
+   <input type="hidden" name="pk_appr_no" value="${requestScope.apprvo.pk_appr_no}" />
    
 	<table style="width: 100%" class="table table-bordered">
 		<tr>
