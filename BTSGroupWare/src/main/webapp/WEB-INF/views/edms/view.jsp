@@ -108,10 +108,10 @@
           	</td>
           	
           	<td rowspan="4" class="edmsviewtbl">중<br/>간<br/>결<br/>재<br/>자</td>
-          	<td class="edmsviewtbl">${requestScope.apprvo.ko_depname}</td>
+          	<td class="edmsviewtbl">${requestScope.midDepName.MID_DEP}</td>
              
 			<td rowspan="4" class="edmsviewtbl">최<br/>종<br/>결<br/>재<br/>자</td>
-          	<td class="edmsviewtbl">${requestScope.apprvo.ko_depname}</td>
+          	<td class="edmsviewtbl">${requestScope.finDepName.FIN_DEP}</td>
 		</tr>
 		
 		<tr>
@@ -240,25 +240,30 @@
 
 	<%-- ************************************************** 수정 버튼 영역 시작 ************************************************** --%>
 		
-		<%-- 2. 로그인한유저=글쓴이사번 && 중간결재전이면 수정/삭제 버튼 보이도록 --%>
+		<%-- 2.1. 로그인한유저=글쓴이사번 && 중간결재전이면 수정 버튼 보이도록 --%>
 		
 		<div style="float: left;">
 			<%-- 수정버튼 --%>
 			<c:if test="${sessionScope.loginuser.pk_emp_no eq apprvo.getFk_emp_no() and requestScope.apprvo.mid_accept eq 0}">
-				<button type="button" class="btn btn-dark btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edit.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">수정하기</button>
+					<button type="button" class="btn btn-info btn-sm mr-3" onclick="javascript:location.href='<%= request.getContextPath()%>/edms/edit.bts?pk_appr_no=${requestScope.apprvo.pk_appr_no}'">수정하기</button>
 			</c:if>
 		</div>
 		
+		<%-- 2.2. 로그인한유저=글쓴이사번 && 중간결재전이면 삭제 버튼 보이도록 --%>
 		<div style="float: left;">
 			<%-- 삭제버튼 --%>
 			<form name="delFrm">
 				<input type="hidden" name="pk_appr_no" value="${requestScope.apprvo.pk_appr_no}">
 				<input type="hidden" name="fk_emp_no" value="${requestScope.apprvo.fk_emp_no}">
 				<c:if test="${sessionScope.loginuser.pk_emp_no eq apprvo.getFk_emp_no() and requestScope.apprvo.mid_accept eq 0}">
-					<button type="button" class="btn btn-primary btn-sm" id="btnDelete">삭제하기</button>
+						<button type="button" class="btn btn-danger btn-sm" id="btnDelete">삭제하기</button>
+				</c:if>
+				<c:if test="${sessionScope.loginuser.pk_emp_no eq 80000001}">
+					<button type="button" class="btn btn-danger btn-sm" id="btnDelete">관리자권한으로 삭제하기</button>
 				</c:if>
 			</form>			
 		</div>
+		
 		
 		
 		<input type="hidden" value="${requestScope.apprvo.mid_accept}">
