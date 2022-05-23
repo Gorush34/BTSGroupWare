@@ -111,6 +111,11 @@ public interface InterEdmsDAO {
 
 	// 메인에서 띄워주기 
 	int getWaitingSignListCount(Map<String, String> paramMap);
+
+	// 문서상세보기에서 중간결재자/최종결재자 부서명 가져오기
+	Map<String, String> getMidDepName(String pk_appr_no);
+
+	Map<String, String> getFinDepName(String pk_appr_no);
 	
 	
 }

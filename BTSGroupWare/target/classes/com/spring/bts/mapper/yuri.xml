@@ -69,7 +69,8 @@
 			   null, null,
 			   default, default)
 	</insert>
-
+	
+	<!-- 파일첨부가 있는 전자결재 문서수정 --> 
 
 	<!-- 페이징 처리를 안한 검색어가 없는 전체 대기문서 목록 보여주기 -->
 <!-- 	<select id="waitListNoSearch" resultType="com.spring.bts.yuri.model.ApprVO">
@@ -125,9 +126,14 @@
 	
 	<!-- 1개글 수정하기 -->
 	<update id="edit" parameterType="com.spring.bts.yuri.model.ApprVO">
-		update tbl_appr set title = #{title}, contents = #{contents}
-		where pk_appr_vo = #{pk_appr_vo}
+		update tbl_appr set fk_appr_sortno = #{fk_appr_sortno},
+							emergency = #{emergency},
+							title = #{title},
+							contents = #{contents}
+		where pk_appr_no = #{pk_appr_no}
 	</update>
+	
+	
 	
 	<!-- 1개글 삭제하기 -->
 	<delete id="del" parameterType="HashMap">
@@ -165,14 +171,8 @@
 		ON A.fk_emp_no = E.pk_emp_no
 		WHERE 1=1
 		AND lower(${searchType}) LIKE '%'|| lower(#{searchWord}) ||'%'
-		<!--
-			select 문에서 distinct 와 order by 절을 함께 사용할때는 조심해야 한다.
-			order by 절에는 select 문에서 사용된 컬럼만 들어올 수가 있다.
-			또는 order by 절을 사용하지 않아야 한다.
-		-->
 		<choose>
 			<when test="searchType neq 'subject'">
-			<!-- JSTL은 ne 지만 여기서는 neq 이다! -->
 				ORDER BY ${searchType} ASC
 			</when>
 			<otherwise>
@@ -185,7 +185,7 @@
 		order by 절에는 select 문에서 사용된 컬럼만 들어올 수가 있다.
 		또는 order by 절을 사용하지 않아야 한다.
 	-->
-
+	<!-- JSTL은 ne 지만 여기서는 neq 이다! -->
 
 	<!-- 총 게시물 건수 구하기 / 검색이 있을 때와 없을 때로 나눠야 된다. -->
 	<!-- 아래 세줄 때문에 오류 java.sql.SQLException: 부적합한 열 유형: 1111 <= 컨트롤러에서 searchWord를 안 줘서? -->
@@ -329,6 +329,11 @@
 	</select>
 
 
+	<!--  -->
+	
+	
+	
+	
 	<!-- 반려문서함 -->
 	<!-- // ==== 파일첨부가 있는 게시판의 페이징 처리한 반려목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함한 것) ==== // -->		
 	<select id="edmsListSearchWithPaging_reject" parameterType="HashMap" resultType="com.spring.bts.yuri.model.ApprVO">
@@ -401,10 +406,6 @@
 		</choose>
 	</update>
 
-
-	<!-- status		0 대기중, 1 진행중, 2 승인됨, 3 반려됨 -->
-	<!-- mid_accept 0 아무것도 안 함, 1 승인함, 2 반려함  -->
-	<!-- fin_accept 0 아무것도 안 함, 1 승인함, 2 반려함  -->
 	<!-- 문서 반려하기 -->
 	<update id="reject" parameterType="com.spring.bts.yuri.model.ApprVO">
 		update tbl_appr
@@ -955,7 +956,41 @@
 	   AND FK_MID_EMPNO = #{pk_emp_no}
     </select>
 	
-    
 
+	
+	<!-- 문서 상세보기에서 중간결재자 부서명 알아오기 -->
+	<resultMap type="Map" id="getMidDepName_map">
+		<result property="MID_NAME"		column="MID_NAME" 		javaType="String" />
+		<result property="MID_DEP" 		column="MID_DEP" 		javaType="String" />
+	</resultMap>
+
+	<select id="getMidDepName" parameterType="String" resultMap="getMidDepName_map">
+		SELECT E.EMP_NAME AS MID_NAME, D.KO_DEPNAME AS MID_DEP
+	    FROM TBL_EMPLOYEES E LEFT JOIN TBL_DEP_SORT D ON E.FK_DEPARTMENT_ID = D.PK_DEP_NO
+	    WHERE PK_EMP_NO = (
+	        SELECT FK_MID_EMPNO
+	        FROM TBL_EMPLOYEES E LEFT JOIN TBL_APPR A
+	        ON E.PK_EMP_NO = A.FK_EMP_NO
+	        WHERE PK_APPR_NO = #{PK_APPR_NO}
+	    )
+	</select>
+
+
+	<!-- 문서 상세보기에서 최종결재자 부서명 알아오기 -->
+	<resultMap type="Map" id="getFinDepName_map">
+		<result property="FIN_NAME"		column="FIN_NAME" 		javaType="String" />
+		<result property="FIN_DEP" 		column="FIN_DEP" 		javaType="String" />
+	</resultMap>
+
+	<select id="getFinDepName" parameterType="String" resultMap="getFinDepName_map">
+		SELECT E.EMP_NAME AS FIN_NAME, D.KO_DEPNAME AS FIN_DEP
+	    FROM TBL_EMPLOYEES E LEFT JOIN TBL_DEP_SORT D ON E.FK_DEPARTMENT_ID = D.PK_DEP_NO
+	    WHERE PK_EMP_NO = (
+	        SELECT FK_FIN_EMPNO
+	        FROM TBL_EMPLOYEES E LEFT JOIN TBL_APPR A
+	        ON E.PK_EMP_NO = A.FK_EMP_NO
+	        WHERE PK_APPR_NO = 268    
+	    )
+	</select>
 
 </mapper>
