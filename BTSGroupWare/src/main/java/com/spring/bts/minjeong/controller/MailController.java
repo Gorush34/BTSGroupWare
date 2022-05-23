@@ -122,7 +122,7 @@ public class MailController {
 	
 	// =========================== 메일쓰기  =========================== //
 	
-	// 메일 쓰기 폼페이지 요청 (추후 로그인 AOP 추가 requiredLogin_) 
+	// 메일 쓰기 폼페이지 요청
 	@RequestMapping(value = "/mail/mailWrite.bts", produces = "text/plain; charset=UTF-8")	
 	public ModelAndView requiredLogin_mailWrite(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
@@ -587,9 +587,6 @@ public class MailController {
 		HttpSession session = request.getSession();
 		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
 
-		
-	//	System.out.println("받은메일함 페이지에서 로그인한 사용자 id (사원번호) 받아오기 " + loginuser.getPk_emp_no());
-		
 		String fk_receiveuser_num = String.valueOf(loginuser.getPk_emp_no());
 		String empname = String.valueOf(loginuser.getEmp_name());
 				
@@ -987,9 +984,6 @@ public class MailController {
 		// 로그인 세션 받아오기 (로그인 한 사람이 본인의 메일 목록만 볼 수 있도록)
 		HttpSession session = request.getSession();
 		EmployeeVO loginuser = (EmployeeVO)session.getAttribute("loginuser");
-
-		
-	//	System.out.println("보낸메일함 수신확인 목록 페이지에서 로그인한 사용자 id (사원번호) 받아오기 " + loginuser.getPk_emp_no());
 		
 		String fk_senduser_num = String.valueOf(loginuser.getPk_emp_no());
 		String empname = String.valueOf(loginuser.getEmp_name());
@@ -1006,8 +1000,7 @@ public class MailController {
 		if(searchType == null || (!"subject".equals(searchType)) && (!"recempname".equals(searchType)) ) {
 			searchType = "";
 		}
-		
-		// 검색 입력창에 아무것도 입력하지 않았을 때 or 공백일 때 기본값을 보여주도록 한다.
+
 		if(searchWord == null || "".equals(searchWord) && searchWord.trim().isEmpty()) {
 			searchWord = "";
 		}
@@ -1556,13 +1549,23 @@ public class MailController {
 		확인용 content(메일 내용) :20220513 임시저장 메일 테스트입니다. 값보내기 테스트 22 / importance 값 보내기&nbsp;		  
 		*/  
 		
-		String uq_email = "";	   /* 이메일 */
-        try {
-        	// DB에 encrypt(암호화) 해서 보내주도록 한다.
-			uq_email = aes.encrypt(mrequest.getParameter("recemail"));
-		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
-			e.printStackTrace();
-		}
+		// 다중메일보내기 시작 (JS 수정 후 (cnt))
+		int cnt = Integer.parseInt(mrequest.getParameter("cnt"));
+		String recemail = mrequest.getParameter("recemail");
+		String [] strArray = recemail.split(",");
+	//	System.out.println("cnt 확인용 " + cnt);
+	//	System.out.println("recemail 확인용" + recemail);
+	//	System.out.println("strArray 확인용" + strArray);
+		
+		for(int i=0; i<cnt; i++) {			
+			String uq_email = (String)strArray[i];	   /*이메일 */
+	//		System.out.println("확인용 uq_email : " + uq_email);
+	        try {
+	        	// DB에 encrypt(암호화) 해서 보내주도록 한다.
+				uq_email = aes.encrypt(uq_email);
+			} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+				e.printStackTrace();
+			}
         
         // 값을 1개만 보낼때에는 String 으로 보내고, 
         // return 타입으로 받아올 때에는 List 또는 Map 으로 받아온다.
@@ -1677,7 +1680,7 @@ public class MailController {
 			mav.addObject("loc", loc);
 			mav.setViewName("msg");	
 		}
-		
+		}
 		return mav;
 	}		
 	
@@ -3101,6 +3104,41 @@ public class MailController {
 		}
 				
 	}	
+
+	
+
+	// === 검색어 입력 시 자동글 완성하기 3 ===
+	@ResponseBody
+	@RequestMapping(value = "/mail/wordSearchShow.bts", method = {
+			RequestMethod.GET }, produces = "text/plain;charset=UTF-8") // URL, 절대경로 contextPath 인 board 뒤의 것들을 가져온다.
+																		// (확장자.java 와 확장자.xml 은 그 앞에 contextPath 가 빠져있는
+																		// 것이다.)
+	public String wordSearchShow(HttpServletRequest request) {
+
+		String searchType = request.getParameter("searchType");
+		String searchWord = request.getParameter("searchWord");
+
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("searchType", searchType);
+		paraMap.put("searchWord", searchWord);
+
+		List<String> wordList = service.wordSearchShow(paraMap); // paraMap 을 담아서 보낸다.
+
+		JSONArray jsonArr = new JSONArray(); // 복수개로 받기 때문에 JSONArray , [] 타입
+
+		if (wordList != null) {
+			for (String word : wordList) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("word", word);
+
+				jsonArr.put(jsonObj);
+			} // end of for------------------------------------------------------------
+		}
+
+		return jsonArr.toString();
+	}
+	
+	
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////
 		

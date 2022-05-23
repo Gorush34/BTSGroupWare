@@ -107,6 +107,12 @@
 		      		 return false;
 		      	 }
 		      	 
+				 // 받는사람 직접 입력 시 발송되도록 하기 (주소록을 거치지 않음)
+		      	 else {
+						mid_cnt = recemail.split(',').length;
+						cnt = $("input#cnt").val(mid_cnt);
+		      	 }		
+		      	 
 		      	 // 메일제목 유효성 검사
 		      	 var subject = $("input#subject").val().trim();
 		      	 if(subject == "") {
@@ -165,6 +171,7 @@
 		 
 		      	var frm = document.mailWriteFrm;
 		      	frm.importanceVal.value = importanceVal;
+		      	frm.cnt = cnt;
 		      	frm.method = "POST";
 		      	frm.action = "<%= ctxPath%>/mail/mailWriteEnd.bts";
 		        frm.submit();
@@ -179,6 +186,7 @@
 					var sendResSetTime = $("span#reservationTime").text();
 					var frm = document.mailWriteFrm;
 					frm.importanceVal.value = importanceVal;
+			      	frm.cnt = cnt;
 					frm.reservation_date.value = sendResSetTime;
 					frm.method = "POST";
 					frm.action = "<%= ctxPath%>/mail/mailWriteReservationEnd.bts";
@@ -214,7 +222,12 @@
 		      		 alert("받는 사람을 입력해주세요.");
 		      		 return false;
 		      	 }
-		      	 
+				// 받는사람 직접 입력 시 발송되도록 하기 (주소록을 거치지 않음)
+		      	 else {
+						mid_cnt = recemail.split(',').length;
+						cnt = $("input#cnt").val(mid_cnt);
+		      	 }	
+		 		      	 
 		      	 // 메일제목 유효성 검사
 		      	 var subject = $("input#subject").val().trim();
 		      	 if(subject == "") {
@@ -266,7 +279,8 @@
 		      	}
 
 				const frm = document.mailWriteFrm;
-			//	frm.importanceVal.value = importanceVal;
+				frm.importanceVal.value = importanceVal;
+		      	frm.cnt = cnt;
 				frm.method = "POST";
 				frm.action = "<%= ctxPath%>/mail/mailTemporaryEnd.bts"
 				frm.submit();

@@ -240,7 +240,7 @@
 		      	// 중요 체크박스에 체크되어있는지 확인
 		      	var importanceVal = 0;
 		      	if($("input[name=importance]").prop("checked")) {
-		      		// 중요 체크박스에 체크되어 있을 때 중요메일함에 들어가도록 하기 (importance = 1)
+		      		// 중요 체크박스에 체크되어 있을 때 !중요 표시 해주기 (importance = 1)
 		      		importanceVal = 1;			// 1
 		      	//	console.log(importanceVal);
 		      	}
@@ -767,7 +767,7 @@
       <table>
          <tr>
          	<td>
-	         	<button class="form-control" style="height:45px; margin-left:14px; width: 40px;" id="set_mid">
+	         	<button class="form-control" style="height:37px; margin-left:20px; width: 40px;" id="set_mid">
 		         	<i class="fa fa-chevron-right" aria-hidden="true"></i>
 	         	</button>
          	</td>
